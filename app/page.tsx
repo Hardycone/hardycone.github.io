@@ -115,7 +115,9 @@ export default function Home() {
             transition={{ duration: 0.3 }}
           >
             {/* Logo + Socials */}
-            <TopBar setViewMode={setViewMode} />
+            <div className="fixed w-full">
+              <TopBar setViewMode={setViewMode} />
+            </div>
 
             <motion.div
               initial={{ y: 800, opacity: 0 }}

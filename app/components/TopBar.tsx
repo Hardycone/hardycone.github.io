@@ -4,7 +4,7 @@ type TopBarProps = {
 
 export default function TopBar({ setViewMode }: TopBarProps) {
   return (
-    <div className="fixed z-50 w-full flex justify-between items-center mb-8 bg-white">
+    <div className="flex justify-between items-center h-[60px] px-[20px] bg-white">
       <div
         className="text-2xl font-bold cursor-pointer"
         onClick={() => setViewMode("home")}

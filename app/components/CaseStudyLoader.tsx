@@ -1,5 +1,5 @@
 // components/CaseStudyLoader.tsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import projects from "../../data/projects";
 
 type CaseStudyLoaderProps = {
@@ -7,23 +7,20 @@ type CaseStudyLoaderProps = {
 };
 
 export default function CaseStudyLoader({ projectId }: CaseStudyLoaderProps) {
-  const project = projects.find((p) => p.id === projectId);
+  const project = projects.find((p) => p.id === projectId)!;
   const [CaseStudyComponent, setCaseStudyComponent] = useState<React.FC | null>(
     null
   );
 
   useEffect(() => {
-    if (!project) return;
+    import(`../case-studies/${project.caseStudySlug}`).then((mod) => {
+      const Component = mod.default;
+      Component.displayName = project.caseStudySlug;
+      setCaseStudyComponent(() => Component);
+    });
+  }, [project.caseStudySlug]);
 
-    import(`../case-studies/${project.caseStudySlug}`)
-      .then((mod) => setCaseStudyComponent(() => mod.default))
-      .catch(() =>
-        setCaseStudyComponent(() => () => <p>Case study not found.</p>)
-      );
-  }, [project]);
-
-  if (!project) return <p>Project not found</p>;
-  if (!CaseStudyComponent) return <p>Loading case study...</p>;
+  if (!CaseStudyComponent) return null;
 
   return (
     <article className="prose max-w-3xl">

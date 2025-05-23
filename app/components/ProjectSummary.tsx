@@ -29,7 +29,7 @@ export default function ProjectSummary({
       initial={false}
       animate={{
         y: viewMode === "home" ? -75 : 0, // move up by 75px in home view
-        top: viewMode === "home" ? "50%" : 20,
+        top: viewMode === "home" ? "50%" : 80,
       }}
       transition={{ type: "tween", duration: 0.2, ease: "easeInOut" }}
       className="absolute left-1/4 text-left w-1/2"
