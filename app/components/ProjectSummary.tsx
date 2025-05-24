@@ -1,60 +1,33 @@
-/// <reference types="react" />
-
+// app/components/ProjectSummary.tsx
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import SpecialButton from "./SpecialButton";
+import { useActiveProject } from "../context/ActiveProjectContext";
+import projects from "../../data/projects";
+import { useRouter } from "next/navigation";
 
-type Project = {
-  id: string;
-  title: string;
-  description: string;
-};
+export default function ProjectSummary() {
+  const { activeIndex } = useActiveProject();
+  const project = projects[activeIndex];
+  const router = useRouter();
 
-type ProjectSummaryProps = {
-  project: Project;
-  scrollDir: "up" | "down";
-  onViewCaseStudy: () => void;
-  viewMode: "home" | "case-study";
-};
+  const handleClick = () => {
+    router.push(`/case-studies/${project.slug}`);
+  };
 
-export default function ProjectSummary({
-  project,
-  scrollDir,
-  onViewCaseStudy,
-  viewMode,
-}: ProjectSummaryProps) {
+  if (!project) {
+    return null; // or a loading state
+  }
+
   return (
-    <motion.div
-      initial={false}
-      animate={{
-        y: viewMode === "home" ? -75 : 0, // move up by 75px in home view
-        top: viewMode === "home" ? "50%" : 80,
-      }}
-      transition={{ type: "tween", duration: 0.2, ease: "easeInOut" }}
-      className="absolute left-1/4 text-left w-1/2"
-    >
-      <motion.div
-        key={project.id}
-        onClick={onViewCaseStudy}
-        initial={{ y: scrollDir === "up" ? -400 : 400, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="cursor-pointer"
+    <div className="absolute left-1/4 top-1/2 w-1/2 justify-center items-center bg-white p-6 rounded-2xl shadow-xl text-center z-50">
+      <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
+      <p className="text-gray-600 mb-4">{project.description}</p>
+      <button
+        onClick={handleClick}
+        className="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition"
       >
-        <h1 className="text-5xl font-bold mb-6">{project.title}</h1>
-        <p className="text-xl text-gray-700 max-w-xl">{project.description}</p>
-        <AnimatePresence>
-          {viewMode === "home" && (
-            <motion.div
-              exit={{ y: 200, opacity: 0 }}
-              transition={{ duration: 0.1 }}
-            >
-              <SpecialButton />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-    </motion.div>
+        View Case Study
+      </button>
+    </div>
   );
 }

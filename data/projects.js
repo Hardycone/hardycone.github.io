@@ -8,28 +8,28 @@ const projects = [
     title: "About Me",
     description: "I am a designer.",
     glyph: ProjectOneLogo,
-    caseStudySlug: "case-study-one",
+    slug: "case-study-one",
   },
   {
     id: "project-2",
     title: "Flux",
     description: "Democratizing quantitative UX research.",
     glyph: ProjectTwoLogo,
-    caseStudySlug: "case-study-two",
+    slug: "case-study-two",
   },
   {
     id: "project-3",
     title: "Community Design",
     description: "Helping a Central New York community design their village.",
     glyph: ProjectOneLogo,
-    caseStudySlug: "case-study-three",
+    slug: "case-study-three",
   },
   {
     id: "project-4",
     title: "Fantail",
     description: "Movies.",
     glyph: ProjectOneLogo,
-    caseStudySlug: "case-study-four",
+    slug: "case-study-four",
   },
   {
     id: "project-5",
@@ -37,7 +37,7 @@ const projects = [
     description:
       "Prototyping and Human-in-the-loop testing a AR experience for NASA's future missions.",
     glyph: ProjectOneLogo,
-    caseStudySlug: "case-study-five",
+    slug: "case-study-five",
   },
   {
     id: "project-6",
@@ -45,7 +45,7 @@ const projects = [
     description:
       "Prototyping and Human-in-the-loop testing a AR experience for NASA's future missions.",
     glyph: ProjectOneLogo,
-    caseStudySlug: "case-study-six",
+    slug: "case-study-six",
   },
 ];
 
