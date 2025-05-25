@@ -31,12 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ActiveProjectProvider>
-          <ViewModeProvider>
+        <ViewModeProvider>
+          <ActiveProjectProvider>
             <ProjectSummary />
             {children}
-          </ViewModeProvider>
-        </ActiveProjectProvider>
+          </ActiveProjectProvider>
+        </ViewModeProvider>
       </body>
     </html>
   );

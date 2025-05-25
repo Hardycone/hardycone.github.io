@@ -1,15 +1,28 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useRef, useEffect } from "react";
 
 function wrapIndex(index: number, length: number): number {
   return (index + length) % length;
 }
 
-const ActiveProjectContext = createContext<{
+interface ActiveProjectContextType {
   activeIndex: number;
   setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
-} | null>(null);
+  previousIndex?: number;
+}
+
+const ActiveProjectContext = createContext<ActiveProjectContextType | null>(
+  null
+);
+
+function usePreviousIndex<T>(value: T): T | undefined {
+  const ref = useRef<T | undefined>(undefined);
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+}
 
 export function ActiveProjectProvider({
   children,
@@ -17,8 +30,11 @@ export function ActiveProjectProvider({
   children: React.ReactNode;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const previousIndex = usePreviousIndex(activeIndex);
   return (
-    <ActiveProjectContext.Provider value={{ activeIndex, setActiveIndex }}>
+    <ActiveProjectContext.Provider
+      value={{ activeIndex, setActiveIndex, previousIndex }}
+    >
       {children}
     </ActiveProjectContext.Provider>
   );
