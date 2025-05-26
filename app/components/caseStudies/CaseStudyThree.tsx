@@ -1,15 +1,7 @@
-import Link from "next/link";
-
 // case-studies/project-two.tsx
 export default function CaseStudyThree() {
   return (
-    <main className="max-w-3xl mx-auto p-8 prose">
-      <Link
-        href="/"
-        className="mb-5 inline-block text-blue-600 hover:underline"
-      >
-        ← Back to Home
-      </Link>
+    <article className="prose h-full w-full p-12">
       <h2>Background</h2>
       <p>
         Filmmakers often have great ideas but struggle to translate them into
@@ -161,6 +153,6 @@ export default function CaseStudyThree() {
         the Sundance Institute’s Story Lab and continues to evolve as a creative
         catalyst for narrative thinkers.
       </p>
-    </main>
+    </article>
   );
 }

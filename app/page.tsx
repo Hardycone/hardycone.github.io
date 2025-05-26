@@ -1,11 +1,17 @@
 "use client";
 
-import GlyphCarousel from "./components/GlyphCarousel";
+import { useEffect } from "react";
+import { useViewMode } from "./context/ViewModeContext";
+import { useActiveProject } from "./context/ActiveProjectContext";
 
-export default function Home() {
-  return (
-    <main className="flex w-1/4 items-center justify-end h-screen pr-16 bg-gray-50 overflow-hidden">
-      <GlyphCarousel />
-    </main>
-  );
+export default function HomePage() {
+  const { setViewMode } = useViewMode();
+  const { setActiveIndex } = useActiveProject();
+
+  useEffect(() => {
+    setViewMode("home");
+    setActiveIndex(0); // Set this to whatever your default project is
+  }, [setViewMode, setActiveIndex]);
+
+  return null;
 }

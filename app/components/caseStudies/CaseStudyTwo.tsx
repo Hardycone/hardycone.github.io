@@ -1,15 +1,7 @@
-import Link from "next/link";
-
 // case-studies/project-two.tsx
 export default function CaseStudyTwo() {
   return (
-    <main className="max-w-3xl mx-auto p-8 prose">
-      <Link
-        href="/"
-        className="mb-5 inline-block text-blue-600 hover:underline"
-      >
-        ← Back to Home
-      </Link>
+    <article className="prose h-full w-full p-12">
       <h2>Background</h2>
       <p>
         Our team set out to solve a common but underexplored problem: how do
@@ -132,6 +124,6 @@ export default function CaseStudyTwo() {
         design decisions with evidence, not guesswork—and reshaping what
         quantitative UX looks like in practice.
       </p>
-    </main>
+    </article>
   );
 }

@@ -1,12 +1,12 @@
-// app/icons/FireIcon.tsx
 export default function ProjectOneLogo() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 500 500"
       fill="currentColor"
-      width="1em"
-      height="1em"
+      width="100%"
+      height="100%"
+      preserveAspectRatio="xMidYMid meet"
     >
       <circle fill="#4b2e83" cx="250" cy="250" r="250" />
       <polygon

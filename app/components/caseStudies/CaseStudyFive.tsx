@@ -1,15 +1,7 @@
-import Link from "next/link";
-
 // case-studies/project-two.tsx
 export default function CaseStudyFive() {
   return (
-    <main className="max-w-3xl mx-auto p-8 prose">
-      <Link
-        href="/"
-        className="mb-5 inline-block text-blue-600 hover:underline"
-      >
-        ← Back to Home
-      </Link>
+    <article className="prose h-full w-full p-12">
       <h2>Background</h2>
       <p>
         In a rural village facing economic decline, residents rallied around a
@@ -170,6 +162,6 @@ export default function CaseStudyFive() {
         design. Most importantly, locals described the space as “ours”—a small
         but powerful shift.
       </p>
-    </main>
+    </article>
   );
 }

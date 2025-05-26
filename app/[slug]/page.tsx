@@ -6,8 +6,6 @@ import CaseStudyFour from "../components/caseStudies/CaseStudyFour";
 import CaseStudyFive from "../components/caseStudies/CaseStudyFive";
 import CaseStudySix from "../components/caseStudies/CaseStudySix";
 
-// ... import all 6
-
 type ProjectSlug =
   | "case-study-one"
   | "case-study-two"
@@ -23,22 +21,26 @@ const caseStudyComponents: Record<ProjectSlug, React.FC> = {
   "case-study-four": CaseStudyFour,
   "case-study-five": CaseStudyFive,
   "case-study-six": CaseStudySix,
-
-  // ... map all slugs to components
 };
 
-export default function ProjectPage({ params }: { params: { slug: string } }) {
-  const project = projects.find((p) => p.slug === params.slug);
+export default async function ProjectPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const { slug } = await params; // <-- just add this line to await params
+
+  const project = projects.find((p) => p.slug === slug);
 
   if (!project) {
     return <p>Project not found</p>;
   }
-  const slug = project.slug as ProjectSlug;
-  const CaseStudyComponent = caseStudyComponents[slug];
+
+  const projectSlug = project.slug as ProjectSlug;
+  const CaseStudyComponent = caseStudyComponents[projectSlug];
 
   return (
     <main>
-      {/* Optionally, you can render a common ProjectSummary here */}
       {CaseStudyComponent ? (
         <CaseStudyComponent />
       ) : (
