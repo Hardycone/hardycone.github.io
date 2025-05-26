@@ -38,10 +38,10 @@ function ViewModeSyncer({
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname.startsWith("/case-studies")) {
-      setViewMode("case-study");
-    } else {
+    if (pathname === "/") {
       setViewMode("home");
+    } else {
+      setViewMode("case-study");
     }
   }, [pathname, setViewMode]);
 

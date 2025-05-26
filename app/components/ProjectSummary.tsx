@@ -26,7 +26,7 @@ export default function ProjectSummary() {
 
   const handleClick = () => {
     setTimeout(() => {
-      router.push(`/case-studies/${project.slug}`);
+      router.push(`/${project.slug}`);
     }, 300);
   };
 
@@ -69,7 +69,7 @@ export default function ProjectSummary() {
 
   return (
     <motion.div
-      className="absolute left-1/4 w-1/2 flex justify-start items-start bg-slate-300 p-12 z-50"
+      className="absolute left-1/4 w-1/2 flex justify-start items-start p-12 z-50"
       variants={containerVariants}
       animate={isCaseStudy ? "case-study" : "home"}
       initial={false}
@@ -82,7 +82,7 @@ export default function ProjectSummary() {
           initial="initial"
           animate="animate"
           exit="exit"
-          className="relative w-full bg-red-100 items-start justify-start"
+          className="relative w-fullitems-start justify-start"
         >
           <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
           <p className="text-gray-600 mb-4">{project.description}</p>
