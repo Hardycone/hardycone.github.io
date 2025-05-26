@@ -2,55 +2,87 @@
 "use client";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
+import { useViewMode } from "../context/ViewModeContext";
 import projects from "../../data/projects";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+
+function useHasMounted() {
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+  return hasMounted;
+}
 
 export default function ProjectSummary() {
+  const hasMounted = useHasMounted();
   const { activeIndex, previousIndex } = useActiveProject();
-  const project = projects[activeIndex];
+  const { viewMode } = useViewMode();
   const router = useRouter();
+  if (!hasMounted) return null; // Prevent hydration mismatch
+  const project = projects[activeIndex];
 
   const handleClick = () => {
-    router.push(`/case-studies/${project.slug}`);
+    setTimeout(() => {
+      router.push(`/case-studies/${project.slug}`);
+    }, 300);
   };
 
   if (!project) return null;
 
+  const isCaseStudy = viewMode === "case-study";
+
   const direction =
     previousIndex !== undefined && activeIndex < previousIndex ? "down" : "up";
 
-  const variants = {
+  const containerVariants = {
+    home: {
+      top: "50%",
+      y: "-50%",
+      transition: { duration: 0.3, ease: "easeOut" },
+    },
+    "case-study": {
+      top: "2rem",
+      y: "0%",
+      transition: { duration: 0.3, ease: "easeOut" },
+    },
+  };
+
+  const summaryVariants = {
     initial: (direction: "up" | "down") => ({
-      y: direction === "up" ? 500 : -500,
+      y: direction === "up" ? 300 : -300,
       opacity: 0,
-      position: "absolute" as const,
     }),
     animate: {
       y: 0,
       opacity: 1,
-      position: "relative" as const,
-      transition: { duration: 0.4, ease: "easeOut" },
+      transition: { duration: 0.2, ease: "easeIn" },
     },
     exit: (direction: "up" | "down") => ({
-      y: direction === "up" ? -500 : 500,
+      y: direction === "up" ? -300 : 300,
       opacity: 0,
-      position: "absolute" as const,
-      transition: { duration: 0.4, ease: "easeOut" },
+      transition: { duration: 0.1, ease: "easeOut" },
     }),
   };
 
   return (
-    <div className="overflow-hidden h-full absolute left-1/4 w-1/2 flex justify-center items-center bg-white p-6 rounded-2xl shadow-xl text-center z-50">
-      <AnimatePresence initial={true} custom={direction}>
+    <motion.div
+      className="absolute left-1/4 w-1/2 flex justify-start items-start bg-slate-300 p-12 z-50"
+      variants={containerVariants}
+      animate={isCaseStudy ? "case-study" : "home"}
+      initial={false}
+    >
+      <AnimatePresence mode="wait" initial={true} custom={direction}>
         <motion.div
           key={project.id}
           custom={direction}
-          variants={variants}
+          variants={summaryVariants}
           initial="initial"
           animate="animate"
           exit="exit"
-          className="absolute w-full"
+          className="relative w-full bg-red-100 items-start justify-start"
         >
           <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
           <p className="text-gray-600 mb-4">{project.description}</p>
@@ -62,6 +94,6 @@ export default function ProjectSummary() {
           </button>
         </motion.div>
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

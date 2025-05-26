@@ -1,6 +1,14 @@
+// app/context/ViewModeContext.tsx
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+import { usePathname } from "next/navigation";
 
 type ViewMode = "home" | "case-study";
 
@@ -14,9 +22,30 @@ export function ViewModeProvider({ children }: { children: ReactNode }) {
 
   return (
     <ViewModeContext.Provider value={{ viewMode, setViewMode }}>
-      {children}
+      <>
+        <ViewModeSyncer setViewMode={setViewMode} />
+        {children}
+      </>
     </ViewModeContext.Provider>
   );
+}
+
+function ViewModeSyncer({
+  setViewMode,
+}: {
+  setViewMode: (mode: ViewMode) => void;
+}) {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (pathname.startsWith("/case-studies")) {
+      setViewMode("case-study");
+    } else {
+      setViewMode("home");
+    }
+  }, [pathname, setViewMode]);
+
+  return null;
 }
 
 export function useViewMode() {

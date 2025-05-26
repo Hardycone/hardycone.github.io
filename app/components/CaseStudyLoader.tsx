@@ -13,12 +13,12 @@ export default function CaseStudyLoader({ projectId }: CaseStudyLoaderProps) {
   );
 
   useEffect(() => {
-    import(`../case-studies/${project.caseStudySlug}`).then((mod) => {
+    import(`../case-studies/${project.slug}`).then((mod) => {
       const Component = mod.default;
-      Component.displayName = project.caseStudySlug;
+      Component.displayName = project.slug;
       setCaseStudyComponent(() => Component);
     });
-  }, [project.caseStudySlug]);
+  }, [project.slug]);
 
   if (!CaseStudyComponent) return null;
 

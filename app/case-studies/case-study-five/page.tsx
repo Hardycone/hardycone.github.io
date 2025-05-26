@@ -44,6 +44,132 @@ export default function CaseStudyFive() {
         design. Most importantly, locals described the space as “ours”—a small
         but powerful shift.
       </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
+      <p>
+        The space reopened with a village celebration. Foot traffic increased,
+        and a nearby cafe reopened to serve visitors. The project was
+        highlighted in a regional planning journal as a model for participatory
+        design. Most importantly, locals described the space as “ours”—a small
+        but powerful shift.
+      </p>
     </main>
   );
 }

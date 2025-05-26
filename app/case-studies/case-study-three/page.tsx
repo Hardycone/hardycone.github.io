@@ -49,6 +49,118 @@ export default function CaseStudyThree() {
         the Sundance Institute’s Story Lab and continues to evolve as a creative
         catalyst for narrative thinkers.
       </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
+      <p>
+        After launching the MVP, we onboarded 300 users in three months. Many
+        cited the AI storyboards as their favorite feature—it helped them pitch
+        ideas visually before production. We saw diverse use cases: from solo
+        YouTubers to nonprofit doc teams. The product earned recognition from
+        the Sundance Institute’s Story Lab and continues to evolve as a creative
+        catalyst for narrative thinkers.
+      </p>
     </main>
   );
 }

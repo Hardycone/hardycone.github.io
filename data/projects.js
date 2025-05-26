@@ -1,6 +1,5 @@
 // app/data/projects.js
 import ProjectOneLogo from "../app/icons/project-1-logo";
-import ProjectTwoLogo from "../app/icons/project-2-logo";
 
 const projects = [
   {
@@ -14,7 +13,7 @@ const projects = [
     id: "project-2",
     title: "Flux",
     description: "Democratizing quantitative UX research.",
-    glyph: ProjectTwoLogo,
+    glyph: ProjectOneLogo,
     slug: "case-study-two",
   },
   {

@@ -47,6 +47,90 @@ export default function CaseStudyFour() {
         interface design were featured at a space tech symposium. Several
         elements informed ongoing HCI research in extreme environments.
       </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
+      <p>
+        Our concept placed in the top 5 nationally. NASA judges commended our
+        integration of technical realism and UX detail. Our demo video and
+        interface design were featured at a space tech symposium. Several
+        elements informed ongoing HCI research in extreme environments.
+      </p>
     </main>
   );
 }
