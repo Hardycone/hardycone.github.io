@@ -8,6 +8,7 @@ import ProjectSummary from "./components/ProjectSummary";
 import { ViewModeProvider } from "./context/ViewModeContext";
 import { ActiveProjectProvider } from "./context/ActiveProjectContext";
 import MainColumn from "./components/MainColumn";
+import CaseStudyContent from "./components/CaseStudyContent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,17 +33,18 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
         <ActiveProjectProvider>
           <ViewModeProvider>
+            <TopBar />
             <main className="relative flex w-screen bg-gray-200">
               <div className="flex-1 flex h-screen flex-col justify-center overflow-hidden bg-red-50">
                 <GlyphCarousel />
               </div>
               <MainColumn>
-                <TopBar />
                 <ProjectSummary />
+                <CaseStudyContent />
                 {children}
               </MainColumn>
               <div className="flex-1 bg-yellow-200"></div>

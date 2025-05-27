@@ -9,13 +9,18 @@ import {
   useEffect,
 } from "react";
 import { usePathname } from "next/navigation";
+import projects from "@/data/projects";
 
-type ViewMode = "home" | "case-study";
+type ViewMode = "home" | "case-study" | "not-found";
 
 const ViewModeContext = createContext<{
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
 } | null>(null);
+
+function isValidSlug(slug: string): boolean {
+  return projects.some((p) => p.slug === slug);
+}
 
 export function ViewModeProvider({ children }: { children: ReactNode }) {
   const [viewMode, setViewMode] = useState<ViewMode>("home");
@@ -40,8 +45,14 @@ function ViewModeSyncer({
   useEffect(() => {
     if (pathname === "/") {
       setViewMode("home");
-    } else {
+      return;
+    }
+
+    const slug = pathname.split("/")[1] || "";
+    if (isValidSlug(slug)) {
       setViewMode("case-study");
+    } else {
+      setViewMode("not-found");
     }
   }, [pathname, setViewMode]);
 

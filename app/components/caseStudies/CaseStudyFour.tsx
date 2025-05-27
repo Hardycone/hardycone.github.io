@@ -2,7 +2,7 @@
 // case-studies/project-two.tsx
 export default function CaseStudyFour() {
   return (
-    <article className="prose h-full w-full p-12">
+    <article>
       <h2>Background</h2>
       <p>
         NASA challenged student teams to imagine how AR could augment spacesuits

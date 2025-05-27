@@ -1,7 +1,7 @@
 // case-studies/project-two.tsx
 export default function CaseStudyFive() {
   return (
-    <article className="prose h-full w-full p-12">
+    <article>
       <h2>Background</h2>
       <p>
         In a rural village facing economic decline, residents rallied around a

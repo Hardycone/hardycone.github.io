@@ -1,7 +1,7 @@
 // case-studies/project-two.tsx
 export default function CaseStudyTwo() {
   return (
-    <article className="prose h-full w-full p-12">
+    <article>
       <h2>Background</h2>
       <p>
         Our team set out to solve a common but underexplored problem: how do

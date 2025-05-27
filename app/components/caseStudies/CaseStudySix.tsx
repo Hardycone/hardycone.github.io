@@ -1,7 +1,7 @@
 // case-studies/project-two.tsx
 export default function CaseStudySix() {
   return (
-    <article className="prose h-full w-full p-12">
+    <article>
       <h2>Background</h2>
       <p>
         Boston’s Chinatown is rich with history—but under threat from

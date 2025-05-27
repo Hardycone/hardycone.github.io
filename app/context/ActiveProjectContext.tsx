@@ -26,26 +26,50 @@ function usePreviousIndex<T>(value: T): T | undefined {
   return ref.current;
 }
 
+const STORAGE_KEY = "activeProjectIndex";
+
 export function ActiveProjectProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [activeIndex, setActiveIndex] = useState(0);
+  // Initialize activeIndex from localStorage if available & valid, else 0
+  const [activeIndex, setActiveIndex] = useState(() => {
+    if (typeof window === "undefined") return 0; // SSR guard
+
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored !== null) {
+      const parsed = parseInt(stored, 10);
+      if (!isNaN(parsed) && parsed >= 0 && parsed < projects.length) {
+        return parsed;
+      }
+    }
+    return 0;
+  });
+
   const previousIndex = usePreviousIndex(activeIndex);
   const pathname = usePathname();
 
-  // 🔁 Sync index with current URL slug
+  // Sync activeIndex with current URL slug on case-study pages
   useEffect(() => {
     if (!pathname) return;
 
     const slug = pathname.split("/")[1]; // because it's /[slug]
+
     const newIndex = projects.findIndex((project) => project.slug === slug);
 
+    // If we're on a case-study page (slug found), update activeIndex
     if (newIndex !== -1 && newIndex !== activeIndex) {
       setActiveIndex(newIndex);
     }
+    // If on home "/" path, do NOT reset activeIndex — keep last selected index
   }, [pathname, activeIndex]);
+
+  // Persist activeIndex changes to localStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem(STORAGE_KEY, activeIndex.toString());
+  }, [activeIndex]);
 
   return (
     <ActiveProjectContext.Provider

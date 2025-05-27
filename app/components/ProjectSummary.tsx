@@ -1,4 +1,3 @@
-// app/components/ProjectSummary.tsx
 "use client";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
@@ -21,18 +20,19 @@ export default function ProjectSummary() {
   const { activeIndex, previousIndex } = useActiveProject();
   const { viewMode } = useViewMode();
   const router = useRouter();
-  if (!hasMounted) return null; // Prevent hydration mismatch
+
+  if (!hasMounted || viewMode === "not-found") return null;
+
   const project = projects[activeIndex];
+  if (!project) return null;
+
+  const showAsCaseStudy = viewMode === "case-study";
 
   const handleClick = () => {
     setTimeout(() => {
       router.push(`/${project.slug}`);
     }, 300);
   };
-
-  if (!project) return null;
-
-  const isCaseStudy = viewMode === "case-study";
 
   const direction =
     previousIndex !== undefined && activeIndex < previousIndex ? "down" : "up";
@@ -57,8 +57,10 @@ export default function ProjectSummary() {
   return (
     <motion.div
       layout
-      className="relative flex p-12 z-50 bg-purple-100"
-      animate={isCaseStudy ? "case-study" : "home"}
+      className={`relative flex p-12 z-10 bg-purple-100 transition-all duration-300 ease-in-out ${
+        showAsCaseStudy ? "mt-[60px]" : "mt-[calc(50vh-100px)]"
+      }`}
+      animate={showAsCaseStudy ? "case-study" : "home"}
       initial={false}
     >
       <AnimatePresence mode="wait" initial={true} custom={direction}>
