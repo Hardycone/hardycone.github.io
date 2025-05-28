@@ -12,6 +12,9 @@ import CaseStudyFour from "./caseStudies/CaseStudyFour";
 import CaseStudyFive from "./caseStudies/CaseStudyFive";
 import CaseStudySix from "./caseStudies/CaseStudySix";
 
+import ProjectSummary from "./ProjectSummary"; // <-- import ProjectSummary here
+import { useEffect } from "react";
+
 type ProjectSlug =
   | "case-study-one"
   | "case-study-two"
@@ -37,18 +40,29 @@ export default function CaseStudyContent() {
   const slug = project.slug as ProjectSlug;
   const CaseStudyComponent = caseStudyComponents[slug];
 
+  // Scroll reset effect on project change, only in case-study mode
+  useEffect(() => {
+    if (viewMode === "case-study") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [activeIndex, viewMode]);
+
   return (
     <AnimatePresence mode="wait">
       {viewMode === "case-study" && CaseStudyComponent && (
         <motion.div
           key={project.id}
-          className="prose h-full w-full p-12 bg-violet-500"
+          className="prose w-full bg-violet-500 flex flex-col gap-10"
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
         >
-          <CaseStudyComponent />
+          <div className="p-12">
+            <CaseStudyComponent />
+          </div>
+          {/* Teaser preview at bottom */}
+          <ProjectSummary variant="bottom" />
         </motion.div>
       )}
     </AnimatePresence>

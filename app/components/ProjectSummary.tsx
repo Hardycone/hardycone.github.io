@@ -15,7 +15,13 @@ function useHasMounted() {
   return hasMounted;
 }
 
-export default function ProjectSummary() {
+interface ProjectSummaryProps {
+  variant?: "header" | "bottom"; // only applies in case-study mode
+}
+
+export default function ProjectSummary({
+  variant = "header",
+}: ProjectSummaryProps) {
   const hasMounted = useHasMounted();
   const { activeIndex, previousIndex } = useActiveProject();
   const { viewMode } = useViewMode();
@@ -23,66 +29,111 @@ export default function ProjectSummary() {
 
   if (!hasMounted || viewMode === "not-found") return null;
 
-  const project = projects[activeIndex];
-  if (!project) return null;
-
-  const showAsCaseStudy = viewMode === "case-study";
-
-  const handleClick = () => {
-    setTimeout(() => {
-      router.push(`/${project.slug}`);
-    }, 300);
-  };
-
+  // Determine direction for animations (used in all views)
   const direction =
     previousIndex !== undefined && activeIndex < previousIndex ? "down" : "up";
 
-  const summaryVariants = {
-    initial: (direction: "up" | "down") => ({
-      y: direction === "up" ? 300 : -300,
-      opacity: 0,
-    }),
-    animate: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.2, ease: "easeIn" },
-    },
-    exit: (direction: "up" | "down") => ({
-      y: direction === "up" ? -300 : 300,
-      opacity: 0,
-      transition: { duration: 0.1, ease: "easeOut" },
-    }),
+  // Home view: show active project, clickable, animated slide with AnimatePresence
+  if (viewMode === "home") {
+    const project = projects[activeIndex];
+    if (!project) return null;
+
+    const handleClick = () => {
+      router.push(`/${project.slug}`);
+    };
+
+    return (
+      <motion.div
+        layout
+        onClick={handleClick}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="cursor-pointer relative flex p-12 z-10 mt-[calc(50vh-100px)]"
+      >
+        <AnimatePresence mode="wait" initial={false} custom={direction}>
+          <motion.div
+            key={project.id}
+            custom={direction}
+            variants={summaryVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="relative w-full items-start justify-start "
+          >
+            <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
+            <p className="text-gray-600 mb-4">{project.description}</p>
+            <button className="px-4 py-2 bg-black text-white rounded-full hover:bg-red-800 transition">
+              View Case Study
+            </button>
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
+    );
+  }
+
+  // Case-study view
+  let project;
+  let clickable = false;
+  let showButton = false;
+
+  if (variant === "header") {
+    project = projects[activeIndex];
+    clickable = false;
+    showButton = false;
+  } else if (variant === "bottom") {
+    const nextIndex = (activeIndex + 1) % projects.length;
+    project = projects[nextIndex];
+    clickable = true;
+    showButton = true;
+  }
+
+  if (!project) return null;
+
+  const handleClick = () => {
+    if (!clickable) return;
+    router.push(`/${project.slug}`);
   };
 
   return (
     <motion.div
       layout
-      className={`relative flex p-12 z-10 bg-purple-100 transition-all duration-300 ease-in-out ${
-        showAsCaseStudy ? "mt-[60px]" : "mt-[calc(50vh-100px)]"
-      }`}
-      animate={showAsCaseStudy ? "case-study" : "home"}
-      initial={false}
+      onClick={clickable ? handleClick : undefined}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className={`relative flex p-12 z-10 ${
+        clickable ? "cursor-pointer" : "cursor-default"
+      } ${variant === "header" ? "mt-[60px]" : "mt-20"}`}
     >
       <AnimatePresence mode="wait" initial={true} custom={direction}>
         <motion.div
           key={project.id}
-          custom={direction}
-          variants={summaryVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          className="relative w-full items-start justify-start bg-cyan-200"
+          className="relative w-full items-start justify-start"
         >
           <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
           <p className="text-gray-600 mb-4">{project.description}</p>
-          <button
-            onClick={handleClick}
-            className="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition"
-          >
-            View Case Study
-          </button>
+          {showButton && (
+            <button className="px-4 py-2 bg-black text-white rounded-full hover:bg-red-800 transition">
+              View Case Study
+            </button>
+          )}
         </motion.div>
       </AnimatePresence>
     </motion.div>
   );
 }
+
+// Keep summaryVariants outside component for clarity
+const summaryVariants = {
+  initial: (direction: "up" | "down") => ({
+    y: direction === "up" ? 300 : -300,
+    opacity: 0,
+  }),
+  animate: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.2, ease: "easeIn" },
+  },
+  exit: (direction: "up" | "down") => ({
+    y: direction === "up" ? -300 : 300,
+    opacity: 0,
+    transition: { duration: 0.1, ease: "easeOut" },
+  }),
+};
