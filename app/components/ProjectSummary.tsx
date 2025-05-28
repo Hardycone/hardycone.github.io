@@ -16,7 +16,7 @@ function useHasMounted() {
 }
 
 interface ProjectSummaryProps {
-  variant?: "header" | "bottom"; // only applies in case-study mode
+  variant?: "header" | "bottom";
 }
 
 export default function ProjectSummary({
@@ -29,82 +29,63 @@ export default function ProjectSummary({
 
   if (!hasMounted || viewMode === "not-found") return null;
 
-  // Determine direction for animations (used in all views)
   const direction =
     previousIndex !== undefined && activeIndex < previousIndex ? "down" : "up";
 
-  // Home view: show active project, clickable, animated slide with AnimatePresence
-  if (viewMode === "home") {
-    const project = projects[activeIndex];
-    if (!project) return null;
-
-    const handleClick = () => {
-      router.push(`/${project.slug}`);
-    };
-
-    return (
-      <motion.div
-        layout
-        onClick={handleClick}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="cursor-pointer relative flex p-12 z-10 mt-[calc(50vh-100px)]"
-      >
-        <AnimatePresence mode="wait" initial={false} custom={direction}>
-          <motion.div
-            key={project.id}
-            custom={direction}
-            variants={summaryVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            className="relative w-full items-start justify-start "
-          >
-            <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
-            <p className="text-gray-600 mb-4">{project.description}</p>
-            <button className="px-4 py-2 bg-black text-white rounded-full hover:bg-red-800 transition">
-              View Case Study
-            </button>
-          </motion.div>
-        </AnimatePresence>
-      </motion.div>
-    );
-  }
-
-  // Case-study view
   let project;
   let clickable = false;
   let showButton = false;
+  let shouldAnimate = false;
+  let marginTop = "";
 
   if (variant === "header") {
     project = projects[activeIndex];
-    clickable = false;
-    showButton = false;
+    clickable = viewMode === "home";
+    showButton = viewMode === "home";
+    shouldAnimate = viewMode === "home";
+    marginTop = viewMode === "home" ? "mt-[calc(50vh-100px)]" : "mt-[60px]";
   } else if (variant === "bottom") {
     const nextIndex = (activeIndex + 1) % projects.length;
     project = projects[nextIndex];
     clickable = true;
     showButton = true;
+    shouldAnimate = false;
+    marginTop = "mt-20";
   }
 
   if (!project) return null;
 
   const handleClick = () => {
     if (!clickable) return;
-    router.push(`/${project.slug}`);
+
+    // Let the layout animation begin before pushing route
+    setTimeout(() => {
+      router.push(`/${project.slug}`);
+    }, 100); // adjust delay to match animation timing
   };
 
   return (
     <motion.div
       layout
+      layoutId={`project-summary-${project.id}`}
       onClick={clickable ? handleClick : undefined}
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className={`relative flex p-12 z-10 ${
         clickable ? "cursor-pointer" : "cursor-default"
-      } ${variant === "header" ? "mt-[60px]" : "mt-20"}`}
+      } ${marginTop}`}
     >
-      <AnimatePresence mode="wait" initial={true} custom={direction}>
+      <AnimatePresence
+        mode="wait"
+        initial={shouldAnimate ? false : true}
+        custom={direction}
+      >
         <motion.div
           key={project.id}
+          custom={shouldAnimate ? direction : undefined}
+          variants={shouldAnimate ? summaryVariants : undefined}
+          initial={shouldAnimate ? "initial" : undefined}
+          animate={shouldAnimate ? "animate" : undefined}
+          exit={shouldAnimate ? "exit" : undefined}
           className="relative w-full items-start justify-start"
         >
           <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
@@ -120,7 +101,6 @@ export default function ProjectSummary({
   );
 }
 
-// Keep summaryVariants outside component for clarity
 const summaryVariants = {
   initial: (direction: "up" | "down") => ({
     y: direction === "up" ? 300 : -300,
