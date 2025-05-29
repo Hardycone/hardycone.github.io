@@ -4,11 +4,9 @@ import "./globals.css";
 
 import TopBar from "./components/TopBar";
 import GlyphCarousel from "./components/GlyphCarousel";
-import ProjectSummary from "./components/ProjectSummary";
 import { ViewModeProvider } from "./context/ViewModeContext";
 import { ActiveProjectProvider } from "./context/ActiveProjectContext";
 import MainColumn from "./components/MainColumn";
-import CaseStudyContent from "./components/CaseStudyContent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,11 +40,7 @@ export default function RootLayout({
               <div className="flex-1 flex h-screen flex-col justify-center overflow-hidden bg-red-50">
                 <GlyphCarousel />
               </div>
-              <MainColumn>
-                <ProjectSummary />
-                <CaseStudyContent />
-                {children}
-              </MainColumn>
+              <MainColumn>{children}</MainColumn>
               <div className="flex-1 bg-yellow-200"></div>
             </main>
           </ViewModeProvider>

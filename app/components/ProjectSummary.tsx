@@ -19,6 +19,37 @@ interface ProjectSummaryProps {
   variant?: "header" | "bottom";
 }
 
+const summaryVariantsDirectional = {
+  initial: (direction: "up" | "down") => ({
+    y: direction === "up" ? 300 : -300,
+    opacity: 0,
+  }),
+  animate: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.2, ease: "easeIn" },
+  },
+  exit: (direction: "up" | "down") => ({
+    y: direction === "up" ? -300 : 300,
+    opacity: 0,
+    transition: { duration: 0.1, ease: "easeOut" },
+  }),
+};
+
+const summaryVariantsFixed = {
+  initial: { y: 500, opacity: 0 },
+  animate: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 2, ease: "easeInOut" },
+  },
+  exit: {
+    y: -500,
+    opacity: 0,
+    transition: { duration: 2, ease: "easeInOut" },
+  },
+};
+
 export default function ProjectSummary({
   variant = "header",
 }: ProjectSummaryProps) {
@@ -28,6 +59,7 @@ export default function ProjectSummary({
   const router = useRouter();
 
   if (!hasMounted || viewMode === "not-found") return null;
+  if (variant === "bottom" && viewMode === "home") return null;
 
   const direction =
     previousIndex !== undefined && activeIndex < previousIndex ? "down" : "up";
@@ -35,21 +67,18 @@ export default function ProjectSummary({
   let project;
   let clickable = false;
   let showButton = false;
-  let shouldAnimate = false;
   let marginTop = "";
 
   if (variant === "header") {
     project = projects[activeIndex];
     clickable = viewMode === "home";
     showButton = viewMode === "home";
-    shouldAnimate = viewMode === "home";
     marginTop = viewMode === "home" ? "mt-[calc(50vh-100px)]" : "mt-[60px]";
   } else if (variant === "bottom") {
     const nextIndex = (activeIndex + 1) % projects.length;
     project = projects[nextIndex];
     clickable = true;
     showButton = true;
-    shouldAnimate = false;
     marginTop = "mt-20";
   }
 
@@ -67,25 +96,27 @@ export default function ProjectSummary({
   return (
     <motion.div
       layout
-      layoutId={`project-summary-${project.id}`}
       onClick={clickable ? handleClick : undefined}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
+      initial={{ opacity: 0, y: 500 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -500 }}
+      transition={{ duration: 1, ease: "easeInOut" }}
       className={`relative flex p-12 z-10 ${
         clickable ? "cursor-pointer" : "cursor-default"
       } ${marginTop}`}
     >
-      <AnimatePresence
-        mode="wait"
-        initial={shouldAnimate ? false : true}
-        custom={direction}
-      >
+      <AnimatePresence mode="wait" custom={direction}>
         <motion.div
           key={project.id}
-          custom={shouldAnimate ? direction : undefined}
-          variants={shouldAnimate ? summaryVariants : undefined}
-          initial={shouldAnimate ? "initial" : undefined}
-          animate={shouldAnimate ? "animate" : undefined}
-          exit={shouldAnimate ? "exit" : undefined}
+          custom={viewMode === "home" ? direction : undefined}
+          variants={
+            viewMode === "home"
+              ? summaryVariantsDirectional
+              : summaryVariantsFixed
+          }
+          initial="initial"
+          animate="animate"
+          exit="exit"
           className="relative w-full items-start justify-start"
         >
           <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
@@ -100,20 +131,3 @@ export default function ProjectSummary({
     </motion.div>
   );
 }
-
-const summaryVariants = {
-  initial: (direction: "up" | "down") => ({
-    y: direction === "up" ? 300 : -300,
-    opacity: 0,
-  }),
-  animate: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.2, ease: "easeIn" },
-  },
-  exit: (direction: "up" | "down") => ({
-    y: direction === "up" ? -300 : 300,
-    opacity: 0,
-    transition: { duration: 0.1, ease: "easeOut" },
-  }),
-};
