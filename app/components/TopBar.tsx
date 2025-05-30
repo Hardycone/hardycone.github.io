@@ -17,7 +17,7 @@ export default function TopBar() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -60, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="fixed flex w-full justify-between items-center h-[60px] px-[20px] bg-amber-700 shadow-sm z-50"
+          className="fixed flex w-full justify-between items-center h-[60px] px-[20px] bg-gray-50 shadow-sm z-50"
         >
           <div
             className="text-2xl font-bold cursor-pointer"

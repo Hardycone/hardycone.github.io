@@ -12,6 +12,8 @@ interface ActiveProjectContextType {
   activeIndex: number;
   setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
   previousIndex?: number;
+  transitioningToNext: boolean;
+  setTransitioningToNext: (value: boolean) => void;
 }
 
 const ActiveProjectContext = createContext<ActiveProjectContextType | null>(
@@ -50,6 +52,10 @@ export function ActiveProjectProvider({
   const previousIndex = usePreviousIndex(activeIndex);
   const pathname = usePathname();
 
+  const [transitioningToNext, setTransitioningToNext] = useState(false);
+  useEffect(() => {
+    console.log("transitioningToNext changed:", transitioningToNext);
+  }, [transitioningToNext]);
   // Sync activeIndex with current URL slug on case-study pages
   useEffect(() => {
     if (!pathname) return;
@@ -73,7 +79,13 @@ export function ActiveProjectProvider({
 
   return (
     <ActiveProjectContext.Provider
-      value={{ activeIndex, setActiveIndex, previousIndex }}
+      value={{
+        activeIndex,
+        setActiveIndex,
+        previousIndex,
+        transitioningToNext,
+        setTransitioningToNext,
+      }}
     >
       {children}
     </ActiveProjectContext.Provider>

@@ -31,17 +31,17 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden bg-gray-50`}
       >
         <ActiveProjectProvider>
           <ViewModeProvider>
             <TopBar />
-            <main className="relative flex w-screen bg-gray-200">
-              <div className="flex-1 flex h-screen flex-col justify-center overflow-hidden bg-red-50">
+            <main className="relative flex w-screen ">
+              <div className="flex-1 flex h-screen flex-col justify-center overflow-hidden ">
                 <GlyphCarousel />
               </div>
               <MainColumn>{children}</MainColumn>
-              <div className="flex-1 bg-yellow-200"></div>
+              <div className="flex-1 "></div>
             </main>
           </ViewModeProvider>
         </ActiveProjectProvider>

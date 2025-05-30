@@ -30,13 +30,14 @@ const caseStudyComponents: Record<ProjectSlug, React.FC> = {
 };
 
 export default function CaseStudyContent() {
-  const { activeIndex } = useActiveProject();
+  const { activeIndex, transitioningToNext, setTransitioningToNext } =
+    useActiveProject();
 
   const project = projects[activeIndex];
   const slug = project.slug as ProjectSlug;
   const CaseStudyComponent = caseStudyComponents[slug];
   const { viewMode } = useViewMode();
-
+  const exitY = transitioningToNext ? -500 : 500; // Adjust exit animation based on transition state
   // Scroll reset effect on project change, only in case-study mode
 
   return (
@@ -44,12 +45,25 @@ export default function CaseStudyContent() {
       {viewMode === "case-study" && CaseStudyComponent && (
         <motion.div
           layout
+          transition={{ duration: 0.2, ease: "easeOut" }}
           key={project.id}
-          className="prose w-full bg-violet-500 flex flex-col gap-10"
+          className="prose w-full flex flex-col gap-10"
           initial={{ y: 500, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -500, opacity: 0 }}
-          transition={{ duration: 1, ease: "easeInOut" }}
+          animate={{
+            y: 0,
+            opacity: 1,
+            transition: { delay: 0.4, duration: 0.2, ease: "easeOut" },
+          }}
+          exit={{
+            y: exitY,
+            opacity: 0,
+            transition: { duration: 0.2, ease: "easeInOut" },
+          }}
+          onAnimationComplete={() => {
+            if (transitioningToNext) {
+              setTransitioningToNext(false); // ✅ Reset flag after animation
+            }
+          }}
         >
           <CaseStudyComponent />
         </motion.div>

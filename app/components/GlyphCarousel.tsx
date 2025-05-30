@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import projects from "../../data/projects";
 import { useActiveProject, wrapIndex } from "../context/ActiveProjectContext";
@@ -10,10 +10,14 @@ export default function GlyphCarousel() {
   const { activeIndex, setActiveIndex } = useActiveProject();
   const { viewMode } = useViewMode();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [hasMounted, setHasMounted] = useState(false);
 
   const isInteractive = viewMode === "home";
 
-  // Always call hooks, but conditionally skip effect logic inside useEffect
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
   useEffect(() => {
     if (!isInteractive) return;
 
@@ -52,20 +56,19 @@ export default function GlyphCarousel() {
     };
   }, [isInteractive, setActiveIndex]);
 
-  // Here, conditionally render empty fragment *after* all hooks run
-  if (viewMode === "not-found") {
+  if (!hasMounted || viewMode === "not-found") {
     return <></>;
   }
 
   return (
     <motion.div
-      className="flex flex-col items-end gap-16 pr-28 bg-orange-100"
+      className="flex flex-col items-end gap-16 pr-28"
       animate={{
         y: `calc(3.75rem + 7.75rem * (2 - ${activeIndex}))`,
         x: isInteractive ? 0 : -300,
         opacity: isInteractive ? 1 : 0,
       }}
-      transition={{ duration: 0.4, ease: "easeInOut" }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
       style={{ pointerEvents: isInteractive ? "auto" : "none" }}
     >
       {projects.map((project, index) => {
@@ -80,7 +83,7 @@ export default function GlyphCarousel() {
               opacity: isActive ? 1 : 0.3,
             }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            className="h-16 w-16 select-none text-center cursor-pointer bg-red-500"
+            className="h-16 w-16 select-none text-center cursor-pointer"
             onClick={() => isInteractive && setActiveIndex(index)}
           >
             <Glyph />

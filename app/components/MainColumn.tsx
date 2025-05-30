@@ -14,14 +14,14 @@ export default function MainColumn({ children }: { children: ReactNode }) {
     if (viewMode === "case-study") {
       const timeout = setTimeout(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
-      }, 500); // Delay in ms
+      }, 0); // Delay in ms
 
       return () => clearTimeout(timeout);
     }
   }, [activeIndex, viewMode]);
 
   return (
-    <div className="flex flex-col w-1/2 max-w-7xl relative">
+    <div className="flex flex-col w-1/2 max-w-4xl relative">
       <ProjectSummary />
 
       <CaseStudyContent />

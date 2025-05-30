@@ -5,7 +5,8 @@ const projects = [
   {
     id: "project-1",
     title: "About Me",
-    description: "I am a designer.",
+    description:
+      "I guess I'm a designer. I'm not sure anymore. What is design anyway? Questions such as this keep my brain busy. Not because it's a particularly hard question, but because my brain doesn't work very well.",
     glyph: ProjectOneLogo,
     slug: "case-study-one",
   },
