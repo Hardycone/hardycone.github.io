@@ -4,6 +4,7 @@ import { useActiveProject } from "../context/ActiveProjectContext";
 import { useViewMode } from "../context/ViewModeContext";
 import { motion, AnimatePresence } from "framer-motion";
 import projects from "@/data/projects";
+import { useEffect } from "react";
 
 import CaseStudyOne from "./caseStudies/CaseStudyOne";
 import CaseStudyTwo from "./caseStudies/CaseStudyTwo";
@@ -39,6 +40,13 @@ export default function CaseStudyContent() {
   const { viewMode } = useViewMode();
   const exitY = transitioningToNext ? -500 : 500; // Adjust exit animation based on transition state
   // Scroll reset effect on project change, only in case-study mode
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      window.dispatchEvent(new Event("case-study-loaded"));
+    }, 600); // allow motion animation to finish (match delay + duration)
+
+    return () => clearTimeout(timeout);
+  }, [project.id]);
 
   return (
     <AnimatePresence mode="wait">

@@ -84,7 +84,7 @@ export default function ProjectSummary({
     project = projects[activeIndex];
     clickable = viewMode === "home";
     showButton = viewMode === "home";
-    marginTop = viewMode === "home" ? "mt-[calc(50vh-200px)]" : "mt-4";
+    marginTop = viewMode === "home" ? "mt-[calc(50vh-200px)]" : "mt-8";
   } else if (variant === "bottom") {
     const nextIndex = (activeIndex + 1) % projects.length;
     project = projects[nextIndex];
