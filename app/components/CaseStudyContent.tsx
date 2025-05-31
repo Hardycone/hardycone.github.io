@@ -47,11 +47,17 @@ export default function CaseStudyContent() {
           layout
           transition={{ duration: 0.2, ease: "easeOut" }}
           key={project.id}
-          className="prose w-full flex flex-col gap-10"
-          initial={{ y: 500, opacity: 0 }}
+          className="p-6 w-full rounded-xl flex flex-col gap-10"
+          initial={{
+            y: 500,
+            opacity: 0,
+            boxShadow:
+              "4px 4px 4px rgba(0, 0, 0, 0.1),-4px -4px 4px rgba(255, 255, 255, 1),-4px 4px 4px rgba(255, 255, 255, 1),4px -4px 4px rgba(255, 255, 255, 1)",
+          }}
           animate={{
             y: 0,
             opacity: 1,
+            boxShadow: "none",
             transition: { delay: 0.4, duration: 0.2, ease: "easeOut" },
           }}
           exit={{

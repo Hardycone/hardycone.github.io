@@ -13,7 +13,7 @@ export default function MainColumn({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (viewMode === "case-study") {
       const timeout = setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({ top: 0, behavior: "auto" });
       }, 0); // Delay in ms
 
       return () => clearTimeout(timeout);
@@ -21,7 +21,7 @@ export default function MainColumn({ children }: { children: ReactNode }) {
   }, [activeIndex, viewMode]);
 
   return (
-    <div className="flex flex-col w-1/2 max-w-4xl relative">
+    <div className="flex flex-col w-1/2 max-w-4xl relative my-12">
       <ProjectSummary />
 
       <CaseStudyContent />

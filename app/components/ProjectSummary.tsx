@@ -84,13 +84,13 @@ export default function ProjectSummary({
     project = projects[activeIndex];
     clickable = viewMode === "home";
     showButton = viewMode === "home";
-    marginTop = viewMode === "home" ? "mt-[calc(50vh-100px)]" : "mt-[60px]";
+    marginTop = viewMode === "home" ? "mt-[calc(50vh-200px)]" : "mt-4";
   } else if (variant === "bottom") {
     const nextIndex = (activeIndex + 1) % projects.length;
     project = projects[nextIndex];
     clickable = true;
     showButton = true;
-    marginTop = "mt-20";
+    marginTop = "";
   }
 
   if (!project) return null;
@@ -138,13 +138,13 @@ export default function ProjectSummary({
                     "4px 4px 4px rgba(0, 0, 0, 0.1),-4px -4px 4px rgba(255, 255, 255, 1),-4px 4px 4px rgba(255, 255, 255, 1),4px -4px 4px rgba(255, 255, 255, 1)",
                 }
           }
-          className="relative flex flex-col gap-6 w-full items-start justify-start p-6 rounded-xl bg-gray-50 "
+          className="relative flex flex-col gap-6 w-full items-start justify-start p-6 rounded-xl"
         >
           <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
           <p className="text-gray-600 mb-4">{project.description}</p>
           <div className="flex justify-end w-full">
             <button
-              className={`px-4 py-2 ${
+              className={`px-4 py-4 ${
                 showButton
                   ? "text-black cursor-pointer hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
                   : "text-transparent cursor-default"

@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
+/* :root {
+  --background: gray-600;
   --foreground: #171717;
 }
 
-/* Worry about dark mode later.
+ Worry about dark mode later.
 
 
 @media (prefers-color-scheme: dark) {
