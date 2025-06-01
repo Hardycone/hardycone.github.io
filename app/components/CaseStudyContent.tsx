@@ -38,12 +38,13 @@ export default function CaseStudyContent() {
   const slug = project.slug as ProjectSlug;
   const CaseStudyComponent = caseStudyComponents[slug];
   const { viewMode } = useViewMode();
-  const exitY = transitioningToNext ? -500 : 500; // Adjust exit animation based on transition state
-  // Scroll reset effect on project change, only in case-study mode
+  const exitY = transitioningToNext ? -500 : 500;
+
+  // Dispatch event after animation completes
   useEffect(() => {
     const timeout = setTimeout(() => {
       window.dispatchEvent(new Event("case-study-loaded"));
-    }, 600); // allow motion animation to finish (match delay + duration)
+    }, 600);
 
     return () => clearTimeout(timeout);
   }, [project.id]);
@@ -75,7 +76,7 @@ export default function CaseStudyContent() {
           }}
           onAnimationComplete={() => {
             if (transitioningToNext) {
-              setTransitioningToNext(false); // ✅ Reset flag after animation
+              setTransitioningToNext(false);
             }
           }}
         >

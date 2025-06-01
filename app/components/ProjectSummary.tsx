@@ -140,14 +140,21 @@ export default function ProjectSummary({
           }
           className="relative flex flex-col gap-6 w-full items-start justify-start p-6 rounded-xl"
         >
-          <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
-          <p className="text-gray-600 mb-4">{project.description}</p>
+          <motion.div layout>
+            <h1
+              className={variant === "bottom" ? "text-2xl font-bold" : "hidden"}
+            >
+              Next Up
+            </h1>
+            <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
+            <p className="text-gray-600 mb-4">{project.description}</p>
+          </motion.div>
           <div className="flex justify-end w-full">
             <button
               className={`px-4 py-4 ${
                 showButton
                   ? "text-black cursor-pointer hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
-                  : "text-transparent cursor-default"
+                  : "hidden"
               } rounded-full transition`}
             >
               View Case Study

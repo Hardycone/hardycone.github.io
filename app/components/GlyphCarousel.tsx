@@ -27,7 +27,7 @@ export default function GlyphCarousel() {
 
       timeoutRef.current = setTimeout(() => {
         timeoutRef.current = null;
-      }, 400);
+      }, 600);
 
       const direction = e.deltaY > 0 ? 1 : -1;
       setActiveIndex((prev) => wrapIndex(prev + direction, projects.length));
@@ -44,7 +44,7 @@ export default function GlyphCarousel() {
 
       timeoutRef.current = setTimeout(() => {
         timeoutRef.current = null;
-      }, 400);
+      }, 300);
     };
 
     window.addEventListener("wheel", handleWheel, { passive: false });
