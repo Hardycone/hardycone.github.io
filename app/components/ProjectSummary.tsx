@@ -84,7 +84,7 @@ export default function ProjectSummary({
     project = projects[activeIndex];
     clickable = viewMode === "home";
     showButton = viewMode === "home";
-    marginTop = viewMode === "home" ? "mt-[calc(50vh-200px)]" : "mt-8";
+    marginTop = viewMode === "home" ? "mt-0 lg:mt-[calc(50vh-200px)]" : "mt-8";
   } else if (variant === "bottom") {
     const nextIndex = (activeIndex + 1) % projects.length;
     project = projects[nextIndex];
@@ -138,7 +138,11 @@ export default function ProjectSummary({
                     "4px 4px 4px rgba(0, 0, 0, 0.1),-4px -4px 4px rgba(255, 255, 255, 1),-4px 4px 4px rgba(255, 255, 255, 1),4px -4px 4px rgba(255, 255, 255, 1)",
                 }
           }
-          className="relative flex flex-col gap-6 w-full items-start justify-start p-6 rounded-xl"
+          className={`relative flex flex-col gap-6 w-full items-start justify-start p-6 rounded-xl ${
+            viewMode === "home"
+              ? "shadow-[4px_4px_4px_rgba(0,0,0,0.1),-4px_-4px_4px_rgba(255,255,255,1),-4px_4px_4px_rgba(255,255,255,1),4px_-4px_4px_rgba(255,255,255,1)] lg:shadow-none"
+              : undefined
+          }`}
         >
           <motion.div layout>
             <h1

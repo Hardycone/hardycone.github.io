@@ -8,7 +8,7 @@ import { useViewMode } from "../context/ViewModeContext";
 import TopBar from "./TopBar";
 import GlyphCarousel from "./GlyphCarousel";
 
-export default function MainColumn({ children }: { children: ReactNode }) {
+export default function Main({ children }: { children: ReactNode }) {
   const { activeIndex } = useActiveProject();
   const { viewMode } = useViewMode();
 
@@ -23,18 +23,27 @@ export default function MainColumn({ children }: { children: ReactNode }) {
   }, [activeIndex, viewMode]);
 
   return (
-    <main className="bg-inherit relative flex w-screen ">
-      <div className="bg-inherit flex-1 flex h-screen flex-col justify-center overflow-hidden ">
+    <main
+      className={`bg-inherit relative flex w-screen ${
+        viewMode === "home" ? "touch-none" : ""
+      }`}
+    >
+      <div
+        className={`flex ${
+          viewMode === "case-study" ? "w-0" : "w-32"
+        }  pr-6 lg:pr-16 h-screen flex-col  lg:flex-1 justify-start lg:justify-center overflow-hidden bg-red-500`}
+      >
         <GlyphCarousel />
       </div>
-      <div className="bg-inherit flex flex-col w-1/2 max-w-4xl relative my-12 ">
+
+      <div className="w-full lg:w-1/2 bg-inherit flex flex-col max-w-4xl relative my-12 mx-4 lg:mx-0 bg-green-500">
         <TopBar />
         <ProjectSummary />
         <CaseStudyContent />
         <ProjectSummary variant="bottom" />
         {children}
-      </div>{" "}
-      <div className="flex-1 "></div>
+      </div>
+      <div className="flex-1" />
     </main>
   );
 }

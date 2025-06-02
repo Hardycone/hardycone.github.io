@@ -4,7 +4,7 @@ import "./globals.css";
 
 import { ViewModeProvider } from "./context/ViewModeContext";
 import { ActiveProjectProvider } from "./context/ActiveProjectContext";
-import MainColumn from "./components/MainColumn";
+import Main from "./components/Main";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,11 +29,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden overscroll-none touch-none bg-background text-foreground h-full`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden bg-background text-foreground h-full`}
       >
         <ActiveProjectProvider>
           <ViewModeProvider>
-            <MainColumn>{children}</MainColumn>
+            <Main>{children}</Main>
           </ViewModeProvider>
         </ActiveProjectProvider>
       </body>
