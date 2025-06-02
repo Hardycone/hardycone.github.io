@@ -102,7 +102,7 @@ export default function TopBar() {
   if (viewMode === "home") return null;
 
   return (
-    <div className="bg-inherit inset-x-0 top-0 fixed p-4 z-50">
+    <div className="bg-inherit max-w-7xl inset-x-0 m-auto top-0 fixed p-4 z-50">
       <AnimatePresence>
         <motion.div
           key="topbar"
@@ -126,7 +126,7 @@ export default function TopBar() {
 
           {/* Center: Title and Sections */}
           <AnimatePresence>
-            {showTitle && activeProject && (
+            {viewMode === "case-study" && showTitle && activeProject && (
               <motion.div
                 key={`title-${activeIndex}`}
                 initial={{ opacity: 0 }}
@@ -149,7 +149,7 @@ export default function TopBar() {
                           e.stopPropagation();
                           handleScrollToSection(section.id);
                         }}
-                        className={`p-2 w-12  h-12 rounded-full ${
+                        className={`text-foreground p-2 w-12  h-12 rounded-full ${
                           activeSection === section.id
                             ? "shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
                             : "hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"

@@ -108,6 +108,125 @@ export default function CaseStudyOne() {
           Thanks for exploring.
         </p>{" "}
       </section>
+      <section id="section-5" className="scroll-mt-24">
+        <h2 className="text-2xl leading-loose">Section 4</h2>
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>{" "}
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>{" "}
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>{" "}
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>{" "}
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>{" "}
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>{" "}
+      </section>
+
+      <section id="section-6" className="scroll-mt-24">
+        <h2 className="text-2xl leading-loose">Section 4</h2>
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>{" "}
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>{" "}
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>{" "}
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>{" "}
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>{" "}
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>
+        <p>
+          Whether I’m prototyping UX flows in Figma, guiding product direction
+          with founders, or co-designing with local communities, I bring a
+          principled but curious approach. This portfolio shares six
+          representative projects—from startups to NASA to grassroots urbanism.
+          Thanks for exploring.
+        </p>{" "}
+      </section>
     </article>
   );
 }

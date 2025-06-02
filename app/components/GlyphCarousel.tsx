@@ -14,6 +14,9 @@ export default function GlyphCarousel() {
 
   const isInteractive = viewMode === "home";
 
+  // Touch tracking
+  const touchStartY = useRef<number | null>(null);
+
   useEffect(() => {
     setHasMounted(true);
   }, []);
@@ -27,7 +30,7 @@ export default function GlyphCarousel() {
 
       timeoutRef.current = setTimeout(() => {
         timeoutRef.current = null;
-      }, 600);
+      }, 400);
 
       const direction = e.deltaY > 0 ? 1 : -1;
       setActiveIndex((prev) => wrapIndex(prev + direction, projects.length));
@@ -47,17 +50,48 @@ export default function GlyphCarousel() {
       }, 300);
     };
 
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY.current = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (timeoutRef.current || touchStartY.current === null) return;
+
+      const endY = e.changedTouches[0].clientY;
+      const deltaY = endY - touchStartY.current;
+
+      const threshold = 30; // min swipe distance
+      let direction = 0;
+
+      if (Math.abs(deltaY) > threshold) {
+        direction = deltaY > 0 ? -1 : 1; // swipe down = previous, up = next
+      }
+
+      if (direction !== 0) {
+        setActiveIndex((prev) => wrapIndex(prev + direction, projects.length));
+        timeoutRef.current = setTimeout(() => {
+          timeoutRef.current = null;
+        }, 400);
+      }
+
+      touchStartY.current = null;
+    };
+
     window.addEventListener("wheel", handleWheel, { passive: false });
     window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd);
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
     };
   }, [isInteractive, setActiveIndex]);
 
   if (!hasMounted || viewMode === "not-found") {
-    return <></>;
+    return null;
   }
 
   return (
@@ -83,7 +117,7 @@ export default function GlyphCarousel() {
               opacity: isActive ? 1 : 0.3,
             }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            className="h-16 w-16 select-none text-center cursor-pointer"
+            className="h-16 w-16 select-none text-center cursor-pointer touch-manipulation"
             onClick={() => isInteractive && setActiveIndex(index)}
           >
             <Glyph />

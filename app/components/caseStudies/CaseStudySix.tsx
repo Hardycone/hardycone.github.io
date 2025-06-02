@@ -363,6 +363,264 @@ export default function CaseStudySix() {
           called it “a love letter in bricks and light.” It also sparked policy
           conversations around heritage zoning and community-led urbanism.
         </p>
+      </section>{" "}
+      <section id="section-5" className="scroll-mt-24">
+        <h2>Design</h2>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+      </section>{" "}
+      <section id="section-6" className="scroll-mt-24">
+        <h2>Design</h2>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
+        <p>
+          The project became a cultural landmark. Tourists and residents alike
+          engaged with the stories woven into the space. A local newspaper
+          called it “a love letter in bricks and light.” It also sparked policy
+          conversations around heritage zoning and community-led urbanism.
+        </p>
       </section>
     </article>
   );

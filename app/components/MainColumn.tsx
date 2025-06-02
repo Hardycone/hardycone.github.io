@@ -5,6 +5,8 @@ import ProjectSummary from "./ProjectSummary";
 import CaseStudyContent from "./CaseStudyContent";
 import { useActiveProject } from "../context/ActiveProjectContext";
 import { useViewMode } from "../context/ViewModeContext";
+import TopBar from "./TopBar";
+import GlyphCarousel from "./GlyphCarousel";
 
 export default function MainColumn({ children }: { children: ReactNode }) {
   const { activeIndex } = useActiveProject();
@@ -21,13 +23,18 @@ export default function MainColumn({ children }: { children: ReactNode }) {
   }, [activeIndex, viewMode]);
 
   return (
-    <div className="flex flex-col w-1/2 max-w-4xl relative my-12">
-      <ProjectSummary />
-
-      <CaseStudyContent />
-      <ProjectSummary variant="bottom" />
-
-      {children}
-    </div>
+    <main className="bg-inherit relative flex w-screen ">
+      <div className="bg-inherit flex-1 flex h-screen flex-col justify-center overflow-hidden ">
+        <GlyphCarousel />
+      </div>
+      <div className="bg-inherit flex flex-col w-1/2 max-w-4xl relative my-12 ">
+        <TopBar />
+        <ProjectSummary />
+        <CaseStudyContent />
+        <ProjectSummary variant="bottom" />
+        {children}
+      </div>{" "}
+      <div className="flex-1 "></div>
+    </main>
   );
 }

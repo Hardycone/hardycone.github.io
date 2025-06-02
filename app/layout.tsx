@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import TopBar from "./components/TopBar";
-import GlyphCarousel from "./components/GlyphCarousel";
 import { ViewModeProvider } from "./context/ViewModeContext";
 import { ActiveProjectProvider } from "./context/ActiveProjectContext";
 import MainColumn from "./components/MainColumn";
@@ -31,18 +29,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden bg-background text-foreground h-full`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden overscroll-none touch-none bg-background text-foreground h-full`}
       >
         <ActiveProjectProvider>
           <ViewModeProvider>
-            <TopBar />
-            <main className="relative flex w-screen ">
-              <div className="flex-1 flex h-screen flex-col justify-center overflow-hidden ">
-                <GlyphCarousel />
-              </div>
-              <MainColumn>{children}</MainColumn>
-              <div className="flex-1 "></div>
-            </main>
+            <MainColumn>{children}</MainColumn>
           </ViewModeProvider>
         </ActiveProjectProvider>
       </body>

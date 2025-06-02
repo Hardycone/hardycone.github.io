@@ -217,6 +217,188 @@ export default function CaseStudyTwo() {
           teams make design decisions with evidence, not guesswork—and reshaping
           what quantitative UX looks like in practice.
         </p>
+      </section>{" "}
+      <section id="section-5" className="scroll-mt-24">
+        <h2>Outcome</h2>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+      </section>{" "}
+      <section id="section-6" className="scroll-mt-24">
+        <h2>Outcome</h2>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
+        <p>
+          We launched a closed beta with 12 teams and saw strong engagement.
+          Teams used the tool to test landing page flows, signup friction, and
+          feature comprehension. Feedback praised its speed and clarity. The
+          product is now in early access with growing adoption. It’s helping
+          teams make design decisions with evidence, not guesswork—and reshaping
+          what quantitative UX looks like in practice.
+        </p>
       </section>
     </article>
   );

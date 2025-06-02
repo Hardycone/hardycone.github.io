@@ -1,6 +1,12 @@
 // app/data/projects.js
 import ProjectOneLogo from "../app/icons/ProjectOneLogo";
-import SectionIconOne from "../app/icons/SectionIconOne";
+import ArcheryTarget from "../app/icons/ArcheryTarget";
+
+import TiedScroll from "../app/icons/TiedScroll";
+import Spyglass from "../app/icons/Spyglass";
+import Enlightenment from "../app/icons/Enlightenment";
+import OnTarget from "../app/icons/OnTarget";
+import PocketBow from "../app/icons/PocketBow";
 
 const projects = [
   {
@@ -11,10 +17,12 @@ const projects = [
     glyph: ProjectOneLogo,
     slug: "case-study-one",
     sections: [
-      { id: "section-1", label: "Background1", icon: SectionIconOne },
-      { id: "section-2", label: "Research1", icon: SectionIconOne },
-      { id: "section-3", label: "Design1", icon: SectionIconOne },
-      { id: "section-4", label: "Impact1", icon: SectionIconOne },
+      { id: "section-1", label: "Quick Take", icon: TiedScroll },
+      { id: "section-2", label: "Problem", icon: Spyglass },
+      { id: "section-3", label: "Goal", icon: ArcheryTarget },
+      { id: "section-4", label: "Action", icon: PocketBow },
+      { id: "section-5", label: "Result", icon: OnTarget },
+      { id: "section-6", label: "Reflection", icon: Enlightenment },
     ],
   },
   {
@@ -24,10 +32,12 @@ const projects = [
     glyph: ProjectOneLogo,
     slug: "case-study-two",
     sections: [
-      { id: "section-1", label: "Background2", icon: SectionIconOne },
-      { id: "section-2", label: "Research2", icon: SectionIconOne },
-      { id: "section-3", label: "Design2", icon: SectionIconOne },
-      { id: "section-4", label: "Impact2", icon: SectionIconOne },
+      { id: "section-1", label: "Quick Take", icon: TiedScroll },
+      { id: "section-2", label: "Problem", icon: Spyglass },
+      { id: "section-3", label: "Goal", icon: ArcheryTarget },
+      { id: "section-4", label: "Action", icon: PocketBow },
+      { id: "section-5", label: "Result", icon: OnTarget },
+      { id: "section-6", label: "Reflection", icon: Enlightenment },
     ],
   },
   {
@@ -37,10 +47,12 @@ const projects = [
     glyph: ProjectOneLogo,
     slug: "case-study-three",
     sections: [
-      { id: "section-1", label: "Background3", icon: SectionIconOne },
-      { id: "section-2", label: "Research3", icon: SectionIconOne },
-      { id: "section-3", label: "Design3", icon: SectionIconOne },
-      { id: "section-4", label: "Impact3", icon: SectionIconOne },
+      { id: "section-1", label: "Quick Take", icon: TiedScroll },
+      { id: "section-2", label: "Problem", icon: Spyglass },
+      { id: "section-3", label: "Goal", icon: ArcheryTarget },
+      { id: "section-4", label: "Action", icon: PocketBow },
+      { id: "section-5", label: "Result", icon: OnTarget },
+      { id: "section-6", label: "Reflection", icon: Enlightenment },
     ],
   },
   {
@@ -50,10 +62,12 @@ const projects = [
     glyph: ProjectOneLogo,
     slug: "case-study-four",
     sections: [
-      { id: "section-1", label: "Background4", icon: SectionIconOne },
-      { id: "section-2", label: "Research4", icon: SectionIconOne },
-      { id: "section-3", label: "Design4", icon: SectionIconOne },
-      { id: "section-4", label: "Impact4", icon: SectionIconOne },
+      { id: "section-1", label: "Quick Take", icon: TiedScroll },
+      { id: "section-2", label: "Problem", icon: Spyglass },
+      { id: "section-3", label: "Goal", icon: ArcheryTarget },
+      { id: "section-4", label: "Action", icon: PocketBow },
+      { id: "section-5", label: "Result", icon: OnTarget },
+      { id: "section-6", label: "Reflection", icon: Enlightenment },
     ],
   },
   {
@@ -63,10 +77,12 @@ const projects = [
     glyph: ProjectOneLogo,
     slug: "case-study-five",
     sections: [
-      { id: "section-1", label: "Background5", icon: SectionIconOne },
-      { id: "section-2", label: "Research5", icon: SectionIconOne },
-      { id: "section-3", label: "Design5", icon: SectionIconOne },
-      { id: "section-4", label: "Impact5", icon: SectionIconOne },
+      { id: "section-1", label: "Quick Take", icon: TiedScroll },
+      { id: "section-2", label: "Problem", icon: Spyglass },
+      { id: "section-3", label: "Goal", icon: ArcheryTarget },
+      { id: "section-4", label: "Action", icon: PocketBow },
+      { id: "section-5", label: "Result", icon: OnTarget },
+      { id: "section-6", label: "Reflection", icon: Enlightenment },
     ],
   },
   {
@@ -76,10 +92,12 @@ const projects = [
     glyph: ProjectOneLogo,
     slug: "case-study-six",
     sections: [
-      { id: "section-1", label: "Background6", icon: SectionIconOne },
-      { id: "section-2", label: "Research6", icon: SectionIconOne },
-      { id: "section-3", label: "Design6", icon: SectionIconOne },
-      { id: "section-4", label: "Impact6", icon: SectionIconOne },
+      { id: "section-1", label: "Quick Take", icon: TiedScroll },
+      { id: "section-2", label: "Problem", icon: Spyglass },
+      { id: "section-3", label: "Goal", icon: ArcheryTarget },
+      { id: "section-4", label: "Action", icon: PocketBow },
+      { id: "section-5", label: "Result", icon: OnTarget },
+      { id: "section-6", label: "Reflection", icon: Enlightenment },
     ],
   },
 ];

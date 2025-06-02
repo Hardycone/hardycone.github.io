@@ -105,7 +105,7 @@ export default function ProjectSummary({
     // Delay navigation to allow animation start
     setTimeout(() => {
       router.push(`/${project.slug}`);
-    }, 300);
+    }, 200);
   };
 
   return (
