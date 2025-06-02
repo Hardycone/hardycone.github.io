@@ -106,7 +106,7 @@ export default function GlyphCarousel() {
     return matches;
   }
   const isLarge = useTailwindBreakpoint();
-  const yOffset = isLarge ? 64 : 32;
+  const yOffset = isLarge ? 64 : 0;
 
   if (!hasMounted || viewMode === "not-found") {
     return null;
@@ -114,7 +114,7 @@ export default function GlyphCarousel() {
 
   return (
     <motion.div
-      className=" flex flex-col items-end gap-8 lg:gap-16 touch-none"
+      className="flex flex-col touch-none items-end gap-8 pt-16 lg:pt-0 lg:gap-16 pr-4 lg:pr-32"
       animate={{
         y: yOffset * (4 - 2 * activeIndex),
         x: isInteractive ? 0 : -300,
@@ -131,7 +131,7 @@ export default function GlyphCarousel() {
           <motion.div
             key={project.id}
             animate={{
-              scale: isActive ? 2.5 : 1,
+              scale: isActive ? 2 : 1,
               opacity: isActive ? 1 : 0.3,
             }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}

@@ -102,7 +102,7 @@ export default function TopBar() {
   if (viewMode === "home") return null;
 
   return (
-    <div className="bg-inherit w-full max-w-7xl inset-x-0 m-auto top-0 fixed p-4 z-50">
+    <div className="bg-inherit w-full max-w-7xl inset-x-0 m-auto top-0 fixed p-2 lg:p-4 z-50">
       <AnimatePresence>
         <motion.div
           key="topbar"
@@ -114,7 +114,7 @@ export default function TopBar() {
           }}
           exit={{ y: -60, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="bg-inherit flex w-full justify-between items-center h-12 lg:h-16 px-4 rounded-xl shadow-sm z-50"
+          className="bg-inherit flex w-full justify-between items-center h-12 lg:h-16 pl-0 pr-2 lg:pl-2 lg:pr-4 rounded-xl shadow-sm z-50"
         >
           {/* Left: Logo */}
           <button
@@ -133,9 +133,9 @@ export default function TopBar() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="w-full flex text-lg select-none justify-center gap-6"
+                className="absolute hidden lg:flex left-1/2 -translate-x-1/2 w-[50vw] max-w-4xl px-2 text-lg select-none justify-start gap-4"
               >
-                <button className="hidden lg:block px-4 h-12 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]">
+                <button className=" px-4 h-12 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]">
                   {activeProject.title}
                 </button>
                 <div className="flex gap-4 ">

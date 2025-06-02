@@ -56,7 +56,7 @@ export default function CaseStudyContent() {
           layout
           transition={{ duration: 0.2, ease: "easeOut" }}
           key={project.id}
-          className="p-6 w-full rounded-xl flex flex-col gap-10"
+          className="p-2 lg:p-6 w-full rounded-xl flex flex-col gap-10"
           initial={{
             y: 500,
             opacity: 0,

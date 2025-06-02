@@ -13,30 +13,28 @@ export default function Main({ children }: { children: ReactNode }) {
   const { viewMode } = useViewMode();
 
   useEffect(() => {
-    if (viewMode === "case-study") {
-      const timeout = setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: "auto" });
-      }, 0); // Delay in ms
+    const timeout = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }, 0);
 
-      return () => clearTimeout(timeout);
-    }
+    return () => clearTimeout(timeout);
   }, [activeIndex, viewMode]);
 
   return (
     <main
-      className={`bg-inherit relative flex w-screen ${
+      className={`relative flex w-full ${
         viewMode === "home" ? "touch-none" : ""
-      }`}
+      } bg-inherit`}
     >
       <div
         className={`flex ${
-          viewMode === "case-study" ? "w-0" : "w-32"
-        }  pr-6 lg:pr-16 h-screen flex-col  lg:flex-1 justify-start lg:justify-center overflow-hidden bg-red-500`}
+          viewMode === "case-study" ? "w-0" : "w-20"
+        } h-screen flex-col  lg:flex-1 justify-start lg:justify-center overflow-hidden`}
       >
         <GlyphCarousel />
       </div>
 
-      <div className="w-full lg:w-1/2 bg-inherit flex flex-col max-w-4xl relative my-12 mx-4 lg:mx-0 bg-green-500">
+      <div className="w-full lg:w-1/2 bg-inherit flex flex-col max-w-4xl relative my-12 px-2 lg:px-0 ">
         <TopBar />
         <ProjectSummary />
         <CaseStudyContent />

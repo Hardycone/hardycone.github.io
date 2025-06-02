@@ -117,7 +117,7 @@ export default function ProjectSummary({
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className={`relative flex z-10 ${
         clickable ? "cursor-pointer" : "cursor-default"
-      } ${marginTop}`}
+      } ${marginTop}  ${viewMode === "home" ? "min-h-[60vh] lg:min-h-0" : ""}`}
     >
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
@@ -138,10 +138,10 @@ export default function ProjectSummary({
                     "4px 4px 4px rgba(0, 0, 0, 0.1),-4px -4px 4px rgba(255, 255, 255, 1),-4px 4px 4px rgba(255, 255, 255, 1),4px -4px 4px rgba(255, 255, 255, 1)",
                 }
           }
-          className={`relative flex flex-col gap-6 w-full items-start justify-start p-6 rounded-xl ${
-            viewMode === "home"
-              ? "shadow-[4px_4px_4px_rgba(0,0,0,0.1),-4px_-4px_4px_rgba(255,255,255,1),-4px_4px_4px_rgba(255,255,255,1),4px_-4px_4px_rgba(255,255,255,1)] lg:shadow-none"
-              : undefined
+          className={`relative flex flex-col gap-6 w-full items-start p-2 lg:p-6 rounded-xl ${
+            viewMode === "home" || variant === "bottom"
+              ? "justify-between shadow-[4px_4px_4px_rgba(0,0,0,0.1),-4px_-4px_4px_rgba(255,255,255,1),-4px_4px_4px_rgba(255,255,255,1),4px_-4px_4px_rgba(255,255,255,1)] lg:shadow-none"
+              : "justify-start"
           }`}
         >
           <motion.div layout>
@@ -150,14 +150,18 @@ export default function ProjectSummary({
             >
               Next Up
             </h1>
-            <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
-            <p className="text-gray-600 mb-4">{project.description}</p>
+            <h1 className="text-lg lg:text-2xl font-bold mb-2">
+              {project.title}
+            </h1>
+            <p className="text-sm lg:text-lg text-gray-600 mb-4">
+              {project.description}
+            </p>
           </motion.div>
           <div className="flex justify-end w-full">
             <button
-              className={`px-4 py-4 ${
+              className={`px-4 py-4 text-sm lg:text-lg ${
                 showButton
-                  ? "text-black cursor-pointer hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
+                  ? "text-black cursor-pointer shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white] lg:shadow-none hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
                   : "hidden"
               } rounded-full transition`}
             >
