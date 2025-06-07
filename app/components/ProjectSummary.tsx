@@ -200,7 +200,7 @@ export default function ProjectSummary({
           {project.image && (
             <div
               className={`relative shrink-0 overflow-hidden rounded-lg ${
-                showButton ? "w-1/2 aspect-[1/1] " : "w-full aspect-[3/2] "
+                showButton ? "w-1/2 aspect-[1/1] " : "w-full aspect-[2/1] "
               }`}
             >
               <Image

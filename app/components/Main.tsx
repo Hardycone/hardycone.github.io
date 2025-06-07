@@ -26,7 +26,7 @@ export default function Main({ children }: { children: ReactNode }) {
   return (
     <main
       className={`relative flex w-full bg-inherit ${
-        viewMode === "home" ? "" : ""
+        viewMode === "home" ? "touch-none" : ""
       }`}
     >
       <div

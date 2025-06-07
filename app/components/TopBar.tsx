@@ -6,7 +6,9 @@ import { useActiveProject } from "../context/ActiveProjectContext";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import projects from "@/data/projects";
-import PersonalLogo from "../icons/PersonalLogo";
+import Home from "../icons/Home";
+import Resume from "../icons/Resume";
+import LinkedIn from "../icons/LinkedIn";
 import { usePathname } from "next/navigation";
 
 export default function TopBar() {
@@ -114,14 +116,14 @@ export default function TopBar() {
           }}
           exit={{ y: -60, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="bg-inherit flex w-full justify-between items-center h-12 pl-0 pr-2 xl:pl-2 xl:pr-4 rounded-xl z-50"
+          className="bg-inherit flex w-full justify-between items-center h-12 px-1 rounded-xl z-50"
         >
           {/* Left: Logo */}
           <button
-            className="p-2 h-12 w-12 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
+            className="p-2 h-10 w-10 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
             onClick={() => router.push("/")}
           >
-            <PersonalLogo />
+            <Home />
           </button>
 
           {/* Center: Title and Sections */}
@@ -132,10 +134,14 @@ export default function TopBar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 className="absolute mt-0 hidden xl:flex left-1/2 -translate-x-1/2 w-full max-w-4xl px-4 text-lg select-none justify-start gap-4"
               >
-                <button className=" px-4 h-10 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]">
+                <button
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }
+                  className="font-sans px-4 h-10 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
+                >
                   {activeProject.title}
                 </button>
                 <div className="flex gap-4 ">
@@ -149,7 +155,7 @@ export default function TopBar() {
                           e.stopPropagation();
                           handleScrollToSection(section.id);
                         }}
-                        className={`text-foreground p-2 w-8 h-8 xl:w-10  xl:h-10 rounded-full ${
+                        className={`text-foreground p-2 w-10 h-10 rounded-full ${
                           activeSection === section.id
                             ? "shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
                             : "hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
@@ -165,12 +171,20 @@ export default function TopBar() {
           </AnimatePresence>
 
           {/* Right: Social Links */}
-          <button
-            className="p-2 h-12 w-12 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
-            onClick={() => router.push("/case-study-one#")}
-          >
-            <PersonalLogo />
-          </button>
+          <div className="flex gap-2">
+            <button
+              className="p-2 h-10 w-10 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
+              onClick={() => router.push("/case-study-one#")}
+            >
+              <Resume />
+            </button>
+            <button
+              className="p-2 h-10 w-10 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
+              onClick={() => router.push("/case-study-one#")}
+            >
+              <LinkedIn />
+            </button>
+          </div>
         </motion.div>
       </AnimatePresence>
     </div>
