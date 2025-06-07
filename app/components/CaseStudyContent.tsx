@@ -54,24 +54,28 @@ export default function CaseStudyContent() {
       {viewMode === "case-study" && CaseStudyComponent && (
         <motion.div
           layout
-          transition={{ duration: 0.2, ease: "easeOut" }}
           key={project.id}
-          className="p-2 lg:p-6 w-full rounded-xl flex flex-col gap-10"
+          className="font-serif p-2 xl:p-6 w-full rounded-xl flex flex-col gap-10"
           initial={{
             y: 500,
             opacity: 0,
             boxShadow:
-              "4px 4px 4px rgba(0, 0, 0, 0.1),-4px -4px 4px rgba(255, 255, 255, 1),-4px 4px 4px rgba(255, 255, 255, 1),4px -4px 4px rgba(255, 255, 255, 1)",
+              "2px 2px 2px rgba(0, 0, 0, 0.1),-2px -2px 2px rgba(255, 255, 255, 1),-2px 2px 2px rgba(255, 255, 255, 1),2px -2px 2px rgba(255, 255, 255, 1)",
           }}
           animate={{
             y: 0,
             opacity: 1,
             boxShadow: "none",
-            transition: { delay: 0.4, duration: 0.2, ease: "easeOut" },
+            transition: {
+              opacity: { delay: 0.2 },
+              y: { delay: 0.2, duration: 0.2, ease: "easeOut" },
+              boxShadow: { delay: 0.7, duration: 0.3, ease: "easeIn" },
+            },
           }}
           exit={{
             y: exitY,
             opacity: 0,
+
             transition: { duration: 0.2, ease: "easeInOut" },
           }}
           onAnimationComplete={() => {

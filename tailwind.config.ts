@@ -9,9 +9,14 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-jost)", "sans-serif"],
+        serif: ["var(--font-merriweather)", "serif"],
+        mono: ["var(--font-roboto-mono)", "monospace"],
+      },
       colors: {
-        background: colors.gray[50],
-        foreground: colors.gray[900],
+        background: colors.zinc[50],
+        foreground: colors.zinc[900],
       },
     },
   },

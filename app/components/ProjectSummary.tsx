@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import projects from "../../data/projects";
 import { useActiveProject } from "../context/ActiveProjectContext";
 import { useViewMode } from "../context/ViewModeContext";
+import Image from "next/image";
 
 function useHasMounted() {
   const [hasMounted, setHasMounted] = useState(false);
@@ -22,16 +23,24 @@ interface ProjectSummaryProps {
 
 const homeViewVersion = {
   initial: (direction: "up" | "down") => ({
-    y: direction === "up" ? 300 : -300,
+    y:
+      direction === "up"
+        ? window.innerHeight / 2 - 240
+        : -window.innerHeight / 2 + 240,
     opacity: 0,
   }),
   animate: {
+    boxShadow:
+      "2px 2px 2px rgba(0, 0, 0, 0.1),-2px -2px 2px rgba(255, 255, 255, 1),-2px 2px 2px rgba(255, 255, 255, 1),2px -2px 2px rgba(255, 255, 255, 1)",
     y: 0,
     opacity: 1,
     transition: { duration: 0.2, ease: "easeIn" },
   },
   exit: (direction: "up" | "down") => ({
-    y: direction === "up" ? -300 : 300,
+    y:
+      direction === "up"
+        ? -window.innerHeight / 2 + 240
+        : window.innerHeight / 2 - 240,
     opacity: 0,
     transition: { duration: 0.1, ease: "easeOut" },
   }),
@@ -40,22 +49,31 @@ const homeViewVersion = {
 const caseStudyViewVersion = {
   initial: (variant: "header" | "bottom") => ({
     y: variant === "bottom" ? 500 : 500,
+    boxShadow:
+      "2px 2px 2px rgba(0, 0, 0, 0.1),-2px -2px 2px rgba(255, 255, 255, 1),-2px 2px 2px rgba(255, 255, 255, 1),2px -2px 2px rgba(255, 255, 255, 1)",
     opacity: 0,
   }),
   animate: (variant: "header" | "bottom") => ({
+    boxShadow:
+      variant === "header"
+        ? "none"
+        : "2px 2px 2px rgba(0, 0, 0, 0.1),-2px -2px 2px rgba(255, 255, 255, 1),-2px 2px 2px rgba(255, 255, 255, 1),2px -2px 2px rgba(255, 255, 255, 1)",
     y: 0,
     opacity: 1,
     transition:
       variant === "bottom"
-        ? { delay: 0.8, duration: 0.2, ease: "easeInOut" }
-        : { delay: 0.2, duration: 0.2, ease: "easeInOut" },
+        ? { delay: 0, duration: 0.2, ease: "easeInOut" }
+        : {
+            y: { duration: 0.2, ease: "easeInOut" },
+            boxShadow: { delay: 0.9, duration: 0.3, ease: "easeIn" },
+          },
   }),
   exit: (variant: "header" | "bottom") => ({
     y: variant === "bottom" ? -300 : 0,
     opacity: 0,
     transition:
       variant === "bottom"
-        ? { delay: 0.2, duration: 0.2, ease: "easeInOut" }
+        ? { y: { delay: 0.8, duration: 0.2, ease: "easeInOut" } }
         : { delay: 0, duration: 0 },
   }),
 };
@@ -79,18 +97,21 @@ export default function ProjectSummary({
   let clickable = false;
   let showButton = false;
   let marginTop = "";
+  let marginBottom = "";
 
   if (variant === "header") {
     project = projects[activeIndex];
     clickable = viewMode === "home";
     showButton = viewMode === "home";
-    marginTop = viewMode === "home" ? "mt-0 lg:mt-[calc(50vh-200px)]" : "mt-8";
+    marginTop = viewMode === "home" ? "mt-[calc(50vh-232px)]" : "mt-20";
+    marginBottom = "";
   } else if (variant === "bottom") {
     const nextIndex = (activeIndex + 1) % projects.length;
     project = projects[nextIndex];
     clickable = true;
     showButton = true;
     marginTop = "";
+    marginBottom = "mb-20";
   }
 
   if (!project) return null;
@@ -109,15 +130,13 @@ export default function ProjectSummary({
   };
 
   return (
+    //Project summary card
     <motion.div
       layout
       onClick={clickable ? handleClick : undefined}
-      initial={{ opacity: 0, y: 500 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-      className={`relative flex z-10 ${
+      className={`relative flex z-10 ${marginTop} ${marginBottom} ${
         clickable ? "cursor-pointer" : "cursor-default"
-      } ${marginTop}  ${viewMode === "home" ? "min-h-[60vh] lg:min-h-0" : ""}`}
+      } `}
     >
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
@@ -133,41 +152,65 @@ export default function ProjectSummary({
             viewMode === "case-study" && variant === "header"
               ? undefined
               : {
-                  scale: 1.01,
+                  scale: 1.005,
                   boxShadow:
                     "4px 4px 4px rgba(0, 0, 0, 0.1),-4px -4px 4px rgba(255, 255, 255, 1),-4px 4px 4px rgba(255, 255, 255, 1),4px -4px 4px rgba(255, 255, 255, 1)",
                 }
           }
-          className={`relative flex flex-col gap-6 w-full items-start p-2 lg:p-6 rounded-xl ${
-            viewMode === "home" || variant === "bottom"
-              ? "justify-between shadow-[4px_4px_4px_rgba(0,0,0,0.1),-4px_-4px_4px_rgba(255,255,255,1),-4px_4px_4px_rgba(255,255,255,1),4px_-4px_4px_rgba(255,255,255,1)] lg:shadow-none"
-              : "justify-start"
+          className={`relative w-full flex gap-6 items-start p-6 rounded-xl ${
+            showButton ? "flex-row" : "flex-col"
           }`}
         >
-          <motion.div layout>
-            <h1
-              className={variant === "bottom" ? "text-2xl font-bold" : "hidden"}
-            >
-              Next Up
-            </h1>
-            <h1 className="text-lg lg:text-2xl font-bold mb-2">
-              {project.title}
-            </h1>
-            <p className="text-sm lg:text-lg text-gray-600 mb-4">
-              {project.description}
-            </p>
-          </motion.div>
-          <div className="flex justify-end w-full">
-            <button
-              className={`px-4 py-4 text-sm lg:text-lg ${
-                showButton
-                  ? "text-black cursor-pointer shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white] lg:shadow-none hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
-                  : "hidden"
-              } rounded-full transition`}
-            >
-              View Case Study
-            </button>
+          <div className="flex flex-col w-full h-full">
+            <motion.div layout="position">
+              <h1
+                className={`font-serif ${
+                  variant === "bottom" ? "text-xl" : "hidden"
+                }`}
+              >
+                Next Up
+              </h1>
+              <h1 className="font-sans font-semibold text-4xl mb-2">
+                {project.title}
+              </h1>
+              <p className="font-serif text-base text-gray-600 mb-4">
+                {project.description}
+              </p>
+            </motion.div>
+
+            <div className="flex mt-auto w-full">
+              <motion.button
+                initial={{
+                  boxShadow:
+                    "inset 1px 1px 1px rgba(0, 0, 0, 0.1), inset -1px -1px 1px rgba(255, 255, 255, 1)",
+                }}
+                whileHover={{
+                  scale: 0.99,
+                  boxShadow:
+                    "inset 2px 2px 2px rgba(0, 0, 0, 0.1), inset -2px -2px 2px rgba(255, 255, 255, 1)",
+                }}
+                className={`font-serif font-bold px-4 py-2 text-base rounded-full ${
+                  showButton ? "" : "hidden"
+                } `}
+              >
+                View Case Study
+              </motion.button>
+            </div>
           </div>
+          {project.image && (
+            <div
+              className={`relative shrink-0 overflow-hidden rounded-lg ${
+                showButton ? "w-1/2 aspect-[1/1] " : "w-full aspect-[3/2] "
+              }`}
+            >
+              <Image
+                src={project.image}
+                alt={`${project.title} preview image`}
+                fill
+                className="object-cover"
+              />
+            </div>
+          )}
         </motion.div>
       </AnimatePresence>
     </motion.div>

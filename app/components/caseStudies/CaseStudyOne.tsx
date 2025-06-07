@@ -3,7 +3,7 @@ export default function CaseStudyOne() {
   return (
     <article>
       <section id="section-1" className="scroll-mt-24">
-        <h2 className="text-2xl leading-loose">Background</h2>
+        <h2 className="font-sans text-2xl leading-loose">Background</h2>
         <p>
           Hello! I’m a multidisciplinary designer with a background in
           interaction design, product strategy, and user research. My work
