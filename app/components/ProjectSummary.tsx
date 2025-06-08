@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import projects from "../../data/projects";
@@ -86,6 +86,34 @@ export default function ProjectSummary({
   const { activeIndex, previousIndex } = useActiveProject();
   const { viewMode } = useViewMode();
   const router = useRouter();
+  const ref = useRef<HTMLDivElement>(null);
+  const [offset, setOffset] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!(viewMode === "home" && variant === "header")) return;
+
+    const updateOffset = () => {
+      if (ref.current) {
+        const height = ref.current.offsetHeight;
+        const newOffset = Math.max(0, window.innerHeight / 2 - height / 2);
+        setOffset(newOffset);
+      }
+    };
+
+    // Delay initial offset calculation to avoid layout jump on refresh
+    const timeoutId: NodeJS.Timeout = setTimeout(updateOffset, 50);
+
+    const observer = new ResizeObserver(updateOffset);
+    if (ref.current) observer.observe(ref.current);
+
+    window.addEventListener("resize", updateOffset);
+
+    return () => {
+      clearTimeout(timeoutId);
+      observer.disconnect();
+      window.removeEventListener("resize", updateOffset);
+    };
+  }, [viewMode, variant, activeIndex]);
 
   if (!hasMounted || viewMode === "not-found") return null;
   if (variant === "bottom" && viewMode === "home") return null;
@@ -103,14 +131,8 @@ export default function ProjectSummary({
     project = projects[activeIndex];
     clickable = viewMode === "home";
     showButton = viewMode === "home";
-    margins =
-      viewMode === "home"
-        ? "mt-16 mb-32 sm:mt-[calc(50vh-136px)] md:mt-[calc(50vh-160px)] lg:mt-[calc(50vh-232px)]"
-        : "mt-20";
-    dimensions =
-      viewMode === "home"
-        ? "w-full h-full sm:w-[536px] sm:h-[272px] md:w-[592px] md:h-[320px] lg:w-full lg:h-auto"
-        : "w-full h-auto";
+    margins = viewMode === "home" ? "" : "mt-20";
+    dimensions = viewMode === "home" ? "w-full h-auto" : "w-full h-auto";
   } else if (variant === "bottom") {
     const nextIndex = (activeIndex + 1) % projects.length;
     project = projects[nextIndex];
@@ -139,10 +161,16 @@ export default function ProjectSummary({
     //Project summary card
     <motion.div
       layout
+      ref={ref}
       onClick={clickable ? handleClick : undefined}
+      style={
+        viewMode === "home" && variant === "header" && offset !== null
+          ? { marginTop: `${offset}px` }
+          : undefined
+      }
       className={`relative flex z-10 ${margins} ${dimensions} ${
         clickable ? "cursor-pointer" : "cursor-default"
-      } `}
+      }`}
     >
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
@@ -195,11 +223,11 @@ export default function ProjectSummary({
                   boxShadow:
                     "inset 2px 2px 2px rgba(0, 0, 0, 0.1), inset -2px -2px 2px rgba(255, 255, 255, 1)",
                 }}
-                className={`font-serif font-bold px-2 py-1 sm:px-4 sm:py-2 text-sm md:text-base rounded-full ${
+                className={`font-serif font-bold px-4 py-2 text-sm md:text-base rounded-full ${
                   showButton ? "" : "hidden"
                 } `}
               >
-                View Case Study
+                {project.button}
               </motion.button>
             </div>
           </div>

@@ -135,7 +135,7 @@ export default function GlyphCarousel() {
 
   return (
     <motion.div
-      className="flex flex-col items-end gap-8 md:gap-16 px-5 md:px-10 lg:px-16 bg-slate-100"
+      className="flex flex-col items-end gap-8 md:gap-16 px-5 md:px-10 lg:px-16 xl:px-24"
       animate={{
         y: yOffset,
         x: isInteractive ? 0 : -300,

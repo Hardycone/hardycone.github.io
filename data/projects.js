@@ -16,6 +16,7 @@ const projects = [
     glyph: ProjectOneLogo,
     slug: "case-study-one",
     image: "/images/project-1.jpg",
+    button: "More About Me",
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -31,8 +32,8 @@ const projects = [
     description: "Democratizing quantitative UX research.",
     glyph: ProjectOneLogo,
     slug: "case-study-two",
+    button: "Look Inside",
     image: "/images/project-1.jpg",
-
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -49,8 +50,8 @@ const projects = [
       "Helping independent filmmakers bring their story to life. Helping independent filmmakers bring their story to life. Helping independent filmmakers bring their story to life. Helping independent filmmakers bring their story to life. Helping independent filmmakers bring their story to life.",
     glyph: ProjectOneLogo,
     slug: "case-study-three",
+    button: "Look Inside",
     image: "/images/project-1.jpg",
-
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -66,8 +67,8 @@ const projects = [
     description: "HoloLens",
     glyph: ProjectOneLogo,
     slug: "case-study-four",
+    button: "Look Inside",
     image: "/images/project-1.jpg",
-
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -83,8 +84,8 @@ const projects = [
     description: "Community",
     glyph: ProjectOneLogo,
     slug: "case-study-five",
+    button: "Look Inside",
     image: "/images/project-1.jpg",
-
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -100,8 +101,8 @@ const projects = [
     description: "Chinatown",
     glyph: ProjectOneLogo,
     slug: "case-study-six",
+    button: "Look Inside",
     image: "/images/project-1.jpg",
-
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },

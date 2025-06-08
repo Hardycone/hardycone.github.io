@@ -71,20 +71,19 @@ export default function Main({ children }: { children: ReactNode }) {
 
   return (
     <main
-      className={`relative flex w-full bg-inherit bg-green-500 ${
+      className={`relative flex w-full bg-inherit ${
         viewMode === "home" ? "touch-none" : ""
       }`}
     >
       <div
-        className={`relative flex h-screen flex-col flex-1 justify-center overflow-hidden bg-blue-100 ${
-          viewMode === "home" ? "min-w-max " : ""
+        className={`relative flex h-screen flex-col flex-1 justify-center overflow-hidden bg-red-100 sm:bg-orange-100 md:bg-yellow-100 lg:bg-green-100 xl:bg-indigo-100 ${
+          viewMode === "home" ? "min-w-max" : ""
         }`}
       >
         <GlyphCarousel />
       </div>
-
       <motion.div
-        className={`relative w-full flex flex-col items-center gap-6 max-w-4xl px-2 bg-red-100 sm:bg-orange-300 md:bg-yellow-300 lg:bg-green-300 xl:bg-indigo-300 ${
+        className={`relative w-full flex flex-col items-center gap-6 max-w-4xl px-2 bg-inherit ${
           viewMode === "home" ? "" : ""
         }`}
       >
@@ -110,9 +109,20 @@ export default function Main({ children }: { children: ReactNode }) {
                 },
               }}
               exit={{ y: -100, opacity: 0 }}
-              className="font-sans text-sm md:text-xl p-2 md:p-4 rounded-lg shadow-md pointer-events-none bg-background"
+              className="font-sans text-sm md:text-xl p-2 md:p-4 rounded-lg shadow-md pointer-events-none bg-foreground text-background"
             >
-              Scroll to explore ↓
+              Scroll to explore
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6 md:w-8 md:h-8 inline-block"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 5l-4 4h3v6H8l4 4 4-4h-3V9h3l-4-4z" />
+              </svg>
             </motion.div>
           </div>
         )}
@@ -121,10 +131,31 @@ export default function Main({ children }: { children: ReactNode }) {
         <ProjectSummary variant="bottom" />
         {children}
       </motion.div>
-
-      <div className="flex-1 min-w-0 lg:min-w-48 bg-orange-100" />
+      <div className="flex-1 min-w-0 xl:min-w-48" />
       {showLandscapeBlocker && (
-        <div className="fixed inset-0 z-[999] bg-background text-foreground flex items-center justify-center text-center p-6">
+        <div className="fixed flex flex-col inset-0 z-[999] bg-background text-foreground  items-center justify-center text-center">
+          <motion.svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+            className="w-16 h-16"
+            animate={{
+              rotate: [90, 90, 0, 0, 0, 90, 90, 180, 180, 180, 90],
+              transition: {
+                rotate: {
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: 6,
+                  ease: "easeInOut",
+                },
+              },
+            }}
+          >
+            <rect x="6" y="2" width="12" height="20" rx="2" ry="2" />
+            <line x1="12" y1="18" x2="12" y2="18" />
+          </motion.svg>
           <p className="text-lg font-sans font-semibold">
             Please rotate your phone to portrait mode to view this page.
           </p>
