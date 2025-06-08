@@ -96,22 +96,28 @@ export default function ProjectSummary({
   let project;
   let clickable = false;
   let showButton = false;
-  let marginTop = "";
-  let marginBottom = "";
+  let margins = "";
+  let dimensions = "";
 
   if (variant === "header") {
     project = projects[activeIndex];
     clickable = viewMode === "home";
     showButton = viewMode === "home";
-    marginTop = viewMode === "home" ? "mt-[calc(50vh-232px)]" : "mt-20";
-    marginBottom = "";
+    margins =
+      viewMode === "home"
+        ? "mt-16 mb-32 sm:mt-[calc(50vh-136px)] md:mt-[calc(50vh-160px)] lg:mt-[calc(50vh-232px)]"
+        : "mt-20";
+    dimensions =
+      viewMode === "home"
+        ? "w-full h-full sm:w-[536px] sm:h-[272px] md:w-[592px] md:h-[320px] lg:w-full lg:h-auto"
+        : "w-full h-auto";
   } else if (variant === "bottom") {
     const nextIndex = (activeIndex + 1) % projects.length;
     project = projects[nextIndex];
     clickable = true;
     showButton = true;
-    marginTop = "";
-    marginBottom = "mb-20";
+    margins = "mb-20";
+    dimensions = "w-full h-auto";
   }
 
   if (!project) return null;
@@ -134,7 +140,7 @@ export default function ProjectSummary({
     <motion.div
       layout
       onClick={clickable ? handleClick : undefined}
-      className={`relative flex z-10 ${marginTop} ${marginBottom} ${
+      className={`relative flex z-10 ${margins} ${dimensions} ${
         clickable ? "cursor-pointer" : "cursor-default"
       } `}
     >
@@ -157,28 +163,28 @@ export default function ProjectSummary({
                     "4px 4px 4px rgba(0, 0, 0, 0.1),-4px -4px 4px rgba(255, 255, 255, 1),-4px 4px 4px rgba(255, 255, 255, 1),4px -4px 4px rgba(255, 255, 255, 1)",
                 }
           }
-          className={`relative w-full flex gap-6 items-start p-6 rounded-xl ${
-            showButton ? "flex-row" : "flex-col"
+          className={`relative flex w-full gap-4 md:gap-6 p-2 md:p-6 rounded-xl ${
+            showButton ? "flex-col sm:flex-row" : "flex-col"
           }`}
         >
           <div className="flex flex-col w-full h-full">
             <motion.div layout="position">
               <h1
                 className={`font-serif ${
-                  variant === "bottom" ? "text-xl" : "hidden"
+                  variant === "bottom" ? "text-sm sm:text-lg" : "hidden"
                 }`}
               >
                 Next Up
               </h1>
-              <h1 className="font-sans font-semibold text-4xl mb-2">
+              <h1 className="font-sans font-semibold text-3xl md:text-4xl mb-2 line-clamp-1">
                 {project.title}
               </h1>
-              <p className="font-serif text-base text-gray-600 mb-4">
+              <p className="font-serif text-sm md:text-base text-gray-600 mb-4 line-clamp-6 sm:line-clamp-4 md:line-clamp-6">
                 {project.description}
               </p>
             </motion.div>
 
-            <div className="flex mt-auto w-full">
+            <div className="flex mt-auto w-full justify-end sm:justify-start">
               <motion.button
                 initial={{
                   boxShadow:
@@ -189,7 +195,7 @@ export default function ProjectSummary({
                   boxShadow:
                     "inset 2px 2px 2px rgba(0, 0, 0, 0.1), inset -2px -2px 2px rgba(255, 255, 255, 1)",
                 }}
-                className={`font-serif font-bold px-4 py-2 text-base rounded-full ${
+                className={`font-serif font-bold px-2 py-1 sm:px-4 sm:py-2 text-sm md:text-base rounded-full ${
                   showButton ? "" : "hidden"
                 } `}
               >
@@ -200,7 +206,9 @@ export default function ProjectSummary({
           {project.image && (
             <div
               className={`relative shrink-0 overflow-hidden rounded-lg ${
-                showButton ? "w-1/2 aspect-[1/1] " : "w-full aspect-[2/1] "
+                showButton
+                  ? "w-full sm:w-1/2 aspect-[1/1] "
+                  : "w-full aspect-[2/1] "
               }`}
             >
               <Image

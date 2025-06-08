@@ -104,7 +104,7 @@ export default function TopBar() {
   if (viewMode === "home") return null;
 
   return (
-    <div className="bg-inherit w-full max-w-7xl inset-x-0 m-auto top-0 fixed p-2 z-50">
+    <div className="fixed bg-inherit w-full max-w-7xl inset-x-0 m-auto top-0  p-2 z-50">
       <AnimatePresence>
         <motion.div
           key="topbar"
@@ -134,7 +134,7 @@ export default function TopBar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute mt-0 hidden xl:flex left-1/2 -translate-x-1/2 w-full max-w-4xl px-4 text-lg select-none justify-start gap-4"
+                className="absolute mt-0 hidden lg:flex left-1/2 -translate-x-1/2 w-full max-w-4xl px-4 text-lg select-none justify-start gap-4"
               >
                 <button
                   onClick={() =>

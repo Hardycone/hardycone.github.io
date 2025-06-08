@@ -45,7 +45,8 @@ const projects = [
   {
     id: "project-3",
     title: "Fantail",
-    description: "Helping independent filmmakers bring their story to life.",
+    description:
+      "Helping independent filmmakers bring their story to life. Helping independent filmmakers bring their story to life. Helping independent filmmakers bring their story to life. Helping independent filmmakers bring their story to life. Helping independent filmmakers bring their story to life.",
     glyph: ProjectOneLogo,
     slug: "case-study-three",
     image: "/images/project-1.jpg",

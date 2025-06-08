@@ -1,3 +1,4 @@
+import lineClamp from "@tailwindcss/line-clamp";
 import type { Config } from "tailwindcss";
 import colors from "tailwindcss/colors";
 
@@ -12,7 +13,6 @@ export default {
       fontFamily: {
         sans: ["var(--font-jost)", "sans-serif"],
         serif: ["var(--font-merriweather)", "serif"],
-        mono: ["var(--font-roboto-mono)", "monospace"],
       },
       colors: {
         background: colors.zinc[50],
@@ -20,5 +20,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [lineClamp],
 } satisfies Config;

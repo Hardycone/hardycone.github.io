@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Jost, Merriweather, Roboto_Mono } from "next/font/google";
+import { Jost, Merriweather } from "next/font/google";
 import "./globals.css";
 
 import { ViewModeProvider } from "./context/ViewModeContext";
@@ -20,12 +20,6 @@ const merriweather = Merriweather({
   display: "swap",
 });
 
-const robotoMono = Roboto_Mono({
-  variable: "--font-roboto-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   title: "Haichao Wang, Product Designer",
   description:
@@ -40,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${jost.variable} ${merriweather.variable} ${robotoMono.variable} antialiased overflow-x-hidden bg-background text-foreground h-full`}
+        className={`${jost.variable} ${merriweather.variable} antialiased overflow-x-hidden bg-background text-foreground h-full`}
       >
         <ActiveProjectProvider>
           <ViewModeProvider>

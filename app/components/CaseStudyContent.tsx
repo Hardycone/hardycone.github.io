@@ -55,7 +55,7 @@ export default function CaseStudyContent() {
         <motion.div
           layout
           key={project.id}
-          className="font-serif p-2 xl:p-6 w-full rounded-xl flex flex-col gap-10"
+          className="font-serif p-2 md:p-6 w-full rounded-xl flex flex-col gap-10"
           initial={{
             y: 500,
             opacity: 0,

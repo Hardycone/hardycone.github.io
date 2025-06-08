@@ -110,7 +110,7 @@ export default function GlyphCarousel() {
     };
   }, [isInteractive, activeIndex, setActiveIndex]);
 
-  function useTailwindBreakpoint(query = "(min-width: 1280px)") {
+  function useTailwindBreakpoint(query = "(min-width: 768px)") {
     const [matches, setMatches] = useState(false);
 
     useEffect(() => {
@@ -127,15 +127,17 @@ export default function GlyphCarousel() {
   }
 
   const isLarge = useTailwindBreakpoint();
-  const yOffset = isLarge ? 64 : 0;
+  const yOffset = isLarge
+    ? 64 * (5 - 2 * activeIndex)
+    : 32 * (4 - 2 * activeIndex);
 
   if (!hasMounted || viewMode === "not-found") return null;
 
   return (
     <motion.div
-      className="flex flex-col items-end gap-8 pt-16 xl:pt-0 xl:gap-16 pr-4 xl:pr-32"
+      className="flex flex-col items-end gap-8 md:gap-16 px-5 md:px-10 lg:px-16 bg-slate-100"
       animate={{
-        y: yOffset * (4 - 2 * activeIndex),
+        y: yOffset,
         x: isInteractive ? 0 : -300,
         opacity: isInteractive ? 1 : 0,
       }}
@@ -155,7 +157,7 @@ export default function GlyphCarousel() {
             key={project.id}
             animate={{ scale, opacity }}
             transition={{ type: "spring", stiffness: 500, damping: 20 }}
-            className="h-8 w-8 xl:h-16 xl:w-16 select-none text-center cursor-pointer touch-manipulation"
+            className="h-8 w-8 md:h-16 md:w-16 select-none cursor-pointer touch-manipulation"
             onClick={() => isInteractive && setActiveIndex(index)}
           >
             <Glyph />
