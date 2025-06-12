@@ -131,7 +131,7 @@ export default function ProjectSummary({
     project = projects[activeIndex];
     clickable = viewMode === "home";
     showButton = viewMode === "home";
-    margins = viewMode === "home" ? "" : "mt-20";
+    margins = viewMode === "home" ? "" : "mt-4";
     dimensions = viewMode === "home" ? "w-full h-auto" : "w-full h-auto";
   } else if (variant === "bottom") {
     const nextIndex = (activeIndex + 1) % projects.length;
@@ -161,6 +161,7 @@ export default function ProjectSummary({
     //Project summary card
     <motion.div
       layout
+      transition={{ duration: 0.2, ease: "easeInOut" }}
       ref={ref}
       onClick={clickable ? handleClick : undefined}
       style={
@@ -179,7 +180,7 @@ export default function ProjectSummary({
           variants={
             viewMode === "home" ? homeViewVersion : caseStudyViewVersion
           }
-          initial="initial"
+          initial={offset === null ? false : "initial"}
           animate="animate"
           exit="exit"
           whileHover={
@@ -196,7 +197,10 @@ export default function ProjectSummary({
           }`}
         >
           <div className="flex flex-col w-full h-full">
-            <motion.div layout="position">
+            <motion.div
+              layout="position"
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+            >
               <h1
                 className={`font-serif ${
                   variant === "bottom" ? "text-sm sm:text-lg" : "hidden"

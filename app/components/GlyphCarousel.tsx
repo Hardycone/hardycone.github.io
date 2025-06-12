@@ -128,14 +128,14 @@ export default function GlyphCarousel() {
 
   const isLarge = useTailwindBreakpoint();
   const yOffset = isLarge
-    ? 64 * (5 - 2 * activeIndex)
-    : 32 * (4 - 2 * activeIndex);
+    ? -64 * (2 * activeIndex + 1 / 2)
+    : -32 * (2 * activeIndex + 1 / 2);
 
   if (!hasMounted || viewMode === "not-found") return null;
 
   return (
     <motion.div
-      className="flex flex-col items-end gap-8 md:gap-16 px-5 md:px-10 lg:px-16 xl:px-24"
+      className="flex flex-col items-end gap-8 md:gap-16 pt-[calc(50dvh)] px-5 md:px-10 lg:px-16 xl:px-24"
       animate={{
         y: yOffset,
         x: isInteractive ? 0 : -300,

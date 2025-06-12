@@ -57,6 +57,7 @@ export default function Main({ children }: { children: ReactNode }) {
         hasPromptShown.current = true;
       }
     }, 3000);
+
     // If activeIndex changes during these 3 seconds, cancel showing prompt
     return () => {
       if (timer) clearTimeout(timer);
@@ -69,6 +70,20 @@ export default function Main({ children }: { children: ReactNode }) {
     setShowPrompt(false);
   }, [activeIndex, viewMode]);
 
+  useEffect(() => {
+    if (showLandscapeBlocker) {
+      // Prevent body scroll globally
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+    } else {
+      // Restore scroll
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+    }
+  }, [showLandscapeBlocker]);
+
   return (
     <main
       className={`relative flex w-full bg-inherit ${
@@ -76,7 +91,7 @@ export default function Main({ children }: { children: ReactNode }) {
       }`}
     >
       <div
-        className={`relative flex h-screen flex-col flex-1 justify-center overflow-hidden bg-red-100 sm:bg-orange-100 md:bg-yellow-100 lg:bg-green-100 xl:bg-indigo-100 ${
+        className={`relative flex h-screen flex-col flex-1 overflow-hidden ${
           viewMode === "home" ? "min-w-max" : ""
         }`}
       >
@@ -131,7 +146,7 @@ export default function Main({ children }: { children: ReactNode }) {
         <ProjectSummary variant="bottom" />
         {children}
       </motion.div>
-      <div className="flex-1 min-w-0 xl:min-w-48" />
+      <div className="flex-1 min-w-0" />
       {showLandscapeBlocker && (
         <div className="fixed flex flex-col inset-0 z-[999] bg-background text-foreground  items-center justify-center text-center">
           <motion.svg
@@ -157,7 +172,7 @@ export default function Main({ children }: { children: ReactNode }) {
             <line x1="12" y1="18" x2="12" y2="18" />
           </motion.svg>
           <p className="text-lg font-sans font-semibold">
-            Please rotate your phone to portrait mode to view this page.
+            Please rotate your phone to portrait mode to view Home.
           </p>
         </div>
       )}

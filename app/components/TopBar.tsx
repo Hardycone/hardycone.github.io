@@ -104,23 +104,21 @@ export default function TopBar() {
   if (viewMode === "home") return null;
 
   return (
-    <div className="fixed bg-inherit w-full max-w-7xl inset-x-0 m-auto top-0  p-2 z-50">
+    <div className="fixed bg-gradient-to-b from-background to-transparent via-background/10 w-full max-w-7xl inset-x-0 m-auto h-32 top-0  p-2 z-50">
       <AnimatePresence>
         <motion.div
           key="topbar"
-          initial={{ boxShadow: "none", opacity: 0 }}
+          initial={{ opacity: 0 }}
           animate={{
-            boxShadow:
-              "4px 4px 4px rgba(0, 0, 0, 0.1),-4px -4px 4px rgba(255, 255, 255, 1),-4px 4px 4px rgba(255, 255, 255, 1),4px -4px 4px rgba(255, 255, 255, 1)",
             opacity: 1,
           }}
           exit={{ y: -60, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="bg-inherit flex w-full justify-between items-center h-12 px-1 rounded-xl z-50"
+          className="flex w-full justify-between items-center h-12 px-1 rounded-xl z-50"
         >
           {/* Left: Logo */}
           <button
-            className="p-2 h-10 w-10 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
+            className="p-2 h-10 w-10 rounded-full hover:scale-110 transition-transform shadow-lg hover:shadow-xl text-foreground"
             onClick={() => router.push("/")}
           >
             <Home />
@@ -134,13 +132,13 @@ export default function TopBar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute mt-0 hidden lg:flex left-1/2 -translate-x-1/2 w-full max-w-4xl px-4 text-lg select-none justify-start gap-4"
+                className="absolute mt-0 hidden lg:flex left-1/2 -translate-x-1/2 px-4  rounded-full select-none justify-center gap-4 bg-background shadow-lg transition-transform hover:shadow-xl hover:scale-105 w-auto"
               >
                 <button
                   onClick={() =>
                     window.scrollTo({ top: 0, behavior: "smooth" })
                   }
-                  className="font-sans px-4 h-10 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
+                  className="font-sans px-4 h-10 rounded-full text-lg font-semibold opacity-40 hover:opacity-100 transition-transform "
                 >
                   {activeProject.title}
                 </button>
@@ -157,8 +155,8 @@ export default function TopBar() {
                         }}
                         className={`text-foreground p-2 w-10 h-10 rounded-full ${
                           activeSection === section.id
-                            ? "shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
-                            : "hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
+                            ? "scale-105 opacity-100"
+                            : "opacity-40 hover:opacity-100"
                         }`}
                       >
                         <Icon />
@@ -171,15 +169,15 @@ export default function TopBar() {
           </AnimatePresence>
 
           {/* Right: Social Links */}
-          <div className="flex gap-2">
+          <div className="flex gap-4 rounded-full">
             <button
-              className="p-2 h-10 w-10 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
+              className="p-2 h-10 w-10 rounded-full shadow-lg transition-transform hover:shadow-xl hover:scale-110"
               onClick={() => router.push("/case-study-one#")}
             >
               <Resume />
             </button>
             <button
-              className="p-2 h-10 w-10 rounded-full hover:scale-95 hover:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.1),inset_-2px_-2px_2px_white]"
+              className="p-2 h-10 w-10 rounded-full shadow-lg transition-transform hover:shadow-xl hover:scale-110"
               onClick={() => router.push("/case-study-one#")}
             >
               <LinkedIn />
