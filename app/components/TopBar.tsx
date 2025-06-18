@@ -138,7 +138,7 @@ export default function TopBar() {
                   onClick={() =>
                     window.scrollTo({ top: 0, behavior: "smooth" })
                   }
-                  className="font-sans px-4 h-10 rounded-full text-lg font-semibold opacity-40 hover:opacity-100 transition-transform "
+                  className="font-sans px-4 h-10 rounded-full text-lg font-semibold opacity-30 hover:opacity-100 transition-transform "
                 >
                   {activeProject.title}
                 </button>
