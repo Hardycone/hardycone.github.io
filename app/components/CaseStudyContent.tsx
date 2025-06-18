@@ -5,6 +5,7 @@ import { useViewMode } from "../context/ViewModeContext";
 import { motion, AnimatePresence } from "framer-motion";
 import projects from "@/data/projects";
 import { useEffect } from "react";
+import { useTheme } from "next-themes";
 
 import CaseStudyOne from "./caseStudies/CaseStudyOne";
 import CaseStudyTwo from "./caseStudies/CaseStudyTwo";
@@ -30,9 +31,18 @@ const caseStudyComponents: Record<ProjectSlug, React.FC> = {
   "case-study-six": CaseStudySix,
 };
 
+const shadows = {
+  light:
+    "2px 2px 2px rgba(0, 0, 0, 0.1), -2px -2px 2px rgba(255, 255, 255, 0.8), -2px 2px 2px -2px rgba(255, 255, 255, 0.8), 2px -2px 2px -2px rgba(255, 255, 255, 0.8)",
+  dark: "0px 0px 2px 2px rgba(255, 255, 255, 0.2)",
+};
+
 export default function CaseStudyContent() {
   const { activeIndex, transitioningToNext, setTransitioningToNext } =
     useActiveProject();
+
+  const { resolvedTheme } = useTheme();
+  const themeShadows = shadows[resolvedTheme === "dark" ? "dark" : "light"];
 
   const project = projects[activeIndex];
   const slug = project.slug as ProjectSlug;
@@ -55,12 +65,11 @@ export default function CaseStudyContent() {
         <motion.div
           layout
           key={project.id}
-          className="font-serif p-2 md:p-6 w-full rounded-xl flex flex-col gap-10"
+          className="font-serif text-foreground dark:text-dark-foreground p-2 md:p-6 w-full rounded-xl flex flex-col gap-10"
           initial={{
             y: 500,
             opacity: 0,
-            boxShadow:
-              "2px 2px 2px rgba(0, 0, 0, 0.1),-2px -2px 2px rgba(255, 255, 255, 1),-2px 2px 2px rgba(255, 255, 255, 1),2px -2px 2px rgba(255, 255, 255, 1)",
+            boxShadow: themeShadows,
           }}
           animate={{
             y: 0,

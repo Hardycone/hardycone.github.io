@@ -9,6 +9,7 @@ import projects from "@/data/projects";
 import Home from "../icons/Home";
 import Resume from "../icons/Resume";
 import LinkedIn from "../icons/LinkedIn";
+import ThemeToggle from "./ThemeToggle";
 import { usePathname } from "next/navigation";
 
 export default function TopBar() {
@@ -87,7 +88,7 @@ export default function TopBar() {
   // Handle scroll to top visibility
   useEffect(() => {
     function onScroll() {
-      setShowTitle(window.scrollY > 30);
+      setShowTitle(window.scrollY > 80);
     }
 
     window.addEventListener("scroll", onScroll);
@@ -101,47 +102,51 @@ export default function TopBar() {
     }
   }, []);
 
-  if (viewMode === "home") return null;
-
   return (
-    <div className="fixed bg-gradient-to-b from-background to-transparent via-background/10 w-full max-w-7xl inset-x-0 m-auto h-32 top-0  p-2 z-50">
+    //TopBar container
+    <div className="fixed flex w-full max-w-7xl inset-x-0 m-auto top-0 p-2 md:p-4 z-50">
+      {/*case-study view portion*/}
       <AnimatePresence>
         <motion.div
           key="topbar"
-          initial={{ opacity: 0 }}
+          initial={{ y: -60, opacity: 0 }}
           animate={{
-            opacity: 1,
+            y: viewMode === "home" ? -60 : 0,
+            opacity: viewMode === "home" ? 0 : 1,
           }}
           exit={{ y: -60, opacity: 0 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="flex w-full justify-between items-center h-12 px-1 rounded-xl z-50"
+          className="w-full flex justify-between z-50"
         >
-          {/* Left: Logo */}
+          {/*Left: Home*/}
           <button
-            className="p-2 h-10 w-10 rounded-full hover:scale-110 transition-transform shadow-lg hover:shadow-xl text-foreground"
+            title="Home"
+            className="p-2 h-10 w-10 rounded-full hover:scale-110 transition shadow-[8px_8px_16px_rgba(0,0,0,0.1)] hover:shadow-[12px_12px_24px_rgba(0,0,0,0.1)] dark:shadow-[0px_0px_8px_4px_rgba(255,255,255,0.2)] dark:hover:shadow-[0px_0px_12px_6px_rgba(255,255,255,0.2)] text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background"
             onClick={() => router.push("/")}
           >
             <Home />
           </button>
-
-          {/* Center: Title and Sections */}
+          {/*Center: Page navigation*/}
           <AnimatePresence mode="wait">
             {viewMode === "case-study" && showTitle && activeProject && (
               <motion.div
                 key={`title-${activeIndex}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute mt-0 hidden lg:flex left-1/2 -translate-x-1/2 px-4  rounded-full select-none justify-center gap-4 bg-background shadow-lg transition-transform hover:shadow-xl hover:scale-105 w-auto"
+                initial={{ x: "-50%", y: -60, opacity: 0 }}
+                animate={{ x: "-50%", y: 0, opacity: 1 }}
+                exit={{ x: "-50%", y: -60, opacity: 0 }}
+                whileHover={{ scale: 1.05 }}
+                className="absolute hidden sm:flex left-1/2 px-4 text-foreground dark:text-dark-foreground rounded-full select-none justify-center gap-4 bg-background dark:bg-dark-background  shadow-[8px_8px_16px_rgba(0,0,0,0.1)] hover:shadow-[12px_12px_24px_rgba(0,0,0,0.1)] dark:shadow-[0px_0px_8px_4px_rgba(255,255,255,0.2)] dark:hover:shadow-[0px_0px_12px_6px_rgba(255,255,255,0.2)]"
               >
+                {/*Title*/}
                 <button
+                  title="Summary"
                   onClick={() =>
                     window.scrollTo({ top: 0, behavior: "smooth" })
                   }
-                  className="font-sans px-4 h-10 rounded-full text-lg font-semibold opacity-30 hover:opacity-100 transition-transform "
+                  className="whitespace-nowrap font-sans px-4 rounded-full text-lg font-semibold opacity-60 hover:opacity-100 transition-transform "
                 >
                   {activeProject.title}
                 </button>
+                {/*Sections*/}
                 <div className="flex gap-4 ">
                   {sections.map((section) => {
                     const Icon = section.icon;
@@ -153,7 +158,7 @@ export default function TopBar() {
                           e.stopPropagation();
                           handleScrollToSection(section.id);
                         }}
-                        className={`text-foreground p-2 w-10 h-10 rounded-full ${
+                        className={`p-2 w-10 h-10 rounded-full ${
                           activeSection === section.id
                             ? "scale-105 opacity-100"
                             : "opacity-40 hover:opacity-100"
@@ -168,23 +173,44 @@ export default function TopBar() {
             )}
           </AnimatePresence>
 
-          {/* Right: Social Links */}
-          <div className="flex gap-4 rounded-full">
-            <button
-              className="p-2 h-10 w-10 rounded-full shadow-lg transition-transform hover:shadow-xl hover:scale-110"
-              onClick={() => router.push("/case-study-one#")}
-            >
-              <Resume />
-            </button>
-            <button
-              className="p-2 h-10 w-10 rounded-full shadow-lg transition-transform hover:shadow-xl hover:scale-110"
-              onClick={() => router.push("/case-study-one#")}
-            >
-              <LinkedIn />
-            </button>
-          </div>
+          {/*Right: Socials*/}
         </motion.div>
       </AnimatePresence>
+      {/*Right group*/}
+      <div className="ml-auto flex gap-2 md:gap-4 rounded-full">
+        {/*Resume*/}
+
+        <button
+          title="About Me"
+          className="p-2 h-10 w-10 rounded-full shadow-[8px_8px_16px_rgba(0,0,0,0.1)] transition-transform hover:shadow-[12px_12px_24px_rgba(0,0,0,0.1)] dark:shadow-[0px_0px_8px_4px_rgba(255,255,255,0.2)] dark:hover:shadow-[0px_0px_12px_6px_rgba(255,255,255,0.2)] hover:scale-110 bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground"
+          onClick={() => {
+            if (pathname === "/case-study-one") {
+              if (window.scrollY > 30) {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              } else {
+                // Scroll down a bit, then bounce back up
+                window.scrollBy({ top: 600, behavior: "instant" });
+                setTimeout(() => {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }, 100); // Adjust delay to match scroll duration
+              }
+            } else {
+              router.push("/case-study-one");
+            }
+          }}
+        >
+          <Resume />
+        </button>
+        {/*LinkedIn*/}
+        <button
+          title="Find Me on LinkedIn"
+          className="p-2 h-10 w-10 rounded-full shadow-[8px_8px_16px_rgba(0,0,0,0.1)] transition-transform hover:shadow-[12px_12px_24px_rgba(0,0,0,0.1)] dark:shadow-[0px_0px_8px_4px_rgba(255,255,255,0.2)] dark:hover:shadow-[0px_0px_12px_6px_rgba(255,255,255,0.2)] hover:scale-110 bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground"
+          onClick={() => router.push("/case-study-one#")}
+        >
+          <LinkedIn />
+        </button>
+        <ThemeToggle />
+      </div>
     </div>
   );
 }

@@ -86,10 +86,11 @@ export default function Main({ children }: { children: ReactNode }) {
 
   return (
     <main
-      className={`relative flex w-full bg-inherit ${
+      className={`relative flex w-full ${
         viewMode === "home" ? "touch-none" : ""
       }`}
     >
+      <TopBar />
       <div
         className={`relative flex h-screen flex-col flex-1 overflow-hidden ${
           viewMode === "home" ? "min-w-max" : ""
@@ -98,11 +99,10 @@ export default function Main({ children }: { children: ReactNode }) {
         <GlyphCarousel />
       </div>
       <motion.div
-        className={`relative w-full flex flex-col items-center gap-6 max-w-4xl px-2 bg-inherit ${
+        className={`relative w-full flex flex-col items-center gap-6 max-w-4xl px-2 ${
           viewMode === "home" ? "" : ""
         }`}
       >
-        <TopBar />
         <ProjectSummary />
 
         {viewMode === "home" && showPrompt && (

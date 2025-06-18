@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import projects from "../../data/projects";
 import { useActiveProject, wrapIndex } from "../context/ActiveProjectContext";
 import { useViewMode } from "../context/ViewModeContext";
+import { useTheme } from "next-themes";
 
 export default function GlyphCarousel() {
   const { activeIndex, setActiveIndex } = useActiveProject();
@@ -126,16 +127,18 @@ export default function GlyphCarousel() {
     return matches;
   }
 
+  const { resolvedTheme } = useTheme();
+
   const isLarge = useTailwindBreakpoint();
   const yOffset = isLarge
-    ? -64 * (2 * activeIndex + 1 / 2)
-    : -32 * (2 * activeIndex + 1 / 2);
+    ? -80 * (2 * activeIndex + 1 / 2)
+    : -40 * (2 * activeIndex + 1 / 2);
 
   if (!hasMounted || viewMode === "not-found") return null;
 
   return (
     <motion.div
-      className="flex flex-col items-end gap-8 md:gap-16 pt-[calc(50dvh)] px-5 md:px-10 lg:px-16 xl:px-24"
+      className="flex flex-col items-end gap-10 md:gap-20 pt-[calc(50dvh)] px-6 md:px-12 lg:px-16 xl:px-24"
       animate={{
         y: yOffset,
         x: isInteractive ? 0 : -300,
@@ -148,16 +151,27 @@ export default function GlyphCarousel() {
         const Glyph = project.glyph;
         const isActive = index === activeIndex;
         const isPreview = index === previewIndex;
+        const isDark = resolvedTheme === "dark";
 
         const scale = isActive ? 2 : isPreview ? 1.2 : 1;
         const opacity = isActive ? 1 : isPreview ? 0.7 : 0.3;
+        const boxShadow =
+          isActive && isDark
+            ? "0px 0px 1px 0px rgba(255, 255, 255, 0.6)"
+            : isActive && !isDark
+            ? "1px 1px 0px 0px rgba(0, 0, 0, 0.1), -1px -1px 0px 0px rgba(255, 255, 255, 0.8)"
+            : "";
 
         return (
           <motion.div
             key={project.id}
-            animate={{ scale, opacity }}
-            transition={{ type: "spring", stiffness: 500, damping: 20 }}
-            className="h-8 w-8 md:h-16 md:w-16 select-none cursor-pointer touch-manipulation"
+            animate={{
+              boxShadow,
+              scale,
+              opacity,
+            }}
+            transition={{ type: "tween", stiffness: 500, damping: 20 }}
+            className="rounded-full p-1 h-10 w-10 md:p-2 md:h-20 md:w-20 select-none cursor-pointer touch-manipulation"
             onClick={() => isInteractive && setActiveIndex(index)}
           >
             <Glyph />

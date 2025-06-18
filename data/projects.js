@@ -11,12 +11,13 @@ import PocketBow from "../app/icons/PocketBow";
 const projects = [
   {
     id: "project-1",
+    slug: "case-study-one",
     title: "Haichao Wang",
     description: "I am a designer with a diverse background.",
     glyph: ProjectOneLogo,
-    slug: "case-study-one",
     image: "/images/project-1.jpg",
     button: "More About Me",
+    bgColor: "bg-background",
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -34,6 +35,8 @@ const projects = [
     slug: "case-study-two",
     button: "Look Inside",
     image: "/images/project-1.jpg",
+    bgColor: "bg-flux",
+
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -52,6 +55,8 @@ const projects = [
     slug: "case-study-three",
     button: "Look Inside",
     image: "/images/project-1.jpg",
+    bgColor: "bg-fantail",
+
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -69,6 +74,7 @@ const projects = [
     slug: "case-study-four",
     button: "Look Inside",
     image: "/images/project-1.jpg",
+    bgColor: "bg-suits",
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -86,6 +92,8 @@ const projects = [
     slug: "case-study-five",
     button: "Look Inside",
     image: "/images/project-1.jpg",
+    bgColor: "bg-wolcott",
+
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -103,6 +111,8 @@ const projects = [
     slug: "case-study-six",
     button: "Look Inside",
     image: "/images/project-1.jpg",
+    bgColor: "bg-chinatown",
+
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },

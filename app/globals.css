@@ -20,3 +20,17 @@
 
 body {
 }
+
+@layer components {
+  .partial-stroke::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    height: 50%;
+    border-bottom: 2px solid black;
+    border-right: 2px solid black;
+    pointer-events: none;
+  }
+}
