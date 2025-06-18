@@ -134,7 +134,7 @@ export default function TopBar() {
                 animate={{ x: "-50%", y: 0, opacity: 1 }}
                 exit={{ x: "-50%", y: -60, opacity: 0 }}
                 whileHover={{ scale: 1.05 }}
-                className="absolute hidden sm:flex left-1/2 px-4 text-foreground dark:text-dark-foreground rounded-full select-none justify-center gap-4 bg-background dark:bg-dark-background  shadow-[8px_8px_16px_rgba(0,0,0,0.1)] hover:shadow-[12px_12px_24px_rgba(0,0,0,0.1)] dark:shadow-[0px_0px_8px_4px_rgba(255,255,255,0.2)] dark:hover:shadow-[0px_0px_12px_6px_rgba(255,255,255,0.2)]"
+                className="absolute hidden sm:flex left-1/2 px-4 text-foreground dark:text-dark-foreground rounded-full select-none justify-center gap-2 lg:gap-4 bg-background dark:bg-dark-background  shadow-[8px_8px_16px_rgba(0,0,0,0.1)] hover:shadow-[12px_12px_24px_rgba(0,0,0,0.1)] dark:shadow-[0px_0px_8px_4px_rgba(255,255,255,0.2)] dark:hover:shadow-[0px_0px_12px_6px_rgba(255,255,255,0.2)]"
               >
                 {/*Title*/}
                 <button
@@ -142,12 +142,12 @@ export default function TopBar() {
                   onClick={() =>
                     window.scrollTo({ top: 0, behavior: "smooth" })
                   }
-                  className="whitespace-nowrap font-sans px-4 rounded-full text-lg font-semibold opacity-60 hover:opacity-100 transition-transform "
+                  className="whitespace-nowrap hidden lg:flex items-center font-sans px-4 rounded-full text-lg font-semibold opacity-60 hover:opacity-100 transition-transform "
                 >
                   {activeProject.title}
                 </button>
                 {/*Sections*/}
-                <div className="flex gap-4 ">
+                <div className="flex gap-2 lg:gap-4 ">
                   {sections.map((section) => {
                     const Icon = section.icon;
                     return (
@@ -177,7 +177,11 @@ export default function TopBar() {
         </motion.div>
       </AnimatePresence>
       {/*Right group*/}
-      <div className="ml-auto flex gap-2 md:gap-4 rounded-full">
+      <motion.div
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="ml-auto flex gap-2 md:gap-4 rounded-full"
+      >
         {/*Resume*/}
 
         <button
@@ -210,7 +214,7 @@ export default function TopBar() {
           <LinkedIn />
         </button>
         <ThemeToggle />
-      </div>
+      </motion.div>
     </div>
   );
 }

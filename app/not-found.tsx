@@ -7,8 +7,9 @@ export default function NotFound() {
         404 – Page Not Found
       </h1>
       <p className="font-serif text-lg text-muted-foreground mb-6">
-        Looks like this page doesn't exist or has been moved. Hit "Home" to
-        explore the rest of my work!
+        Thanks for visiting my site. I'm sorry the page you're looking for
+        doesn't exist or has been moved. Hit "Home" to explore the rest of my
+        work!
       </p>
     </div>
   );
