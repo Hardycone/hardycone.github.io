@@ -11,7 +11,20 @@ import Resume from "../icons/Resume";
 import LinkedIn from "../icons/LinkedIn";
 import ThemeToggle from "./ThemeToggle";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 
+import { useLighting } from "../context/LightingContext";
+
+function getShadows(a: number, b: number) {
+  return {
+    light: `${-a * 2}px ${-b * 2}px 16px 0px rgba(0, 0, 0, 0.2), ${a * 2}px ${
+      b * 2
+    }px 16px 0px rgba(255, 255, 255, 0.8)`,
+    dark: `${-a * 2}px ${-b * 2}px 16px 0px rgba(0, 0, 0, 1), inset ${
+      -a / 4
+    }px ${-b / 4}px 2px 0px rgba(255, 255, 255, 0.6)`,
+  };
+}
 export default function TopBar() {
   const { viewMode } = useViewMode();
   const { activeIndex } = useActiveProject();
@@ -19,12 +32,18 @@ export default function TopBar() {
   const pathname = usePathname();
   const [showTitle, setShowTitle] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const { a, b } = useLighting();
+  const { resolvedTheme } = useTheme();
 
+  const themeShadows = getShadows(a, b)[
+    resolvedTheme === "dark" ? "dark" : "light"
+  ];
   const activeProject = projects[activeIndex];
   const sections = useMemo(
     () => projects[activeIndex]?.sections || [],
     [activeIndex]
   );
+
   useEffect(() => {
     let observer: IntersectionObserver;
     const sectionElements: HTMLElement[] = [];
@@ -118,23 +137,29 @@ export default function TopBar() {
           className="w-full flex justify-between z-50"
         >
           {/*Left: Home*/}
-          <button
+          <motion.button
             title="Home"
-            className="p-2 h-10 w-10 rounded-full hover:scale-110 transition shadow-[8px_8px_16px_rgba(0,0,0,0.1)] hover:shadow-[12px_12px_24px_rgba(0,0,0,0.1)] dark:shadow-[0px_0px_8px_4px_rgba(255,255,255,0.2)] dark:hover:shadow-[0px_0px_12px_6px_rgba(255,255,255,0.2)] text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background"
+            animate={{ boxShadow: themeShadows }}
+            className="p-2 h-10 w-10 rounded-full hover:scale-110 transition  text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background"
             onClick={() => router.push("/")}
           >
             <Home />
-          </button>
+          </motion.button>
           {/*Center: Page navigation*/}
           <AnimatePresence mode="wait">
             {viewMode === "case-study" && showTitle && activeProject && (
               <motion.div
                 key={`title-${activeIndex}`}
                 initial={{ x: "-50%", y: -60, opacity: 0 }}
-                animate={{ x: "-50%", y: 0, opacity: 1 }}
+                animate={{
+                  boxShadow: themeShadows,
+                  x: "-50%",
+                  y: 0,
+                  opacity: 1,
+                }}
                 exit={{ x: "-50%", y: -60, opacity: 0 }}
                 whileHover={{ scale: 1.05 }}
-                className="absolute hidden sm:flex left-1/2 px-4 text-foreground dark:text-dark-foreground rounded-full select-none justify-center gap-2 lg:gap-4 bg-background dark:bg-dark-background  shadow-[8px_8px_16px_rgba(0,0,0,0.1)] hover:shadow-[12px_12px_24px_rgba(0,0,0,0.1)] dark:shadow-[0px_0px_8px_4px_rgba(255,255,255,0.2)] dark:hover:shadow-[0px_0px_12px_6px_rgba(255,255,255,0.2)]"
+                className="absolute hidden sm:flex left-1/2 px-4 text-foreground dark:text-dark-foreground rounded-full select-none justify-center gap-2 lg:gap-4 bg-background dark:bg-dark-background"
               >
                 {/*Title*/}
                 <button
@@ -184,19 +209,20 @@ export default function TopBar() {
       >
         {/*Resume*/}
 
-        <button
+        <motion.button
           title="About Me"
-          className="p-2 h-10 w-10 rounded-full shadow-[8px_8px_16px_rgba(0,0,0,0.1)] transition-transform hover:shadow-[12px_12px_24px_rgba(0,0,0,0.1)] dark:shadow-[0px_0px_8px_4px_rgba(255,255,255,0.2)] dark:hover:shadow-[0px_0px_12px_6px_rgba(255,255,255,0.2)] hover:scale-110 bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground"
+          animate={{ boxShadow: themeShadows }}
+          className="p-2 h-10 w-10 rounded-full transition-transform  hover:scale-110 bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground"
           onClick={() => {
             if (pathname === "/case-study-one") {
               if (window.scrollY > 30) {
                 window.scrollTo({ top: 0, behavior: "smooth" });
               } else {
                 // Scroll down a bit, then bounce back up
-                window.scrollBy({ top: 600, behavior: "instant" });
+                window.scrollBy({ top: 80, behavior: "instant" });
                 setTimeout(() => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
-                }, 100); // Adjust delay to match scroll duration
+                }, 200); // Adjust delay to match scroll duration
               }
             } else {
               router.push("/case-study-one");
@@ -204,16 +230,28 @@ export default function TopBar() {
           }}
         >
           <Resume />
-        </button>
+        </motion.button>
         {/*LinkedIn*/}
-        <button
+        <motion.button
           title="Find Me on LinkedIn"
-          className="p-2 h-10 w-10 rounded-full shadow-[8px_8px_16px_rgba(0,0,0,0.1)] transition-transform hover:shadow-[12px_12px_24px_rgba(0,0,0,0.1)] dark:shadow-[0px_0px_8px_4px_rgba(255,255,255,0.2)] dark:hover:shadow-[0px_0px_12px_6px_rgba(255,255,255,0.2)] hover:scale-110 bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground"
-          onClick={() => router.push("/case-study-one#")}
+          animate={{ boxShadow: themeShadows }}
+          className="p-2 h-10 w-10 rounded-full transition-transform hover:scale-110 bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground"
+          onClick={() =>
+            window.open(
+              "https://www.google.com",
+              "_blank",
+              "noopener,noreferrer"
+            )
+          }
         >
           <LinkedIn />
-        </button>
-        <ThemeToggle />
+        </motion.button>
+        <motion.div
+          animate={{ boxShadow: themeShadows }}
+          className="flex w-10 h-10 z-50 rounded-full bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground transition-transform hover:scale-110"
+        >
+          <ThemeToggle />
+        </motion.div>
       </motion.div>
     </div>
   );

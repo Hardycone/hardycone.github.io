@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import projects from "@/data/projects";
 import { useEffect } from "react";
 import { useTheme } from "next-themes";
+import { useLighting } from "../context/LightingContext";
 
 import CaseStudyOne from "./caseStudies/CaseStudyOne";
 import CaseStudyTwo from "./caseStudies/CaseStudyTwo";
@@ -31,19 +32,25 @@ const caseStudyComponents: Record<ProjectSlug, React.FC> = {
   "case-study-six": CaseStudySix,
 };
 
-const shadows = {
-  light:
-    "2px 2px 2px rgba(0, 0, 0, 0.1), -2px -2px 2px rgba(255, 255, 255, 0.8), -2px 2px 2px -2px rgba(255, 255, 255, 0.8), 2px -2px 2px -2px rgba(255, 255, 255, 0.8)",
-  dark: "0px 0px 2px 2px rgba(255, 255, 255, 0.2)",
-};
+function getShadows(a: number, b: number) {
+  return {
+    light: `${-a}px ${-b}px 4px 0px rgba(0, 0, 0, 0.1), ${a}px ${b}px 4px 0px rgba(255, 255, 255, 0.8)`,
+    dark: `${-a}px ${-b}px 4px 0px rgba(0, 0, 0, 1), inset ${-a / 4}px ${
+      -b / 4
+    }px 4px 0px rgba(255, 255, 255, 0.6)`,
+  };
+}
 
 export default function CaseStudyContent() {
   const { activeIndex, transitioningToNext, setTransitioningToNext } =
     useActiveProject();
 
   const { resolvedTheme } = useTheme();
-  const themeShadows = shadows[resolvedTheme === "dark" ? "dark" : "light"];
+  const { a, b } = useLighting();
 
+  const themeShadows = getShadows(a, b)[
+    resolvedTheme === "dark" ? "dark" : "light"
+  ];
   const project = projects[activeIndex];
   const slug = project.slug as ProjectSlug;
   const CaseStudyComponent = caseStudyComponents[slug];

@@ -25,8 +25,8 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="flex w-10 h-10 p-2 z-50 rounded-full bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground shadow-[8px_8px_16px_rgba(0,0,0,0.1)] transition-transform hover:shadow-[12px_12px_24px_rgba(0,0,0,0.1)] dark:shadow-[0px_0px_8px_4px_rgba(255,255,255,0.2)] dark:hover:shadow-[0px_0px_12px_6px_rgba(255,255,255,0.2)] hover:scale-110"
       title={`Switch to ${isDark ? "Light" : "Dark"} Mode`}
+      className="p-2"
     >
       {isDark ? <Moon /> : <Sun />}
     </button>

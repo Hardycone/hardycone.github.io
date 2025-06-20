@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import projects from "../../data/projects";
 import { useActiveProject } from "../context/ActiveProjectContext";
 import { useViewMode } from "../context/ViewModeContext";
 import { useTheme } from "next-themes";
+import { useLighting } from "../context/LightingContext";
 import Image from "next/image";
 
 function useHasMounted() {
@@ -17,24 +18,44 @@ function useHasMounted() {
   return hasMounted;
 }
 
-const shadows = {
-  light: {
-    baseCard:
-      "2px 2px 2px rgba(0, 0, 0, 0.1), -2px -2px 2px rgba(255, 255, 255, 0.8), -2px 2px 2px -2px rgba(255, 255, 255, 0.8), 2px -2px 2px -2px rgba(255, 255, 255, 0.8)",
-    hoverCard:
-      "4px 4px 3px rgba(0, 0, 0, 0.1), -4px -4px 3px rgba(255, 255, 255, 0.8), -4px 4px 3px -4px rgba(255, 255, 255, 0.8), 4px -4px 3px -4px rgba(255, 255, 255, 0.8)",
-    baseButton:
-      "inset 1px 1px 1px rgba(0, 0, 0, 0.1), inset -1px -1px 1px rgba(255, 255, 255, 1)",
-    hoverButton:
-      "inset 2px 2px 2px rgba(0, 0, 0, 0.1), inset -2px -2px 2px rgba(255, 255, 255, 1)",
-  },
-  dark: {
-    baseCard: "0px 0px 2px 2px rgba(255, 255, 255, 0.2)",
-    hoverCard: "0px 0px 3px 3px rgba(255, 255, 255, 0.2)",
-    baseButton: "inset 0px 0px 2px 2px rgba(255, 255, 255, 0.2)",
-    hoverButton: "inset 0px 0px 3px 3px rgba(255, 255, 255, 0.2)",
-  },
-};
+function getShadows(a: number, b: number) {
+  return {
+    light: {
+      baseCard: ` ${-a}px ${-b}px 4px 0px rgba(0, 0, 0, 0.1),
+                  ${a}px ${b}px 4px 0px rgba(255, 255, 255, 0.8),
+                  ${a}px ${-b}px 4px -2px rgba(255, 255, 255, 0.8),
+                  ${-a}px ${b}px 4px -2px rgba(255, 255, 255, 0.8)`,
+      hoverCard: `${-2 * a}px ${-2 * b}px 8px 0px rgba(0, 0, 0, 0.1),
+                  ${2 * a}px ${2 * b}px 8px 0px rgba(255, 255, 250, 0.8),
+                  ${2 * a}px ${-2 * b}px 8px -4px rgba(255, 255, 250, 0.8),
+                  ${-2 * a}px ${2 * b}px 8px -4px rgba(255, 255, 250, 0.8)`,
+      baseButton: `inset ${-a / 4}px ${
+        -b / 4
+      }px 1px rgba(0, 0, 0, 0.1), inset ${a / 4}px ${
+        b / 4
+      }px 1px rgba(255, 255, 255, 1)`,
+      hoverButton: `inset ${-a / 2}px ${
+        -b / 2
+      }px 2px rgba(0, 0, 0, 0.1), inset ${a / 2}px ${
+        b / 2
+      }px 2px rgba(255, 255, 255, 1)`,
+    },
+    dark: {
+      baseCard: `${-a}px ${-b}px 4px 0px rgba(0, 0, 0, 1), inset ${-a / 4}px ${
+        -b / 4
+      }px 4px 0px rgba(255, 255, 255, 0.6)`,
+      hoverCard: `${-2 * a}px ${-2 * b}px 8px 0px rgba(0, 0, 0, 1), inset ${
+        -a / 4
+      }px ${-b / 4}px 2px 0px rgba(255, 255, 255, 0.6)`,
+      baseButton: `inset ${-a / 4}px ${-b / 4}px 1px rgba(0, 0, 0, 1), inset ${
+        a / 4
+      }px ${b / 4}px 1px rgba(255, 255, 255, 0.4)`,
+      hoverButton: `inset ${-a / 2}px ${-b / 2}px 2px rgba(0, 0, 0, 1), inset ${
+        a / 2
+      }px ${b / 2}px 2px rgba(255, 255, 255, 0.4)`,
+    },
+  };
+}
 
 interface ProjectSummaryProps {
   variant?: "header" | "bottom";
@@ -52,7 +73,13 @@ export default function ProjectSummary({
   const ref = useRef<HTMLDivElement>(null);
   const [offset, setOffset] = useState<number | null>(null);
   const { resolvedTheme } = useTheme();
-  const themeShadows = shadows[resolvedTheme === "dark" ? "dark" : "light"];
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const { a, b } = useLighting();
+
+  const themeShadows = getShadows(a, b)[
+    resolvedTheme === "dark" ? "dark" : "light"
+  ];
 
   const homeViewVersion = {
     initial: (direction: "up" | "down") => ({
@@ -66,7 +93,10 @@ export default function ProjectSummary({
       boxShadow: themeShadows.baseCard,
       y: 0,
       opacity: 1,
-      transition: { duration: 0.2, ease: "easeIn" },
+      transition: {
+        y: { duration: 0.2, ease: "easeInOut" },
+        boxShadow: { ease: "easeInOut" },
+      },
     },
     exit: (direction: "up" | "down") => ({
       y:
@@ -106,31 +136,33 @@ export default function ProjectSummary({
     }),
   };
 
-  useEffect(() => {
-    if (!(viewMode === "home" && variant === "header")) return;
+  useLayoutEffect(() => {
+    if (
+      !hasMounted ||
+      !imageLoaded ||
+      !(viewMode === "home" && variant === "header")
+    )
+      return;
+
+    if (!ref.current) return;
 
     const updateOffset = () => {
-      if (ref.current) {
-        const height = ref.current.offsetHeight;
-        const newOffset = Math.max(0, window.innerHeight / 2 - height / 2);
-        setOffset(newOffset);
-      }
+      const height = ref.current?.offsetHeight ?? 0;
+      setOffset(Math.max(0, window.innerHeight / 2 - height / 2));
     };
 
-    // Delay initial offset calculation to avoid layout jump on refresh
-    const timeoutId: NodeJS.Timeout = setTimeout(updateOffset, 50);
+    updateOffset();
 
     const observer = new ResizeObserver(updateOffset);
-    if (ref.current) observer.observe(ref.current);
+    observer.observe(ref.current);
 
     window.addEventListener("resize", updateOffset);
 
     return () => {
-      clearTimeout(timeoutId);
       observer.disconnect();
       window.removeEventListener("resize", updateOffset);
     };
-  }, [viewMode, variant, activeIndex]);
+  }, [hasMounted, imageLoaded, viewMode, variant, activeIndex]);
 
   if (!hasMounted || viewMode === "not-found") return null;
   if (variant === "bottom" && viewMode === "home") return null;
@@ -213,11 +245,15 @@ export default function ProjectSummary({
             showButton ? "flex-col sm:flex-row" : "flex-col"
           }`}
         >
+          {/*Text and Button*/}
           <div className="flex flex-col w-full h-full">
+            {/*Text*/}
             <motion.div
               layout="position"
               transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="flex flex-col gap-4"
             >
+              {/*Title*/}
               <h1
                 className={`font-serif text-foreground dark:text-dark-foreground ${
                   variant === "bottom" ? "text-sm sm:text-lg" : "hidden"
@@ -228,11 +264,12 @@ export default function ProjectSummary({
               <h1 className="font-sans font-semibold text-foreground dark:text-dark-foreground text-3xl md:text-4xl mb-2 line-clamp-1">
                 {project.title}
               </h1>
+              {/*Description*/}
               <p className="font-serif text-sm md:text-base text-foreground dark:text-dark-foreground mb-4 line-clamp-6 sm:line-clamp-4 md:line-clamp-6">
                 {project.description}
               </p>
             </motion.div>
-
+            {/*Button*/}
             <div className="flex mt-auto w-full justify-end sm:justify-start">
               <motion.button
                 animate={{
@@ -250,6 +287,7 @@ export default function ProjectSummary({
               </motion.button>
             </div>
           </div>
+          {/*Image*/}
           {project.image && (
             <div
               className={`relative shrink-0 overflow-hidden rounded-lg ${
@@ -262,7 +300,10 @@ export default function ProjectSummary({
                 src={project.image}
                 alt={`${project.title} preview image`}
                 fill
+                sizes="(min-width: 640px) 50vw, 100vw"
                 className="object-cover"
+                priority={viewMode === "home" && variant === "header"}
+                onLoad={() => setImageLoaded(true)}
               />
             </div>
           )}

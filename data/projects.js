@@ -13,7 +13,8 @@ const projects = [
     id: "project-1",
     slug: "case-study-one",
     title: "Haichao Wang",
-    description: "I am a designer with a diverse background.",
+    description:
+      "I am a designer with a decade of diverse professional experiences in design strategy, research, and project management. My body of work ranges from leading multi million dollar federal grant projects driven by deep community enagement, to founding B2B SaaS products from Zero to One",
     glyph: ProjectOneLogo,
     image: "/images/project-1.jpg",
     button: "More About Me",

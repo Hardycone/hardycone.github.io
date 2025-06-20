@@ -11,7 +11,7 @@ import TopBar from "./TopBar";
 import ProjectSummary from "./ProjectSummary";
 import CaseStudyContent from "./CaseStudyContent";
 
-export default function Main({ children }: { children: ReactNode }) {
+export default function MainContent({ children }: { children: ReactNode }) {
   const { activeIndex } = useActiveProject();
   const { viewMode } = useViewMode();
 

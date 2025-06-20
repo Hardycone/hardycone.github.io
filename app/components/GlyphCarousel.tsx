@@ -6,6 +6,18 @@ import projects from "../../data/projects";
 import { useActiveProject, wrapIndex } from "../context/ActiveProjectContext";
 import { useViewMode } from "../context/ViewModeContext";
 import { useTheme } from "next-themes";
+import { useLighting } from "../context/LightingContext";
+
+function getShadows(a: number, b: number) {
+  return {
+    light: `${-a / 2}px ${-b / 2}px 2px 0px rgba(0, 0, 0, 0.1), ${a / 2}px ${
+      b / 2
+    }px 2px 0px rgba(255, 255, 255, 0.8)`,
+    dark: `${-a / 2}px ${-b / 2}px 4px 0px rgba(0, 0, 0, 1), inset ${
+      -a / 4
+    }px ${-b / 4}px 1px 0px rgba(255, 255, 255, 0.6)`,
+  };
+}
 
 export default function GlyphCarousel() {
   const { activeIndex, setActiveIndex } = useActiveProject();
@@ -14,6 +26,7 @@ export default function GlyphCarousel() {
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
 
   const isInteractive = viewMode === "home";
+  const { a, b } = useLighting();
 
   const touchStartY = useRef<number | null>(null);
   const keyboardLocked = useRef(false);
@@ -151,22 +164,18 @@ export default function GlyphCarousel() {
         const Glyph = project.glyph;
         const isActive = index === activeIndex;
         const isPreview = index === previewIndex;
-        const isDark = resolvedTheme === "dark";
 
         const scale = isActive ? 2 : isPreview ? 1.2 : 1;
         const opacity = isActive ? 1 : isPreview ? 0.7 : 0.3;
-        const boxShadow =
-          isActive && isDark
-            ? "0px 0px 1px 0px rgba(255, 255, 255, 0.6)"
-            : isActive && !isDark
-            ? "1px 1px 0px 0px rgba(0, 0, 0, 0.1), -1px -1px 0px 0px rgba(255, 255, 255, 0.8)"
-            : "";
+        const themeShadows = getShadows(a, b)[
+          resolvedTheme === "dark" ? "dark" : "light"
+        ];
 
         return (
           <motion.div
             key={project.id}
             animate={{
-              boxShadow,
+              boxShadow: isActive ? themeShadows : "none",
               scale,
               opacity,
             }}

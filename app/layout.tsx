@@ -5,7 +5,9 @@ import "./globals.css";
 import { ViewModeProvider } from "./context/ViewModeContext";
 import { ActiveProjectProvider } from "./context/ActiveProjectContext";
 import { ThemeProvider } from "next-themes";
-import Main from "./components/Main";
+import { LightingProvider } from "./context/LightingContext";
+
+import MainContent from "./components/MainContent";
 
 const jost = Jost({
   variable: "--font-jost",
@@ -40,7 +42,9 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ActiveProjectProvider>
             <ViewModeProvider>
-              <Main>{children}</Main>
+              <LightingProvider>
+                <MainContent>{children}</MainContent>
+              </LightingProvider>
             </ViewModeProvider>
           </ActiveProjectProvider>
         </ThemeProvider>
