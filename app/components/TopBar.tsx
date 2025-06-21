@@ -13,18 +13,8 @@ import ThemeToggle from "./ThemeToggle";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 
-import { useLighting } from "../context/LightingContext";
+import { useLighting, getShadows } from "../context/LightingContext";
 
-function getShadows(a: number, b: number) {
-  return {
-    light: `${-a * 2}px ${-b * 2}px 16px 0px rgba(0, 0, 0, 0.2), ${a * 2}px ${
-      b * 2
-    }px 16px 0px rgba(255, 255, 255, 0.8)`,
-    dark: `${-a * 2}px ${-b * 2}px 16px 0px rgba(0, 0, 0, 1), inset ${
-      -a / 4
-    }px ${-b / 4}px 2px 0px rgba(255, 255, 255, 0.6)`,
-  };
-}
 export default function TopBar() {
   const { viewMode } = useViewMode();
   const { activeIndex } = useActiveProject();
@@ -32,12 +22,32 @@ export default function TopBar() {
   const pathname = usePathname();
   const [showTitle, setShowTitle] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const { a, b } = useLighting();
+  const { a, b, getTextColorClass, getBgColorClass, getLightColor } =
+    useLighting();
   const { resolvedTheme } = useTheme();
 
-  const themeShadows = getShadows(a, b)[
+  const textColorClass = getTextColorClass(
+    resolvedTheme || "light",
+    projects[activeIndex].textColor
+  );
+
+  const bgColorClass = getBgColorClass(
+    resolvedTheme || "light",
+    projects[activeIndex].bgColor
+  );
+
+  const lightColor = getLightColor(
+    resolvedTheme || "light",
+    projects[activeIndex].textColor
+  );
+
+  const themeShadows = getShadows(
+    a,
+    b,
+    lightColor,
     resolvedTheme === "dark" ? "dark" : "light"
-  ];
+  );
+
   const activeProject = projects[activeIndex];
   const sections = useMemo(
     () => projects[activeIndex]?.sections || [],
@@ -139,8 +149,8 @@ export default function TopBar() {
           {/*Left: Home*/}
           <motion.button
             title="Home"
-            animate={{ boxShadow: themeShadows }}
-            className="p-2 h-10 w-10 rounded-full hover:scale-110 transition  text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background"
+            animate={{ boxShadow: themeShadows.topBar }}
+            className={`p-2 h-10 w-10 rounded-full hover:scale-110 transition ${textColorClass} ${bgColorClass}`}
             onClick={() => router.push("/")}
           >
             <Home />
@@ -152,14 +162,14 @@ export default function TopBar() {
                 key={`title-${activeIndex}`}
                 initial={{ x: "-50%", y: -60, opacity: 0 }}
                 animate={{
-                  boxShadow: themeShadows,
+                  boxShadow: themeShadows.topBar,
                   x: "-50%",
                   y: 0,
                   opacity: 1,
                 }}
                 exit={{ x: "-50%", y: -60, opacity: 0 }}
                 whileHover={{ scale: 1.05 }}
-                className="absolute hidden sm:flex left-1/2 px-4 text-foreground dark:text-dark-foreground rounded-full select-none justify-center gap-2 lg:gap-4 bg-background dark:bg-dark-background"
+                className={`absolute hidden sm:flex left-1/2 px-4 transition ${textColorClass} ${bgColorClass} rounded-full select-none justify-center gap-2 lg:gap-4`}
               >
                 {/*Title*/}
                 <button
@@ -211,8 +221,8 @@ export default function TopBar() {
 
         <motion.button
           title="About Me"
-          animate={{ boxShadow: themeShadows }}
-          className="p-2 h-10 w-10 rounded-full transition-transform  hover:scale-110 bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground"
+          animate={{ boxShadow: themeShadows.topBar }}
+          className={`p-2 h-10 w-10 rounded-full transition  hover:scale-110 ${textColorClass} ${bgColorClass}`}
           onClick={() => {
             if (pathname === "/case-study-one") {
               if (window.scrollY > 30) {
@@ -234,8 +244,8 @@ export default function TopBar() {
         {/*LinkedIn*/}
         <motion.button
           title="Find Me on LinkedIn"
-          animate={{ boxShadow: themeShadows }}
-          className="p-2 h-10 w-10 rounded-full transition-transform hover:scale-110 bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground"
+          animate={{ boxShadow: themeShadows.topBar }}
+          className={`p-2 h-10 w-10 rounded-full transition hover:scale-110 ${textColorClass} ${bgColorClass}`}
           onClick={() =>
             window.open(
               "https://www.google.com",
@@ -247,8 +257,8 @@ export default function TopBar() {
           <LinkedIn />
         </motion.button>
         <motion.div
-          animate={{ boxShadow: themeShadows }}
-          className="flex w-10 h-10 z-50 rounded-full bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground transition-transform hover:scale-110"
+          animate={{ boxShadow: themeShadows.topBar }}
+          className={`flex w-10 h-10 z-50 rounded-full ${textColorClass} ${bgColorClass} transition hover:scale-110`}
         >
           <ThemeToggle />
         </motion.div>

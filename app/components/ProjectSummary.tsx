@@ -7,7 +7,7 @@ import projects from "../../data/projects";
 import { useActiveProject } from "../context/ActiveProjectContext";
 import { useViewMode } from "../context/ViewModeContext";
 import { useTheme } from "next-themes";
-import { useLighting } from "../context/LightingContext";
+import { useLighting, getShadows } from "../context/LightingContext";
 import Image from "next/image";
 
 function useHasMounted() {
@@ -16,45 +16,6 @@ function useHasMounted() {
     setHasMounted(true);
   }, []);
   return hasMounted;
-}
-
-function getShadows(a: number, b: number) {
-  return {
-    light: {
-      baseCard: ` ${-a}px ${-b}px 4px 0px rgba(0, 0, 0, 0.1),
-                  ${a}px ${b}px 4px 0px rgba(255, 255, 255, 0.8),
-                  ${a}px ${-b}px 4px -2px rgba(255, 255, 255, 0.8),
-                  ${-a}px ${b}px 4px -2px rgba(255, 255, 255, 0.8)`,
-      hoverCard: `${-2 * a}px ${-2 * b}px 8px 0px rgba(0, 0, 0, 0.1),
-                  ${2 * a}px ${2 * b}px 8px 0px rgba(255, 255, 250, 0.8),
-                  ${2 * a}px ${-2 * b}px 8px -4px rgba(255, 255, 250, 0.8),
-                  ${-2 * a}px ${2 * b}px 8px -4px rgba(255, 255, 250, 0.8)`,
-      baseButton: `inset ${-a / 4}px ${
-        -b / 4
-      }px 1px rgba(0, 0, 0, 0.1), inset ${a / 4}px ${
-        b / 4
-      }px 1px rgba(255, 255, 255, 1)`,
-      hoverButton: `inset ${-a / 2}px ${
-        -b / 2
-      }px 2px rgba(0, 0, 0, 0.1), inset ${a / 2}px ${
-        b / 2
-      }px 2px rgba(255, 255, 255, 1)`,
-    },
-    dark: {
-      baseCard: `${-a}px ${-b}px 4px 0px rgba(0, 0, 0, 1), inset ${-a / 4}px ${
-        -b / 4
-      }px 4px 0px rgba(255, 255, 255, 0.6)`,
-      hoverCard: `${-2 * a}px ${-2 * b}px 8px 0px rgba(0, 0, 0, 1), inset ${
-        -a / 4
-      }px ${-b / 4}px 2px 0px rgba(255, 255, 255, 0.6)`,
-      baseButton: `inset ${-a / 4}px ${-b / 4}px 1px rgba(0, 0, 0, 1), inset ${
-        a / 4
-      }px ${b / 4}px 1px rgba(255, 255, 255, 0.4)`,
-      hoverButton: `inset ${-a / 2}px ${-b / 2}px 2px rgba(0, 0, 0, 1), inset ${
-        a / 2
-      }px ${b / 2}px 2px rgba(255, 255, 255, 0.4)`,
-    },
-  };
 }
 
 interface ProjectSummaryProps {
@@ -75,11 +36,19 @@ export default function ProjectSummary({
   const { resolvedTheme } = useTheme();
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  const { a, b } = useLighting();
+  const { a, b, getTextColorClass, getBgColorClass, getLightColor } =
+    useLighting();
 
-  const themeShadows = getShadows(a, b)[
+  const lightColor = getLightColor(
+    resolvedTheme || "light",
+    projects[activeIndex].textColor
+  );
+  const themeShadows = getShadows(
+    a,
+    b,
+    lightColor,
     resolvedTheme === "dark" ? "dark" : "light"
-  ];
+  );
 
   const homeViewVersion = {
     initial: (direction: "up" | "down") => ({
@@ -94,8 +63,8 @@ export default function ProjectSummary({
       y: 0,
       opacity: 1,
       transition: {
-        y: { duration: 0.2, ease: "easeInOut" },
-        boxShadow: { ease: "easeInOut" },
+        y: { duration: 0.1, ease: "easeInOut" },
+        boxShadow: { duration: 0.1, ease: "easeInOut" },
       },
     },
     exit: (direction: "up" | "down") => ({
@@ -206,6 +175,16 @@ export default function ProjectSummary({
     }, 200);
   };
 
+  const textColorClass = getTextColorClass(
+    resolvedTheme || "light",
+    project.textColor
+  );
+
+  const bgColorClass = getBgColorClass(
+    resolvedTheme || "light",
+    project.bgColor
+  );
+
   return (
     //Project summary container
     <motion.div
@@ -241,7 +220,7 @@ export default function ProjectSummary({
                   boxShadow: themeShadows.hoverCard,
                 }
           }
-          className={`relative flex w-full gap-4 md:gap-6 p-2 md:p-6 rounded-xl  bg-background dark:bg-dark-background ${
+          className={`relative flex w-full gap-4 md:gap-6 p-2 md:p-6 rounded-xl ${bgColorClass} ${
             showButton ? "flex-col sm:flex-row" : "flex-col"
           }`}
         >
@@ -251,21 +230,28 @@ export default function ProjectSummary({
             <motion.div
               layout="position"
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-2"
             >
               {/*Title*/}
-              <h1
-                className={`font-serif text-foreground dark:text-dark-foreground ${
+              <h3
+                className={`text-foreground dark:text-dark-foreground ${
                   variant === "bottom" ? "text-sm sm:text-lg" : "hidden"
                 }`}
               >
                 Next Up
-              </h1>
-              <h1 className="font-sans font-semibold text-foreground dark:text-dark-foreground text-3xl md:text-4xl mb-2 line-clamp-1">
+              </h3>
+              <h1
+                className={`font-sans font-semibold ${textColorClass} text-3xl md:text-4xl mb-2`}
+              >
                 {project.title}
               </h1>
+              <h2
+                className={`font-sans ${textColorClass} text-xl md:text-2xl mb-2`}
+              >
+                {project.tagline}
+              </h2>
               {/*Description*/}
-              <p className="font-serif text-sm md:text-base text-foreground dark:text-dark-foreground mb-4 line-clamp-6 sm:line-clamp-4 md:line-clamp-6">
+              <p className="font-serif text-base md:text-lg text-foreground dark:text-dark-foreground mb-4 line-clamp-6 sm:line-clamp-4 md:line-clamp-6">
                 {project.description}
               </p>
             </motion.div>
@@ -292,7 +278,7 @@ export default function ProjectSummary({
             <div
               className={`relative shrink-0 overflow-hidden rounded-lg ${
                 showButton
-                  ? "w-full sm:w-1/2 aspect-[1/1] "
+                  ? "w-full sm:w-1/2 aspect-[3/2] sm:aspect-[1/1]"
                   : "w-full aspect-[2/1] "
               }`}
             >

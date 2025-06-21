@@ -5,6 +5,9 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 
 import { useViewMode } from "../context/ViewModeContext";
 import { useActiveProject } from "../context/ActiveProjectContext";
+import { useTheme } from "next-themes";
+import { useLighting } from "../context/LightingContext";
+import projects from "../../data/projects";
 
 import GlyphCarousel from "./GlyphCarousel";
 import TopBar from "./TopBar";
@@ -14,12 +17,16 @@ import CaseStudyContent from "./CaseStudyContent";
 export default function MainContent({ children }: { children: ReactNode }) {
   const { activeIndex } = useActiveProject();
   const { viewMode } = useViewMode();
+  const { resolvedTheme } = useTheme();
 
   const [showPrompt, setShowPrompt] = useState(false);
   const hasPromptShown = useRef(false);
   // Landscape-blocker logic
   const [showLandscapeBlocker, setShowLandscapeBlocker] = useState(false);
-
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   useEffect(() => {
     const handleOrientationChange = () => {
       const isMobile = /iPhone|Android/i.test(navigator.userAgent);
@@ -83,10 +90,19 @@ export default function MainContent({ children }: { children: ReactNode }) {
       document.body.style.width = "";
     }
   }, [showLandscapeBlocker]);
-
+  const { getBgColorClass } = useLighting();
+  const project = projects[activeIndex];
+  const bgColorClass = getBgColorClass(
+    resolvedTheme || "light",
+    project.bgColor
+  );
+  if (!mounted) {
+    // Avoid rendering on server or before mount to prevent mismatch
+    return null;
+  }
   return (
     <main
-      className={`relative flex w-full ${
+      className={`relative flex w-full transition-colors ${bgColorClass} ${
         viewMode === "home" ? "touch-none" : ""
       }`}
     >
@@ -124,12 +140,12 @@ export default function MainContent({ children }: { children: ReactNode }) {
                 },
               }}
               exit={{ y: -100, opacity: 0 }}
-              className="font-sans text-sm md:text-xl p-2 md:p-4 rounded-lg shadow-md pointer-events-none bg-foreground text-background"
+              className="font-sans text-sm md:text-lg pl-2 py-1 rounded-lg shadow-md pointer-events-none bg-foreground text-background dark:bg-dark-foreground dark:text-dark-background"
             >
               Scroll to explore
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 md:w-8 md:h-8 inline-block"
+                className="w-7 h-7 inline-block"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 stroke="currentColor"

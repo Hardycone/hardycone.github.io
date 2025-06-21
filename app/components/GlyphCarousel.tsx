@@ -6,28 +6,27 @@ import projects from "../../data/projects";
 import { useActiveProject, wrapIndex } from "../context/ActiveProjectContext";
 import { useViewMode } from "../context/ViewModeContext";
 import { useTheme } from "next-themes";
-import { useLighting } from "../context/LightingContext";
-
-function getShadows(a: number, b: number) {
-  return {
-    light: `${-a / 2}px ${-b / 2}px 2px 0px rgba(0, 0, 0, 0.1), ${a / 2}px ${
-      b / 2
-    }px 2px 0px rgba(255, 255, 255, 0.8)`,
-    dark: `${-a / 2}px ${-b / 2}px 4px 0px rgba(0, 0, 0, 1), inset ${
-      -a / 4
-    }px ${-b / 4}px 1px 0px rgba(255, 255, 255, 0.6)`,
-  };
-}
+import { useLighting, getShadows } from "../context/LightingContext";
 
 export default function GlyphCarousel() {
   const { activeIndex, setActiveIndex } = useActiveProject();
   const { viewMode } = useViewMode();
   const [hasMounted, setHasMounted] = useState(false);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+  const { resolvedTheme } = useTheme();
 
   const isInteractive = viewMode === "home";
-  const { a, b } = useLighting();
-
+  const { a, b, getLightColor } = useLighting();
+  const lightColor = getLightColor(
+    resolvedTheme || "light",
+    projects[activeIndex].textColor
+  );
+  const themeShadows = getShadows(
+    a,
+    b,
+    lightColor,
+    resolvedTheme === "dark" ? "dark" : "light"
+  );
   const touchStartY = useRef<number | null>(null);
   const keyboardLocked = useRef(false);
   const lastScrollTime = useRef(0);
@@ -140,8 +139,6 @@ export default function GlyphCarousel() {
     return matches;
   }
 
-  const { resolvedTheme } = useTheme();
-
   const isLarge = useTailwindBreakpoint();
   const yOffset = isLarge
     ? -80 * (2 * activeIndex + 1 / 2)
@@ -167,15 +164,12 @@ export default function GlyphCarousel() {
 
         const scale = isActive ? 2 : isPreview ? 1.2 : 1;
         const opacity = isActive ? 1 : isPreview ? 0.7 : 0.3;
-        const themeShadows = getShadows(a, b)[
-          resolvedTheme === "dark" ? "dark" : "light"
-        ];
 
         return (
           <motion.div
             key={project.id}
             animate={{
-              boxShadow: isActive ? themeShadows : "none",
+              boxShadow: isActive ? themeShadows.glyph : "none",
               scale,
               opacity,
             }}

@@ -12,13 +12,15 @@ const projects = [
   {
     id: "project-1",
     slug: "case-study-one",
-    title: "Haichao Wang",
+    title: "I'm Haichao Wang",
+    tagline: "Human-Centered Designer",
     description:
-      "I am a designer with a decade of diverse professional experiences in design strategy, research, and project management. My body of work ranges from leading multi million dollar federal grant projects driven by deep community enagement, to founding B2B SaaS products from Zero to One",
+      "Thank you for visiting! I have 10 years of experience across design, research, and leadership. My work spans from public initiatives deeply rooted in community stakeholder engagement to enterprise software aiding complex workflows.",
     glyph: ProjectOneLogo,
     image: "/images/project-1.jpg",
     button: "More About Me",
-    bgColor: "bg-background",
+    textColor: "intro",
+    bgColor: "introBackground",
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -31,13 +33,14 @@ const projects = [
   {
     id: "project-2",
     title: "Flux",
-    description: "Democratizing quantitative UX research.",
+    tagline: "Democratizing quantitative UX research",
+    description: "Unlocking the rigor of quantitative insights for everyone.",
     glyph: ProjectOneLogo,
     slug: "case-study-two",
     button: "Look Inside",
     image: "/images/project-1.jpg",
-    bgColor: "bg-flux",
-
+    textColor: "flux",
+    bgColor: "fluxBackground",
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -50,14 +53,15 @@ const projects = [
   {
     id: "project-3",
     title: "Fantail",
+    tagline: "Empowering filmmakers to bring their stories to life",
     description:
       "Helping independent filmmakers bring their story to life. Helping independent filmmakers bring their story to life. Helping independent filmmakers bring their story to life. Helping independent filmmakers bring their story to life. Helping independent filmmakers bring their story to life.",
     glyph: ProjectOneLogo,
     slug: "case-study-three",
     button: "Look Inside",
     image: "/images/project-1.jpg",
-    bgColor: "bg-fantail",
-
+    textColor: "fantail",
+    bgColor: "fantailBackground",
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -70,12 +74,14 @@ const projects = [
   {
     id: "project-4",
     title: "AR Stuff",
+    tagline: "",
     description: "HoloLens",
     glyph: ProjectOneLogo,
     slug: "case-study-four",
     button: "Look Inside",
     image: "/images/project-1.jpg",
-    bgColor: "bg-suits",
+    textColor: "suits",
+    bgColor: "suitsBackground",
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -88,13 +94,14 @@ const projects = [
   {
     id: "project-5",
     title: "Co-Design",
+    tagline: "",
     description: "Community",
     glyph: ProjectOneLogo,
     slug: "case-study-five",
     button: "Look Inside",
     image: "/images/project-1.jpg",
-    bgColor: "bg-wolcott",
-
+    textColor: "wolcott",
+    bgColor: "wolcottBackground",
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },
@@ -107,13 +114,14 @@ const projects = [
   {
     id: "project-6",
     title: "Boston",
+    tagline: "",
     description: "Chinatown",
     glyph: ProjectOneLogo,
     slug: "case-study-six",
     button: "Look Inside",
     image: "/images/project-1.jpg",
-    bgColor: "bg-chinatown",
-
+    textColor: "chinatown",
+    bgColor: "chinatownBackground",
     sections: [
       { id: "section-1", label: "Quick Take", icon: TiedScroll },
       { id: "section-2", label: "Problem", icon: Spyglass },

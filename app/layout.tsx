@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Jost, Merriweather } from "next/font/google";
+import { Jost, Besley } from "next/font/google";
 import "./globals.css";
 
 import { ViewModeProvider } from "./context/ViewModeContext";
@@ -16,8 +16,8 @@ const jost = Jost({
   display: "swap",
 });
 
-const merriweather = Merriweather({
-  variable: "--font-merriweather",
+const besley = Besley({
+  variable: "--font-besley",
   subsets: ["latin"],
   weight: ["400", "700"],
   display: "swap",
@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${jost.variable} ${merriweather.variable} antialiased overflow-x-hidden h-full bg-background dark:bg-dark-background text-foreground transition-colors`}
+        className={`${jost.variable} ${besley.variable} antialiased overflow-x-hidden h-full bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground transition-colors`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ActiveProjectProvider>
