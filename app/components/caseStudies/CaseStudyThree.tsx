@@ -1,9 +1,28 @@
 // case-studies/project-two.tsx
+"use client";
+
+import { useLighting } from "../../context/LightingContext";
+import { useTheme } from "next-themes";
+import projects from "@/data/projects";
+import { useActiveProject } from "@/app/context/ActiveProjectContext";
+
 export default function CaseStudyThree() {
+  const { resolvedTheme } = useTheme();
+  const { activeIndex } = useActiveProject();
+
+  const { getTextColorClass } = useLighting();
+  const textColorClass = getTextColorClass(
+    resolvedTheme || "light",
+    projects[activeIndex].textColor
+  );
   return (
     <article>
       <section id="section-1" className="scroll-mt-24">
-        <h2>Background</h2>
+        <h2
+          className={`font-sans font-semibold text-3xl ${textColorClass} leading-loose`}
+        >
+          W1232
+        </h2>{" "}
         <p>
           Filmmakers often have great ideas but struggle to translate them into
           structured scripts and visual plans. We partnered with a team of indie

@@ -162,7 +162,15 @@ export default function GlyphCarousel() {
         const isActive = index === activeIndex;
         const isPreview = index === previewIndex;
 
-        const scale = isActive ? 2 : isPreview ? 1.2 : 1;
+        const scale = isLarge
+          ? isActive
+            ? 2
+            : isPreview
+            ? 1.2
+            : 1
+          : isActive
+          ? 1.5
+          : 1;
         const opacity = isActive ? 1 : isPreview ? 0.7 : 0.3;
 
         return (

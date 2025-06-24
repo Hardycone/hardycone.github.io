@@ -1,9 +1,29 @@
 // case-studies/project-two.tsx
+
+"use client";
+
+import { useLighting } from "../../context/LightingContext";
+import { useTheme } from "next-themes";
+import projects from "@/data/projects";
+import { useActiveProject } from "@/app/context/ActiveProjectContext";
+
 export default function CaseStudyTwo() {
+  const { resolvedTheme } = useTheme();
+  const { activeIndex } = useActiveProject();
+
+  const { getTextColorClass } = useLighting();
+  const textColorClass = getTextColorClass(
+    resolvedTheme || "light",
+    projects[activeIndex].textColor
+  );
   return (
     <article>
       <section id="section-1" className="scroll-mt-24">
-        <h2>Background</h2>
+        <h2
+          className={`font-sans font-semibold text-3xl ${textColorClass} leading-loose`}
+        >
+          W1232
+        </h2>
         <p>
           Our team set out to solve a common but underexplored problem: how do
           product teams know which design works best—really know, with data?
@@ -11,7 +31,7 @@ export default function CaseStudyTwo() {
           quant UX tooling, particularly for live prototype testing. We wanted
           to bring statistical rigor to the kinds of questions teams already ask
           in Figma: which variant performs better? Where do users hesitate?
-        </p>{" "}
+        </p>
         <p>
           Our team set out to solve a common but underexplored problem: how do
           product teams know which design works best—really know, with data?

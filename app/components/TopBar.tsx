@@ -133,7 +133,7 @@ export default function TopBar() {
 
   return (
     //TopBar container
-    <div className="fixed flex w-full max-w-7xl inset-x-0 m-auto top-0 p-2 md:p-4 z-50">
+    <div className="fixed flex w-full max-w-[1440px] inset-x-0 m-auto top-0 p-2 md:p-4 z-50">
       {/*case-study view portion*/}
       <AnimatePresence>
         <motion.div
@@ -150,7 +150,9 @@ export default function TopBar() {
           <motion.button
             title="Home"
             animate={{ boxShadow: themeShadows.topBar }}
-            className={`p-2 h-10 w-10 rounded-full hover:scale-110 transition ${textColorClass} ${bgColorClass}`}
+            transition={{ duration: 0.1 }}
+            whileHover={{ scale: 1.1 }}
+            className={`p-2 w-11 h-11 rounded-full hover:scale-110 transition-colors text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background`}
             onClick={() => router.push("/")}
           >
             <Home />
@@ -167,9 +169,10 @@ export default function TopBar() {
                   y: 0,
                   opacity: 1,
                 }}
+                transition={{ duration: 0.1 }}
                 exit={{ x: "-50%", y: -60, opacity: 0 }}
                 whileHover={{ scale: 1.05 }}
-                className={`absolute hidden sm:flex left-1/2 px-4 transition ${textColorClass} ${bgColorClass} rounded-full select-none justify-center gap-2 lg:gap-4`}
+                className={`absolute hidden sm:flex left-1/2 px-4 transition-colors text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background rounded-full select-none justify-center gap-2 lg:gap-4`}
               >
                 {/*Title*/}
                 <button
@@ -177,7 +180,7 @@ export default function TopBar() {
                   onClick={() =>
                     window.scrollTo({ top: 0, behavior: "smooth" })
                   }
-                  className="whitespace-nowrap hidden lg:flex items-center font-sans px-4 rounded-full text-lg font-semibold opacity-60 hover:opacity-100 transition-transform "
+                  className={`whitespace-nowrap hidden lg:flex items-center font-sans px-4 rounded-full text-lg font-semibold opacity-60 hover:opacity-100 transition-transform ${textColorClass}`}
                 >
                   {activeProject.title}
                 </button>
@@ -193,10 +196,10 @@ export default function TopBar() {
                           e.stopPropagation();
                           handleScrollToSection(section.id);
                         }}
-                        className={`p-2 w-10 h-10 rounded-full ${
+                        className={`p-2 w-11 h-11 rounded-full ${
                           activeSection === section.id
-                            ? "scale-105 opacity-100"
-                            : "opacity-40 hover:opacity-100"
+                            ? `${textColorClass}`
+                            : "opacity-40 text-foreground dark:text-dark-foreground hover:opacity-100"
                         }`}
                       >
                         <Icon />
@@ -222,7 +225,9 @@ export default function TopBar() {
         <motion.button
           title="About Me"
           animate={{ boxShadow: themeShadows.topBar }}
-          className={`p-2 h-10 w-10 rounded-full transition  hover:scale-110 ${textColorClass} ${bgColorClass}`}
+          transition={{ duration: 0.1 }}
+          whileHover={{ scale: 1.1 }}
+          className={`p-2 w-11 h-11 rounded-full transition-colors text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background`}
           onClick={() => {
             if (pathname === "/case-study-one") {
               if (window.scrollY > 30) {
@@ -245,7 +250,9 @@ export default function TopBar() {
         <motion.button
           title="Find Me on LinkedIn"
           animate={{ boxShadow: themeShadows.topBar }}
-          className={`p-2 h-10 w-10 rounded-full transition hover:scale-110 ${textColorClass} ${bgColorClass}`}
+          transition={{ duration: 0.1 }}
+          whileHover={{ scale: 1.1 }}
+          className={`p-2 w-11 h-11 rounded-full transition-colors text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background`}
           onClick={() =>
             window.open(
               "https://www.google.com",
@@ -258,7 +265,9 @@ export default function TopBar() {
         </motion.button>
         <motion.div
           animate={{ boxShadow: themeShadows.topBar }}
-          className={`flex w-10 h-10 z-50 rounded-full ${textColorClass} ${bgColorClass} transition hover:scale-110`}
+          transition={{ duration: 0.1 }}
+          whileHover={{ scale: 1.1 }}
+          className={`flex w-11 h-11 z-50 rounded-full text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background transition-colors`}
         >
           <ThemeToggle />
         </motion.div>

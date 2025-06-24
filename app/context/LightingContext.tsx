@@ -41,8 +41,8 @@ export const LightingProvider = ({
       const xFromCenter = e.clientX - window.innerWidth / 2;
       const yFromCenter = e.clientY - window.innerHeight / 2;
 
-      const newA = clamp(xFromCenter / 100, -6, 6);
-      const newB = clamp(yFromCenter / 100, -6, 6);
+      const newA = clamp(xFromCenter / 50, -6, 6);
+      const newB = clamp(yFromCenter / 50, -6, 6);
 
       setA(newA);
       setB(newB);
@@ -103,11 +103,11 @@ export const LightingProvider = ({
     const map: Record<string, Record<string, string>> = {
       light: {
         intro: "rgba(255, 255, 255, 1)",
-        flux: "rgba(251, 247, 255, 1)",
-        fantail: "rgba(255, 255, 255, 0.1)",
-        suits: "rgba(255, 255, 255, 0.1)",
-        wolcott: "rgba(255, 255, 255, 0.1)",
-        chinatown: "rgba(255, 255, 255, 0.1)",
+        flux: "rgba(255, 255, 255, 1)",
+        fantail: "rgba(255, 255, 255, 1)",
+        suits: "rgba(255, 255, 255, 1)",
+        wolcott: "rgba(255, 255, 255, 1)",
+        chinatown: "rgba(255, 255, 255, 1)",
       },
       dark: {
         intro: "rgba(255, 255, 255, 0.4)",
@@ -163,35 +163,39 @@ export function getShadows(
 ) {
   if (theme === "light") {
     return {
-      topBar: `${-a * 2}px ${-b * 2}px 16px 0px rgba(0, 0, 0, 0.2),
-              ${a * 2}px ${b * 2}px 16px 0px ${lightColor}`,
-      glyph: `${-a / 2}px ${-b / 2}px 2px 0px rgba(0, 0, 0, 0.1),
-              ${a / 2}px ${b / 2}px 2px 0px ${lightColor}`,
-      baseCard: `${-a}px ${-b}px 8px 0px rgba(0, 0, 0, 0.1),
-                 ${a}px ${b}px 8px 0px ${lightColor},
-                 inset 0px 0px 0px 0px ${lightColor}`,
-      hoverCard: `${-2 * a}px ${-2 * b}px 8px 0px rgba(0, 0, 0, 0.1),
-                 ${2 * a}px ${2 * b}px 8px 0px ${lightColor},
-                 inset ${2 * a}px ${2 * b}px 16px 0px ${lightColor}`,
-      baseButton: `inset ${-a / 2}px ${-b / 2}px 2px rgba(0, 0, 0, 0.1), 
-                   inset ${a / 2}px ${b / 2}px 2px ${lightColor}`,
-      hoverButton: `inset ${-a}px ${-b}px 4px rgba(0, 0, 0, 0.1), 
-                    inset ${a}px ${b}px 4px ${lightColor}`,
+      topBar: `${-a * 2}px ${-b * 2}px 16px 0px rgba(0, 0, 0, 0.3)`,
+      glyph: `${a / 3}px ${b / 3}px 4px 0px rgba(255,255,255,0.7),
+              ${a / 2}px ${b / 2}px 2px 0px rgba(255,255,255,1),
+              ${-a / 2}px ${-b / 2}px 2px 0px rgba(0, 0, 0, 0.1)`,
+      baseCard: `${a}px ${b}px 4px 0px rgba(255,255,255,1),
+                 ${-a}px ${-b}px 8px 0px rgba(0, 0, 0, 0.2)`,
+      hoverCard: `${1.5 * a}px ${1.5 * b}px 4px 0px rgba(255,255,255,1),
+                  ${-1.5 * a}px ${-1.5 * b}px 8px 0px rgba(0, 0, 0, 0.2),
+                  inset ${2 * a}px ${2 * b}px 8px 0px rgba(255,255,255,1)`,
+      baseButton: `inset ${-a}px ${-b}px 4px rgba(0, 0, 0, 0.1), 
+                   inset ${a}px ${b}px 4px rgba(255,255,255,1)`,
+      hoverButton: `inset ${-2 * a}px ${-2 * b}px 4px rgba(0, 0, 0, 0.1), 
+                    inset ${2 * a}px ${2 * b}px 4px rgba(255,255,255,1)`,
+      content: `${a / 1.5}px ${b / 1.5}px 4px 0px rgba(255,255,255,0.7),
+                 ${a}px ${b}px 8px 0px rgba(255,255,255,1),
+                 ${-a}px ${-b}px 8px 0px rgba(0, 0, 0, 0.1`,
     };
   } else {
     return {
       topBar: `${-a * 2}px ${-b * 2}px 16px 0px rgba(0, 0, 0, 1),
-              inset ${-a / 4}px ${-b / 4}px 2px 0px ${lightColor}`,
+              inset ${-a / 4}px ${-b / 4}px 2px 0px rgba(255,255,255,0.4)`,
       glyph: `${-a / 2}px ${-b / 2}px 4px 0px rgba(0, 0, 0, 1),
-              inset ${-a / 4}px ${-b / 4}px 1px 0px ${lightColor}`,
+              inset ${-a / 4}px ${-b / 4}px 1px 0px rgba(255,255,255,0.4)`,
       baseCard: `${-a}px ${-b}px 8px 0px rgba(0, 0, 0, 1), 
-                 inset ${-a / 3}px ${-b / 3}px 4px 0px ${lightColor}`,
+                 inset ${-a / 2}px ${-b / 2}px 4px 0px rgba(255,255,255,0.2)`,
       hoverCard: `${-2 * a}px ${-2 * b}px 8px 0px rgba(0, 0, 0, 1), 
-                  inset ${-a / 2}px ${-b / 2}px 4px 0px ${lightColor}`,
-      baseButton: `inset ${-a / 4}px ${-b / 4}px 1px rgba(0, 0, 0, 1), 
-                   inset ${a / 4}px ${b / 4}px 1px ${lightColor}`,
-      hoverButton: `inset ${-a / 2}px ${-b / 2}px 2px rgba(0, 0, 0, 1), 
-                    inset ${a / 2}px ${b / 2}px 2px ${lightColor}`,
+                  inset ${-a / 2}px ${-b / 2}px 4px 0px rgba(255,255,255,0.4)`,
+      baseButton: `inset ${-a / 2}px ${-b / 2}px 4px rgba(0, 0, 0, 1), 
+                   inset ${a / 2}px ${b / 2}px 4px rgba(255,255,255,0.4)`,
+      hoverButton: `inset ${-a}px ${-b}px 4px rgba(0, 0, 0, 1), 
+                    inset ${a}px ${b}px 4px rgba(255,255,255,0.4)`,
+      content: `${-a}px ${-b}px 8px 0px rgba(0, 0, 0, 1), 
+                 inset ${-a / 3}px ${-b / 3}px 4px 0px rgba(255,255,255,0.4)`,
     };
   }
 }

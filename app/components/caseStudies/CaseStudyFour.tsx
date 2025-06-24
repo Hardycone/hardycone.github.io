@@ -1,10 +1,27 @@
 /* eslint-disable react/no-unescaped-entities */
 // case-studies/project-two.tsx
+import { useLighting } from "../../context/LightingContext";
+import { useTheme } from "next-themes";
+import projects from "@/data/projects";
+import { useActiveProject } from "@/app/context/ActiveProjectContext";
+
 export default function CaseStudyFour() {
+  const { resolvedTheme } = useTheme();
+  const { activeIndex } = useActiveProject();
+
+  const { getTextColorClass } = useLighting();
+  const textColorClass = getTextColorClass(
+    resolvedTheme || "light",
+    projects[activeIndex].textColor
+  );
   return (
     <article>
       <section id="section-1" className="scroll-mt-24">
-        <h2>Background</h2>
+        <h2
+          className={`font-sans font-semibold text-3xl ${textColorClass} leading-loose`}
+        >
+          My Resume
+        </h2>{" "}
         <p>
           NASA challenged student teams to imagine how AR could augment
           spacesuits for lunar and Martian missions. Our team—a mix of

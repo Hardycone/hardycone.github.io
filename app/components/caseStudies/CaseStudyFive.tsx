@@ -1,9 +1,26 @@
 // case-studies/project-two.tsx
+import { useLighting } from "../../context/LightingContext";
+import { useTheme } from "next-themes";
+import projects from "@/data/projects";
+import { useActiveProject } from "@/app/context/ActiveProjectContext";
+
 export default function CaseStudyFive() {
+  const { resolvedTheme } = useTheme();
+  const { activeIndex } = useActiveProject();
+
+  const { getTextColorClass } = useLighting();
+  const textColorClass = getTextColorClass(
+    resolvedTheme || "light",
+    projects[activeIndex].textColor
+  );
   return (
     <article>
       <section id="section-1" className="scroll-mt-24">
-        <h2>Background</h2>
+        <h2
+          className={`font-sans font-semibold text-3xl ${textColorClass} leading-loose`}
+        >
+          My Resume
+        </h2>
         <p>
           In a rural village facing economic decline, residents rallied around a
           local natural site—a small but beautiful waterfall—as a symbol of

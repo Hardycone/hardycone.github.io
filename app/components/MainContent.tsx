@@ -102,7 +102,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
   }
   return (
     <main
-      className={`relative flex w-full transition-colors ${bgColorClass} ${
+      className={`relative flex w-full transition-colors bg-background dark:bg-dark-background ${
         viewMode === "home" ? "touch-none" : ""
       }`}
     >
@@ -115,7 +115,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
         <GlyphCarousel />
       </div>
       <motion.div
-        className={`relative w-full flex flex-col items-center gap-6 max-w-4xl px-2 ${
+        className={`relative w-full flex flex-col items-center gap-6 max-w-5xl px-2 ${
           viewMode === "home" ? "" : ""
         }`}
       >

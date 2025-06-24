@@ -216,11 +216,11 @@ export default function ProjectSummary({
             viewMode === "case-study" && variant === "header"
               ? undefined
               : {
-                  scale: 1.01,
+                  scale: 1.005,
                   boxShadow: themeShadows.hoverCard,
                 }
           }
-          className={`relative flex w-full gap-4 md:gap-6 p-2 md:p-6 rounded-xl ${bgColorClass} ${
+          className={`relative flex w-full gap-4 md:gap-6 p-2 md:p-6 rounded-xl md:rounded-[44px] bg-background dark:bg-dark-background ${
             showButton ? "flex-col sm:flex-row" : "flex-col"
           }`}
         >
@@ -230,28 +230,53 @@ export default function ProjectSummary({
             <motion.div
               layout="position"
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="flex flex-col gap-2"
+              className="flex flex-col gap-6"
             >
-              {/*Title*/}
-              <h3
-                className={`text-foreground dark:text-dark-foreground ${
-                  variant === "bottom" ? "text-sm sm:text-lg" : "hidden"
-                }`}
-              >
-                Next Up
-              </h3>
-              <h1
-                className={`font-sans font-semibold ${textColorClass} text-3xl md:text-4xl mb-2`}
-              >
-                {project.title}
-              </h1>
-              <h2
-                className={`font-sans ${textColorClass} text-xl md:text-2xl mb-2`}
-              >
-                {project.tagline}
-              </h2>
+              {/*Title Block*/}
+              <div className="flex flex-col gap-4">
+                {/*Up Next*/}
+                <h3
+                  className={`text-serif text-foreground dark:text-dark-foreground ${
+                    variant === "bottom" ? "text-sm sm:text-lg" : "hidden"
+                  }`}
+                >
+                  Next Up
+                </h3>
+
+                {/*Title and Tags*/}
+                <div className="flex flex-col gap-2">
+                  {/*Title*/}
+                  <h1
+                    className={`font-sans font-bold ${textColorClass} text-3xl lg:text-5xl mb-2`}
+                  >
+                    {project.title}
+                  </h1>
+
+                  {/*Tags*/}
+                  {project.tags && (
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className={`px-2 py-1 text-xs font-sans font-medium ${bgColorClass} text-dark-foreground dark:text-foreground`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/*Tagline*/}
+                <h2
+                  className={`font-sans font-semibold text-foreground dark:text-dark-foreground opacity-70 text-xl lg:text-2xl mb-2`}
+                >
+                  {project.tagline}
+                </h2>
+              </div>
+
               {/*Description*/}
-              <p className="font-serif text-base md:text-lg text-foreground dark:text-dark-foreground mb-4 line-clamp-6 sm:line-clamp-4 md:line-clamp-6">
+              <p className="font-serif text-base text-foreground dark:text-dark-foreground mb-4 line-clamp-6 sm:line-clamp-4 md:line-clamp-6">
                 {project.description}
               </p>
             </motion.div>
@@ -265,7 +290,7 @@ export default function ProjectSummary({
                   scale: 0.97,
                   boxShadow: themeShadows.hoverButton,
                 }}
-                className={`font-serif font-bold px-4 py-2 text-sm md:text-base text-foreground dark:text-dark-foreground rounded-full ${
+                className={`font-serif font-bold px-4 py-2 text-sm md:text-base ${textColorClass} rounded-lg md:rounded-full ${
                   showButton ? "" : "hidden"
                 } `}
               >
@@ -278,7 +303,7 @@ export default function ProjectSummary({
             <div
               className={`relative shrink-0 overflow-hidden rounded-lg ${
                 showButton
-                  ? "w-full sm:w-1/2 aspect-[3/2] sm:aspect-[1/1]"
+                  ? "w-full sm:w-1/2 aspect-[2/1] sm:aspect-[1/1]"
                   : "w-full aspect-[2/1] "
               }`}
             >
@@ -287,7 +312,7 @@ export default function ProjectSummary({
                 alt={`${project.title} preview image`}
                 fill
                 sizes="(min-width: 640px) 50vw, 100vw"
-                className="object-cover"
+                className="object-cover object-[center_bottom] rounded-lg md:rounded-[20px]"
                 priority={viewMode === "home" && variant === "header"}
                 onLoad={() => setImageLoaded(true)}
               />
