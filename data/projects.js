@@ -16,7 +16,7 @@ const projects = [
     tagline: "Human-Centered Designer with 10 Years of Experience",
     tags: ["Designer", "Researcher", "Entrepreneur"],
     description:
-      "My expertise ranges across design, research, and leadership. I have worked on everything from public initiatives deeply rooted in stakeholder engagement, to enterprise software aiding complex workflows. The throughline of all my work is a commitment to solving real problems for real people.",
+      "My expertise ranges across design, research, and project management. I have worked on everything from public initiatives deeply rooted in stakeholder engagement, to enterprise software aiding complex workflows. The throughline of all my work is a commitment to solving real problems for real people.",
     image: "/images/project-1.jpg",
     button: "More About Me",
     textColor: "intro",
