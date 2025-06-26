@@ -2,7 +2,7 @@ export default function Sun() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="fill-current w-full h-full"
+      className="h-full w-full fill-current"
       viewBox="0 0 800 800"
       preserveAspectRatio="xMidYMid meet"
     >

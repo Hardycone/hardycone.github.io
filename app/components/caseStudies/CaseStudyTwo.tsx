@@ -14,13 +14,14 @@ export default function CaseStudyTwo() {
   const { getTextColorClass } = useLighting();
   const textColorClass = getTextColorClass(
     resolvedTheme || "light",
-    projects[activeIndex].textColor
+    projects[activeIndex].textColor,
   );
   return (
     <article>
+      {/*Section 1*/}
       <section id="section-1" className="scroll-mt-24">
         <h2
-          className={`font-sans font-semibold text-3xl ${textColorClass} leading-loose`}
+          className={`font-sans text-3xl font-semibold ${textColorClass} leading-loose`}
         >
           W1232
         </h2>

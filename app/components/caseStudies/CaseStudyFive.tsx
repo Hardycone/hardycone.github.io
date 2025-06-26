@@ -11,13 +11,13 @@ export default function CaseStudyFive() {
   const { getTextColorClass } = useLighting();
   const textColorClass = getTextColorClass(
     resolvedTheme || "light",
-    projects[activeIndex].textColor
+    projects[activeIndex].textColor,
   );
   return (
     <article>
       <section id="section-1" className="scroll-mt-24">
         <h2
-          className={`font-sans font-semibold text-3xl ${textColorClass} leading-loose`}
+          className={`font-sans text-3xl font-semibold ${textColorClass} leading-loose`}
         >
           My Resume
         </h2>

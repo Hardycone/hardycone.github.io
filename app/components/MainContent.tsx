@@ -94,7 +94,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
   const project = projects[activeIndex];
   const bgColorClass = getBgColorClass(
     resolvedTheme || "light",
-    project.bgColor
+    project.bgColor,
   );
   if (!mounted) {
     // Avoid rendering on server or before mount to prevent mismatch
@@ -102,27 +102,27 @@ export default function MainContent({ children }: { children: ReactNode }) {
   }
   return (
     <main
-      className={`relative flex w-full transition-colors bg-background dark:bg-dark-background ${
-        viewMode === "home" ? "touch-none" : ""
+      className={`relative flex w-full bg-background transition-colors dark:bg-dark-background ${
+        viewMode === "home" ? "touch-none overflow-y-hidden" : ""
       }`}
     >
       <TopBar />
       <div
-        className={`relative flex h-screen flex-col flex-1 overflow-hidden ${
+        className={`relative flex h-screen flex-1 flex-col overflow-hidden ${
           viewMode === "home" ? "min-w-max" : ""
         }`}
       >
         <GlyphCarousel />
       </div>
       <motion.div
-        className={`relative w-full flex flex-col items-center gap-6 max-w-5xl px-2 ${
+        className={`relative flex w-full max-w-5xl flex-col items-center gap-6 px-2 ${
           viewMode === "home" ? "" : ""
         }`}
       >
         <ProjectSummary />
 
         {viewMode === "home" && showPrompt && (
-          <div className="fixed bottom-6 w-full inset-x-0 flex justify-center z-50">
+          <div className="fixed inset-x-0 bottom-6 z-50 flex w-full justify-center">
             <motion.div
               initial={{ y: -100, opacity: 0 }}
               animate={{
@@ -140,12 +140,12 @@ export default function MainContent({ children }: { children: ReactNode }) {
                 },
               }}
               exit={{ y: -100, opacity: 0 }}
-              className="font-sans text-sm md:text-lg pl-2 py-1 rounded-lg shadow-md pointer-events-none bg-foreground text-background dark:bg-dark-foreground dark:text-dark-background"
+              className="pointer-events-none rounded-lg bg-foreground py-1 pl-2 font-sans text-sm text-background shadow-md dark:bg-dark-foreground dark:text-dark-background md:text-lg"
             >
               Scroll to explore
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-7 h-7 inline-block"
+                className="inline-block h-7 w-7"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 stroke="currentColor"
@@ -162,16 +162,16 @@ export default function MainContent({ children }: { children: ReactNode }) {
         <ProjectSummary variant="bottom" />
         {children}
       </motion.div>
-      <div className="flex-1 min-w-0" />
+      <div className="min-w-0 flex-1" />
       {showLandscapeBlocker && (
-        <div className="fixed flex flex-col inset-0 z-[999] bg-background text-foreground  items-center justify-center text-center">
+        <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-background text-center text-foreground">
           <motion.svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="1"
-            className="w-16 h-16"
+            className="h-16 w-16"
             animate={{
               rotate: [90, 90, 0, 0, 0, 90, 90, 180, 180, 180, 90],
               transition: {
@@ -187,7 +187,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
             <rect x="6" y="2" width="12" height="20" rx="2" ry="2" />
             <line x1="12" y1="18" x2="12" y2="18" />
           </motion.svg>
-          <p className="text-lg font-sans font-semibold">
+          <p className="font-sans text-lg font-semibold">
             Please rotate your phone to portrait mode to view Home.
           </p>
         </div>

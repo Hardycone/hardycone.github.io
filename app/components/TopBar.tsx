@@ -28,30 +28,30 @@ export default function TopBar() {
 
   const textColorClass = getTextColorClass(
     resolvedTheme || "light",
-    projects[activeIndex].textColor
+    projects[activeIndex].textColor,
   );
 
   const bgColorClass = getBgColorClass(
     resolvedTheme || "light",
-    projects[activeIndex].bgColor
+    projects[activeIndex].bgColor,
   );
 
   const lightColor = getLightColor(
     resolvedTheme || "light",
-    projects[activeIndex].textColor
+    projects[activeIndex].textColor,
   );
 
   const themeShadows = getShadows(
     a,
     b,
     lightColor,
-    resolvedTheme === "dark" ? "dark" : "light"
+    resolvedTheme === "dark" ? "dark" : "light",
   );
 
   const activeProject = projects[activeIndex];
   const sections = useMemo(
     () => projects[activeIndex]?.sections || [],
-    [activeIndex]
+    [activeIndex],
   );
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function TopBar() {
             .sort(
               (a, b) =>
                 Math.abs(b.boundingClientRect.top) -
-                Math.abs(a.boundingClientRect.top)
+                Math.abs(a.boundingClientRect.top),
             );
 
           if (visible.length > 0) {
@@ -83,7 +83,7 @@ export default function TopBar() {
           root: null,
           rootMargin: "-25% 0px -25% 0px",
           threshold: 0.01,
-        }
+        },
       );
 
       const tryObserve = () => {
@@ -133,7 +133,7 @@ export default function TopBar() {
 
   return (
     //TopBar container
-    <div className="fixed flex w-full max-w-[1440px] inset-x-0 m-auto top-0 p-2 md:p-4 z-50">
+    <div className="fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[1440px] p-2 md:p-4">
       {/*case-study view portion*/}
       <AnimatePresence>
         <motion.div
@@ -144,7 +144,7 @@ export default function TopBar() {
             opacity: viewMode === "home" ? 0 : 1,
           }}
           exit={{ y: -60, opacity: 0 }}
-          className="w-full flex justify-between z-50"
+          className="z-50 flex w-full justify-between"
         >
           {/*Left: Home*/}
           <motion.button
@@ -152,7 +152,7 @@ export default function TopBar() {
             animate={{ boxShadow: themeShadows.topBar }}
             transition={{ duration: 0.1 }}
             whileHover={{ scale: 1.1 }}
-            className={`p-2 w-11 h-11 rounded-full hover:scale-110 transition-colors text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background`}
+            className={`h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors hover:scale-110 dark:bg-dark-background dark:text-dark-foreground`}
             onClick={() => router.push("/")}
           >
             <Home />
@@ -172,7 +172,7 @@ export default function TopBar() {
                 transition={{ duration: 0.1 }}
                 exit={{ x: "-50%", y: -60, opacity: 0 }}
                 whileHover={{ scale: 1.05 }}
-                className={`absolute hidden sm:flex left-1/2 px-4 transition-colors text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background rounded-full select-none justify-center gap-2 lg:gap-4`}
+                className={`absolute left-1/2 hidden select-none justify-center gap-2 rounded-full bg-background px-4 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground sm:flex lg:gap-4`}
               >
                 {/*Title*/}
                 <button
@@ -180,12 +180,12 @@ export default function TopBar() {
                   onClick={() =>
                     window.scrollTo({ top: 0, behavior: "smooth" })
                   }
-                  className={`whitespace-nowrap hidden lg:flex items-center font-sans px-4 rounded-full text-lg font-semibold opacity-60 hover:opacity-100 transition-transform ${textColorClass}`}
+                  className={`hidden items-center whitespace-nowrap rounded-full px-4 font-sans text-lg font-semibold opacity-60 transition-transform hover:opacity-100 lg:flex ${textColorClass}`}
                 >
                   {activeProject.title}
                 </button>
                 {/*Sections*/}
-                <div className="flex gap-2 lg:gap-4 ">
+                <div className="flex gap-2 lg:gap-4">
                   {sections.map((section) => {
                     const Icon = section.icon;
                     return (
@@ -196,10 +196,10 @@ export default function TopBar() {
                           e.stopPropagation();
                           handleScrollToSection(section.id);
                         }}
-                        className={`p-2 w-11 h-11 rounded-full ${
+                        className={`h-11 w-11 rounded-full p-2 ${
                           activeSection === section.id
                             ? `${textColorClass}`
-                            : "opacity-40 text-foreground dark:text-dark-foreground hover:opacity-100"
+                            : "text-foreground opacity-40 hover:opacity-100 dark:text-dark-foreground"
                         }`}
                       >
                         <Icon />
@@ -218,7 +218,7 @@ export default function TopBar() {
       <motion.div
         initial={{ y: -60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="ml-auto flex gap-2 md:gap-4 rounded-full"
+        className="ml-auto flex gap-2 rounded-full md:gap-4"
       >
         {/*Resume*/}
 
@@ -227,14 +227,14 @@ export default function TopBar() {
           animate={{ boxShadow: themeShadows.topBar }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
-          className={`p-2 w-11 h-11 rounded-full transition-colors text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background`}
+          className={`h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground`}
           onClick={() => {
             if (pathname === "/case-study-one") {
               if (window.scrollY > 30) {
                 window.scrollTo({ top: 0, behavior: "smooth" });
               } else {
                 // Scroll down a bit, then bounce back up
-                window.scrollBy({ top: 80, behavior: "instant" });
+                window.scrollBy({ top: 120, behavior: "smooth" });
                 setTimeout(() => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }, 200); // Adjust delay to match scroll duration
@@ -252,12 +252,12 @@ export default function TopBar() {
           animate={{ boxShadow: themeShadows.topBar }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
-          className={`p-2 w-11 h-11 rounded-full transition-colors text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background`}
+          className={`h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground`}
           onClick={() =>
             window.open(
               "https://www.google.com",
               "_blank",
-              "noopener,noreferrer"
+              "noopener,noreferrer",
             )
           }
         >
@@ -267,7 +267,7 @@ export default function TopBar() {
           animate={{ boxShadow: themeShadows.topBar }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
-          className={`flex w-11 h-11 z-50 rounded-full text-foreground dark:text-dark-foreground bg-background dark:bg-dark-background transition-colors`}
+          className={`z-50 flex h-11 w-11 rounded-full bg-background text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground`}
         >
           <ThemeToggle />
         </motion.div>

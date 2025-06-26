@@ -159,7 +159,7 @@ export function getShadows(
   a: number,
   b: number,
   lightColor: string,
-  theme: "light" | "dark"
+  theme: "light" | "dark",
 ) {
   if (theme === "light") {
     return {

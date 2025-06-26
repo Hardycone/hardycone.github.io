@@ -41,13 +41,13 @@ export default function CaseStudyContent() {
 
   const lightColor = getLightColor(
     resolvedTheme || "light",
-    projects[activeIndex].textColor
+    projects[activeIndex].textColor,
   );
   const themeShadows = getShadows(
     a,
     b,
     lightColor,
-    resolvedTheme === "dark" ? "dark" : "light"
+    resolvedTheme === "dark" ? "dark" : "light",
   );
   const project = projects[activeIndex];
   const slug = project.slug as ProjectSlug;
@@ -70,7 +70,7 @@ export default function CaseStudyContent() {
         <motion.div
           layout
           key={project.id}
-          className="font-serif text-foreground dark:text-dark-foreground p-2 md:p-6 w-full rounded-[44px] flex flex-col gap-10"
+          className="flex w-full flex-col gap-10 rounded-[44px] p-2 font-serif text-foreground dark:text-dark-foreground md:p-6"
           initial={{
             y: 500,
             opacity: 0,

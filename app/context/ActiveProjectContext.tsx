@@ -32,7 +32,7 @@ interface ActiveProjectContextType {
 }
 
 const ActiveProjectContext = createContext<ActiveProjectContextType | null>(
-  null
+  null,
 );
 
 function usePreviousIndex<T>(value: T): T | undefined {
@@ -107,7 +107,7 @@ export function useActiveProject() {
   const context = useContext(ActiveProjectContext);
   if (!context) {
     throw new Error(
-      "useActiveProject must be used within ActiveProjectProvider"
+      "useActiveProject must be used within ActiveProjectProvider",
     );
   }
   return context;

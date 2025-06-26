@@ -8,7 +8,7 @@ export default function PersonalLogo() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="text-foreground w-full h-full"
+      className="h-full w-full text-foreground"
     >
       <path d="M12 2L2 12h10v10l10-10H12z" />
     </svg>

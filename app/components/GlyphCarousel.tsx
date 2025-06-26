@@ -19,13 +19,13 @@ export default function GlyphCarousel() {
   const { a, b, getLightColor } = useLighting();
   const lightColor = getLightColor(
     resolvedTheme || "light",
-    projects[activeIndex].textColor
+    projects[activeIndex].textColor,
   );
   const themeShadows = getShadows(
     a,
     b,
     lightColor,
-    resolvedTheme === "dark" ? "dark" : "light"
+    resolvedTheme === "dark" ? "dark" : "light",
   );
   const touchStartY = useRef<number | null>(null);
   const keyboardLocked = useRef(false);
@@ -53,7 +53,7 @@ export default function GlyphCarousel() {
       const direction = wheelAccum.current > 0 ? 1 : -1;
       const candidateIndex = wrapIndex(
         activeIndex + direction,
-        projects.length
+        projects.length,
       );
 
       if (!ticking.current) {
@@ -148,7 +148,7 @@ export default function GlyphCarousel() {
 
   return (
     <motion.div
-      className="flex flex-col items-end gap-10 md:gap-20 pt-[calc(50dvh)] px-6 md:px-12 lg:px-16 xl:px-24"
+      className="xl:px-20= flex flex-col items-end gap-10 px-6 pt-[calc(50dvh)] md:gap-20 md:px-12 lg:px-16"
       animate={{
         y: yOffset,
         x: isInteractive ? 0 : -300,
@@ -166,11 +166,11 @@ export default function GlyphCarousel() {
           ? isActive
             ? 2
             : isPreview
-            ? 1.2
-            : 1
+              ? 1.2
+              : 1
           : isActive
-          ? 1.5
-          : 1;
+            ? 1.5
+            : 1;
         const opacity = isActive ? 1 : isPreview ? 0.7 : 0.3;
 
         return (
@@ -182,7 +182,7 @@ export default function GlyphCarousel() {
               opacity,
             }}
             transition={{ type: "tween", stiffness: 500, damping: 20 }}
-            className="rounded-full p-1 h-10 w-10 md:p-2 md:h-20 md:w-20 select-none cursor-pointer touch-manipulation"
+            className="h-10 w-10 cursor-pointer touch-manipulation select-none rounded-full p-1 md:h-20 md:w-20 md:p-2"
             onClick={() => isInteractive && setActiveIndex(index)}
           >
             <Glyph />
