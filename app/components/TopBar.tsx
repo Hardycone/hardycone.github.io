@@ -22,18 +22,12 @@ export default function TopBar() {
   const pathname = usePathname();
   const [showTitle, setShowTitle] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const { a, b, getTextColorClass, getBgColorClass, getLightColor } =
-    useLighting();
+  const { a, b, getTextColorClass, getLightColor } = useLighting();
   const { resolvedTheme } = useTheme();
 
   const textColorClass = getTextColorClass(
     resolvedTheme || "light",
     projects[activeIndex].textColor,
-  );
-
-  const bgColorClass = getBgColorClass(
-    resolvedTheme || "light",
-    projects[activeIndex].bgColor,
   );
 
   const lightColor = getLightColor(
@@ -102,7 +96,6 @@ export default function TopBar() {
       tryObserve();
     };
 
-    // ✅ Run immediately on mount or when sections/pathname changes
     handleRefresh();
 
     window.addEventListener("case-study-loaded", handleRefresh);
@@ -153,7 +146,71 @@ export default function TopBar() {
             transition={{ duration: 0.1 }}
             whileHover={{ scale: 1.1 }}
             className={`h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors hover:scale-110 dark:bg-dark-background dark:text-dark-foreground`}
-            onClick={() => router.push("/")}
+            onClick={() => {
+              const preventScroll = (e: Event) => {
+                e.preventDefault();
+              };
+
+              const blockUserScroll = () => {
+                window.addEventListener("wheel", preventScroll, {
+                  passive: false,
+                });
+                window.addEventListener("touchmove", preventScroll, {
+                  passive: false,
+                });
+                window.addEventListener("keydown", keydownHandler, {
+                  passive: false,
+                });
+              };
+
+              const unblockUserScroll = () => {
+                window.removeEventListener("wheel", preventScroll);
+                window.removeEventListener("touchmove", preventScroll);
+                window.removeEventListener("keydown", keydownHandler);
+              };
+
+              const keydownHandler = (e: KeyboardEvent) => {
+                // Block keys that cause scrolling
+                const keys = [
+                  "ArrowUp",
+                  "ArrowDown",
+                  "PageUp",
+                  "PageDown",
+                  "Home",
+                  "End",
+                  " ",
+                ];
+                if (keys.includes(e.key)) {
+                  e.preventDefault();
+                }
+              };
+
+              // In your button onClick:
+              if (window.scrollY > 0) {
+                blockUserScroll();
+
+                const onScroll = () => {
+                  if (window.scrollY === 0) {
+                    window.removeEventListener("scroll", onScroll);
+                    unblockUserScroll();
+                    router.push("/");
+                  }
+                };
+
+                window.addEventListener("scroll", onScroll);
+
+                window.scrollTo({ top: 0, behavior: "smooth" });
+
+                // Fallback timeout if scroll event never fires
+                setTimeout(() => {
+                  window.removeEventListener("scroll", onScroll);
+                  unblockUserScroll();
+                  if (window.scrollY === 0) router.push("/");
+                }, 2000);
+              } else {
+                router.push("/");
+              }
+            }}
           >
             <Home />
           </motion.button>
@@ -237,7 +294,7 @@ export default function TopBar() {
                 window.scrollBy({ top: 120, behavior: "smooth" });
                 setTimeout(() => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
-                }, 200); // Adjust delay to match scroll duration
+                }, 1000); // Adjust delay to match scroll duration
               }
             } else {
               router.push("/case-study-one");

@@ -5,9 +5,6 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 
 import { useViewMode } from "../context/ViewModeContext";
 import { useActiveProject } from "../context/ActiveProjectContext";
-import { useTheme } from "next-themes";
-import { useLighting } from "../context/LightingContext";
-import projects from "../../data/projects";
 
 import GlyphCarousel from "./GlyphCarousel";
 import TopBar from "./TopBar";
@@ -17,7 +14,6 @@ import CaseStudyContent from "./CaseStudyContent";
 export default function MainContent({ children }: { children: ReactNode }) {
   const { activeIndex } = useActiveProject();
   const { viewMode } = useViewMode();
-  const { resolvedTheme } = useTheme();
 
   const [showPrompt, setShowPrompt] = useState(false);
   const hasPromptShown = useRef(false);
@@ -90,12 +86,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       document.body.style.width = "";
     }
   }, [showLandscapeBlocker]);
-  const { getBgColorClass } = useLighting();
-  const project = projects[activeIndex];
-  const bgColorClass = getBgColorClass(
-    resolvedTheme || "light",
-    project.bgColor,
-  );
+
   if (!mounted) {
     // Avoid rendering on server or before mount to prevent mismatch
     return null;
@@ -103,7 +94,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
   return (
     <main
       className={`relative flex w-full bg-background transition-colors dark:bg-dark-background ${
-        viewMode === "home" ? "touch-none overflow-y-hidden" : ""
+        viewMode === "home" ? "touch-none overflow-y-hidden" : "touch-auto"
       }`}
     >
       <TopBar />
@@ -121,44 +112,48 @@ export default function MainContent({ children }: { children: ReactNode }) {
       >
         <ProjectSummary />
 
+        {/*Scroll Reminder*/}
         {viewMode === "home" && showPrompt && (
-          <div className="fixed inset-x-0 bottom-6 z-50 flex w-full justify-center">
-            <motion.div
-              initial={{ y: -100, opacity: 0 }}
-              animate={{
-                y: [0, 0, 8, 0, 0, -8, 0, 0],
-                opacity: 1,
-                transition: {
-                  y: {
-                    delay: 0.5,
-                    repeat: Infinity,
-                    repeatType: "loop",
-                    duration: 3,
-                    ease: "easeInOut",
-                  },
-                  opacity: { duration: 0.5 },
+          <motion.div
+            initial={{ y: -100, opacity: 0 }}
+            animate={{
+              y: [0, 0, 8, 0, 0, -8, 0, 0],
+              opacity: 1,
+              transition: {
+                y: {
+                  delay: 0.5,
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: 3,
+                  ease: "easeInOut",
                 },
-              }}
-              exit={{ y: -100, opacity: 0 }}
-              className="pointer-events-none rounded-lg bg-foreground py-1 pl-2 font-sans text-sm text-background shadow-md dark:bg-dark-foreground dark:text-dark-background md:text-lg"
+                opacity: { duration: 0.5 },
+              },
+            }}
+            exit={{ y: -100, opacity: 0 }}
+            className="pointer-events-none fixed bottom-6 z-50 flex justify-center rounded-lg bg-foreground py-1 pl-2 font-sans text-sm text-background shadow-md dark:bg-dark-foreground dark:text-dark-background md:text-lg"
+          >
+            Scroll to explore
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="inline-block h-7 w-7"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              Scroll to explore
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="inline-block h-7 w-7"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 5l-4 4h3v6H8l4 4 4-4h-3V9h3l-4-4z" />
-              </svg>
-            </motion.div>
-          </div>
+              <path d="M12 5l-4 4h3v6H8l4 4 4-4h-3V9h3l-4-4z" />
+            </svg>
+          </motion.div>
         )}
 
         <CaseStudyContent />
+        {viewMode === "case-study" && (
+          <h3 className="mb-4 ml-6 mr-auto font-sans text-3xl font-semibold">
+            Up Next:
+          </h3>
+        )}
         <ProjectSummary variant="bottom" />
         {children}
       </motion.div>

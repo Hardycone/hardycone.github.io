@@ -49,6 +49,8 @@ export default function ProjectSummary({
     lightColor,
     resolvedTheme === "dark" ? "dark" : "light",
   );
+  const direction =
+    previousIndex !== undefined && activeIndex < previousIndex ? "down" : "up";
 
   const homeViewVersion = {
     initial: (direction: "up" | "down") => ({
@@ -134,10 +136,7 @@ export default function ProjectSummary({
   }, [hasMounted, imageLoaded, viewMode, variant, activeIndex]);
 
   if (!hasMounted || viewMode === "not-found") return null;
-  if (variant === "bottom" && viewMode === "home") return null;
-
-  const direction =
-    previousIndex !== undefined && activeIndex < previousIndex ? "down" : "up";
+  if (viewMode === "home" && variant === "bottom") return null;
 
   let project;
   let clickable = false;
@@ -230,53 +229,45 @@ export default function ProjectSummary({
             <motion.div
               layout="position"
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="flex flex-col gap-6"
+              className={`flex flex-col gap-4`}
             >
               {/*Title Block*/}
-              <div className="flex flex-col gap-4">
-                {/*Up Next*/}
-                <h3
-                  className={`text-serif text-foreground dark:text-dark-foreground ${
-                    variant === "bottom" ? "text-sm sm:text-lg" : "hidden"
-                  }`}
+              <div className="flex flex-col">
+                {/*Title*/}
+                <div
+                  className={`font-sans font-bold ${textColorClass} ${viewMode === "home" ? "text-3xl lg:text-5xl" : "text-5xl"}`}
                 >
-                  Next Up
-                </h3>
-
-                {/*Title and Tags*/}
-                <div className="flex flex-col gap-2">
-                  {/*Title*/}
-                  <h1
-                    className={`font-sans font-bold ${textColorClass} mb-2 text-3xl lg:text-5xl`}
-                  >
-                    {project.title}
-                  </h1>
-
-                  {/*Tags*/}
-                  {project.tags && (
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className={`px-2 py-1 font-sans text-xs font-semibold ${bgColorClass} hidden text-dark-foreground dark:text-foreground md:flex`}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  {project.title}
                 </div>
+
+                {/*Tags*/}
+                {project.tags && (
+                  <div
+                    className={`my-4 flex flex-wrap gap-2 ${viewMode === "home" ? "hidden lg:flex" : "flex"}`}
+                  >
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className={`px-2 py-1 font-sans text-xs font-semibold ${bgColorClass} text-dark-foreground dark:text-foreground`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
 
                 {/*Tagline*/}
                 <h2
-                  className={`mb-2 font-sans text-xl font-semibold text-foreground opacity-70 dark:text-dark-foreground lg:text-2xl`}
+                  className={`mb-2 font-sans font-semibold text-foreground opacity-70 dark:text-dark-foreground ${viewMode === "home" ? "text-lg lg:text-2xl" : "text-2xl"}`}
                 >
                   {project.tagline}
                 </h2>
               </div>
 
               {/*Description*/}
-              <p className="mb-4 line-clamp-6 font-serif text-base text-foreground dark:text-dark-foreground sm:line-clamp-4 md:line-clamp-6">
+              <p
+                className={`mb-4 font-serif text-foreground dark:text-dark-foreground ${viewMode === "home" ? "line-clamp-6 text-sm sm:line-clamp-4 md:line-clamp-6 lg:text-base" : "text-base"}`}
+              >
                 {project.description}
               </p>
             </motion.div>

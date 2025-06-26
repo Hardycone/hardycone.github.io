@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { useLighting, getShadows } from "../../context/LightingContext";
@@ -26,16 +27,15 @@ export default function CaseStudyOne() {
     lightColor,
     resolvedTheme === "dark" ? "dark" : "light",
   );
+
   return (
     <article>
       {/*Section 1: Resume*/}
-      <section id="section-1" className="scroll-mt-24">
-        {/*Section Header*/}
-        <div className="flex w-full items-center justify-between">
+      <section id="section-1" className="mb-16 scroll-mt-24">
+        {/*Section Header Block*/}
+        <div className="mb-4 flex w-full items-start justify-between">
           {/*Section Title*/}
-          <h2
-            className={`font-sans text-3xl font-semibold ${textColorClass} leading-loose`}
-          >
+          <h2 className={`font-sans text-3xl font-semibold ${textColorClass}`}>
             My Resume
           </h2>
           {/*Download Button*/}
@@ -47,12 +47,11 @@ export default function CaseStudyOne() {
             Download a Copy
           </motion.button>
         </div>
+
         {/*Subsection 1: Experience*/}
-        <div className="">
+        <div className="mb-8">
           {/*Subheader*/}
-          <h3 className="mb-4 font-sans text-2xl font-semibold leading-loose">
-            Experience
-          </h3>
+          <h3 className="mb-4 font-sans text-2xl font-semibold">Experience</h3>
           {/*Entry 1*/}
           <div className="mb-4 flex gap-4">
             {/*Left: Image*/}
@@ -117,14 +116,29 @@ export default function CaseStudyOne() {
               <div className="mt-2 flex flex-col">
                 <p>
                   ASLF is a leading nonprofit with a decades-long track record
-                  of shaping national environmental policy through strategic
-                  litigation. In recent years, the organizatoin is refocusing
-                  its efforts to
+                  of shaping US environmental policy through strategic
+                  litigation. I joined as a landscape designer as the
+                  organizatoin aimed to refocus its efforts to implement
+                  impactful green projects in local communities.
                 </p>
                 <ul className="mt-2 list-inside list-disc">
-                  <li>Design</li>
-                  <li>Project Management</li>
-                  <li>Program Development</li>
+                  <li>
+                    Design and Implementation: I designed and oversaw the
+                    implementation of over a dozen green projects.
+                  </li>
+                  <li>
+                    Project Management: I managed several federal and local
+                    grants amassing a total budget of over $3 million.
+                  </li>
+                  <li>
+                    Program Development: I built partnerships and secured
+                    grants.
+                  </li>
+                  <li>
+                    Stakeholder Management: I heavily involved the local
+                    community in all my projects in the form of interviews and
+                    workshops.
+                  </li>
                 </ul>
               </div>
             </div>
@@ -172,13 +186,11 @@ export default function CaseStudyOne() {
           </div>
         </div>
         {/*Subsection 2: Education*/}
-        <div>
+        <div className="mb-8">
           {/*Subheader*/}
-          <h3 className="mb-4 font-sans text-2xl font-semibold leading-loose">
-            Education
-          </h3>
+          <h3 className="mb-4 font-sans text-2xl font-semibold">Education</h3>
           {/*Entry 1*/}
-          <div className="mb-8 flex gap-4">
+          <div className="mb-4 flex gap-4">
             {/*Left: Image*/}
             <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
               <Image
@@ -211,7 +223,7 @@ export default function CaseStudyOne() {
             </div>
           </div>
           {/*Entry 2*/}
-          <div className="mb-8 flex gap-4">
+          <div className="mb-4 flex gap-4">
             {/*Left: Image*/}
             <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
               <Image
@@ -244,7 +256,7 @@ export default function CaseStudyOne() {
             </div>
           </div>
           {/*Entry 3*/}
-          <div className="mb-8 flex gap-4">
+          <div className="mb-4 flex gap-4">
             {/*Left: Image*/}
             <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
               <Image
@@ -272,9 +284,9 @@ export default function CaseStudyOne() {
           </div>
         </div>
         {/*Subsection 3: Grants and Awards*/}
-        <div>
+        <div className="mb-8">
           {/*Subheader*/}
-          <h3 className="mb-4 font-sans text-2xl font-semibold leading-loose">
+          <h3 className="mb-4 font-sans text-2xl font-semibold">
             Awards, Grants, and Funded Projects
           </h3>
           {/*List*/}
@@ -408,8 +420,7 @@ export default function CaseStudyOne() {
                 </div>
                 {/*Description*/}
                 <p>
-                  New York State Environmental Facilities Corporation Green
-                  Innovation Grant,{" "}
+                  New York State Green Innovation Grant,{" "}
                   <span className="font-serif text-lg italic">$1,100,000</span>
                 </p>
               </div>
@@ -441,98 +452,174 @@ export default function CaseStudyOne() {
           </ul>
         </div>
         {/*Subsection 4: Skills*/}
-        <h3 className="mb-4 font-sans text-2xl font-semibold leading-loose">
-          Skills
-        </h3>
-        {/*Skills List*/}
-        <ul className="text-xl">
-          {/*1*/}
-          <li>
-            <p className="mb-2 font-sans text-xl">
-              Design and Animation:{" "}
-              <span className="font-serif text-lg italic">
-                Figma, Illustrator, Photoshop, After Effect, LottieFiles, Framer
-                Motion
-              </span>
-            </p>
-          </li>
-          {/*2*/}
-          <li>
-            <p className="mb-2 font-sans text-xl">
-              Research and Analyses:{" "}
-              <span className="font-serif text-lg italic">
-                User Interview, Focus Groups, Survey Design, Statistical Methods
-                (T-test, ANOVA, Linear Regression)
-              </span>
-            </p>
-          </li>
-          {/*3*/}
-          <li>
-            <p className="mb-2 font-sans text-xl">
-              Front-End:{" "}
-              <span className="font-serif text-lg italic">
-                Javascript, React, Next.js, Tailwind CSS
-              </span>
-            </p>
-          </li>
-          {/*4*/}
-          <li>
-            <p className="mb-2 font-sans text-xl">
-              Data Visualization:{" "}
-              <span className="font-serif text-lg italic">D3.js, Tableau</span>
-            </p>
-          </li>
-          {/*5*/}
-          <li>
-            <p className="mb-2 font-sans text-xl">
-              Physical Prototyping:{" "}
-              <span className="font-serif text-lg italic">
-                Microcontrollers, 3D Modeling (Blender, Fusion 360, SolidWorks),
-                Digital Fabrication (3D Printing, Laser Cutting, CNC Milling)
-              </span>
-            </p>
-          </li>
-        </ul>
+        <div className="mb-8">
+          <h3 className="mb-4 font-sans text-2xl font-semibold">Skills</h3>
+          {/*Skills List*/}
+          <ul className="text-xl">
+            {/*1*/}
+            <li>
+              <p className="mb-2 font-sans text-xl">
+                Design and Animation:{" "}
+                <span className="font-serif text-lg italic">
+                  Figma, Illustrator, Photoshop, After Effect, LottieFiles,
+                  Framer Motion
+                </span>
+              </p>
+            </li>
+            {/*2*/}
+            <li>
+              <p className="mb-2 font-sans text-xl">
+                Research and Analyses:{" "}
+                <span className="font-serif text-lg italic">
+                  User Interview, Focus Groups, Survey Design, Statistical
+                  Methods (T-test, ANOVA, Linear Regression)
+                </span>
+              </p>
+            </li>
+            {/*3*/}
+            <li>
+              <p className="mb-2 font-sans text-xl">
+                Front-End:{" "}
+                <span className="font-serif text-lg italic">
+                  Javascript, React, Next.js, Tailwind CSS
+                </span>
+              </p>
+            </li>
+            {/*4*/}
+            <li>
+              <p className="mb-2 font-sans text-xl">
+                Data Visualization:{" "}
+                <span className="font-serif text-lg italic">
+                  D3.js, Tableau
+                </span>
+              </p>
+            </li>
+            {/*5*/}
+            <li>
+              <p className="mb-2 font-sans text-xl">
+                Physical Prototyping:{" "}
+                <span className="font-serif text-lg italic">
+                  Microcontrollers, 3D Modeling (Blender, Fusion 360,
+                  SolidWorks), Digital Fabrication (3D Printing, Laser Cutting,
+                  CNC Milling)
+                </span>
+              </p>
+            </li>
+          </ul>
+        </div>
       </section>
-      {/*List 2: Story*/}
-      <section id="section-2" className="scroll-mt-24">
+      {/*Section 2: Story*/}
+      <section id="section-2" className="mb-16 scroll-mt-24">
         {/*Section Header*/}
         <h2
-          className={`font-sans text-3xl font-semibold ${textColorClass} my-4 leading-loose`}
+          className={`font-sans text-3xl font-semibold ${textColorClass} mb-8`}
         >
           My Story
         </h2>
-        <p>
-          Design, for me, isn’t about just making things pretty. It’s about
-          enabling people to do things better, feel supported, or see themselves
-          reflected in a space or product. I’ve worked on tools for creative
-          professionals, interfaces for astronauts, and public spaces for
-          storytelling. I move fluidly between pixels and people, screens and
-          systems.
-        </p>
+        <p>My interest in designing products comes from</p>
         <p>
           Whether I’m prototyping UX flows in Figma, guiding product direction
           with founders, or co-designing with local communities, I bring a
           principled but curious approach. This portfolio shares six
           representative projects—from startups to NASA to grassroots urbanism.
           Thanks for exploring.
-        </p>{" "}
+        </p>
       </section>
       {/*Section 3: Interests*/}
-      <section id="section-3" className="scroll-mt-24">
+      <section id="section-3" className="mb-16 scroll-mt-24">
         {/*Section Header*/}
         <h2
-          className={`font-sans text-3xl font-semibold ${textColorClass} my-4 leading-loose`}
+          className={`font-sans text-3xl font-semibold ${textColorClass} mb-8`}
         >
           My Interests
         </h2>
-        <p>
-          Whether I’m prototyping UX flows in Figma, guiding product direction
-          with founders, or co-designing with local communities, I bring a
-          principled but curious approach. This portfolio shares six
-          representative projects—from startups to NASA to grassroots urbanism.
-          Thanks for exploring.
+        <p className="text-lg">
+          In my spare time, I enjoy hiking, running, practicing barre chords on
+          my acoustic guitar, and taking pictures with a mirrorless camera. I
+          also enjoy making physical things.
         </p>
+        {/*Image Grid Container*/}
+        <div className="relative left-1/2 mx-auto w-screen max-w-[1440px] -translate-x-1/2 px-6">
+          {/*Image Grid*/}
+          <div className="grid grid-cols-4 grid-rows-4 gap-2">
+            {/* Image 1 - 4 cells horizontally */}
+            <div className="relative col-span-4 row-span-1">
+              <Image
+                src="/images/20230624-HWP00734-Edit.jpg"
+                fill
+                alt="Dummy Image 1"
+                className="h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            {/* Image 2 - 2x2 square */}
+            <div className="relative col-span-2 row-span-2 aspect-[1/1]">
+              <Image
+                src="/images/20230624-HWP00734-Edit.jpg"
+                fill
+                alt="Dummy Image 2"
+                className="h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            {/* Image 3 - 2 cells vertically adjacent */}
+            <div className="relative col-span-1 row-span-2">
+              <Image
+                src="/images/20230624-HWP00734-Edit.jpg"
+                fill
+                alt="Dummy Image 3"
+                className="h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            {/* Remaining cells */}
+            <div className="relative">
+              <Image
+                src="/images/20230624-HWP00734-Edit.jpg"
+                fill
+                alt="Dummy Image 4"
+                className="h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            <div className="relative">
+              <Image
+                src="/images/20230624-HWP00734-Edit.jpg"
+                fill
+                alt="Dummy Image 5"
+                className="h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            <div className="relative">
+              <Image
+                src="/images/20230624-HWP00734-Edit.jpg"
+                fill
+                alt="Dummy Image 6"
+                className="h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            <div className="relative">
+              <Image
+                src="/images/20230624-HWP00734-Edit.jpg"
+                fill
+                alt="Dummy Image 7"
+                className="h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            <div className="relative">
+              <Image
+                src="/images/20230624-HWP00734-Edit.jpg"
+                fill
+                alt="Dummy Image 8"
+                className="h-full w-full rounded-[20px] object-cover"
+              />
+            </div>{" "}
+            <div className="relative">
+              <Image
+                src="/images/20230624-HWP00734-Edit.jpg"
+                fill
+                alt="Dummy Image 8"
+                className="h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+          </div>
+        </div>
         <p>
           Whether I’m prototyping UX flows in Figma, guiding product direction
           with founders, or co-designing with local communities, I bring a
