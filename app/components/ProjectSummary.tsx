@@ -215,7 +215,7 @@ export default function ProjectSummary({
             viewMode === "case-study" && variant === "header"
               ? undefined
               : {
-                  scale: 1.005,
+                  scale: 1,
                   boxShadow: themeShadows.hoverCard,
                 }
           }

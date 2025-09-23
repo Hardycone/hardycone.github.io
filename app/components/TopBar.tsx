@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback, useEffect, useState } from "react";
+import { useMemo, useCallback, useEffect, useState, useRef } from "react";
 import { useViewMode } from "../context/ViewModeContext";
 import { useActiveProject } from "../context/ActiveProjectContext";
 import { useRouter } from "next/navigation";
@@ -48,6 +48,71 @@ export default function TopBar() {
     [activeIndex],
   );
 
+  const [isNavigatingHome, setIsNavigatingHome] = useState(false);
+  const scrollTimeout = useRef<number | null>(null);
+  const handleHomeClick = useCallback(() => {
+    if (isNavigatingHome) return; // prevent double triggers
+    setIsNavigatingHome(true);
+
+    const preventScroll = (e: Event) => e.preventDefault();
+    const keydownHandler = (e: KeyboardEvent) => {
+      const keys = [
+        "ArrowUp",
+        "ArrowDown",
+        "PageUp",
+        "PageDown",
+        "Home",
+        "End",
+        " ",
+      ];
+      if (keys.includes(e.key)) e.preventDefault();
+    };
+
+    let onScroll: () => void;
+
+    const cleanup = () => {
+      window.removeEventListener("wheel", preventScroll);
+      window.removeEventListener("touchmove", preventScroll);
+      window.removeEventListener("keydown", keydownHandler);
+      if (onScroll) window.removeEventListener("scroll", onScroll);
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+        scrollTimeout.current = null;
+      }
+      setIsNavigatingHome(false);
+    };
+
+    if (window.scrollY > 0) {
+      window.addEventListener("wheel", preventScroll, { passive: false });
+      window.addEventListener("touchmove", preventScroll, { passive: false });
+      window.addEventListener("keydown", keydownHandler, { passive: false });
+
+      onScroll = () => {
+        if (window.scrollY === 0) {
+          cleanup();
+          router.push("/");
+        }
+      };
+
+      window.addEventListener("scroll", onScroll);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      scrollTimeout.current = window.setTimeout(() => {
+        cleanup();
+        if (window.scrollY === 0) router.push("/");
+      }, 1500);
+    } else {
+      router.push("/");
+      setIsNavigatingHome(false);
+    }
+  }, [isNavigatingHome, router]);
+  useEffect(() => {
+    return () => {
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+    };
+  }, []);
   useEffect(() => {
     let observer: IntersectionObserver;
     const sectionElements: HTMLElement[] = [];
@@ -97,7 +162,6 @@ export default function TopBar() {
     };
 
     handleRefresh();
-
     window.addEventListener("case-study-loaded", handleRefresh);
 
     return () => {
@@ -107,27 +171,21 @@ export default function TopBar() {
     };
   }, [sections, pathname]);
 
-  // Handle scroll to top visibility
   useEffect(() => {
     function onScroll() {
       setShowTitle(window.scrollY > 80);
     }
-
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const handleScrollToSection = useCallback((id: string) => {
     const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
   return (
-    //TopBar container
     <div className="fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[1440px] p-2 md:p-4">
-      {/*case-study view portion*/}
       <AnimatePresence>
         <motion.div
           key="topbar"
@@ -139,82 +197,18 @@ export default function TopBar() {
           exit={{ y: -60, opacity: 0 }}
           className="z-50 flex w-full justify-between"
         >
-          {/*Left: Home*/}
           <motion.button
             title="Home"
             animate={{ boxShadow: themeShadows.topBar }}
             transition={{ duration: 0.1 }}
             whileHover={{ scale: 1.1 }}
-            className={`h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors hover:scale-110 dark:bg-dark-background dark:text-dark-foreground`}
-            onClick={() => {
-              const preventScroll = (e: Event) => {
-                e.preventDefault();
-              };
-
-              const blockUserScroll = () => {
-                window.addEventListener("wheel", preventScroll, {
-                  passive: false,
-                });
-                window.addEventListener("touchmove", preventScroll, {
-                  passive: false,
-                });
-                window.addEventListener("keydown", keydownHandler, {
-                  passive: false,
-                });
-              };
-
-              const unblockUserScroll = () => {
-                window.removeEventListener("wheel", preventScroll);
-                window.removeEventListener("touchmove", preventScroll);
-                window.removeEventListener("keydown", keydownHandler);
-              };
-
-              const keydownHandler = (e: KeyboardEvent) => {
-                // Block keys that cause scrolling
-                const keys = [
-                  "ArrowUp",
-                  "ArrowDown",
-                  "PageUp",
-                  "PageDown",
-                  "Home",
-                  "End",
-                  " ",
-                ];
-                if (keys.includes(e.key)) {
-                  e.preventDefault();
-                }
-              };
-
-              // In your button onClick:
-              if (window.scrollY > 0) {
-                blockUserScroll();
-
-                const onScroll = () => {
-                  if (window.scrollY === 0) {
-                    window.removeEventListener("scroll", onScroll);
-                    unblockUserScroll();
-                    router.push("/");
-                  }
-                };
-
-                window.addEventListener("scroll", onScroll);
-
-                window.scrollTo({ top: 0, behavior: "smooth" });
-
-                // Fallback timeout if scroll event never fires
-                setTimeout(() => {
-                  window.removeEventListener("scroll", onScroll);
-                  unblockUserScroll();
-                  if (window.scrollY === 0) router.push("/");
-                }, 2000);
-              } else {
-                router.push("/");
-              }
-            }}
+            className="h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors hover:scale-110 dark:bg-dark-background dark:text-dark-foreground"
+            onClick={handleHomeClick}
           >
             <Home />
           </motion.button>
-          {/*Center: Page navigation*/}
+
+          {/* Center: page navigation */}
           <AnimatePresence mode="wait">
             {viewMode === "case-study" && showTitle && activeProject && (
               <motion.div
@@ -229,9 +223,8 @@ export default function TopBar() {
                 transition={{ duration: 0.1 }}
                 exit={{ x: "-50%", y: -60, opacity: 0 }}
                 whileHover={{ scale: 1.05 }}
-                className={`absolute left-1/2 hidden select-none justify-center gap-2 rounded-full bg-background px-4 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground sm:flex lg:gap-4`}
+                className="absolute left-1/2 hidden select-none justify-center gap-2 rounded-full bg-background px-4 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground sm:flex lg:gap-4"
               >
-                {/*Title*/}
                 <button
                   title="Summary"
                   onClick={() =>
@@ -241,7 +234,6 @@ export default function TopBar() {
                 >
                   {activeProject.title}
                 </button>
-                {/*Sections*/}
                 <div className="flex gap-2 lg:gap-4">
                   {sections.map((section) => {
                     const Icon = section.icon;
@@ -267,34 +259,31 @@ export default function TopBar() {
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/*Right: Socials*/}
         </motion.div>
       </AnimatePresence>
-      {/*Right group*/}
+
+      {/* Right group */}
       <motion.div
         initial={{ y: -60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="ml-auto flex gap-2 rounded-full md:gap-4"
       >
-        {/*Resume*/}
-
+        {/*Resume button*/}
         <motion.button
           title="About Me"
           animate={{ boxShadow: themeShadows.topBar }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
-          className={`h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground`}
+          className="h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground"
           onClick={() => {
             if (pathname === "/case-study-one") {
               if (window.scrollY > 30) {
                 window.scrollTo({ top: 0, behavior: "smooth" });
               } else {
-                // Scroll down a bit, then bounce back up
                 window.scrollBy({ top: 120, behavior: "smooth" });
                 setTimeout(() => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
-                }, 1000); // Adjust delay to match scroll duration
+                }, 1000);
               }
             } else {
               router.push("/case-study-one");
@@ -303,13 +292,14 @@ export default function TopBar() {
         >
           <Resume />
         </motion.button>
-        {/*LinkedIn*/}
+
+        {/* LinkedIn */}
         <motion.button
           title="Find Me on LinkedIn"
           animate={{ boxShadow: themeShadows.topBar }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
-          className={`h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground`}
+          className="h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground"
           onClick={() =>
             window.open(
               "https://www.google.com",
@@ -320,11 +310,12 @@ export default function TopBar() {
         >
           <LinkedIn />
         </motion.button>
+
         <motion.div
           animate={{ boxShadow: themeShadows.topBar }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
-          className={`z-50 flex h-11 w-11 rounded-full bg-background text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground`}
+          className="z-50 flex h-11 w-11 rounded-full bg-background text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground"
         >
           <ThemeToggle />
         </motion.div>
