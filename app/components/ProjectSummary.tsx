@@ -137,22 +137,20 @@ export default function ProjectSummary({
       ? projects[(activeIndex + 1) % projects.length]
       : projects[activeIndex];
 
-  const interactive = variant === "preview" || variant === "bottom";
-  const margins =
-    variant === "preview"
-      ? ""
-      : variant === "header"
-        ? "mt-20 lg:mt-4"
-        : "mb-20";
-  const dimensions =
-    variant === "preview"
-      ? "w-full max-w-5xl"
-      : variant === "header"
-        ? "w-full h-screen"
-        : "w-full max-w-5xl";
+  const containerClasses =
+    variant === "header"
+      ? "fixed inset-0 z-10 flex w-full h-screen items-center justify-center p-12"
+      : variant === "preview"
+        ? "relative flex flex-col sm:flex-row w-full max-w-5xl"
+        : "relative flex flex-col sm:flex-row w-full mb-20 max-w-5xl";
+
+  const cardClasses =
+    variant === "header"
+      ? "flex w-full cursor-default h-full max-w-[2650px] gap-12 rounded-xl bg-background p-12 dark:bg-dark-background flex-col md:flex-row"
+      : "flex w-full cursor-pointer gap-4 rounded-xl bg-background p-2 dark:bg-dark-background md:gap-6 md:rounded-[44px] md:p-6";
 
   const handleClick = () => {
-    if (!interactive) return;
+    if (variant === "header") return;
     if (variant === "bottom" && setTransitioningToNext) {
       setTransitioningToNext(true);
     }
@@ -170,21 +168,21 @@ export default function ProjectSummary({
 
   return (
     <motion.div
+      layoutId={`project-${project.id}-container`}
       layout
       ref={ref}
       transition={{ duration: 0.2, ease: "easeInOut" }}
-      onClick={interactive ? handleClick : undefined}
+      onClick={variant === "header" ? undefined : handleClick}
       style={
         variant === "preview" && offset !== null
           ? { marginTop: `${offset}px` }
           : undefined
       }
-      className={`relative z-10 flex ${margins} ${dimensions} ${
-        interactive ? "cursor-pointer" : "cursor-default"
-      }`}
+      className={`z-10 flex ${containerClasses}`}
     >
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
+          layoutId={`project-${project.id}-card`}
           key={project.id}
           custom={variant === "preview" ? direction : undefined}
           variants={variants[variant]}
@@ -196,12 +194,10 @@ export default function ProjectSummary({
               ? undefined
               : { scale: 1, boxShadow: themeShadows.hoverCard }
           }
-          className={`relative flex w-full gap-4 rounded-xl bg-background p-2 dark:bg-dark-background md:gap-6 md:rounded-[44px] md:p-6 ${
-            interactive ? "flex-col sm:flex-row" : "flex-col"
-          }`}
+          className={`flex w-full gap-4 rounded-xl bg-background p-2 dark:bg-dark-background md:gap-6 md:rounded-[44px] md:p-6 ${cardClasses}`}
         >
           {/* Text + Button */}
-          <div className="flex h-full w-full flex-col">
+          <div className="flex h-full w-full flex-1 flex-col">
             <motion.div
               layout="position"
               transition={{ duration: 0.2, ease: "easeInOut" }}
@@ -261,7 +257,7 @@ export default function ProjectSummary({
                   boxShadow: themeShadows.hoverButton,
                 }}
                 className={`px-4 py-2 font-serif text-sm font-bold md:text-base ${textColorClass} rounded-lg md:rounded-full ${
-                  interactive ? "" : "hidden"
+                  variant === "header" ? "hidden" : ""
                 } `}
               >
                 {project.button}
@@ -270,22 +266,19 @@ export default function ProjectSummary({
           </div>
 
           {project.image && (
-            <div
-              className={`relative shrink-0 overflow-hidden rounded-lg ${
-                interactive
-                  ? "aspect-[2/1] w-full sm:aspect-[1/1] sm:w-1/2"
-                  : "aspect-[2/1] w-full"
-              }`}
-            >
-              <Image
-                src={project.image}
-                alt={`${project.title} preview image`}
-                fill
-                sizes="(min-width: 640px) 50vw, 100vw"
-                className="rounded-lg object-cover object-[center_bottom] md:rounded-[20px]"
-                priority={variant === "header"}
-                onLoad={() => setImageLoaded(true)}
-              />
+            <div className="relative flex-1 overflow-hidden rounded-[20px]">
+              <div
+                className={`relative w-full ${variant === "header" ? "h-full" : "pb-[100%]"}`}
+              >
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  className="object-cover"
+                  priority={variant === "header"}
+                  onLoad={() => setImageLoaded(true)}
+                />
+              </div>
             </div>
           )}
         </motion.div>
