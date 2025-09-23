@@ -9,17 +9,14 @@ export default function ThemeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
+  // Ensure client-only rendering to avoid hydration mismatch
   useEffect(() => setMounted(true), []);
-
   if (!mounted) return null;
 
   const isDark = resolvedTheme === "dark";
 
   const toggleTheme = () => {
-    const nextTheme = isDark ? "light" : "dark";
-    // Set temporary theme, then revert to system on next reload
-    setTheme(nextTheme);
-    localStorage.removeItem("theme"); // Ensures system is used on refresh
+    setTheme(isDark ? "light" : "dark");
   };
 
   return (
