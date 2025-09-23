@@ -110,7 +110,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
           viewMode === "home" ? "" : ""
         }`}
       >
-        <ProjectSummary />
+        <ProjectSummary variant={viewMode === "home" ? "preview" : "header"} />
 
         {/*Scroll Reminder*/}
         {viewMode === "home" && showPrompt && (
