@@ -226,15 +226,14 @@ export default function MainContent({ children }: { children: ReactNode }) {
             </svg>
           </motion.div>
         )}
+        {viewMode === "case-study" && <CaseStudyContent />}
 
-        {/* Proper AnimatePresence wrapper for mount/unmount animations */}
         <AnimatePresence mode="wait">
           {summaryVariant && (
             <ProjectSummary key="project-summary" variant={summaryVariant} />
           )}
         </AnimatePresence>
 
-        {viewMode === "case-study" && <CaseStudyContent />}
         {children}
       </motion.div>
       <div className="min-w-0 flex-1" />

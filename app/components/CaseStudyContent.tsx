@@ -64,31 +64,25 @@ export default function CaseStudyContent() {
 
   return (
     <>
-      <div className="min-h-[80dvh]" />
+      <div className="min-h-[85dvh]" />
       <AnimatePresence mode="wait">
         <motion.div
           layout
           key={project.id}
-          className="z-40 flex w-full flex-col gap-10 rounded-[44px] p-2 font-serif text-foreground dark:text-dark-foreground md:p-6"
+          className="z-40 flex w-full flex-col gap-10 rounded-[44px] bg-background p-2 font-serif text-foreground dark:bg-dark-background dark:text-dark-foreground md:p-6"
           initial={{
-            y: 500,
+            y: 100,
             opacity: 0,
             boxShadow: themeShadows.content,
           }}
           animate={{
             y: 0,
             opacity: 1,
-            boxShadow: "none",
-            transition: {
-              opacity: { delay: 0.2 },
-              y: { delay: 0.2, duration: 0.2, ease: "easeOut" },
-              boxShadow: { delay: 0.7, duration: 0.3, ease: "easeIn" },
-            },
+            boxShadow: themeShadows.content,
           }}
           exit={{
             y: exitY,
             opacity: 0,
-
             transition: { duration: 0.2, ease: "easeInOut" },
           }}
           onAnimationComplete={() => {

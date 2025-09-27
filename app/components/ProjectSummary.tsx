@@ -129,7 +129,7 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
     header: {
       initial: {
         y: 0,
-        scale: 0.99,
+        scale: 0.95,
         opacity: 0,
         boxShadow: themeShadows.baseCard,
       },
@@ -139,10 +139,10 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
         boxShadow: "none",
         transition: {
           y: { duration: 0, ease: "easeInOut" },
-          boxShadow: { delay: 0.9, duration: 0.3, ease: "easeIn" },
+          boxShadow: { delay: 0.5, duration: 0.2, ease: "easeIn" },
         },
       },
-      exit: { y: 0, scale: 0.95, opacity: 0, transition: { duration: 0.1 } },
+      exit: { y: 0, scale: 0.95, opacity: 0, transition: { duration: 0.2 } },
     },
     bottom: {
       initial: {
@@ -164,7 +164,7 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
         opacity: 0,
         transition: {
           y: { delay: 0, duration: 0, ease: "easeInOut" },
-          duration: 0.1,
+          duration: 0.2,
         },
       },
     },
@@ -174,15 +174,15 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
 
   const containerClasses =
     variant === "header"
-      ? "fixed inset-0 z-10 flex w-full h-screen items-center justify-center p-12"
+      ? " fixed inset-0 w-full h-screen items-center justify-center p-12"
       : variant === "preview"
-        ? "relative flex flex-col sm:flex-row w-full max-w-5xl"
-        : "fixed inset-0 z-10 flex w-full h-screen items-center justify-center p-48";
+        ? " relative my-auto w-full max-w-5xl"
+        : "fixed items-center justify-center w-full h-screen max-w-5xl p-2";
 
   const cardClasses =
     variant === "header"
-      ? "flex w-full cursor-default h-full max-w-[2650px] gap-12 rounded-xl bg-background p-12 dark:bg-dark-background flex-col md:flex-row"
-      : "flex w-full cursor-pointer gap-4 rounded-xl bg-background p-2 dark:bg-dark-background md:gap-6 md:rounded-[44px] md:p-6";
+      ? "cursor-default h-full max-w-[2650px] gap-12 "
+      : "cursor-pointer gap-6 ";
 
   const textColorClass = getTextColorClass(
     resolvedTheme || "light",
@@ -198,15 +198,19 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
     <div
       ref={ref}
       onClick={variant === "header" ? undefined : handleClick}
-      style={
-        variant === "preview" && offset !== null
-          ? { marginTop: `${offset}px` }
-          : undefined
-      }
-      className={`z-10 flex ${containerClasses}`}
+      // style={
+      //   variant === "preview" && offset !== null
+      //     ? { marginTop: `${offset}px` }
+      //     : undefined
+      // }
+      className={`z-10 flex flex-col ${containerClasses}`}
     >
+      <h1
+        className={`${variant === "bottom" ? "mb-6 font-sans text-4xl font-semibold text-foreground dark:text-dark-foreground" : "hidden"}`}
+      >
+        Next Up
+      </h1>
       {/* Card */}
-
       <motion.div
         layout
         key={key}
@@ -215,13 +219,12 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
         initial="initial"
         animate="animate"
         exit="exit"
-        // style={{ opacity, scale }}
         whileHover={
           variant === "header"
             ? undefined
             : { scale: 1, boxShadow: themeShadows.hoverCard }
         }
-        className={`flex w-full gap-4 rounded-xl bg-background p-2 dark:bg-dark-background md:gap-6 md:rounded-[44px] md:p-6 ${cardClasses}`}
+        className={`flex w-full rounded-[44px] bg-background p-6 dark:bg-dark-background ${cardClasses}`}
       >
         {/* Text + Button */}
         <div className="flex h-full w-full flex-1 flex-col">

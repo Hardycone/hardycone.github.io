@@ -176,9 +176,7 @@ export function getShadows(
                    inset ${a}px ${b}px 4px rgba(255,255,255,1)`,
       hoverButton: `inset ${-2 * a}px ${-2 * b}px 4px rgba(0, 0, 0, 0.1), 
                     inset ${2 * a}px ${2 * b}px 4px rgba(255,255,255,1)`,
-      content: `${a / 1.5}px ${b / 1.5}px 4px 0px rgba(255,255,255,0.7),
-                 ${a}px ${b}px 8px 0px rgba(255,255,255,1),
-                 ${-a}px ${-b}px 8px 0px rgba(0, 0, 0, 0.1`,
+      content: `${-a / 4}px ${-b / 4}px 4px 0px rgba(0, 0, 0, 0.3)`,
     };
   } else {
     return {
@@ -194,8 +192,8 @@ export function getShadows(
                    inset ${a / 2}px ${b / 2}px 4px rgba(255,255,255,0.4)`,
       hoverButton: `inset ${-a}px ${-b}px 4px rgba(0, 0, 0, 1), 
                     inset ${a}px ${b}px 4px rgba(255,255,255,0.4)`,
-      content: `${-a}px ${-b}px 8px 0px rgba(0, 0, 0, 1), 
-                 inset ${-a / 3}px ${-b / 3}px 4px 0px rgba(255,255,255,0.4)`,
+      content: `${-a / 4}px ${-b / 4}px 4px 0px rgba(0, 0, 0, 1),
+              inset ${-a / 4}px ${-b / 4}px 2px 0px rgba(255,255,255,0.4)`,
     };
   }
 }
