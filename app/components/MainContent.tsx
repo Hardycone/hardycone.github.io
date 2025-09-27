@@ -1,6 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  AnimatePresence,
+  useMotionValueEvent,
+} from "framer-motion";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
 import { useViewMode } from "../context/ViewModeContext";
@@ -17,12 +22,94 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   const [showPrompt, setShowPrompt] = useState(false);
   const hasPromptShown = useRef(false);
-  // Landscape-blocker logic
   const [showLandscapeBlocker, setShowLandscapeBlocker] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  const { scrollY } = useScroll();
+
+  // State for document dimensions
+  const [docDimensions, setDocDimensions] = useState({
+    height: 0,
+    winHeight: 0,
+  });
+
+  // Single state for current variant
+  const [summaryVariant, setSummaryVariant] = useState<
+    "preview" | "header" | "bottom" | null
+  >("preview");
+
+  // Update document dimensions
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (typeof window !== "undefined" && typeof document !== "undefined") {
+        setDocDimensions({
+          height: document.body.scrollHeight,
+          winHeight: window.innerHeight,
+        });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+
+    const timeout = setTimeout(updateDimensions, 100);
+
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      clearTimeout(timeout);
+    };
+  }, [viewMode, activeIndex]);
+
+  // Set initial variant based on viewMode
+  useEffect(() => {
+    if (viewMode === "not-found") {
+      setSummaryVariant(null);
+      return;
+    }
+
+    if (viewMode === "home") {
+      setSummaryVariant("preview");
+      return;
+    }
+
+    const y = scrollY.get();
+    const { height: docHeight, winHeight } = docDimensions;
+
+    if (docHeight > 0 && winHeight > 0) {
+      if (y < winHeight / 4) {
+        setSummaryVariant("header");
+      } else if (y > docHeight - winHeight * 1.5) {
+        setSummaryVariant("bottom");
+      } else {
+        setSummaryVariant(null);
+      }
+    }
+  }, [viewMode, docDimensions, scrollY]);
+
+  // Use useMotionValueEvent for efficient scroll handling
+  useMotionValueEvent(scrollY, "change", (y) => {
+    if (viewMode !== "case-study") {
+      setSummaryVariant("preview");
+      return;
+    }
+
+    // ALWAYS use fresh values
+    const docHeight = document.body.scrollHeight;
+    const winHeight = window.innerHeight;
+
+    if (y < winHeight / 4) {
+      setSummaryVariant("header");
+    } else if (y > docHeight - winHeight * 1.5) {
+      setSummaryVariant("bottom");
+    } else {
+      setSummaryVariant(null);
+    }
+  });
+
   useEffect(() => {
     setMounted(true);
   }, []);
+
   useEffect(() => {
     const handleOrientationChange = () => {
       const isMobile = /iPhone|Android/i.test(navigator.userAgent);
@@ -31,7 +118,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       setShowLandscapeBlocker(shouldBlock);
     };
 
-    handleOrientationChange(); // Run on mount
+    handleOrientationChange();
     window.addEventListener("orientationchange", handleOrientationChange);
     window.addEventListener("resize", handleOrientationChange);
     return () => {
@@ -61,13 +148,12 @@ export default function MainContent({ children }: { children: ReactNode }) {
       }
     }, 3000);
 
-    // If activeIndex changes during these 3 seconds, cancel showing prompt
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [viewMode, activeIndex]); // watch activeIndex to reset timer
+  }, [viewMode, activeIndex]);
 
-  // Dismiss prompt on interaction (detected via activeIndex change)
+  // Dismiss prompt on interaction
   useEffect(() => {
     if (viewMode !== "home" || !hasPromptShown.current) return;
     setShowPrompt(false);
@@ -75,22 +161,18 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (showLandscapeBlocker) {
-      // Prevent body scroll globally
       document.body.style.overflow = "hidden";
       document.body.style.position = "fixed";
       document.body.style.width = "100%";
     } else {
-      // Restore scroll
       document.body.style.overflow = "";
       document.body.style.position = "";
       document.body.style.width = "";
     }
   }, [showLandscapeBlocker]);
 
-  if (!mounted) {
-    // Avoid rendering on server or before mount to prevent mismatch
-    return null;
-  }
+  if (!mounted) return null;
+
   return (
     <main
       className={`relative flex w-full bg-background transition-colors dark:bg-dark-background ${
@@ -110,9 +192,6 @@ export default function MainContent({ children }: { children: ReactNode }) {
           viewMode === "home" ? "" : ""
         }`}
       >
-        <ProjectSummary variant={viewMode === "home" ? "preview" : "header"} />
-
-        {/*Scroll Reminder*/}
         {viewMode === "home" && showPrompt && (
           <motion.div
             initial={{ y: -100, opacity: 0 }}
@@ -148,13 +227,14 @@ export default function MainContent({ children }: { children: ReactNode }) {
           </motion.div>
         )}
 
-        <CaseStudyContent />
-        {viewMode === "case-study" && (
-          <h3 className="mb-4 ml-6 mr-auto font-sans text-3xl font-semibold">
-            Up Next:
-          </h3>
-        )}
-        <ProjectSummary variant="bottom" />
+        {/* Proper AnimatePresence wrapper for mount/unmount animations */}
+        <AnimatePresence mode="wait">
+          {summaryVariant && (
+            <ProjectSummary key="project-summary" variant={summaryVariant} />
+          )}
+        </AnimatePresence>
+
+        {viewMode === "case-study" && <CaseStudyContent />}
         {children}
       </motion.div>
       <div className="min-w-0 flex-1" />

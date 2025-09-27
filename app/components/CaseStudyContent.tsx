@@ -1,7 +1,6 @@
 "use client";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
-import { useViewMode } from "../context/ViewModeContext";
 import { motion, AnimatePresence } from "framer-motion";
 import projects from "@/data/projects";
 import { useEffect } from "react";
@@ -52,7 +51,6 @@ export default function CaseStudyContent() {
   const project = projects[activeIndex];
   const slug = project.slug as ProjectSlug;
   const CaseStudyComponent = caseStudyComponents[slug];
-  const { viewMode } = useViewMode();
   const exitY = transitioningToNext ? -500 : 500;
 
   // Dispatch event after animation completes
@@ -65,12 +63,13 @@ export default function CaseStudyContent() {
   }, [project.id]);
 
   return (
-    <AnimatePresence mode="wait">
-      {viewMode === "case-study" && CaseStudyComponent && (
+    <>
+      <div className="min-h-[80dvh]" />
+      <AnimatePresence mode="wait">
         <motion.div
           layout
           key={project.id}
-          className="flex w-full flex-col gap-10 rounded-[44px] p-2 font-serif text-foreground dark:text-dark-foreground md:p-6"
+          className="z-40 flex w-full flex-col gap-10 rounded-[44px] p-2 font-serif text-foreground dark:text-dark-foreground md:p-6"
           initial={{
             y: 500,
             opacity: 0,
@@ -100,7 +99,8 @@ export default function CaseStudyContent() {
         >
           <CaseStudyComponent />
         </motion.div>
-      )}
-    </AnimatePresence>
+      </AnimatePresence>{" "}
+      <div className="min-h-screen" />
+    </>
   );
 }
