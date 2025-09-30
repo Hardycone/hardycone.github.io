@@ -226,14 +226,13 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
         }
         className={`flex w-full rounded-[44px] bg-background p-6 dark:bg-dark-background ${cardClasses}`}
       >
-        {/* Text + Button */}
+        {/* Left */}
         <div className="flex h-full w-full flex-1 flex-col">
-          <motion.div
-            layout="position"
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="flex flex-col gap-4"
-          >
+          {/* Text */}
+          <motion.div layout="position" className="flex flex-col gap-4">
+            {/* Title block */}
             <div className="flex flex-col">
+              {/* Title */}
               <div
                 className={`font-sans font-bold ${textColorClass} ${
                   variant === "preview" ? "text-3xl lg:text-5xl" : "text-5xl"
@@ -241,7 +240,7 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
               >
                 {frozenProject.title}
               </div>
-
+              {/* Tags */}
               {frozenProject.tags && (
                 <div
                   className={`my-4 flex flex-wrap gap-2 ${
@@ -258,7 +257,7 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
                   ))}
                 </div>
               )}
-
+              {/* Tagline */}
               <h2
                 className={`mb-2 font-sans font-semibold text-foreground opacity-70 dark:text-dark-foreground ${
                   variant === "preview" ? "text-lg lg:text-2xl" : "text-2xl"
@@ -267,7 +266,7 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
                 {frozenProject.tagline}
               </h2>
             </div>
-
+            {/* Description */}
             <p
               className={`mb-4 font-serif text-foreground dark:text-dark-foreground ${
                 variant === "preview"
@@ -278,8 +277,9 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
               {frozenProject.description}
             </p>
           </motion.div>
-
+          {/* Button container */}
           <div className="mt-auto flex w-full justify-end sm:justify-start">
+            {/* Button */}
             <motion.button
               animate={{ boxShadow: themeShadows.baseButton }}
               whileHover={{
@@ -295,9 +295,10 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
           </div>
         </div>
 
-        {/* Image */}
+        {/* Image container*/}
         {frozenProject.image && (
           <div className="relative flex-1 overflow-hidden rounded-[20px]">
+            {/* Image */}
             <div
               className={`relative w-full ${
                 variant === "header" ? "h-full" : "pb-[100%]"
