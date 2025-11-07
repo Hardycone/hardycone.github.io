@@ -59,22 +59,28 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
   const [key, setKey] = useState(`project-${project.id}`);
   const [frozenProject, setFrozenProject] = useState(project);
 
-  useEffect(() => {
-    if (variant !== "bottom") {
-      setKey(`project-${project.id}`);
-      setFrozenProject(project);
-    }
-  }, [project, variant]);
+  // near the top of ProjectSummary component
+  const isMorphingRef = useRef(false);
 
   const handleClick = () => {
     if (variant === "header") return;
     if (variant === "bottom" && setTransitioningToNext) {
+      // mark that a click-initiated morph started
+      isMorphingRef.current = true;
       setTransitioningToNext(true);
       setKey(`project-${projects[(activeIndex + 1) % projects.length].id}`);
       setFrozenProject(project);
     }
     setTimeout(() => router.push(`/${project.slug}`), 200);
   };
+
+  useEffect(() => {
+    // Only avoid updating frozenProject if a click-initiated morph is in progress.
+    if (!isMorphingRef.current) {
+      setKey(`project-${project.id}`);
+      setFrozenProject(project);
+    }
+  }, [project, variant]);
 
   useLayoutEffect(() => {
     if (!hasMounted || !imageLoaded || variant !== "preview") return;
@@ -177,7 +183,7 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
       ? " fixed inset-0 w-full h-screen items-center justify-center p-12"
       : variant === "preview"
         ? " relative my-auto w-full max-w-5xl"
-        : "fixed items-center justify-center w-full h-screen max-w-5xl p-2";
+        : "fixed items-center justify-center w-full h-screen max-w-5xl translate-y-[40vh] p-2";
 
   const cardClasses =
     variant === "header"
@@ -224,6 +230,17 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
             ? undefined
             : { scale: 1, boxShadow: themeShadows.hoverCard }
         }
+        onLayoutAnimationComplete={() => {
+          // If we were morphing (click), commit the latest project once the layout animation finished.
+          if (isMorphingRef.current) {
+            isMorphingRef.current = false;
+            // commit frozenProject to the latest "project"
+            setKey(`project-${project.id}`);
+            setFrozenProject(project);
+            // clear the global transitioning flag if exists
+            if (setTransitioningToNext) setTransitioningToNext(false);
+          }
+        }}
         className={`flex w-full rounded-[44px] bg-background p-6 dark:bg-dark-background ${cardClasses}`}
       >
         {/* Left */}
