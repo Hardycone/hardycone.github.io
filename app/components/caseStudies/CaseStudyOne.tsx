@@ -526,7 +526,7 @@ export default function CaseStudyOne() {
         </p>
       </section>
       {/*Section 3: Interests*/}
-      <section id="section-3" className="mb-16 scroll-mt-24">
+      <section id="section-3" className="scroll-mt-24">
         {/*Section Header*/}
         <h2
           className={`font-sans text-3xl font-semibold ${textColorClass} mb-8`}

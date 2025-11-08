@@ -14,9 +14,10 @@ const projects = [
     slug: "case-study-one",
     title: "Haichao Wang",
     tagline: "Human-Centered Designer with 10 Years of Experience",
-    tags: ["Designer", "Researcher", "Entrepreneur"],
+    tags: ["Designer", "Researcher", "Builder"],
     description:
       "My expertise ranges across design, research, and project management. I have worked on everything from public initiatives deeply rooted in stakeholder engagement, to enterprise software aiding complex workflows. The throughline of all my work is a commitment to solving real problems for real people.",
+    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     image: "/images/project-1.jpg",
     button: "More About Me",
     textColor: "intro",
@@ -39,6 +40,7 @@ const projects = [
     tags: ["Quantitative UX", "B2B SaaS", "Startup", "Data Visualization"],
     description:
       "I co-founded a company with a mission to unlock rigorous quantitative insights for every product team. Our products enables everyone, not just data scientists and quantitative researchers, to test and analyze their design prototypes and obtain actionable data-driven insights.",
+    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     image: "/images/project-1.jpg",
     button: "Look Inside",
     textColor: "flux",
@@ -61,6 +63,7 @@ const projects = [
     tags: ["Generative AI", "Empowering Creatives", "Startup"],
     description:
       "Incubated during my time at University of Washington, Fantail is an AI-powered story development platform that helps filmmakers brainstorm, organize, storyboard, and pitch their projects.",
+    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     button: "Look Inside",
     image: "/images/project-1.jpg",
     textColor: "fantail",
@@ -83,6 +86,7 @@ const projects = [
     tags: ["Augmented Reality", "Next Gen NASA Spacesuits", "Artemis Program"],
     description:
       "The next generation of lunar and Mars missions call for interfaces that can effectively relay information and aid extra-vehicular missions on alien terrains. Our team went on to become a finalist in NASA's 2023 SUITS challenge and tested our prototype with astronauts and engineers at the Johnson Space Center.",
+    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     button: "Look Inside",
     image: "/images/project-1.jpg",
     textColor: "suits",
@@ -105,6 +109,7 @@ const projects = [
     tags: ["Co-Design", "Stakeholder Management", "Environmental Justice"],
     description:
       "I implemented a community-driven project that laid out a vision for the urban core of Wolcott, NY that promoted local pride, urban design, and watershed protection. Funded by the National Oceanic and Atmospheric Administration (NOAA).",
+    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     button: "Look Inside",
     image: "/images/project-1.jpg",
     textColor: "wolcott",
@@ -128,6 +133,7 @@ const projects = [
     tags: ["Designer", "Researcher", "Entrepreneur"],
     description:
       "This year-long project was a collaboration with Massuetts Institute of Technology, the Boston Parks and Recreation Department, and the Boston Chinatown Neighborhood Association. I conducted extensive research and created a series of design proposals which were partially implemented.",
+    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     button: "Look Inside",
     image: "/images/project-1.jpg",
     textColor: "chinatown",

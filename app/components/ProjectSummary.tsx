@@ -9,6 +9,7 @@ import {
   useTransform,
   useMotionValue,
   useScroll,
+  useSpring,
 } from "framer-motion";
 import projects from "../../data/projects";
 import { useActiveProject } from "../context/ActiveProjectContext";
@@ -24,9 +25,13 @@ function useHasMounted() {
 
 interface ProjectSummaryProps {
   variant: "preview" | "header" | "bottom";
+  scrollY: MotionValue<number>;
 }
 
-export default function ProjectSummary({ variant }: ProjectSummaryProps) {
+export default function ProjectSummary({
+  variant,
+  scrollY,
+}: ProjectSummaryProps) {
   const { setTransitioningToNext, activeIndex, previousIndex } =
     useActiveProject();
   const hasMounted = useHasMounted();
@@ -35,6 +40,42 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
   const [offset, setOffset] = useState<number | null>(null);
   const { resolvedTheme } = useTheme();
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  const smoothScrollY = useSpring(scrollY, {
+    stiffness: 120,
+    damping: 20,
+    mass: 0.2,
+  });
+
+  const headerOpacity = useTransform(
+    scrollY,
+    [0, window.innerHeight / 2],
+    [1, 0],
+  );
+
+  const bottomOpacity = useTransform(
+    scrollY,
+    [
+      document.body.scrollHeight - window.innerHeight * 1.5,
+      document.body.scrollHeight - window.innerHeight,
+    ],
+    [0, 1],
+  );
+
+  const headerScale = useTransform(
+    smoothScrollY,
+    [0, window.innerHeight / 2],
+    [1, 0.95],
+  );
+
+  const bottomScale = useTransform(
+    smoothScrollY,
+    [
+      document.body.scrollHeight - window.innerHeight * 1.5,
+      document.body.scrollHeight - window.innerHeight,
+    ],
+    [0.95, 1],
+  );
 
   const { a, b, getTextColorClass, getBgColorClass, getLightColor } =
     useLighting();
@@ -105,7 +146,7 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
   if (!hasMounted) return null;
 
   // --- Framer Motion variants
-  const variants = {
+  const motionVariants = {
     preview: {
       initial: (dir: "up" | "down") => ({
         y:
@@ -134,40 +175,33 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
     },
     header: {
       initial: {
-        y: 0,
-        scale: 0.95,
-        opacity: 0,
         boxShadow: themeShadows.baseCard,
       },
       animate: {
-        scale: 1,
         opacity: 1,
+        y: 0,
+        scale: 1,
         boxShadow: "none",
         transition: {
-          y: { duration: 0, ease: "easeInOut" },
           boxShadow: { delay: 0.5, duration: 0.2, ease: "easeIn" },
         },
       },
-      exit: { y: 0, scale: 0.95, opacity: 0, transition: { duration: 0.2 } },
+      exit: { transition: { duration: 0.2 } },
     },
     bottom: {
       initial: {
-        y: 0,
-        scale: 0.95,
-        opacity: 0,
+        y: 48,
         boxShadow: themeShadows.baseCard,
       },
       animate: {
-        y: 0,
+        y: 48,
         scale: 1,
         opacity: 1,
         boxShadow: themeShadows.baseCard,
         transition: { duration: 0.2, ease: "easeInOut" },
       },
       exit: {
-        y: 0,
-        scale: 0.95,
-        opacity: 0,
+        y: 48,
         transition: {
           y: { delay: 0, duration: 0, ease: "easeInOut" },
           duration: 0.2,
@@ -183,12 +217,14 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
       ? " fixed inset-0 w-full h-screen items-center justify-center p-12"
       : variant === "preview"
         ? " relative my-auto w-full max-w-5xl"
-        : "fixed items-center justify-center w-full h-screen max-w-5xl translate-y-[40vh] p-2";
+        : "fixed items-center justify-end w-full h-screen max-w-6xl px-2 pt-2 ";
 
   const cardClasses =
     variant === "header"
-      ? "cursor-default h-full max-w-[2650px] gap-12 "
-      : "cursor-pointer gap-6 ";
+      ? "cursor-default h-full max-w-[2650px] gap-12 p-6"
+      : variant === "preview"
+        ? " cursor-pointer gap-6 p-6"
+        : " cursor-pointer pb-12 pt-6 px-6";
 
   const textColorClass = getTextColorClass(
     resolvedTheme || "light",
@@ -201,8 +237,22 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
 
   return (
     // Container
-    <div
+    <motion.div
       ref={ref}
+      style={{
+        opacity:
+          variant === "header"
+            ? headerOpacity
+            : variant === "bottom"
+              ? bottomOpacity
+              : undefined,
+        scale:
+          variant === "header"
+            ? headerScale
+            : variant === "bottom"
+              ? bottomScale
+              : undefined,
+      }}
       onClick={variant === "header" ? undefined : handleClick}
       // style={
       //   variant === "preview" && offset !== null
@@ -211,17 +261,12 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
       // }
       className={`z-10 flex flex-col ${containerClasses}`}
     >
-      <h1
-        className={`${variant === "bottom" ? "mb-6 font-sans text-4xl font-semibold text-foreground dark:text-dark-foreground" : "hidden"}`}
-      >
-        Next Up
-      </h1>
       {/* Card */}
       <motion.div
         layout
         key={key}
         custom={variant === "preview" ? direction : undefined}
-        variants={variants[variant]}
+        variants={motionVariants[variant]}
         initial="initial"
         animate="animate"
         exit="exit"
@@ -241,21 +286,44 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
             if (setTransitioningToNext) setTransitioningToNext(false);
           }
         }}
-        className={`flex w-full rounded-[44px] bg-background p-6 dark:bg-dark-background ${cardClasses}`}
+        className={`flex w-full rounded-[44px] bg-background dark:bg-dark-background ${cardClasses}`}
       >
         {/* Left */}
-        <div className="flex h-full w-full flex-1 flex-col">
+        <div
+          className={`flex h-full w-full flex-1 ${variant === "bottom" ? "" : "flex-col"}`}
+        >
           {/* Text */}
-          <motion.div layout="position" className="flex flex-col gap-4">
+          <div className="flex-0 flex w-full flex-col gap-4">
+            {/*Title button*/}
+            {variant === "bottom" && (
+              <div
+                className={`mb-auto flex w-full flex-1 items-center justify-between`}
+              >
+                {/* "Next Up" */}
+                <h6 className="font-serif text-lg font-bold">Next Up </h6>
+                {/* Button */}
+                <motion.button
+                  animate={{ boxShadow: themeShadows.baseButton }}
+                  whileHover={{
+                    scale: 0.97,
+                    boxShadow: themeShadows.hoverButton,
+                  }}
+                  className={`px-4 py-2 font-serif text-lg font-bold ${textColorClass} whitespace-nowrap rounded-full`}
+                >
+                  {frozenProject.button}
+                </motion.button>
+              </div>
+            )}
             {/* Title block */}
             <div className="flex flex-col">
               {/* Title */}
-              <div
-                className={`font-sans font-bold ${textColorClass} ${
-                  variant === "preview" ? "text-3xl lg:text-5xl" : "text-5xl"
-                }`}
-              >
-                {frozenProject.title}
+              <div className="flex">
+                {/* Title text */}
+                <h1
+                  className={`font-sans font-bold ${textColorClass} } text-5xl`}
+                >
+                  {frozenProject.title}
+                </h1>
               </div>
               {/* Tags */}
               {frozenProject.tags && (
@@ -284,37 +352,52 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
               </h2>
             </div>
             {/* Description */}
-            <p
-              className={`mb-4 font-serif text-foreground dark:text-dark-foreground ${
-                variant === "preview"
-                  ? "line-clamp-6 text-sm sm:line-clamp-4 md:line-clamp-6 lg:text-base"
-                  : "text-base"
-              }`}
-            >
-              {frozenProject.description}
-            </p>
-          </motion.div>
-          {/* Button container */}
-          <div className="mt-auto flex w-full justify-end sm:justify-start">
-            {/* Button */}
-            <motion.button
-              animate={{ boxShadow: themeShadows.baseButton }}
-              whileHover={{
-                scale: 0.97,
-                boxShadow: themeShadows.hoverButton,
-              }}
-              className={`px-4 py-2 font-serif text-sm font-bold md:text-base ${textColorClass} rounded-lg md:rounded-full ${
-                variant === "header" ? "hidden" : ""
-              } `}
-            >
-              {frozenProject.button}
-            </motion.button>
+            {variant !== "bottom" && (
+              <p
+                className={`mb-4 font-serif text-base text-foreground dark:text-dark-foreground ${
+                  variant === "preview" ? "line-clamp-6" : ""
+                }`}
+              >
+                {frozenProject.description}
+              </p>
+            )}
+            {/* Bullet points */}
+            {variant === "header" && frozenProject.bullets && (
+              <ul>
+                {frozenProject.bullets.map((bullet) => (
+                  <li
+                    key={bullet}
+                    className={`px-2 py-1 font-sans text-xl font-semibold text-foreground dark:text-dark-foreground`}
+                  >
+                    {bullet}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
+          {/* Button container */}
+          {variant === "preview" && (
+            <div className={`mt-auto flex w-full justify-start`}>
+              {/* Button */}
+              <motion.button
+                animate={{ boxShadow: themeShadows.baseButton }}
+                whileHover={{
+                  scale: 0.97,
+                  boxShadow: themeShadows.hoverButton,
+                }}
+                className={`px-4 py-2 font-serif text-lg font-bold ${textColorClass} whitespace-nowrap rounded-full`}
+              >
+                {frozenProject.button}
+              </motion.button>
+            </div>
+          )}
         </div>
 
         {/* Image container*/}
         {frozenProject.image && (
-          <div className="relative flex-1 overflow-hidden rounded-[20px]">
+          <div
+            className={`${variant === "bottom" ? "flex-0" : "flex-1"} relative overflow-hidden rounded-[20px]`}
+          >
             {/* Image */}
             <div
               className={`relative w-full ${
@@ -333,6 +416,6 @@ export default function ProjectSummary({ variant }: ProjectSummaryProps) {
           </div>
         )}
       </motion.div>
-    </div>
+    </motion.div>
   );
 }

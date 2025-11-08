@@ -39,24 +39,32 @@ export default function MainContent({ children }: { children: ReactNode }) {
   >("preview");
 
   // Update document dimensions
+  // 🔁 Reactive document height tracking
   useEffect(() => {
-    const updateDimensions = () => {
-      if (typeof window !== "undefined" && typeof document !== "undefined") {
-        setDocDimensions({
-          height: document.body.scrollHeight,
-          winHeight: window.innerHeight,
-        });
-      }
+    if (typeof window === "undefined" || typeof document === "undefined")
+      return;
+
+    const update = () => {
+      setDocDimensions({
+        height: document.body.scrollHeight,
+        winHeight: window.innerHeight,
+      });
     };
 
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
+    // Run once on mount
+    update();
 
-    const timeout = setTimeout(updateDimensions, 100);
+    // Watch for any layout changes that affect document height
+    const observer = new ResizeObserver(update);
+    observer.observe(document.body);
 
+    // Also handle viewport resizes
+    window.addEventListener("resize", update);
+
+    // Clean up on unmount
     return () => {
-      window.removeEventListener("resize", updateDimensions);
-      clearTimeout(timeout);
+      observer.disconnect();
+      window.removeEventListener("resize", update);
     };
   }, [viewMode, activeIndex]);
 
@@ -76,7 +84,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     const { height: docHeight, winHeight } = docDimensions;
 
     if (docHeight > 0 && winHeight > 0) {
-      if (y < winHeight / 4) {
+      if (y < winHeight / 2) {
         setSummaryVariant("header");
       } else if (y > docHeight - winHeight * 1.5) {
         setSummaryVariant("bottom");
@@ -97,7 +105,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     const docHeight = document.body.scrollHeight;
     const winHeight = window.innerHeight;
 
-    if (y < winHeight / 4) {
+    if (y < winHeight / 2) {
       setSummaryVariant("header");
     } else if (y > docHeight - winHeight * 1.5) {
       setSummaryVariant("bottom");
@@ -127,8 +135,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
     };
   }, [viewMode]);
 
-  // Scroll to top on page/view change
   useEffect(() => {
+    // Scroll to top on page/view change
     const timeout = setTimeout(() => {
       window.scrollTo({ top: 0, behavior: "auto" });
     }, 0);
@@ -212,7 +220,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
             exit={{ y: -100, opacity: 0 }}
             className="pointer-events-none fixed bottom-6 z-50 flex justify-center rounded-lg bg-foreground py-1 pl-2 font-sans text-sm text-background shadow-md dark:bg-dark-foreground dark:text-dark-background md:text-lg"
           >
-            Scroll to explore
+            Scroll or use arrow keys to explore
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="inline-block h-7 w-7"
@@ -230,7 +238,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
         <AnimatePresence mode="wait">
           {summaryVariant && (
-            <ProjectSummary key="project-summary" variant={summaryVariant} />
+            <ProjectSummary
+              key="project-summary"
+              variant={summaryVariant}
+              scrollY={scrollY}
+            />
           )}
         </AnimatePresence>
 
