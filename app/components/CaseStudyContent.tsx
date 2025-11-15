@@ -69,7 +69,7 @@ export default function CaseStudyContent() {
         <motion.div
           layout
           key={project.id}
-          className="z-40 flex w-full flex-col gap-10 rounded-[44px] bg-background/70 p-6 font-serif text-foreground backdrop-blur-xl dark:bg-dark-background/10 dark:text-dark-foreground"
+          className="z-40 flex w-full flex-col gap-10 rounded-[44px] bg-background/70 p-8 font-serif text-foreground backdrop-blur-xl dark:bg-dark-background/10 dark:text-dark-foreground"
           initial={{
             y: 100,
             opacity: 0,

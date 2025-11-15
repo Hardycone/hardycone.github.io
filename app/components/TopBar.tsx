@@ -106,6 +106,7 @@ export default function TopBar() {
       setIsNavigatingHome(false);
     }
   }, [isNavigatingHome, router]);
+
   useEffect(() => {
     return () => {
       if (scrollTimeout.current) {
@@ -113,6 +114,7 @@ export default function TopBar() {
       }
     };
   }, []);
+
   useEffect(() => {
     let observer: IntersectionObserver;
     const sectionElements: HTMLElement[] = [];
@@ -140,8 +142,8 @@ export default function TopBar() {
         },
         {
           root: null,
-          rootMargin: "-25% 0px -25% 0px",
-          threshold: 0.01,
+          rootMargin: "-10% 0px -85% 0px",
+          threshold: 0,
         },
       );
 
@@ -173,7 +175,7 @@ export default function TopBar() {
 
   useEffect(() => {
     function onScroll() {
-      setShowTitle(window.scrollY > 80);
+      setShowTitle(window.scrollY > window.innerHeight / 2);
     }
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);

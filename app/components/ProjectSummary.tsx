@@ -190,18 +190,18 @@ export default function ProjectSummary({
     },
     bottom: {
       initial: {
-        y: 48,
+        y: 44,
         boxShadow: themeShadows.baseCard,
       },
       animate: {
-        y: 48,
+        y: 44,
         scale: 1,
         opacity: 1,
         boxShadow: themeShadows.baseCard,
         transition: { duration: 0.2, ease: "easeInOut" },
       },
       exit: {
-        y: 48,
+        y: 44,
         transition: {
           y: { delay: 0, duration: 0, ease: "easeInOut" },
           duration: 0.2,
@@ -320,22 +320,18 @@ export default function ProjectSummary({
               <div className="flex">
                 {/* Title text */}
                 <h1
-                  className={`font-sans font-bold ${textColorClass} } text-5xl`}
+                  className={`font-sans font-bold ${textColorClass} ${variant === "header" ? "text-6xl" : "text-5xl"}`}
                 >
                   {frozenProject.title}
                 </h1>
               </div>
               {/* Tags */}
-              {frozenProject.tags && (
-                <div
-                  className={`my-4 flex flex-wrap gap-2 ${
-                    variant === "preview" ? "hidden lg:flex" : "flex"
-                  }`}
-                >
+              {variant !== "bottom" && frozenProject.tags && (
+                <div className={`my-4 flex flex-wrap gap-2`}>
                   {frozenProject.tags.map((tag) => (
                     <span
                       key={tag}
-                      className={`px-2 py-1 font-sans text-xs font-semibold ${bgColorClass} text-dark-foreground dark:text-foreground`}
+                      className={`px-2 py-1 font-sans ${variant === "header" ? "text-sm" : "text-xs"} font-semibold ${bgColorClass} text-dark-foreground dark:text-foreground`}
                     >
                       {tag}
                     </span>
@@ -345,7 +341,7 @@ export default function ProjectSummary({
               {/* Tagline */}
               <h2
                 className={`mb-2 font-sans font-semibold text-foreground opacity-70 dark:text-dark-foreground ${
-                  variant === "preview" ? "text-lg lg:text-2xl" : "text-2xl"
+                  variant === "header" ? "text-3xl" : "text-2xl"
                 }`}
               >
                 {frozenProject.tagline}

@@ -196,9 +196,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
         <GlyphCarousel />
       </div>
       <motion.div
-        className={`relative flex w-full max-w-5xl flex-col items-center gap-6 px-2 ${
-          viewMode === "home" ? "" : ""
-        }`}
+        className={`relative flex w-full max-w-5xl flex-col items-center gap-6 px-2`}
       >
         {viewMode === "home" && showPrompt && (
           <motion.div

@@ -1,11 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
+import { useRef } from "react";
 import { useLighting, getShadows } from "../../context/LightingContext";
 import { useTheme } from "next-themes";
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Image from "next/image";
 
 export default function CaseStudyOne() {
@@ -27,6 +28,22 @@ export default function CaseStudyOne() {
     lightColor,
     resolvedTheme === "dark" ? "dark" : "light",
   );
+  const targetRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start start", "end end"],
+  });
+
+  const smoothScrollYProgress = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 20,
+    mass: 0.2,
+  });
+
+  // --- 1. USE 'vw' for 'useTransform' ---
+  // We are moving the "filmstrip" by full viewport widths
+  const x = useTransform(smoothScrollYProgress, [0, 1], ["0vw", "-200vw"]);
 
   return (
     <article>
@@ -524,6 +541,61 @@ export default function CaseStudyOne() {
           representative projects—from startups to NASA to grassroots urbanism.
           Thanks for exploring.
         </p>
+      </section>
+      <section ref={targetRef} className="relative h-[200vh]">
+        {/* The "Sticky" Element */}
+        <div className="sticky top-[10vh] ml-[calc(50%_-_50vw)] h-[90vh] w-[100vw] overflow-hidden">
+          {/* The "Filmstrip" */}
+          <motion.div style={{ x }} className="flex">
+            <div className="flex h-screen w-[300vw] items-center justify-center">
+              <div className="m-[5vw] flex h-full w-[90vw] items-center rounded-3xl border-4">
+                <div className="flex-1" />
+                <div className="w-full max-w-5xl text-left text-black dark:text-white">
+                  <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+                    Section 1: The Problem
+                  </h2>
+                  <p className="text-lg md:text-xl">
+                    ere is some dummy text for the first section. We would
+                    describe the user's pain points and the initial challenge.
+                    As the user scrolls down, the content will begin to move
+                    horizontally, revealing the next part of the story.
+                  </p>
+                </div>
+                <div className="flex-1" />
+              </div>
+              <div className="flex w-[100vw]">
+                <div className="flex-1" />
+                <div className="flex w-full max-w-5xl flex-col text-left text-black dark:text-white">
+                  <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+                    Section 1: The Problem
+                  </h2>
+                  <p className="text-lg md:text-xl">
+                    ere is some dummy text for the first section. We would
+                    describe the user's pain points and the initial challenge.
+                    As the user scrolls down, the content will begin to move
+                    horizontally, revealing the next part of the story.
+                  </p>
+                </div>
+                <div className="flex-1" />
+              </div>
+              <div className="flex w-[100vw]">
+                <div className="flex-1 bg-green-50" />
+                <div className="w-full max-w-5xl bg-red-200 text-left text-black dark:text-white">
+                  <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+                    Section 1: The Problem
+                  </h2>
+                  <p className="text-lg md:text-xl">
+                    ere is some dummy text for the first section. We would
+                    describe the user's pain points and the initial challenge.
+                    As the user scrolls down, the content will begin to move
+                    horizontally, revealing the next part of the story.
+                  </p>
+                </div>
+                <div className="flex-1" />
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </section>
       {/*Section 3: Interests*/}
       <section id="section-3" className="scroll-mt-24">

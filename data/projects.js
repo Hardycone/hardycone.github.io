@@ -52,7 +52,6 @@ const projects = [
       { id: "section-3", label: "Goal", icon: ArcheryTarget },
       { id: "section-4", label: "Action", icon: PocketBow },
       { id: "section-5", label: "Result", icon: OnTarget },
-      { id: "section-6", label: "Reflection", icon: Enlightenment },
     ],
   },
   {

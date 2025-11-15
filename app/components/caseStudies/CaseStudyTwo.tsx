@@ -21,9 +21,9 @@ export default function CaseStudyTwo() {
       {/*Section 1*/}
       <section id="section-1" className="scroll-mt-24">
         <h2
-          className={`font-sans text-3xl font-semibold ${textColorClass} leading-loose`}
+          className={`font-sans text-4xl font-semibold ${textColorClass} leading-loose`}
         >
-          W1232
+          Overview
         </h2>
         <p>
           Our team set out to solve a common but underexplored problem: how do
