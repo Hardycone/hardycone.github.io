@@ -6,10 +6,21 @@ import { useLighting, getShadows } from "../../context/LightingContext";
 import { useTheme } from "next-themes";
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  MotionValue,
+} from "framer-motion";
 import Image from "next/image";
+import { FileTextIcon } from "@phosphor-icons/react";
 
-export default function CaseStudyOne() {
+interface CaseStudyOneProps {
+  scrollY: MotionValue<number>;
+}
+
+export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   const { resolvedTheme } = useTheme();
   const { activeIndex } = useActiveProject();
 
@@ -44,486 +55,517 @@ export default function CaseStudyOne() {
   // --- 1. USE 'vw' for 'useTransform' ---
   // We are moving the "filmstrip" by full viewport widths
   const x = useTransform(smoothScrollYProgress, [0, 1], ["0vw", "-200vw"]);
+  const borderOpacity = useTransform(
+    scrollY,
+    [
+      0,
+      window.innerHeight * 2,
+      document.body.scrollHeight - window.innerHeight * 2,
+      document.body.scrollHeight - window.innerHeight * 1.2,
+      document.body.scrollHeight - window.innerHeight,
+    ],
+    resolvedTheme === "dark" ? [0.25, 0, 0, 0.25, 0] : [1, 0, 0, 1, 0],
+  );
+
+  const borderColor = useTransform(
+    borderOpacity,
+    (o) => `rgba(255,255,255,${o})`,
+  );
 
   return (
     <article>
       {/*Section 1: Resume*/}
       <section id="section-1" className="mb-16 scroll-mt-24">
         {/*Section Header Block*/}
-        <div className="mb-4 flex w-full items-start justify-between">
-          {/*Section Title*/}
-          <h2 className={`font-sans text-3xl font-semibold ${textColorClass}`}>
-            My Resume
-          </h2>
-          {/*Download Button*/}
-          <motion.button
-            className="rounded-full px-4 py-2 font-semibold"
-            animate={{ boxShadow: themeShadows.baseButton }}
-            whileHover={{ boxShadow: themeShadows.hoverButton }}
-          >
-            Download a Copy
-          </motion.button>
-        </div>
 
-        {/*Subsection 1: Experience*/}
-        <div className="mb-8">
-          {/*Subheader*/}
-          <h3 className="mb-4 font-sans text-2xl font-semibold">Experience</h3>
-          {/*Entry 1*/}
-          <div className="mb-4 flex gap-4">
-            {/*Left: Image*/}
-            <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl">
-              <Image
-                src="/images/logo-flux.png"
-                fill
-                alt="logo"
-                className="object-cover"
+        <motion.div
+          className="mb-24 flex flex-col rounded-[44px] border bg-background/20 p-6 text-foreground backdrop-blur-xl dark:bg-dark-background/10 dark:text-dark-foreground"
+          style={{ borderColor }}
+        >
+          <div className="mb-4 flex w-full items-start justify-between">
+            {/*Section Title*/}
+            <div className="flex items-center gap-2">
+              <FileTextIcon
+                weight="duotone"
+                size={32}
+                className={`text-red-`}
               />
+              <h2
+                className={`font-sans text-3xl font-semibold ${textColorClass}`}
+              >
+                My Resume
+              </h2>
             </div>
-            {/*Right: Description*/}
-            <div className="flex w-full flex-col">
-              {/*Header*/}
-              <div className="flex justify-between font-sans text-xl">
-                {/*Title Block*/}
-                <div className="flex flex-col">
-                  <p className="font-semibold">Co-founder</p>
-                  <p>Flux</p>
-                </div>
-                {/*Years*/}
-                <p>2023 - 2025</p>
-              </div>
-              {/*Description*/}
-              <div className="mt-2 flex flex-col">
-                <p>
-                  Flux is a quantitative UX research platform with a mission to
-                  democratize data-driven product design
-                </p>
-                <ul className="mt-2 list-inside list-disc">
-                  <li>Design</li>
-                  <li>Zero to One</li>
-                  <li>Complex work flows</li>
-                </ul>
-              </div>
-            </div>
+
+            {/*Download Button*/}
+            <motion.button
+              className="rounded-full px-4 py-2 font-semibold"
+              animate={{ boxShadow: themeShadows.baseButton }}
+              whileHover={{ boxShadow: themeShadows.hoverButton }}
+            >
+              Download a Copy
+            </motion.button>
           </div>
-          {/*Entry 2*/}
-          <div className="mb-4 flex gap-4">
-            {/*Left: Image*/}
-            <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
-              <Image
-                src="/images/logo-aslf.png"
-                fill
-                alt="logo"
-                className="object-cover dark:invert"
-              />
-            </div>
-            {/*Right: Description*/}
-            <div className="flex w-full flex-col">
-              {/*Header*/}
-              <div className="flex justify-between font-sans text-xl">
-                {/*Title Block*/}
-                <div className="flex flex-col">
-                  <p className="font-semibold">Design Director</p>
-                  <p>ASLF, Inc.</p>
-                </div>
-                {/*Years*/}
-                <p>2015 - 2022</p>
-              </div>
-              {/*Description*/}
-              <div className="mt-2 flex flex-col">
-                <p>
-                  ASLF is a leading nonprofit with a decades-long track record
-                  of shaping US environmental policy through strategic
-                  litigation. I joined as a landscape designer as the
-                  organizatoin aimed to refocus its efforts to implement
-                  impactful green projects in local communities.
-                </p>
-                <ul className="mt-2 list-inside list-disc">
-                  <li>
-                    Design and Implementation: I designed and oversaw the
-                    implementation of over a dozen green projects.
-                  </li>
-                  <li>
-                    Project Management: I managed several federal and local
-                    grants amassing a total budget of over $3 million.
-                  </li>
-                  <li>
-                    Program Development: I built partnerships and secured
-                    grants.
-                  </li>
-                  <li>
-                    Stakeholder Management: I heavily involved the local
-                    community in all my projects in the form of interviews and
-                    workshops.
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          {/*Entry 3*/}
-          <div className="mb-4 flex gap-4">
-            {/*Left: Image*/}
-            <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
-              <Image
-                src="/images/logo-nps.png"
-                fill
-                alt="logo"
-                className="object-cover"
-              />
-            </div>
-            {/*Right: Description*/}
-            <div className="flex w-full flex-col">
-              {/*Header*/}
-              <div className="flex justify-between font-sans text-xl">
-                {/*Title Block*/}
-                <div className="flex flex-col">
-                  <p className="font-semibold">Researcher</p>
-                  <p>National Park Service</p>
-                </div>
-                {/*Years*/}
-                <p>2014 - 2015</p>
-              </div>
-              {/*Description*/}
-              <div className="mt-2 flex flex-col">
-                <p>Olmsted Center for Cultural Landscape Preservation </p>
-                <ul className="mt-2 list-disc pl-8">
-                  <li>Design</li>
-                  <li>Zero to One</li>
-                  <li>
-                    My work was published as a technical report:{" "}
-                    <span className="italic">
-                      Auwaerter, John E., Haichao Wang, and George W. Curry.
-                      Cultural Landscape Report for Muir Woods National
-                      Monument. National Park Service, 2021.
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/*Subsection 2: Education*/}
-        <div className="mb-8">
-          {/*Subheader*/}
-          <h3 className="mb-4 font-sans text-2xl font-semibold">Education</h3>
-          {/*Entry 1*/}
-          <div className="mb-4 flex gap-4">
-            {/*Left: Image*/}
-            <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
-              <Image
-                src="/images/logo-uw.png"
-                fill
-                alt="logo"
-                className="object-cover dark:hidden"
-              />
-              <Image
-                src="/images/logo-uw-gold.png"
-                fill
-                alt="logo"
-                className="hidden object-cover dark:block"
-              />
-            </div>
-            {/*Right: Description*/}
-            <div className="flex w-full flex-col">
-              {/*Header*/}
-              <div className="flex justify-between font-sans text-xl">
-                {/*Title Block*/}
-                <div className="flex flex-col">
-                  <p className="font-semibold">
-                    Master's in Human-Computer Interaction
-                  </p>
-                  <p>University of Washington - Seattle</p>
-                </div>
-                {/*Years*/}
-                <p>2023</p>
-              </div>
-            </div>
-          </div>
-          {/*Entry 2*/}
-          <div className="mb-4 flex gap-4">
-            {/*Left: Image*/}
-            <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
-              <Image
-                src="/images/logo-esf.png"
-                fill
-                alt="logo"
-                className="object-cover dark:hidden"
-              />{" "}
-              <Image
-                src="/images/logo-esf-light.png"
-                fill
-                alt="logo"
-                className="hidden object-cover dark:block"
-              />
-            </div>
-            {/*Right: Description*/}
-            <div className="flex w-full flex-col">
-              {/*Header*/}
-              <div className="flex justify-between font-sans text-xl">
-                {/*Title Block*/}
-                <div className="flex flex-col">
-                  <p className="font-semibold">
-                    Master's in Landscape Architecture
-                  </p>
-                  <p>State University of New York - Syracuse</p>
-                </div>
-                {/*Years*/}
-                <p>2015</p>
-              </div>
-            </div>
-          </div>
-          {/*Entry 3*/}
-          <div className="mb-4 flex gap-4">
-            {/*Left: Image*/}
-            <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
-              <Image
-                src="/images/logo-bnu.png"
-                fill
-                alt="logo"
-                className="object-cover dark:brightness-[50] dark:saturate-0"
-              />
-            </div>
-            {/*Right: Description*/}
-            <div className="flex w-full flex-col">
-              {/*Header*/}
-              <div className="flex justify-between font-sans text-xl">
-                {/*Title Block*/}
-                <div className="flex flex-col">
-                  <p className="font-semibold">
-                    Bachelor's in Environmental Science
-                  </p>
-                  <p>Beijing Normal University</p>
-                </div>
-                {/*Years*/}
-                <p>2011</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/*Subsection 3: Grants and Awards*/}
-        <div className="mb-8">
-          {/*Subheader*/}
-          <h3 className="mb-4 font-sans text-2xl font-semibold">
-            Awards, Grants, and Funded Projects
-          </h3>
-          {/*List*/}
-          <ul>
+          <div className="mb-6 h-[1px] w-full rounded-full bg-white dark:bg-white/25" />
+          {/*Subsection 1: Experience*/}
+          <div className="mb-8">
+            {/*Subheader*/}
+            <h3 className="mb-4 font-sans text-2xl font-semibold">
+              Experience
+            </h3>
             {/*Entry 1*/}
-            <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-              {/*Left: Description*/}
-              <div className="flex gap-2">
-                {/*Image*/}
-                <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                  <Image
-                    src="/images/logo-nasa.png"
-                    fill
-                    alt="logo"
-                    className="object-cover"
-                  />
+            <div className="mb-4 flex gap-4">
+              {/*Left: Image*/}
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl">
+                <Image
+                  src="/images/logo-flux.png"
+                  fill
+                  alt="logo"
+                  className="object-cover"
+                />
+              </div>
+              {/*Right: Description*/}
+              <div className="flex w-full flex-col">
+                {/*Header*/}
+                <div className="flex justify-between font-sans text-xl">
+                  {/*Title Block*/}
+                  <div className="flex flex-col">
+                    <p className="font-semibold">Co-founder</p>
+                    <p>Flux</p>
+                  </div>
+                  {/*Years*/}
+                  <p>2023 - 2025</p>
                 </div>
                 {/*Description*/}
-                <p>
-                  NASA SUITS,{" "}
-                  <span className="font-serif text-lg italic">
-                    Finalist (Selected for testing and presentation at Johnson
-                    Space Center with 9 other teams)
+                <div className="mt-2 flex flex-col">
+                  <p>
+                    Flux is a quantitative UX research platform with a mission
+                    to democratize data-driven product design
+                  </p>
+                  <ul className="mt-2 list-inside list-disc">
+                    <li>Design</li>
+                    <li>Zero to One</li>
+                    <li>Complex work flows</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            {/*Entry 2*/}
+            <div className="mb-4 flex gap-4">
+              {/*Left: Image*/}
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+                <Image
+                  src="/images/logo-aslf.png"
+                  fill
+                  alt="logo"
+                  className="object-cover dark:invert"
+                />
+              </div>
+              {/*Right: Description*/}
+              <div className="flex w-full flex-col">
+                {/*Header*/}
+                <div className="flex justify-between font-sans text-xl">
+                  {/*Title Block*/}
+                  <div className="flex flex-col">
+                    <p className="font-semibold">Design Director</p>
+                    <p>ASLF, Inc.</p>
+                  </div>
+                  {/*Years*/}
+                  <p>2015 - 2022</p>
+                </div>
+                {/*Description*/}
+                <div className="mt-2 flex flex-col">
+                  <p>
+                    ASLF is a leading nonprofit with a decades-long track record
+                    of shaping US environmental policy through strategic
+                    litigation. I joined as a landscape designer as the
+                    organizatoin aimed to refocus its efforts to implement
+                    impactful green projects in local communities.
+                  </p>
+                  <ul className="mt-2 list-inside list-disc">
+                    <li>
+                      Design and Implementation: I designed and oversaw the
+                      implementation of over a dozen green projects.
+                    </li>
+                    <li>
+                      Project Management: I managed several federal and local
+                      grants amassing a total budget of over $3 million.
+                    </li>
+                    <li>
+                      Program Development: I built partnerships and secured
+                      grants.
+                    </li>
+                    <li>
+                      Stakeholder Management: I heavily involved the local
+                      community in all my projects in the form of interviews and
+                      workshops.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            {/*Entry 3*/}
+            <div className="mb-4 flex gap-4">
+              {/*Left: Image*/}
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+                <Image
+                  src="/images/logo-nps.png"
+                  fill
+                  alt="logo"
+                  className="object-cover"
+                />
+              </div>
+              {/*Right: Description*/}
+              <div className="flex w-full flex-col">
+                {/*Header*/}
+                <div className="flex justify-between font-sans text-xl">
+                  {/*Title Block*/}
+                  <div className="flex flex-col">
+                    <p className="font-semibold">Researcher</p>
+                    <p>National Park Service</p>
+                  </div>
+                  {/*Years*/}
+                  <p>2014 - 2015</p>
+                </div>
+                {/*Description*/}
+                <div className="mt-2 flex flex-col">
+                  <p>Olmsted Center for Cultural Landscape Preservation </p>
+                  <ul className="mt-2 list-disc pl-8">
+                    <li>Design</li>
+                    <li>Zero to One</li>
+                    <li>
+                      My work was published as a technical report:{" "}
+                      <span className="italic">
+                        Auwaerter, John E., Haichao Wang, and George W. Curry.
+                        Cultural Landscape Report for Muir Woods National
+                        Monument. National Park Service, 2021.
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/*Subsection 2: Education*/}
+          <div className="mb-8">
+            {/*Subheader*/}
+            <h3 className="mb-4 font-sans text-2xl font-semibold">Education</h3>
+            {/*Entry 1*/}
+            <div className="mb-4 flex gap-4">
+              {/*Left: Image*/}
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+                <Image
+                  src="/images/logo-uw.png"
+                  fill
+                  alt="logo"
+                  className="object-cover dark:hidden"
+                />
+                <Image
+                  src="/images/logo-uw-gold.png"
+                  fill
+                  alt="logo"
+                  className="hidden object-cover dark:block"
+                />
+              </div>
+              {/*Right: Description*/}
+              <div className="flex w-full flex-col">
+                {/*Header*/}
+                <div className="flex justify-between font-sans text-xl">
+                  {/*Title Block*/}
+                  <div className="flex flex-col">
+                    <p className="font-semibold">
+                      Master's in Human-Computer Interaction
+                    </p>
+                    <p>University of Washington - Seattle</p>
+                  </div>
+                  {/*Years*/}
+                  <p>2023</p>
+                </div>
+              </div>
+            </div>
+            {/*Entry 2*/}
+            <div className="mb-4 flex gap-4">
+              {/*Left: Image*/}
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+                <Image
+                  src="/images/logo-esf.png"
+                  fill
+                  alt="logo"
+                  className="object-cover dark:hidden"
+                />{" "}
+                <Image
+                  src="/images/logo-esf-light.png"
+                  fill
+                  alt="logo"
+                  className="hidden object-cover dark:block"
+                />
+              </div>
+              {/*Right: Description*/}
+              <div className="flex w-full flex-col">
+                {/*Header*/}
+                <div className="flex justify-between font-sans text-xl">
+                  {/*Title Block*/}
+                  <div className="flex flex-col">
+                    <p className="font-semibold">
+                      Master's in Landscape Architecture
+                    </p>
+                    <p>State University of New York - Syracuse</p>
+                  </div>
+                  {/*Years*/}
+                  <p>2015</p>
+                </div>
+              </div>
+            </div>
+            {/*Entry 3*/}
+            <div className="mb-4 flex gap-4">
+              {/*Left: Image*/}
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+                <Image
+                  src="/images/logo-bnu.png"
+                  fill
+                  alt="logo"
+                  className="object-cover dark:brightness-[50] dark:saturate-0"
+                />
+              </div>
+              {/*Right: Description*/}
+              <div className="flex w-full flex-col">
+                {/*Header*/}
+                <div className="flex justify-between font-sans text-xl">
+                  {/*Title Block*/}
+                  <div className="flex flex-col">
+                    <p className="font-semibold">
+                      Bachelor's in Environmental Science
+                    </p>
+                    <p>Beijing Normal University</p>
+                  </div>
+                  {/*Years*/}
+                  <p>2011</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/*Subsection 3: Grants and Awards*/}
+          <div className="mb-8">
+            {/*Subheader*/}
+            <h3 className="mb-4 font-sans text-2xl font-semibold">
+              Awards, Grants, and Funded Projects
+            </h3>
+            {/*List*/}
+            <ul>
+              {/*Entry 1*/}
+              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
+                {/*Left: Description*/}
+                <div className="flex gap-2">
+                  {/*Image*/}
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                    <Image
+                      src="/images/logo-nasa.png"
+                      fill
+                      alt="logo"
+                      className="object-cover"
+                    />
+                  </div>
+                  {/*Description*/}
+                  <p>
+                    NASA SUITS,{" "}
+                    <span className="text-lg italic">
+                      Finalist (Selected for testing and presentation at Johnson
+                      Space Center with 9 other teams)
+                    </span>
+                  </p>
+                </div>
+                {/*Right: Years*/}
+                <p>2023</p>
+              </li>
+              {/*Entry 2*/}
+              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
+                {/*Left: Description*/}
+                <div className="flex gap-2">
+                  {/*Image*/}
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                    <Image
+                      src="/images/logo-epa.png"
+                      fill
+                      alt="logo"
+                      className="object-cover dark:brightness-[10]"
+                    />
+                  </div>
+                  {/*Description*/}
+                  <p>
+                    EPA Environmental Justice Small Grant Award,{" "}
+                    <span className="text-lg italic">$65,094</span>
+                  </p>
+                </div>
+                {/*Right: Years*/}
+                <p>2021</p>
+              </li>
+              {/*Entry 3*/}
+              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
+                {/*Left: Description*/}
+                <div className="flex gap-2">
+                  {/*Image*/}
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                    <Image
+                      src="/images/logo-wep.png"
+                      fill
+                      alt="logo"
+                      className="object-cover"
+                    />
+                  </div>
+                  {/*Description*/}
+                  <p>
+                    Onondaga County Department of Water Environment Protection
+                    Contract, <span className="text-lg italic">$2,150,000</span>
+                  </p>
+                </div>
+                {/*Right: Years*/}
+                <p>2020</p>
+              </li>
+              {/*Entry 4*/}
+              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
+                {/*Left: Description*/}
+                <div className="flex gap-2">
+                  {/*Image*/}
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                    <Image
+                      src="/images/logo-usda.png"
+                      fill
+                      alt="logo"
+                      className="object-cover dark:brightness-200"
+                    />
+                  </div>
+                  {/*Description*/}
+                  <p>
+                    USDA Great Lakes Restoration Initiative Grant Award,{" "}
+                    <span className="text-lg italic">$99,983</span>
+                  </p>
+                </div>
+                {/*Right: Years*/}
+                <p>2019</p>
+              </li>
+              {/*Entry 5*/}
+              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
+                {/*Left: Description*/}
+                <div className="flex gap-2">
+                  {/*Image*/}
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                    <Image
+                      src="/images/logo-noaa.png"
+                      fill
+                      alt="logo"
+                      className="object-cover"
+                    />
+                  </div>
+                  {/*Description*/}
+                  <p>
+                    NOAA Sea Grant Award,{" "}
+                    <span className="text-lg italic">$24,964</span>
+                  </p>
+                </div>
+                {/*Right: Years*/}
+                <p>2018</p>
+              </li>
+              {/*Entry 6*/}
+              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
+                {/*Left: Description*/}
+                <div className="flex gap-2">
+                  {/*Image*/}
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                    <Image
+                      src="/images/logo-nys.png"
+                      fill
+                      alt="logo"
+                      className="object-cover dark:brightness-200 dark:saturate-0"
+                    />
+                  </div>
+                  {/*Description*/}
+                  <p>
+                    New York State Green Innovation Grant,{" "}
+                    <span className="text-lg italic">$1,100,000</span>
+                  </p>
+                </div>
+                {/*Right: Years*/}
+                <p>2017</p>
+              </li>
+              {/*Entry 7*/}
+              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
+                {/*Left: Description*/}
+                <div className="flex gap-2">
+                  {/*Image*/}
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                    <Image
+                      src="/images/logo-usda.png"
+                      fill
+                      alt="logo"
+                      className="object-cover dark:brightness-200"
+                    />
+                  </div>
+                  {/*Description*/}
+                  <p>
+                    USDA Great Lakes Restoration Initiative Grant Award,{" "}
+                    <span className="text-lg italic">$186,950</span>
+                  </p>
+                </div>
+                {/*Right: Years*/}
+                <p>2016</p>
+              </li>
+            </ul>
+          </div>
+          {/*Subsection 4: Skills*/}
+          <div className="mb-8">
+            <h3 className="mb-4 font-sans text-2xl font-semibold">Skills</h3>
+            {/*Skills List*/}
+            <ul className="text-xl">
+              {/*1*/}
+              <li>
+                <p className="mb-2 font-sans text-xl">
+                  Design and Animation:{" "}
+                  <span className="text-lg italic">
+                    Figma, Illustrator, Photoshop, After Effect, LottieFiles,
+                    Framer Motion
                   </span>
                 </p>
-              </div>
-              {/*Right: Years*/}
-              <p>2023</p>
-            </li>
-            {/*Entry 2*/}
-            <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-              {/*Left: Description*/}
-              <div className="flex gap-2">
-                {/*Image*/}
-                <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                  <Image
-                    src="/images/logo-epa.png"
-                    fill
-                    alt="logo"
-                    className="object-cover dark:brightness-[10]"
-                  />
-                </div>
-                {/*Description*/}
-                <p>
-                  EPA Environmental Justice Small Grant Award,{" "}
-                  <span className="font-serif text-lg italic">$65,094</span>
+              </li>
+              {/*2*/}
+              <li>
+                <p className="mb-2 font-sans text-xl">
+                  Research and Analyses:{" "}
+                  <span className="text-lg italic">
+                    User Interview, Focus Groups, Survey Design, Statistical
+                    Methods (T-test, ANOVA, Linear Regression)
+                  </span>
                 </p>
-              </div>
-              {/*Right: Years*/}
-              <p>2021</p>
-            </li>
-            {/*Entry 3*/}
-            <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-              {/*Left: Description*/}
-              <div className="flex gap-2">
-                {/*Image*/}
-                <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                  <Image
-                    src="/images/logo-wep.png"
-                    fill
-                    alt="logo"
-                    className="object-cover"
-                  />
-                </div>
-                {/*Description*/}
-                <p>
-                  Onondaga County Department of Water Environment Protection
-                  Contract,{" "}
-                  <span className="font-serif text-lg italic">$2,150,000</span>
+              </li>
+              {/*3*/}
+              <li>
+                <p className="mb-2 font-sans text-xl">
+                  Front-End:{" "}
+                  <span className="text-lg italic">
+                    Javascript, React, Next.js, Tailwind CSS
+                  </span>
                 </p>
-              </div>
-              {/*Right: Years*/}
-              <p>2020</p>
-            </li>
-            {/*Entry 4*/}
-            <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-              {/*Left: Description*/}
-              <div className="flex gap-2">
-                {/*Image*/}
-                <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                  <Image
-                    src="/images/logo-usda.png"
-                    fill
-                    alt="logo"
-                    className="object-cover dark:brightness-200"
-                  />
-                </div>
-                {/*Description*/}
-                <p>
-                  USDA Great Lakes Restoration Initiative Grant Award,{" "}
-                  <span className="font-serif text-lg italic">$99,983</span>
+              </li>
+              {/*4*/}
+              <li>
+                <p className="mb-2 font-sans text-xl">
+                  Data Visualization:{" "}
+                  <span className="text-lg italic">D3.js, Tableau</span>
                 </p>
-              </div>
-              {/*Right: Years*/}
-              <p>2019</p>
-            </li>
-            {/*Entry 5*/}
-            <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-              {/*Left: Description*/}
-              <div className="flex gap-2">
-                {/*Image*/}
-                <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                  <Image
-                    src="/images/logo-noaa.png"
-                    fill
-                    alt="logo"
-                    className="object-cover"
-                  />
-                </div>
-                {/*Description*/}
-                <p>
-                  NOAA Sea Grant Award,{" "}
-                  <span className="font-serif text-lg italic">$24,964</span>
+              </li>
+              {/*5*/}
+              <li>
+                <p className="mb-2 font-sans text-xl">
+                  Physical Prototyping:{" "}
+                  <span className="text-lg italic">
+                    Microcontrollers, 3D Modeling (Blender, Fusion 360,
+                    SolidWorks), Digital Fabrication (3D Printing, Laser
+                    Cutting, CNC Milling)
+                  </span>
                 </p>
-              </div>
-              {/*Right: Years*/}
-              <p>2018</p>
-            </li>
-            {/*Entry 6*/}
-            <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-              {/*Left: Description*/}
-              <div className="flex gap-2">
-                {/*Image*/}
-                <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                  <Image
-                    src="/images/logo-nys.png"
-                    fill
-                    alt="logo"
-                    className="object-cover dark:brightness-200 dark:saturate-0"
-                  />
-                </div>
-                {/*Description*/}
-                <p>
-                  New York State Green Innovation Grant,{" "}
-                  <span className="font-serif text-lg italic">$1,100,000</span>
-                </p>
-              </div>
-              {/*Right: Years*/}
-              <p>2017</p>
-            </li>
-            {/*Entry 7*/}
-            <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-              {/*Left: Description*/}
-              <div className="flex gap-2">
-                {/*Image*/}
-                <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                  <Image
-                    src="/images/logo-usda.png"
-                    fill
-                    alt="logo"
-                    className="object-cover dark:brightness-200"
-                  />
-                </div>
-                {/*Description*/}
-                <p>
-                  USDA Great Lakes Restoration Initiative Grant Award,{" "}
-                  <span className="font-serif text-lg italic">$186,950</span>
-                </p>
-              </div>
-              {/*Right: Years*/}
-              <p>2016</p>
-            </li>
-          </ul>
-        </div>
-        {/*Subsection 4: Skills*/}
-        <div className="mb-8">
-          <h3 className="mb-4 font-sans text-2xl font-semibold">Skills</h3>
-          {/*Skills List*/}
-          <ul className="text-xl">
-            {/*1*/}
-            <li>
-              <p className="mb-2 font-sans text-xl">
-                Design and Animation:{" "}
-                <span className="font-serif text-lg italic">
-                  Figma, Illustrator, Photoshop, After Effect, LottieFiles,
-                  Framer Motion
-                </span>
-              </p>
-            </li>
-            {/*2*/}
-            <li>
-              <p className="mb-2 font-sans text-xl">
-                Research and Analyses:{" "}
-                <span className="font-serif text-lg italic">
-                  User Interview, Focus Groups, Survey Design, Statistical
-                  Methods (T-test, ANOVA, Linear Regression)
-                </span>
-              </p>
-            </li>
-            {/*3*/}
-            <li>
-              <p className="mb-2 font-sans text-xl">
-                Front-End:{" "}
-                <span className="font-serif text-lg italic">
-                  Javascript, React, Next.js, Tailwind CSS
-                </span>
-              </p>
-            </li>
-            {/*4*/}
-            <li>
-              <p className="mb-2 font-sans text-xl">
-                Data Visualization:{" "}
-                <span className="font-serif text-lg italic">
-                  D3.js, Tableau
-                </span>
-              </p>
-            </li>
-            {/*5*/}
-            <li>
-              <p className="mb-2 font-sans text-xl">
-                Physical Prototyping:{" "}
-                <span className="font-serif text-lg italic">
-                  Microcontrollers, 3D Modeling (Blender, Fusion 360,
-                  SolidWorks), Digital Fabrication (3D Printing, Laser Cutting,
-                  CNC Milling)
-                </span>
-              </p>
-            </li>
-          </ul>
-        </div>
+              </li>
+            </ul>
+          </div>
+        </motion.div>
       </section>
       {/*Section 2: Story*/}
       <section id="section-2" className="mb-16 scroll-mt-24">

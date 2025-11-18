@@ -7,6 +7,11 @@ import {
   useMotionValueEvent,
 } from "framer-motion";
 import { ReactNode, useEffect, useRef, useState } from "react";
+import {
+  ArrowSquareUpIcon,
+  ArrowSquareDownIcon,
+  MouseScrollIcon,
+} from "@phosphor-icons/react";
 
 import { useViewMode } from "../context/ViewModeContext";
 import { useActiveProject } from "../context/ActiveProjectContext";
@@ -216,23 +221,17 @@ export default function MainContent({ children }: { children: ReactNode }) {
               },
             }}
             exit={{ y: -100, opacity: 0 }}
-            className="pointer-events-none fixed bottom-6 z-50 flex justify-center rounded-lg bg-foreground py-1 pl-2 font-sans text-sm text-background shadow-md dark:bg-dark-foreground dark:text-dark-background md:text-lg"
+            className="pointer-events-none fixed bottom-6 z-50 flex items-center space-x-2 rounded-lg bg-foreground px-4 py-2 font-sans text-sm text-background shadow-md dark:bg-dark-foreground dark:text-dark-background md:text-lg"
           >
-            Scroll or use arrow keys to explore
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="inline-block h-7 w-7"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 5l-4 4h3v6H8l4 4 4-4h-3V9h3l-4-4z" />
-            </svg>
+            <span>Use scroll</span>
+            <MouseScrollIcon size={24} />
+            <span> or arrow keys</span>
+            <ArrowSquareUpIcon size={24} />
+            <ArrowSquareDownIcon size={24} />
+            <span>to explore</span>
           </motion.div>
         )}
-        {viewMode === "case-study" && <CaseStudyContent />}
+        {viewMode === "case-study" && <CaseStudyContent scrollY={scrollY} />}
 
         <AnimatePresence mode="wait">
           {summaryVariant && (

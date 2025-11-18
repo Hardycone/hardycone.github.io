@@ -6,6 +6,16 @@ import { useActiveProject } from "../context/ActiveProjectContext";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import projects from "@/data/projects";
+
+import {
+  ScrollIcon,
+  PuzzlePieceIcon,
+  TargetIcon,
+  PersonSimpleRunIcon,
+  PresentationChartIcon,
+  BrainIcon,
+} from "@phosphor-icons/react";
+
 import Home from "../icons/Home";
 import Resume from "../icons/Resume";
 import LinkedIn from "../icons/LinkedIn";
@@ -238,7 +248,16 @@ export default function TopBar() {
                 </button>
                 <div className="flex gap-2 lg:gap-4">
                   {sections.map((section) => {
-                    const Icon = section.icon;
+                    const Icons = {
+                      ScrollIcon,
+                      PuzzlePieceIcon,
+                      TargetIcon,
+                      PersonSimpleRunIcon,
+                      PresentationChartIcon,
+                      BrainIcon,
+                    };
+                    type IconName = keyof typeof Icons;
+                    const Icon = Icons[section.icon as IconName];
                     return (
                       <button
                         key={section.id}
@@ -253,7 +272,10 @@ export default function TopBar() {
                             : "text-foreground opacity-40 hover:opacity-100 dark:text-dark-foreground"
                         }`}
                       >
-                        <Icon />
+                        <Icon
+                          size={20}
+                          weight={`${activeSection === section.id ? "duotone" : "regular"}`}
+                        />
                       </button>
                     );
                   })}

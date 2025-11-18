@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${jost.variable} ${besley.variable} h-full overflow-x-hidden bg-background text-foreground antialiased transition-colors dark:bg-dark-background dark:text-dark-foreground`}
+        className={`${jost.variable} ${besley.variable} h-full overflow-x-hidden bg-background font-serif text-foreground antialiased transition-colors dark:bg-dark-background dark:text-dark-foreground`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ActiveProjectProvider>

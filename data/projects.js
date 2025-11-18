@@ -1,12 +1,5 @@
 // app/data/projects.js
 import ProjectOneLogo from "../app/icons/ProjectOneLogo";
-import ArcheryTarget from "../app/icons/ArcheryTarget";
-
-import TiedScroll from "../app/icons/TiedScroll";
-import Spyglass from "../app/icons/Spyglass";
-import Enlightenment from "../app/icons/Enlightenment";
-import OnTarget from "../app/icons/OnTarget";
-import PocketBow from "../app/icons/PocketBow";
 
 const projects = [
   {
@@ -24,12 +17,12 @@ const projects = [
     bgColor: "introBackground",
     glyph: ProjectOneLogo,
     sections: [
-      { id: "section-1", label: "My Resume", icon: TiedScroll },
-      { id: "section-2", label: "Problem", icon: Spyglass },
-      { id: "section-3", label: "Goal", icon: ArcheryTarget },
-      { id: "section-4", label: "Action", icon: PocketBow },
-      { id: "section-5", label: "Result", icon: OnTarget },
-      { id: "section-6", label: "Reflection", icon: Enlightenment },
+      { id: "section-1", label: "My Resume", icon: "ScrollIcon" },
+      { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
+      { id: "section-3", label: "Goal", icon: "TargetIcon" },
+      { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
+      { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
+      { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
   },
   {
@@ -41,17 +34,17 @@ const projects = [
     description:
       "I co-founded a company with a mission to unlock rigorous quantitative insights for every product team. Our products enables everyone, not just data scientists and quantitative researchers, to test and analyze their design prototypes and obtain actionable data-driven insights.",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
-    image: "/images/project-1.jpg",
+    image: "/images/hero-flux.png",
     button: "Look Inside",
     textColor: "flux",
     bgColor: "fluxBackground",
     glyph: ProjectOneLogo,
     sections: [
-      { id: "section-1", label: "Quick Take", icon: TiedScroll },
-      { id: "section-2", label: "Problem", icon: Spyglass },
-      { id: "section-3", label: "Goal", icon: ArcheryTarget },
-      { id: "section-4", label: "Action", icon: PocketBow },
-      { id: "section-5", label: "Result", icon: OnTarget },
+      { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
+      { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
+      { id: "section-3", label: "Goal", icon: "TargetIcon" },
+      { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
+      { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
     ],
   },
   {
@@ -64,17 +57,17 @@ const projects = [
       "Incubated during my time at University of Washington, Fantail is an AI-powered story development platform that helps filmmakers brainstorm, organize, storyboard, and pitch their projects.",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     button: "Look Inside",
-    image: "/images/project-1.jpg",
+    image: "/images/hero-fantail.png",
     textColor: "fantail",
     bgColor: "fantailBackground",
     glyph: ProjectOneLogo,
     sections: [
-      { id: "section-1", label: "Quick Take", icon: TiedScroll },
-      { id: "section-2", label: "Problem", icon: Spyglass },
-      { id: "section-3", label: "Goal", icon: ArcheryTarget },
-      { id: "section-4", label: "Action", icon: PocketBow },
-      { id: "section-5", label: "Result", icon: OnTarget },
-      { id: "section-6", label: "Reflection", icon: Enlightenment },
+      { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
+      { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
+      { id: "section-3", label: "Goal", icon: "TargetIcon" },
+      { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
+      { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
+      { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
   },
   {
@@ -87,17 +80,17 @@ const projects = [
       "The next generation of lunar and Mars missions call for interfaces that can effectively relay information and aid extra-vehicular missions on alien terrains. Our team went on to become a finalist in NASA's 2023 SUITS challenge and tested our prototype with astronauts and engineers at the Johnson Space Center.",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     button: "Look Inside",
-    image: "/images/project-1.jpg",
+    image: "/images/hero-astrohuskies.jpg",
     textColor: "suits",
     bgColor: "suitsBackground",
     glyph: ProjectOneLogo,
     sections: [
-      { id: "section-1", label: "Quick Take", icon: TiedScroll },
-      { id: "section-2", label: "Problem", icon: Spyglass },
-      { id: "section-3", label: "Goal", icon: ArcheryTarget },
-      { id: "section-4", label: "Action", icon: PocketBow },
-      { id: "section-5", label: "Result", icon: OnTarget },
-      { id: "section-6", label: "Reflection", icon: Enlightenment },
+      { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
+      { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
+      { id: "section-3", label: "Goal", icon: "TargetIcon" },
+      { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
+      { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
+      { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
   },
   {
@@ -110,17 +103,17 @@ const projects = [
       "I implemented a community-driven project that laid out a vision for the urban core of Wolcott, NY that promoted local pride, urban design, and watershed protection. Funded by the National Oceanic and Atmospheric Administration (NOAA).",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     button: "Look Inside",
-    image: "/images/project-1.jpg",
+    image: "/images/hero-wolcott.jpg",
     textColor: "wolcott",
     bgColor: "wolcottBackground",
     glyph: ProjectOneLogo,
     sections: [
-      { id: "section-1", label: "Quick Take", icon: TiedScroll },
-      { id: "section-2", label: "Problem", icon: Spyglass },
-      { id: "section-3", label: "Goal", icon: ArcheryTarget },
-      { id: "section-4", label: "Action", icon: PocketBow },
-      { id: "section-5", label: "Result", icon: OnTarget },
-      { id: "section-6", label: "Reflection", icon: Enlightenment },
+      { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
+      { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
+      { id: "section-3", label: "Goal", icon: "TargetIcon" },
+      { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
+      { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
+      { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
   },
   {
@@ -134,17 +127,17 @@ const projects = [
       "This year-long project was a collaboration with Massuetts Institute of Technology, the Boston Parks and Recreation Department, and the Boston Chinatown Neighborhood Association. I conducted extensive research and created a series of design proposals which were partially implemented.",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     button: "Look Inside",
-    image: "/images/project-1.jpg",
+    image: "/images/hero-ribbon.png",
     textColor: "chinatown",
     bgColor: "chinatownBackground",
     glyph: ProjectOneLogo,
     sections: [
-      { id: "section-1", label: "Quick Take", icon: TiedScroll },
-      { id: "section-2", label: "Problem", icon: Spyglass },
-      { id: "section-3", label: "Goal", icon: ArcheryTarget },
-      { id: "section-4", label: "Action", icon: PocketBow },
-      { id: "section-5", label: "Result", icon: OnTarget },
-      { id: "section-6", label: "Reflection", icon: Enlightenment },
+      { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
+      { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
+      { id: "section-3", label: "Goal", icon: "TargetIcon" },
+      { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
+      { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
+      { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
   },
 ];

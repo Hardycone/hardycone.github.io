@@ -1,7 +1,12 @@
 "use client";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  MotionValue,
+  useTransform,
+} from "framer-motion";
 import projects from "@/data/projects";
 import { useEffect } from "react";
 import { useTheme } from "next-themes";
@@ -13,6 +18,9 @@ import CaseStudyThree from "./caseStudies/CaseStudyThree";
 import CaseStudyFour from "./caseStudies/CaseStudyFour";
 import CaseStudyFive from "./caseStudies/CaseStudyFive";
 import CaseStudySix from "./caseStudies/CaseStudySix";
+interface CaseStudyContentProps {
+  scrollY: MotionValue<number>;
+}
 
 type ProjectSlug =
   | "case-study-one"
@@ -22,7 +30,10 @@ type ProjectSlug =
   | "case-study-five"
   | "case-study-six";
 
-const caseStudyComponents: Record<ProjectSlug, React.FC> = {
+const caseStudyComponents: Record<
+  ProjectSlug,
+  React.FC<CaseStudyContentProps>
+> = {
   "case-study-one": CaseStudyOne,
   "case-study-two": CaseStudyTwo,
   "case-study-three": CaseStudyThree,
@@ -31,7 +42,7 @@ const caseStudyComponents: Record<ProjectSlug, React.FC> = {
   "case-study-six": CaseStudySix,
 };
 
-export default function CaseStudyContent() {
+export default function CaseStudyContent({ scrollY }: CaseStudyContentProps) {
   const { activeIndex, transitioningToNext, setTransitioningToNext } =
     useActiveProject();
 
@@ -69,7 +80,7 @@ export default function CaseStudyContent() {
         <motion.div
           layout
           key={project.id}
-          className="z-40 flex w-full flex-col gap-10 rounded-[44px] bg-background/70 p-8 font-serif text-foreground backdrop-blur-xl dark:bg-dark-background/10 dark:text-dark-foreground"
+          className="z-40 flex w-full flex-col"
           initial={{
             y: 100,
             opacity: 0,
@@ -91,7 +102,7 @@ export default function CaseStudyContent() {
             }
           }}
         >
-          <CaseStudyComponent />
+          <CaseStudyComponent scrollY={scrollY} />
         </motion.div>
       </AnimatePresence>
       <div className="min-h-[25vh]" />

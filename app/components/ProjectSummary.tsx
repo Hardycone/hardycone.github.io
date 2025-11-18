@@ -74,7 +74,7 @@ export default function ProjectSummary({
       document.body.scrollHeight - window.innerHeight * 1.5,
       document.body.scrollHeight - window.innerHeight,
     ],
-    [0.95, 1],
+    [1.1, 1],
   );
 
   const { a, b, getTextColorClass, getBgColorClass, getLightColor } =
@@ -90,6 +90,7 @@ export default function ProjectSummary({
     lightColor,
     resolvedTheme === "dark" ? "dark" : "light",
   );
+
   const project =
     variant === "bottom"
       ? projects[(activeIndex + 1) % projects.length]
@@ -217,7 +218,7 @@ export default function ProjectSummary({
       ? " fixed inset-0 w-full h-screen items-center justify-center p-12"
       : variant === "preview"
         ? " relative my-auto w-full max-w-5xl"
-        : "fixed items-center justify-end w-full h-screen max-w-6xl px-2 pt-2 ";
+        : "fixed items-center justify-end w-full h-screen max-w-5xl px-2 pt-2 ";
 
   const cardClasses =
     variant === "header"
@@ -300,7 +301,7 @@ export default function ProjectSummary({
                 className={`mb-auto flex w-full flex-1 items-center justify-between`}
               >
                 {/* "Next Up" */}
-                <h6 className="font-serif text-lg font-bold">Next Up </h6>
+                <h6 className="text-lg font-bold">Next Up </h6>
                 {/* Button */}
                 <motion.button
                   animate={{ boxShadow: themeShadows.baseButton }}
@@ -308,7 +309,7 @@ export default function ProjectSummary({
                     scale: 0.97,
                     boxShadow: themeShadows.hoverButton,
                   }}
-                  className={`px-4 py-2 font-serif text-lg font-bold ${textColorClass} whitespace-nowrap rounded-full`}
+                  className={`px-4 py-2 text-lg font-bold ${textColorClass} whitespace-nowrap rounded-full`}
                 >
                   {frozenProject.button}
                 </motion.button>
@@ -350,7 +351,7 @@ export default function ProjectSummary({
             {/* Description */}
             {variant !== "bottom" && (
               <p
-                className={`mb-4 font-serif text-base text-foreground dark:text-dark-foreground ${
+                className={`mb-4 text-base text-foreground dark:text-dark-foreground ${
                   variant === "preview" ? "line-clamp-6" : ""
                 }`}
               >
@@ -381,7 +382,7 @@ export default function ProjectSummary({
                   scale: 0.97,
                   boxShadow: themeShadows.hoverButton,
                 }}
-                className={`px-4 py-2 font-serif text-lg font-bold ${textColorClass} whitespace-nowrap rounded-full`}
+                className={`px-4 py-2 text-lg font-bold ${textColorClass} whitespace-nowrap rounded-full`}
               >
                 {frozenProject.button}
               </motion.button>
