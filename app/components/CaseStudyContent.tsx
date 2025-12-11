@@ -75,7 +75,7 @@ export default function CaseStudyContent({ scrollY }: CaseStudyContentProps) {
 
   return (
     <>
-      <div className="min-h-[85dvh]" />
+      <div className="min-h-[calc(100dvh-48px)]" />
       <AnimatePresence mode="wait">
         <motion.div
           layout

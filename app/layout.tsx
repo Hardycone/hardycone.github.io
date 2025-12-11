@@ -35,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="snap-y snap-proximity">
       <body
         className={`${jost.variable} ${besley.variable} h-full overflow-x-hidden bg-background font-serif text-foreground antialiased transition-colors dark:bg-dark-background dark:text-dark-foreground`}
       >

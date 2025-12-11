@@ -2,6 +2,11 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
+//Define shadow styles based on cursor position
+//Define text and background color classes based on active project and theme
+
+//Define light color based on active project and theme, unused at the moment
+
 interface LightingContextValue {
   a: number;
   b: number;
@@ -79,20 +84,20 @@ export const LightingProvider = ({
   const getBgColorClass = (theme: string, colorKey: string) => {
     const map: Record<string, Record<string, string>> = {
       light: {
-        introBackground: "bg-introBackground",
-        fluxBackground: "bg-fluxBackground",
-        fantailBackground: "bg-fantailBackground",
-        suitsBackground: "bg-suitsBackground",
-        wolcottBackground: "bg-wolcottBackground",
-        chinatownBackground: "bg-chinatownBackground",
+        introBackground: "bg-intro",
+        fluxBackground: "bg-flux",
+        fantailBackground: "bg-fantail",
+        suitsBackground: "bg-suits",
+        wolcottBackground: "bg-wolcott",
+        chinatownBackground: "bg-chinatown",
       },
       dark: {
-        introBackground: "dark:bg-dark-introBackground",
-        fluxBackground: "dark:bg-dark-fluxBackground",
-        fantailBackground: "dark:bg-dark-fantailBackground",
-        suitsBackground: "dark:bg-dark-suitsBackground",
-        wolcottBackground: "dark:bg-dark-wolcottBackground",
-        chinatownBackground: "dark:bg-dark-chinatownBackground",
+        introBackground: "dark:bg-dark-intro",
+        fluxBackground: "dark:bg-dark-flux",
+        fantailBackground: "dark:bg-dark-fantail",
+        suitsBackground: "dark:bg-dark-suits",
+        wolcottBackground: "dark:bg-dark-wolcott",
+        chinatownBackground: "dark:bg-dark-chinatown",
       },
     };
 
@@ -163,7 +168,7 @@ export function getShadows(
 ) {
   if (theme === "light") {
     return {
-      topBar: `${-a * 2}px ${-b * 2}px 16px 0px rgba(0, 0, 0, 0.3)`,
+      topBar: `${-a * 1.5}px ${-b * 1.5}px 16px 0px rgba(0, 0, 0, 0.2)`,
       glyph: `${a / 3}px ${b / 3}px 4px 0px rgba(255,255,255,0.7),
               ${a / 2}px ${b / 2}px 2px 0px rgba(255,255,255,1),
               ${-a / 2}px ${-b / 2}px 2px 0px rgba(0, 0, 0, 0.1)`,
@@ -180,7 +185,7 @@ export function getShadows(
     };
   } else {
     return {
-      topBar: `${-a * 2}px ${-b * 2}px 16px 0px rgba(0, 0, 0, 1),
+      topBar: `${-a * 1.5}px ${-b * 1.5}px 16px 0px rgba(0, 0, 0, 1),
               inset ${-a / 4}px ${-b / 4}px 2px 0px rgba(255,255,255,0.4)`,
       glyph: `${-a / 2}px ${-b / 2}px 4px 0px rgba(0, 0, 0, 1),
               inset ${-a / 4}px ${-b / 4}px 1px 0px rgba(255,255,255,0.4)`,

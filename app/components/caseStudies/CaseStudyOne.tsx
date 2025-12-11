@@ -79,17 +79,13 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
         {/*Section Header Block*/}
 
         <motion.div
-          className="mb-24 flex flex-col rounded-[44px] border bg-background/20 p-6 text-foreground backdrop-blur-xl dark:bg-dark-background/10 dark:text-dark-foreground"
+          className="mb-24 flex flex-col rounded-[44px] border p-6 text-foreground backdrop-blur-xl dark:text-dark-foreground"
           style={{ borderColor }}
         >
           <div className="mb-4 flex w-full items-start justify-between">
             {/*Section Title*/}
             <div className="flex items-center gap-2">
-              <FileTextIcon
-                weight="duotone"
-                size={32}
-                className={`text-red-`}
-              />
+              <FileTextIcon weight="duotone" size={32} className={`text-red`} />
               <h2
                 className={`font-sans text-3xl font-semibold ${textColorClass}`}
               >
@@ -686,7 +682,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             {/* Remaining cells */}
             <div className="relative">
               <Image
-                src="/images/20230624-HWP00734-Edit.jpg"
+                src="/images/20230624-HWP00734"
                 fill
                 alt="Dummy Image 4"
                 className="h-full w-full rounded-[20px] object-cover"
@@ -704,32 +700,16 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <Image
                 src="/images/20230624-HWP00734-Edit.jpg"
                 fill
-                alt="Dummy Image 6"
-                className="h-full w-full rounded-[20px] object-cover"
-              />
-            </div>
-            <div className="relative">
-              <Image
-                src="/images/20230624-HWP00734-Edit.jpg"
-                fill
                 alt="Dummy Image 7"
                 className="h-full w-full rounded-[20px] object-cover"
               />
             </div>
-            <div className="relative">
+            <div className="relative col-span-3 row-span-1">
               <Image
-                src="/images/20230624-HWP00734-Edit.jpg"
+                src="/images/20240704-HWP03580-Edit.jpg"
                 fill
-                alt="Dummy Image 8"
-                className="h-full w-full rounded-[20px] object-cover"
-              />
-            </div>{" "}
-            <div className="relative">
-              <Image
-                src="/images/20230624-HWP00734-Edit.jpg"
-                fill
-                alt="Dummy Image 8"
-                className="h-full w-full rounded-[20px] object-cover"
+                alt="Dummy Image 6"
+                className="h-full w-full rounded-[20px] object-cover object-top"
               />
             </div>
           </div>

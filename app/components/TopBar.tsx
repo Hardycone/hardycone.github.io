@@ -14,6 +14,10 @@ import {
   PersonSimpleRunIcon,
   PresentationChartIcon,
   BrainIcon,
+  SealQuestionIcon,
+  MagnifyingGlassIcon,
+  LightbulbFilamentIcon,
+  RocketLaunchIcon,
 } from "@phosphor-icons/react";
 
 import Home from "../icons/Home";
@@ -255,6 +259,10 @@ export default function TopBar() {
                       PersonSimpleRunIcon,
                       PresentationChartIcon,
                       BrainIcon,
+                      SealQuestionIcon,
+                      MagnifyingGlassIcon,
+                      LightbulbFilamentIcon,
+                      RocketLaunchIcon,
                     };
                     type IconName = keyof typeof Icons;
                     const Icon = Icons[section.icon as IconName];

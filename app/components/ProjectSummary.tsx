@@ -1,21 +1,15 @@
 "use client";
 
-import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import {
-  motion,
-  AnimatePresence,
-  MotionValue,
-  useTransform,
-  useMotionValue,
-  useScroll,
-  useSpring,
-} from "framer-motion";
-import projects from "../../data/projects";
-import { useActiveProject } from "../context/ActiveProjectContext";
 import { useTheme } from "next-themes";
-import { useLighting, getShadows } from "../context/LightingContext";
 import Image from "next/image";
+
+import { motion, MotionValue, useTransform, useSpring } from "framer-motion";
+
+import { useActiveProject } from "../context/ActiveProjectContext";
+import { useLighting, getShadows } from "../context/LightingContext";
+import projects from "../../data/projects";
 
 function useHasMounted() {
   const [hasMounted, setHasMounted] = useState(false);
@@ -37,9 +31,7 @@ export default function ProjectSummary({
   const hasMounted = useHasMounted();
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
-  const [offset, setOffset] = useState<number | null>(null);
   const { resolvedTheme } = useTheme();
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   const smoothScrollY = useSpring(scrollY, {
     stiffness: 120,
@@ -99,7 +91,7 @@ export default function ProjectSummary({
     previousIndex !== undefined && activeIndex < previousIndex ? "down" : "up";
 
   const [key, setKey] = useState(`project-${project.id}`);
-  const [frozenProject, setFrozenProject] = useState(project);
+  const [displayedProject, setdisplayedProject] = useState(project);
 
   // near the top of ProjectSummary component
   const isMorphingRef = useRef(false);
@@ -111,38 +103,18 @@ export default function ProjectSummary({
       isMorphingRef.current = true;
       setTransitioningToNext(true);
       setKey(`project-${projects[(activeIndex + 1) % projects.length].id}`);
-      setFrozenProject(project);
+      setdisplayedProject(project);
     }
     setTimeout(() => router.push(`/${project.slug}`), 200);
   };
 
   useEffect(() => {
-    // Only avoid updating frozenProject if a click-initiated morph is in progress.
+    // Only avoid updating displayedProject if a click-initiated morph is in progress.
     if (!isMorphingRef.current) {
       setKey(`project-${project.id}`);
-      setFrozenProject(project);
+      setdisplayedProject(project);
     }
   }, [project, variant]);
-
-  useLayoutEffect(() => {
-    if (!hasMounted || !imageLoaded || variant !== "preview") return;
-    if (!ref.current) return;
-
-    const updateOffset = () => {
-      const height = ref.current?.offsetHeight ?? 0;
-      setOffset(Math.max(0, window.innerHeight / 2 - height / 2));
-    };
-    updateOffset();
-
-    const observer = new ResizeObserver(updateOffset);
-    observer.observe(ref.current);
-    window.addEventListener("resize", updateOffset);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", updateOffset);
-    };
-  }, [hasMounted, imageLoaded, variant, activeIndex]);
 
   if (!hasMounted) return null;
 
@@ -229,11 +201,11 @@ export default function ProjectSummary({
 
   const textColorClass = getTextColorClass(
     resolvedTheme || "light",
-    frozenProject.textColor,
+    displayedProject.textColor,
   );
   const bgColorClass = getBgColorClass(
     resolvedTheme || "light",
-    frozenProject.bgColor,
+    displayedProject.bgColor,
   );
 
   return (
@@ -255,11 +227,6 @@ export default function ProjectSummary({
               : undefined,
       }}
       onClick={variant === "header" ? undefined : handleClick}
-      // style={
-      //   variant === "preview" && offset !== null
-      //     ? { marginTop: `${offset}px` }
-      //     : undefined
-      // }
       className={`z-10 flex flex-col ${containerClasses}`}
     >
       {/* Card */}
@@ -280,9 +247,9 @@ export default function ProjectSummary({
           // If we were morphing (click), commit the latest project once the layout animation finished.
           if (isMorphingRef.current) {
             isMorphingRef.current = false;
-            // commit frozenProject to the latest "project"
+            // commit displayedProject to the latest "project"
             setKey(`project-${project.id}`);
-            setFrozenProject(project);
+            setdisplayedProject(project);
             // clear the global transitioning flag if exists
             if (setTransitioningToNext) setTransitioningToNext(false);
           }
@@ -311,7 +278,7 @@ export default function ProjectSummary({
                   }}
                   className={`px-4 py-2 text-lg font-bold ${textColorClass} whitespace-nowrap rounded-full`}
                 >
-                  {frozenProject.button}
+                  {displayedProject.button}
                 </motion.button>
               </div>
             )}
@@ -323,13 +290,13 @@ export default function ProjectSummary({
                 <h1
                   className={`font-sans font-bold ${textColorClass} ${variant === "header" ? "text-6xl" : "text-5xl"}`}
                 >
-                  {frozenProject.title}
+                  {displayedProject.title}
                 </h1>
               </div>
               {/* Tags */}
-              {variant !== "bottom" && frozenProject.tags && (
+              {variant !== "bottom" && displayedProject.tags && (
                 <div className={`my-4 flex flex-wrap gap-2`}>
-                  {frozenProject.tags.map((tag) => (
+                  {displayedProject.tags.map((tag) => (
                     <span
                       key={tag}
                       className={`px-2 py-1 font-sans ${variant === "header" ? "text-sm" : "text-xs"} font-semibold ${bgColorClass} text-dark-foreground dark:text-foreground`}
@@ -345,7 +312,7 @@ export default function ProjectSummary({
                   variant === "header" ? "text-3xl" : "text-2xl"
                 }`}
               >
-                {frozenProject.tagline}
+                {displayedProject.tagline}
               </h2>
             </div>
             {/* Description */}
@@ -355,13 +322,13 @@ export default function ProjectSummary({
                   variant === "preview" ? "line-clamp-6" : ""
                 }`}
               >
-                {frozenProject.description}
+                {displayedProject.description}
               </p>
             )}
             {/* Bullet points */}
-            {variant === "header" && frozenProject.bullets && (
+            {variant === "header" && displayedProject.bullets && (
               <ul>
-                {frozenProject.bullets.map((bullet) => (
+                {displayedProject.bullets.map((bullet) => (
                   <li
                     key={bullet}
                     className={`px-2 py-1 font-sans text-xl font-semibold text-foreground dark:text-dark-foreground`}
@@ -384,14 +351,14 @@ export default function ProjectSummary({
                 }}
                 className={`px-4 py-2 text-lg font-bold ${textColorClass} whitespace-nowrap rounded-full`}
               >
-                {frozenProject.button}
+                {displayedProject.button}
               </motion.button>
             </div>
           )}
         </div>
 
         {/* Image container*/}
-        {frozenProject.image && (
+        {displayedProject.image && (
           <div
             className={`${variant === "bottom" ? "flex-0" : "flex-1"} relative overflow-hidden rounded-[20px]`}
           >
@@ -402,12 +369,11 @@ export default function ProjectSummary({
               }`}
             >
               <Image
-                src={frozenProject.image}
-                alt={frozenProject.title}
+                src={displayedProject.image}
+                alt={displayedProject.title}
                 fill
                 className="object-cover"
                 priority={variant === "header"}
-                onLoad={() => setImageLoaded(true)}
               />
             </div>
           </div>

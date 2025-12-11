@@ -1,11 +1,14 @@
 // app/data/projects.js
 import ProjectOneLogo from "../app/icons/ProjectOneLogo";
+import ProjectTwoLogo from "../app/icons/ProjectTwoLogo";
+import ProjectFourLogo from "../app/icons/ProjectFourLogo";
+import ProjectFiveLogo from "../app/icons/ProjectFiveLogo";
 
 const projects = [
   {
     id: "project-1",
     slug: "case-study-one",
-    title: "Haichao Wang",
+    title: "About Me",
     tagline: "Human-Centered Designer with 10 Years of Experience",
     tags: ["Designer", "Researcher", "Builder"],
     description:
@@ -32,19 +35,32 @@ const projects = [
     tagline: "Democratizing quantitative UX research",
     tags: ["Quantitative UX", "B2B SaaS", "Startup", "Data Visualization"],
     description:
-      "I co-founded a company with a mission to unlock rigorous quantitative insights for every product team. Our products enables everyone, not just data scientists and quantitative researchers, to test and analyze their design prototypes and obtain actionable data-driven insights.",
-    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
-    image: "/images/hero-flux.png",
+      "I co-founded a company on a mission to demystify and democratize rigorous quantitative UX insights for product teams of all sizes. This case study recounts our 0-to-1 journey.",
+    bullets: ["Duration: 2 year", "Role: Co-founder"],
+    image: "/images/hero-flux.jpg",
     button: "Look Inside",
     textColor: "flux",
     bgColor: "fluxBackground",
-    glyph: ProjectOneLogo,
+    glyph: ProjectTwoLogo,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
-      { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
-      { id: "section-3", label: "Goal", icon: "TargetIcon" },
-      { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
-      { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
+      { id: "section-2", label: 'The "Zero"', icon: "SealQuestionIcon" },
+      {
+        id: "section-3",
+        label: "Research & Discovery",
+        icon: "MagnifyingGlassIcon",
+      },
+      {
+        id: "section-4",
+        label: "Ideation & Exploration",
+        icon: "LightbulbFilamentIcon",
+      },
+      { id: "section-5", label: 'The "One"', icon: "RocketLaunchIcon" },
+      {
+        id: "section-6",
+        label: "Impact & Reflection",
+        icon: "PresentationChartIcon",
+      },
     ],
   },
   {
@@ -80,10 +96,10 @@ const projects = [
       "The next generation of lunar and Mars missions call for interfaces that can effectively relay information and aid extra-vehicular missions on alien terrains. Our team went on to become a finalist in NASA's 2023 SUITS challenge and tested our prototype with astronauts and engineers at the Johnson Space Center.",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     button: "Look Inside",
-    image: "/images/hero-astrohuskies.jpg",
+    image: "/images/hero-fantail.png",
     textColor: "suits",
     bgColor: "suitsBackground",
-    glyph: ProjectOneLogo,
+    glyph: ProjectFourLogo,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
       { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
@@ -106,7 +122,7 @@ const projects = [
     image: "/images/hero-wolcott.jpg",
     textColor: "wolcott",
     bgColor: "wolcottBackground",
-    glyph: ProjectOneLogo,
+    glyph: ProjectFiveLogo,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
       { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
@@ -124,7 +140,7 @@ const projects = [
       "Telling the story of an ethnic enclave through narrative landscape architecture",
     tags: ["Designer", "Researcher", "Entrepreneur"],
     description:
-      "This year-long project was a collaboration with Massuetts Institute of Technology, the Boston Parks and Recreation Department, and the Boston Chinatown Neighborhood Association. I conducted extensive research and created a series of design proposals which were partially implemented.",
+      "I studied Boston's Chinatown and delievered a suite of design recommendations to key stakeholders that aimed at promoting the neighorhood's cultural identity. Several of my proposals were later partially implemented.",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     button: "Look Inside",
     image: "/images/hero-ribbon.png",
