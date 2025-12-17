@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 
 import { motion, MotionValue, useTransform, useSpring } from "framer-motion";
+import { useProjectTheme } from "@/hooks/useProjectTheme";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
 import { useLighting, getShadows } from "../context/LightingContext";
@@ -69,17 +70,11 @@ export default function ProjectSummary({
     [1.1, 1],
   );
 
-  const { a, b, getTextColorClass, getBgColorClass, getLightColor } =
-    useLighting();
+  const { a, b } = useLighting();
 
-  const lightColor = getLightColor(
-    resolvedTheme || "light",
-    projects[activeIndex].textColor,
-  );
   const themeShadows = getShadows(
     a,
     b,
-    lightColor,
     resolvedTheme === "dark" ? "dark" : "light",
   );
 
@@ -87,6 +82,9 @@ export default function ProjectSummary({
     variant === "bottom"
       ? projects[(activeIndex + 1) % projects.length]
       : projects[activeIndex];
+
+  const theme = useProjectTheme(project.id);
+
   const direction =
     previousIndex !== undefined && activeIndex < previousIndex ? "down" : "up";
 
@@ -199,15 +197,6 @@ export default function ProjectSummary({
         ? " cursor-pointer gap-6 p-6"
         : " cursor-pointer pb-12 pt-6 px-6";
 
-  const textColorClass = getTextColorClass(
-    resolvedTheme || "light",
-    displayedProject.textColor,
-  );
-  const bgColorClass = getBgColorClass(
-    resolvedTheme || "light",
-    displayedProject.bgColor,
-  );
-
   return (
     // Container
     <motion.div
@@ -276,7 +265,7 @@ export default function ProjectSummary({
                     scale: 0.97,
                     boxShadow: themeShadows.hoverButton,
                   }}
-                  className={`px-4 py-2 text-lg font-bold ${textColorClass} whitespace-nowrap rounded-full`}
+                  className={`px-4 py-2 text-lg font-bold ${theme.textColorClass} whitespace-nowrap rounded-full`}
                 >
                   {displayedProject.button}
                 </motion.button>
@@ -288,7 +277,7 @@ export default function ProjectSummary({
               <div className="flex">
                 {/* Title text */}
                 <h1
-                  className={`font-sans font-bold ${textColorClass} ${variant === "header" ? "text-6xl" : "text-5xl"}`}
+                  className={`font-sans font-bold ${theme.textColorClass} ${variant === "header" ? "text-6xl" : "text-5xl"}`}
                 >
                   {displayedProject.title}
                 </h1>
@@ -299,7 +288,7 @@ export default function ProjectSummary({
                   {displayedProject.tags.map((tag) => (
                     <span
                       key={tag}
-                      className={`px-2 py-1 font-sans ${variant === "header" ? "text-sm" : "text-xs"} font-semibold ${bgColorClass} text-dark-foreground dark:text-foreground`}
+                      className={`px-2 py-1 font-sans ${variant === "header" ? "text-sm" : "text-xs"} font-semibold ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
                     >
                       {tag}
                     </span>
@@ -349,7 +338,7 @@ export default function ProjectSummary({
                   scale: 0.97,
                   boxShadow: themeShadows.hoverButton,
                 }}
-                className={`px-4 py-2 text-lg font-bold ${textColorClass} whitespace-nowrap rounded-full`}
+                className={`px-4 py-2 text-lg font-bold ${theme.textColorClass} whitespace-nowrap rounded-full`}
               >
                 {displayedProject.button}
               </motion.button>

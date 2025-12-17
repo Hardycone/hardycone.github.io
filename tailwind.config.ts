@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import colors from "tailwindcss/colors";
+import { PALETTE } from "./lib/palette";
 
 export default {
   darkMode: "class",
@@ -27,50 +27,64 @@ export default {
         serif: ["var(--font-besley)", "serif"],
       },
       colors: {
-        foreground: colors.zinc[800],
-        background: colors.zinc[100],
-        light: colors.white,
-        intro: colors.zinc[900],
-        introBackground: colors.zinc[900],
-        introLight: colors.zinc[50],
-        chinatown: colors.red[600],
-        chinatownBackground: colors.red[600],
-        chinatownLight: colors.red[50],
-        wolcott: colors.green[600],
-        wolcottBackground: colors.green[600],
-        wolcottLight: colors.green[50],
-        fantail: colors.yellow[600],
-        fantailBackground: colors.yellow[600],
-        fantailLight: colors.yellow[50],
-        suits: colors.blue[600],
-        suitsBackground: colors.blue[600],
-        suitsLight: colors.blue[50],
-        flux: colors.purple[600],
-        fluxBackground: colors.purple[600],
-        fluxLight: colors.purple[50],
+        // 1. Base UI
+        foreground: PALETTE.base.foreground,
+        background: PALETTE.base.background,
 
+        // 2. Project Colors (Light Mode)
+        // usage: text-flux (primary), text-flux-secondary, bg-flux-soft
+        intro: PALETTE.intro.light.primary,
+        "intro-secondary": PALETTE.intro.light.secondary,
+        "intro-soft": PALETTE.intro.light.soft,
+
+        flux: PALETTE.flux.light.primary,
+        "flux-secondary": PALETTE.flux.light.secondary,
+        "flux-soft": PALETTE.flux.light.soft,
+
+        fantail: PALETTE.fantail.light.primary,
+        "fantail-secondary": PALETTE.fantail.light.secondary,
+        "fantail-soft": PALETTE.fantail.light.soft,
+
+        suits: PALETTE.suits.light.primary,
+        "suits-secondary": PALETTE.suits.light.secondary,
+        "suits-soft": PALETTE.suits.light.soft,
+
+        wolcott: PALETTE.wolcott.light.primary,
+        "wolcott-secondary": PALETTE.wolcott.light.secondary,
+        "wolcott-soft": PALETTE.wolcott.light.soft,
+
+        chinatown: PALETTE.chinatown.light.primary,
+        "chinatown-secondary": PALETTE.chinatown.light.secondary,
+        "chinatown-soft": PALETTE.chinatown.light.soft,
+
+        // 3. Dark Mode Specifics (prefixed with 'dark-')
         dark: {
-          foreground: colors.zinc[100],
-          background: colors.zinc[900],
-          light: colors.white,
-          intro: colors.zinc[100],
-          introBackground: colors.zinc[100],
-          introLight: colors.zinc[50],
-          chinatown: colors.red[300],
-          chinatownBackground: colors.red[300],
-          chinatownLight: colors.red[50],
-          wolcott: colors.green[300],
-          wolcottBackground: colors.green[300],
-          wolcottLight: colors.green[50],
-          fantail: colors.yellow[300],
-          fantailBackground: colors.yellow[300],
-          fantailLight: colors.yellow[50],
-          suits: colors.blue[300],
-          suitsBackground: colors.blue[300],
-          suitsLight: colors.blue[50],
-          flux: colors.purple[300],
-          fluxBackground: colors.purple[300],
-          fluxLight: colors.purple[50],
+          foreground: PALETTE.base.darkForeground,
+          background: PALETTE.base.darkBackground,
+
+          intro: PALETTE.intro.dark.primary,
+          "intro-secondary": PALETTE.intro.dark.secondary,
+          "intro-soft": PALETTE.intro.dark.soft,
+
+          flux: PALETTE.flux.dark.primary,
+          "flux-secondary": PALETTE.flux.dark.secondary,
+          "flux-soft": PALETTE.flux.dark.soft,
+
+          fantail: PALETTE.fantail.dark.primary,
+          "fantail-secondary": PALETTE.fantail.dark.secondary,
+          "fantail-soft": PALETTE.fantail.dark.soft,
+
+          suits: PALETTE.suits.dark.primary,
+          "suits-secondary": PALETTE.suits.dark.secondary,
+          "suits-soft": PALETTE.suits.dark.soft,
+
+          wolcott: PALETTE.wolcott.dark.primary,
+          "wolcott-secondary": PALETTE.wolcott.dark.secondary,
+          "wolcott-soft": PALETTE.wolcott.dark.soft,
+
+          chinatown: PALETTE.chinatown.dark.primary,
+          "chinatown-secondary": PALETTE.chinatown.dark.secondary,
+          "chinatown-soft": PALETTE.chinatown.dark.soft,
         },
       },
     },

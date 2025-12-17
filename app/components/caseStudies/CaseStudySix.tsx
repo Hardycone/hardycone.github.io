@@ -3,13 +3,7 @@ import { useLighting } from "../../context/LightingContext";
 import { useTheme } from "next-themes";
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
-import {
-  ScrollIcon,
-  PuzzlePieceIcon,
-  TargetIcon,
-  PersonSimpleRunIcon,
-  PresentationChartIcon,
-} from "@phosphor-icons/react";
+import { ScrollIcon } from "@phosphor-icons/react";
 import {
   MotionValue,
   useTransform,
@@ -19,6 +13,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
+import { useProjectTheme } from "@/hooks/useProjectTheme";
 
 interface CaseStudySixProps {
   scrollY: MotionValue<number>;
@@ -39,11 +34,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
   });
   const x = useTransform(smoothScrollYProgress, [0, 1], ["0vw", "-200vw"]);
 
-  const { getTextColorClass } = useLighting();
-  const textColorClass = getTextColorClass(
-    resolvedTheme || "light",
-    projects[activeIndex].textColor,
-  );
+  const theme = useProjectTheme(projects[activeIndex].id);
 
   const borderOpacity = useTransform(
     scrollY,
@@ -73,10 +64,10 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
             <ScrollIcon
               size={32}
               weight="duotone"
-              className={`${textColorClass}`}
+              className={`${theme.textColorClass}`}
             />
             <h2
-              className={`font-sans text-4xl font-semibold ${textColorClass}`}
+              className={`font-sans text-4xl font-semibold ${theme.textColorClass}`}
             >
               Quick Take
             </h2>

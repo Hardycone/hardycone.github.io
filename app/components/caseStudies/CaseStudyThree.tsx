@@ -5,21 +5,19 @@ import { useLighting } from "../../context/LightingContext";
 import { useTheme } from "next-themes";
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
+import { useProjectTheme } from "@/hooks/useProjectTheme";
 
 export default function CaseStudyThree() {
   const { resolvedTheme } = useTheme();
   const { activeIndex } = useActiveProject();
 
-  const { getTextColorClass } = useLighting();
-  const textColorClass = getTextColorClass(
-    resolvedTheme || "light",
-    projects[activeIndex].textColor,
-  );
+  const theme = useProjectTheme(projects[activeIndex].id);
+
   return (
     <article>
       <section id="section-1" className="scroll-mt-24">
         <h2
-          className={`font-sans text-3xl font-semibold ${textColorClass} leading-loose`}
+          className={`font-sans text-3xl font-semibold ${theme.textColorClass} leading-loose`}
         >
           W1232
         </h2>{" "}

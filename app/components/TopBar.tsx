@@ -6,6 +6,7 @@ import { useActiveProject } from "../context/ActiveProjectContext";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import projects from "@/data/projects";
+import { useProjectTheme } from "@/hooks/useProjectTheme";
 
 import {
   ScrollIcon,
@@ -36,27 +37,19 @@ export default function TopBar() {
   const pathname = usePathname();
   const [showTitle, setShowTitle] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const { a, b, getTextColorClass, getLightColor } = useLighting();
+  const { a, b } = useLighting();
   const { resolvedTheme } = useTheme();
 
-  const textColorClass = getTextColorClass(
-    resolvedTheme || "light",
-    projects[activeIndex].textColor,
-  );
-
-  const lightColor = getLightColor(
-    resolvedTheme || "light",
-    projects[activeIndex].textColor,
-  );
+  const theme = useProjectTheme(projects[activeIndex].id);
 
   const themeShadows = getShadows(
     a,
     b,
-    lightColor,
     resolvedTheme === "dark" ? "dark" : "light",
   );
 
   const activeProject = projects[activeIndex];
+
   const sections = useMemo(
     () => projects[activeIndex]?.sections || [],
     [activeIndex],
@@ -246,7 +239,7 @@ export default function TopBar() {
                   onClick={() =>
                     window.scrollTo({ top: 0, behavior: "smooth" })
                   }
-                  className={`hidden items-center whitespace-nowrap rounded-full px-4 font-sans text-lg font-semibold opacity-60 transition-transform hover:opacity-100 lg:flex ${textColorClass}`}
+                  className={`hidden items-center whitespace-nowrap rounded-full px-4 font-sans text-lg font-semibold opacity-60 transition-transform hover:opacity-100 lg:flex ${theme.textColorClass}`}
                 >
                   {activeProject.title}
                 </button>
@@ -276,7 +269,7 @@ export default function TopBar() {
                         }}
                         className={`h-11 w-11 rounded-full p-2 ${
                           activeSection === section.id
-                            ? `${textColorClass}`
+                            ? `${theme.textColorClass}`
                             : "text-foreground opacity-40 hover:opacity-100 dark:text-dark-foreground"
                         }`}
                       >

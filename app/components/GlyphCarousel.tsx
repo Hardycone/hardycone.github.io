@@ -16,15 +16,11 @@ export default function GlyphCarousel() {
   const { resolvedTheme } = useTheme();
 
   const isInteractive = viewMode === "home";
-  const { a, b, getLightColor } = useLighting();
-  const lightColor = getLightColor(
-    resolvedTheme || "light",
-    projects[activeIndex].textColor,
-  );
+  const { a, b } = useLighting();
+
   const themeShadows = getShadows(
     a,
     b,
-    lightColor,
     resolvedTheme === "dark" ? "dark" : "light",
   );
   const touchStartY = useRef<number | null>(null);

@@ -6,7 +6,7 @@ import ProjectFiveLogo from "../app/icons/ProjectFiveLogo";
 
 const projects = [
   {
-    id: "project-1",
+    id: "intro",
     slug: "case-study-one",
     title: "About Me",
     tagline: "Human-Centered Designer with 10 Years of Experience",
@@ -29,7 +29,7 @@ const projects = [
     ],
   },
   {
-    id: "project-2",
+    id: "flux",
     slug: "case-study-two",
     title: "Flux",
     tagline: "Democratizing quantitative UX research",
@@ -64,7 +64,7 @@ const projects = [
     ],
   },
   {
-    id: "project-3",
+    id: "fantail",
     slug: "case-study-three",
     title: "Fantail",
     tagline: "Empowering filmmakers to bring their stories to life",
@@ -87,7 +87,7 @@ const projects = [
     ],
   },
   {
-    id: "project-4",
+    id: "suits",
     slug: "case-study-four",
     title: "Astrohuskies",
     tagline: "Building AR interfaces for next gen NASA missions",
@@ -110,7 +110,7 @@ const projects = [
     ],
   },
   {
-    id: "project-5",
+    id: "wolcott",
     slug: "case-study-five",
     title: "Wolcott Falls",
     tagline: "Co-designing a community space for a small rural New York town",
@@ -133,7 +133,7 @@ const projects = [
     ],
   },
   {
-    id: "project-6",
+    id: "chinatown",
     slug: "case-study-six",
     title: "The Ribbon",
     tagline:

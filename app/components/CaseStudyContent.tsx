@@ -46,19 +46,6 @@ export default function CaseStudyContent({ scrollY }: CaseStudyContentProps) {
   const { activeIndex, transitioningToNext, setTransitioningToNext } =
     useActiveProject();
 
-  const { resolvedTheme } = useTheme();
-  const { a, b, getLightColor } = useLighting();
-
-  const lightColor = getLightColor(
-    resolvedTheme || "light",
-    projects[activeIndex].textColor,
-  );
-  const themeShadows = getShadows(
-    a,
-    b,
-    lightColor,
-    resolvedTheme === "dark" ? "dark" : "light",
-  );
   const project = projects[activeIndex];
   const slug = project.slug as ProjectSlug;
   const CaseStudyComponent = caseStudyComponents[slug];

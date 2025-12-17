@@ -15,6 +15,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { FileTextIcon } from "@phosphor-icons/react";
+import { useProjectTheme } from "@/hooks/useProjectTheme";
 
 interface CaseStudyOneProps {
   scrollY: MotionValue<number>;
@@ -24,19 +25,14 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   const { resolvedTheme } = useTheme();
   const { activeIndex } = useActiveProject();
 
-  const { a, b, getLightColor, getTextColorClass } = useLighting();
-  const textColorClass = getTextColorClass(
-    resolvedTheme || "light",
-    projects[activeIndex].textColor,
-  );
-  const lightColor = getLightColor(
-    resolvedTheme || "light",
-    projects[activeIndex].textColor,
-  );
+  const { a, b } = useLighting();
+
+  const theme = useProjectTheme(projects[activeIndex].id);
+
   const themeShadows = getShadows(
     a,
     b,
-    lightColor,
+
     resolvedTheme === "dark" ? "dark" : "light",
   );
   const targetRef = useRef<HTMLDivElement>(null);
@@ -87,7 +83,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <div className="flex items-center gap-2">
               <FileTextIcon weight="duotone" size={32} className={`text-red`} />
               <h2
-                className={`font-sans text-3xl font-semibold ${textColorClass}`}
+                className={`font-sans text-3xl font-semibold ${theme.textColorClass}`}
               >
                 My Resume
               </h2>
@@ -567,7 +563,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       <section id="section-2" className="mb-16 scroll-mt-24">
         {/*Section Header*/}
         <h2
-          className={`font-sans text-3xl font-semibold ${textColorClass} mb-8`}
+          className={`font-sans text-3xl font-semibold ${theme.textColorClass} mb-8`}
         >
           My Story
         </h2>
@@ -639,7 +635,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       <section id="section-3" className="scroll-mt-24">
         {/*Section Header*/}
         <h2
-          className={`font-sans text-3xl font-semibold ${textColorClass} mb-8`}
+          className={`font-sans text-3xl font-semibold ${theme.textColorClass} mb-8`}
         >
           My Interests
         </h2>

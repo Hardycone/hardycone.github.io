@@ -10,17 +10,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface LightingContextValue {
   a: number;
   b: number;
-  getTextColorClass: (theme: string, colorKey: string) => string;
-  getBgColorClass: (theme: string, colorKey: string) => string;
-  getLightColor: (theme: string, colorKey: string) => string;
 }
 
 const LightingContext = createContext<LightingContextValue>({
   a: -6,
   b: -6,
-  getTextColorClass: () => "",
-  getBgColorClass: () => "",
-  getLightColor: () => "",
 });
 
 export const LightingProvider = ({
@@ -58,77 +52,6 @@ export const LightingProvider = ({
   }, []);
   const [hasMounted, setHasMounted] = useState(false);
 
-  const getTextColorClass = (theme: string, colorKey: string) => {
-    const map: Record<string, Record<string, string>> = {
-      light: {
-        intro: "text-intro",
-        flux: "text-flux",
-        fantail: "text-fantail",
-        suits: "text-suits",
-        wolcott: "text-wolcott",
-        chinatown: "text-chinatown",
-      },
-      dark: {
-        intro: "dark:text-dark-intro",
-        flux: "dark:text-dark-flux",
-        fantail: "dark:text-dark-fantail",
-        suits: "dark:text-dark-suits",
-        wolcott: "dark:text-dark-wolcott",
-        chinatown: "dark:text-dark-chinatown",
-      },
-    };
-
-    return map[theme === "dark" ? "dark" : "light"][colorKey] || "";
-  };
-
-  const getBgColorClass = (theme: string, colorKey: string) => {
-    const map: Record<string, Record<string, string>> = {
-      light: {
-        introBackground: "bg-intro",
-        fluxBackground: "bg-flux",
-        fantailBackground: "bg-fantail",
-        suitsBackground: "bg-suits",
-        wolcottBackground: "bg-wolcott",
-        chinatownBackground: "bg-chinatown",
-      },
-      dark: {
-        introBackground: "dark:bg-dark-intro",
-        fluxBackground: "dark:bg-dark-flux",
-        fantailBackground: "dark:bg-dark-fantail",
-        suitsBackground: "dark:bg-dark-suits",
-        wolcottBackground: "dark:bg-dark-wolcott",
-        chinatownBackground: "dark:bg-dark-chinatown",
-      },
-    };
-
-    return map[theme === "dark" ? "dark" : "light"][colorKey] || "";
-  };
-
-  const getLightColor = (theme: string, colorKey: string): string => {
-    const map: Record<string, Record<string, string>> = {
-      light: {
-        intro: "rgba(255, 255, 255, 1)",
-        flux: "rgba(255, 255, 255, 1)",
-        fantail: "rgba(255, 255, 255, 1)",
-        suits: "rgba(255, 255, 255, 1)",
-        wolcott: "rgba(255, 255, 255, 1)",
-        chinatown: "rgba(255, 255, 255, 1)",
-      },
-      dark: {
-        intro: "rgba(255, 255, 255, 0.4)",
-        flux: "rgba(255, 255, 255, 0.1)",
-        fantail: "rgba(255, 255, 255, 0.1)",
-        suits: "rgba(255, 255, 255, 0.1)",
-        wolcott: "rgba(255, 255, 255, 0.1)",
-        chinatown: "rgba(255, 255, 255, 0.1)",
-      },
-    };
-
-    return (
-      map[theme === "dark" ? "dark" : "light"][colorKey] || "rgba(0,0,0,0.1)"
-    );
-  };
-
   useEffect(() => {
     setHasMounted(true);
   }, []);
@@ -139,9 +62,6 @@ export const LightingProvider = ({
         value={{
           a: -6,
           b: -6,
-          getTextColorClass,
-          getBgColorClass,
-          getLightColor,
         }}
       >
         {children}
@@ -150,9 +70,7 @@ export const LightingProvider = ({
   }
 
   return (
-    <LightingContext.Provider
-      value={{ a, b, getTextColorClass, getBgColorClass, getLightColor }}
-    >
+    <LightingContext.Provider value={{ a, b }}>
       {children}
     </LightingContext.Provider>
   );
@@ -160,12 +78,7 @@ export const LightingProvider = ({
 
 export const useLighting = () => useContext(LightingContext);
 
-export function getShadows(
-  a: number,
-  b: number,
-  lightColor: string,
-  theme: "light" | "dark",
-) {
+export function getShadows(a: number, b: number, theme: "light" | "dark") {
   if (theme === "light") {
     return {
       topBar: `${-a * 1.5}px ${-b * 1.5}px 16px 0px rgba(0, 0, 0, 0.2)`,

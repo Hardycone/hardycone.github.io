@@ -10,13 +10,9 @@ import {
   ScrollIcon,
   MagnifyingGlassIcon,
   RocketLaunchIcon,
-  NumberCircleThreeIcon,
   PresentationChartIcon,
   SealQuestionIcon,
-  NumberCircleTwoIcon,
   LightbulbFilamentIcon,
-  NumberCircleOneIcon,
-  NumberCircleFourIcon,
 } from "@phosphor-icons/react";
 import {
   MotionValue,
@@ -30,6 +26,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import ContentCard from "../SectionContainer";
 import SubSectionHeading from "../SubSectionHeading";
+import { useProjectTheme } from "@/hooks/useProjectTheme";
 
 interface CaseStudyTwoProps {
   scrollY: MotionValue<number>;
@@ -60,17 +57,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
   // });
   const x = useTransform(scrollYProgress, [0, 1], ["0vw", "-63dvw"]);
 
-  const { getTextColorClass, getBgColorClass } = useLighting();
-
-  const textColorClass = getTextColorClass(
-    resolvedTheme || "light",
-    projects[activeIndex].textColor,
-  );
-
-  const bgColorClass = getBgColorClass(
-    resolvedTheme || "light",
-    projects[activeIndex].bgColor,
-  );
+  const theme = useProjectTheme(projects[activeIndex].id);
 
   const borderOpacity = useTransform(
     scrollY,
@@ -96,8 +83,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <ContentCard
           title="Quick Take"
           icon={ScrollIcon}
-          textColorClass={textColorClass}
-          bgColorClass={bgColorClass}
+          textColorClass={theme.textColorClass}
+          bgColorClass={theme.bgColorClass}
           borderColor={borderColor}
         >
           <p className="mb-10 px-2 text-lg leading-normal">
@@ -106,9 +93,14 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             consuming, a luxury reserved for mature organizations. With Flux,
             small teams can now unlock new opportunities, while large teams can
             test up to{" "}
-            <span className={`font-bold ${textColorClass}`}>15x cheaper</span>{" "}
+            <span className={`font-bold ${theme.textColorClass}`}>
+              15x cheaper
+            </span>{" "}
             and{" "}
-            <span className={`font-bold ${textColorClass}`}>10x faster</span>.
+            <span className={`font-bold ${theme.textColorClass}`}>
+              10x faster
+            </span>
+            .
           </p>
           <div
             className={`relative aspect-[16/9] w-full overflow-hidden rounded-[20px]`}
@@ -127,8 +119,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <ContentCard
           title={`The "Zero"`}
           icon={SealQuestionIcon}
-          textColorClass={textColorClass}
-          bgColorClass={bgColorClass}
+          textColorClass={theme.textColorClass}
+          bgColorClass={theme.bgColorClass}
           borderColor={borderColor}
         >
           <SubSectionHeading number="1" heading="Spotting the gap" />
@@ -139,12 +131,12 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             quantitative methods like A/B testing.
           </p>
           <p
-            className={`${bgColorClass} mb-16 rounded-[20px] border border-white bg-zinc-100 p-12 text-2xl leading-normal dark:bg-opacity-5`}
+            className={`${theme.bgColorClass} mb-16 rounded-[20px] border border-white bg-zinc-100 p-12 text-2xl leading-normal dark:bg-opacity-5`}
           >
             Even though quantitative UX research has the potential to deliver
             clearer insights with higher confidence, it is only done by large
             and mature organizations. Smaller teams seem to shy away.{" "}
-            <span className={`font-bold ${textColorClass} `}>Why?</span>
+            <span className={`font-bold ${theme.textColorClass} `}>Why?</span>
           </p>
           <SubSectionHeading number="2" heading="The UX research landscape" />
           <p className="mb-10 px-2 text-lg leading-normal">
@@ -266,7 +258,9 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 <p className="pb-2 pl-2 text-2xl">
                   <motion.span
                     animate={{
-                      color: isOneInView ? "#9333ea" : "#27272a",
+                      color: isOneInView
+                        ? theme.hex.primary
+                        : theme.hex.foreground,
                       fontSize: isOneInView ? "30px" : "24px",
                       fontWeight: isOneInView ? "700" : "400",
                     }}
@@ -278,7 +272,9 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 <p className="pb-2 pl-2 text-2xl">
                   <motion.span
                     animate={{
-                      color: isTwoInView ? "flux" : "#27272a",
+                      color: isTwoInView
+                        ? theme.hex.primary
+                        : theme.hex.foreground,
                       fontSize: isTwoInView ? "30px" : "24px",
                       fontWeight: isTwoInView ? "700" : "400",
                     }}
@@ -291,7 +287,9 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 <p className="pl-2 text-2xl">
                   <motion.span
                     animate={{
-                      color: isThreeInView ? "#9333ea" : "#27272a",
+                      color: isThreeInView
+                        ? theme.hex.primary
+                        : theme.hex.foreground,
                       fontSize: isThreeInView ? "30px" : "24px",
                       fontWeight: isThreeInView ? "700" : "400",
                     }}
@@ -356,8 +354,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <ContentCard
           title="Research & Disovery"
           icon={MagnifyingGlassIcon}
-          textColorClass={textColorClass}
-          bgColorClass={bgColorClass}
+          textColorClass={theme.textColorClass}
+          bgColorClass={theme.bgColorClass}
           borderColor={"rgba(0,0,0,0)"}
           cardClass=""
         >
@@ -426,8 +424,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <ContentCard
           title="Ideation & Exploration"
           icon={LightbulbFilamentIcon}
-          textColorClass={textColorClass}
-          bgColorClass={bgColorClass}
+          textColorClass={theme.textColorClass}
+          bgColorClass={theme.bgColorClass}
           borderColor={"rgba(0,0,0,0)"}
           cardClass=""
         >
@@ -444,8 +442,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <ContentCard
           title={`The "One"`}
           icon={RocketLaunchIcon}
-          textColorClass={textColorClass}
-          bgColorClass={bgColorClass}
+          textColorClass={theme.textColorClass}
+          bgColorClass={theme.bgColorClass}
           borderColor={"rgba(0,0,0,0)"}
           cardClass=""
         >
@@ -470,8 +468,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <ContentCard
           title={`Impact & Reflection`}
           icon={PresentationChartIcon}
-          textColorClass={textColorClass}
-          bgColorClass={bgColorClass}
+          textColorClass={theme.textColorClass}
+          bgColorClass={theme.bgColorClass}
           borderColor={borderColor}
           cardClass=""
         >
