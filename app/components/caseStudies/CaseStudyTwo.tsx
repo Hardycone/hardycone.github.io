@@ -28,7 +28,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
-import ContentCard from "../ContentCard";
+import ContentCard from "../SectionContainer";
 import SubSectionHeading from "../SubSectionHeading";
 
 interface CaseStudyTwoProps {
@@ -92,16 +92,15 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
   return (
     <article>
       {/*Section 1*/}
-      <section id="section-1" className="scroll-mt-24">
+      <section id="section-1" className="snap-start scroll-mt-24">
         <ContentCard
           title="Quick Take"
           icon={ScrollIcon}
           textColorClass={textColorClass}
           bgColorClass={bgColorClass}
           borderColor={borderColor}
-          cardClass="mb-12"
         >
-          <p className="mb-6 text-lg leading-normal">
+          <p className="mb-10 px-2 text-lg leading-normal">
             Quantitative UX insights can be game-changing, but often out of
             reach. Rigorous A/B testing is prohibitively expensive and time
             consuming, a luxury reserved for mature organizations. With Flux,
@@ -124,7 +123,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         </ContentCard>
       </section>
       {/*Section 2*/}
-      <section id="section-2" className="scroll-mt-24">
+      <section id="section-2" className="snap-start scroll-mt-24">
         <ContentCard
           title={`The "Zero"`}
           icon={SealQuestionIcon}
@@ -132,61 +131,51 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           bgColorClass={bgColorClass}
           borderColor={borderColor}
         >
-          <SubSectionHeading
-            iconNumber={1}
-            headingText="Spotting the gap"
-            textColorClass={textColorClass}
-            bgColorClass={bgColorClass}
-          />
-          <p className="mb-2 rounded-3xl p-2 text-lg leading-normal">
+          <SubSectionHeading number="1" heading="Spotting the gap" />
+          <p className="mb-10 px-2 text-lg leading-normal">
             We started Flux with a simple observation: UX practices are heavily
             skewed toward qualitative methods. While designers and researchers
             are comfortable with user interviews, surprisingly few leverage
             quantitative methods like A/B testing.
           </p>
           <p
-            className={`${bgColorClass} mb-8 rounded-[20px] bg-opacity-5 p-12 text-2xl leading-normal dark:bg-opacity-5`}
+            className={`${bgColorClass} mb-16 rounded-[20px] border border-white bg-zinc-100 p-12 text-2xl leading-normal dark:bg-opacity-5`}
           >
             Even though quantitative UX research has the potential to deliver
             clearer insights with higher confidence, it is only done by large
             and mature organizations. Smaller teams seem to shy away.{" "}
             <span className={`font-bold ${textColorClass} `}>Why?</span>
           </p>
-          <SubSectionHeading
-            iconNumber={2}
-            headingText="The UX research landscape"
-            textColorClass={textColorClass}
-            bgColorClass={bgColorClass}
-          />
-          <p className="mb-8 rounded-3xl p-2 text-lg leading-normal">
+          <SubSectionHeading number="2" heading="The UX research landscape" />
+          <p className="mb-10 px-2 text-lg leading-normal">
             We had a hunch: people don't do it because they don't know how.
             Quantitative research is inherently scientific. While the core
             concept isn't necessarily difficult to grasp, doing it well requires
             specialized training in statistics.
           </p>
           <div
-            className={`relative mb-24 h-screen max-h-[600px] w-full rounded-[20px] bg-gradient-to-br from-emerald-500/10 to-rose-500/10 dark:bg-opacity-5`}
+            className={`relative mb-16 h-screen max-h-[600px] w-full rounded-[20px] border border-white bg-gradient-to-br from-emerald-500/5 to-rose-500/5 dark:border-white/25 dark:bg-opacity-5`}
           >
             <div className="absolute flex h-full w-full flex-col items-center gap-1 text-xs font-bold">
-              <span className="mt-6 bg-emerald-400 p-2 font-bold text-white">
+              <span className="mt-4 bg-emerald-400 p-2 font-bold text-white">
                 High Confidence
               </span>
               <div className="from- w-1 flex-1 bg-gradient-to-b from-emerald-400 to-rose-400 dark:bg-white/20" />
-              <span className="mb-6 bg-rose-400 p-2 font-bold text-white">
+              <span className="mb-4 bg-rose-400 p-2 font-bold text-white">
                 Low Confidence
               </span>
             </div>
             <div className="absolute flex h-full w-full items-center gap-1 text-xs font-bold">
-              <span className="ml-6 bg-emerald-400 p-2 font-bold text-white">
+              <span className="ml-4 bg-emerald-400 p-2 font-bold text-white">
                 Low Cost
               </span>
               <div className="h-1 flex-1 bg-gradient-to-r from-emerald-400 to-rose-400 dark:bg-white/20" />
-              <span className="mr-6 bg-rose-400 p-2 font-bold text-white">
+              <span className="mr-4 bg-rose-400 p-2 font-bold text-white">
                 High Cost
               </span>
             </div>
             <div
-              className={`group-hover:z-100 group absolute bottom-6 left-6 z-0 flex w-64 cursor-default flex-col items-center gap-2 rounded-xl border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
+              className={`group-hover:z-100 group absolute bottom-8 left-8 z-0 flex w-64 cursor-default flex-col items-center gap-2 rounded-xl border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
             >
               <span className={`font-sans text-lg font-semibold`}>
                 No UX research
@@ -196,7 +185,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               </span>
             </div>
             <div
-              className={`group-hover:z-100 group absolute right-6 top-6 z-0 flex w-64 cursor-default flex-col items-center gap-2 rounded-xl border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
+              className={`group-hover:z-100 group absolute right-8 top-8 z-0 flex w-64 cursor-default flex-col items-center gap-2 rounded-xl border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
             >
               <span className={`font-sans text-lg font-semibold`}>
                 In-product A/B testing
@@ -268,15 +257,13 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             <div className="w-96 flex-none">
               <div className="sticky top-24 h-[calc(100dvh_-_6rem)] max-h-[800px]">
                 <SubSectionHeading
-                  iconNumber={3}
-                  headingText="Initial problem statement"
-                  textColorClass={textColorClass}
-                  bgColorClass={bgColorClass}
+                  number="3"
+                  heading="Initial problem statement"
                 />
-                <p className="py-1 pl-2 text-2xl leading-normal">
+                <p className="pb-2 pl-2 text-2xl leading-normal">
                   Quantitative UX research is
                 </p>
-                <p className="py-1 pl-2 text-2xl">
+                <p className="pb-2 pl-2 text-2xl">
                   <motion.span
                     animate={{
                       color: isOneInView ? "#9333ea" : "#27272a",
@@ -288,7 +275,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                   </motion.span>
                   ,
                 </p>{" "}
-                <p className="py-1 pl-2 text-2xl">
+                <p className="pb-2 pl-2 text-2xl">
                   <motion.span
                     animate={{
                       color: isTwoInView ? "flux" : "#27272a",
@@ -300,8 +287,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                   </motion.span>
                   ,
                 </p>
-                <p className="py-1 pl-2 text-2xl">and involves a</p>
-                <p className="py-1 pl-2 text-2xl">
+                <p className="pb-2 pl-2 text-2xl">and involves a</p>
+                <p className="pl-2 text-2xl">
                   <motion.span
                     animate={{
                       color: isThreeInView ? "#9333ea" : "#27272a",
@@ -318,50 +305,45 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             <div className="relative flex-1">
               <div
                 ref={triggerOneRef}
-                className="h-[calc(100dvh_-_6rem)] max-h-[800px] scroll-mt-[6rem] pb-12 text-lg"
+                className="h-[calc(100dvh_-_6rem)] max-h-[800px] snap-start scroll-mt-[6rem] pb-8 text-lg"
               >
-                <div className="flex h-full items-center justify-center overflow-clip rounded-[20px] border border-white p-12 shadow dark:border-white/25">
-                  How do product teams know which design works best—really know,
-                  with data? While qualitative methods dominate early design, we
-                  noticed a gap in quant UX tooling, particularly for live
-                  prototype testing. We wanted to bring statistical rigor to the
-                  kinds of questions teams already ask in Figma: which variant
-                  performs better? Where do users hesitate? How do product teams
-                  know which design works best—really know, with data? While
-                  qualitative methods dominate early design, we noticed a gap in
-                  quant UX tooling, particularly for live prototype testing.
+                <div className="flex h-full flex-col items-end justify-between overflow-clip rounded-[20px] border border-white p-[15%] shadow dark:border-white/25">
+                  <div
+                    className={`relative aspect-square w-full overflow-hidden`}
+                  >
+                    <Image
+                      src="/images/Avalon-3D-Shapes-1_10.png"
+                      alt=""
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <p className="ml-[0%]">
+                    Quantitative UX research is inherently scientific. It's a
+                    practical application of statistics. Doing it well requires
+                    an expertise in math.
+                  </p>
                 </div>
               </div>
               <div
                 ref={triggerTwoRef}
-                className="h-[calc(100dvh_-_6rem)] max-h-[800px] scroll-mt-[6rem] pb-12 text-lg"
+                className="h-[calc(100dvh_-_6rem)] max-h-[800px] snap-start scroll-mt-[6rem] pb-8 text-lg"
               >
-                <div className="flex h-full items-center justify-center overflow-clip rounded-[20px] border border-white p-12 shadow dark:border-white/25">
-                  How do product teams know which design works best—really know,
-                  with data? While qualitative methods dominate early design, we
-                  noticed a gap in quant UX tooling, particularly for live
-                  prototype testing. We wanted to bring statistical rigor to the
-                  kinds of questions teams already ask in Figma: which variant
-                  performs better? Where do users hesitate? How do product teams
-                  know which design works best—really know, with data? While
-                  qualitative methods dominate early design, we noticed a gap in
-                  quant UX tooling, particularly for live prototype testing.
+                <div className="flex h-full items-end justify-center overflow-clip rounded-[20px] border border-white p-12 pl-36 shadow dark:border-white/25">
+                  To detect meaningful difference, researchers often need to
+                  design a rigorous experiment and recruit hundreds of
+                  participants. A study could take weeks to finish.
                 </div>
               </div>
               <div
                 ref={triggerThreeRef}
-                className="h-[calc(100dvh_-_6rem)] max-h-[800px] scroll-mt-[6rem] pb-12 text-lg"
+                className="h-[calc(100dvh_-_6rem)] max-h-[800px] snap-start scroll-mt-[6rem] text-lg"
               >
-                <div className="flex h-full items-center justify-center overflow-clip rounded-[20px] border border-white p-12 shadow dark:border-white/25">
-                  How do product teams know which design works best—really know,
-                  with data? While qualitative methods dominate early design, we
-                  noticed a gap in quant UX tooling, particularly for live
-                  prototype testing. We wanted to bring statistical rigor to the
-                  kinds of questions teams already ask in Figma: which variant
-                  performs better? Where do users hesitate? How do product teams
-                  know which design works best—really know, with data? While
-                  qualitative methods dominate early design, we noticed a gap in
-                  quant UX tooling, particularly for live prototype testing.
+                <div className="flex h-full items-end justify-center overflow-clip rounded-[20px] border border-white p-12 pl-36 shadow dark:border-white/25">
+                  The existing workflow for quantitative research involves
+                  integrating design prototypes with survey platforms. The data
+                  then need to be further analyzed and synthesized into a
+                  report. This process involves multiple tools.
                 </div>
               </div>
               <div className="absolute bottom-0 h-0 w-full"></div>
@@ -370,7 +352,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         </ContentCard>
       </section>
       {/*Section 3*/}
-      <section id="section-3" className="scroll-mt-24">
+      <section id="section-3" className="snap-start scroll-mt-24">
         <ContentCard
           title="Research & Disovery"
           icon={MagnifyingGlassIcon}
@@ -379,13 +361,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           borderColor={"rgba(0,0,0,0)"}
           cardClass=""
         >
-          <SubSectionHeading
-            iconNumber={1}
-            headingText="Research method"
-            textColorClass={textColorClass}
-            bgColorClass={bgColorClass}
-          />
-          <p className="mb-6 p-2 text-lg leading-normal">
+          <SubSectionHeading number="1" heading="Research method" />
+          <p className="mb-10 p-2 text-lg leading-normal">
             To further understand our problem space, we reached out to our
             network of colleagues in the tech industry.
           </p>
@@ -396,13 +373,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               {/* --- PART A: THE STATIC HEADER --- */}
               {/* This stays centered and visible the whole time */}
               <div className="relative z-10 mb-8">
-                <SubSectionHeading
-                  iconNumber={2}
-                  headingText="Insights"
-                  textColorClass={textColorClass}
-                  bgColorClass={bgColorClass}
-                />
-                <p className="mb-6 p-2 text-lg leading-normal">
+                <SubSectionHeading number="2" heading="Insights" />
+                <p className="mb-6 px-2 text-lg leading-normal">
                   To further understand our problem space, we reached out to our
                   network of colleagues in the tech industry.
                 </p>
@@ -412,8 +384,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               <div className="mb-24">
                 <motion.div style={{ x }} className="flex gap-8">
                   {/* Card 1 */}
-                  <div className="flex h-[60dvh] w-[40dvw] shrink-0 flex-col rounded-[20px] bg-white p-8 shadow">
-                    <span className="text-6xl">01</span>
+                  <div className="flex h-[60dvh] w-[40dvw] shrink-0 flex-col rounded-[20px] border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800">
+                    <span className="text-6xl">1</span>
                     <div className="flex h-full items-center justify-center">
                       <h3 className="text-2xl font-bold">
                         Nobody wants to do quantitative research. Come on. Who
@@ -423,44 +395,34 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                   </div>
 
                   {/* Card 2 */}
-                  <div className="h-[60dvh] w-[40dvw] shrink-0 rounded-[20px] bg-purple-100 p-8 shadow">
-                    <span className="text-6xl">02</span>
+                  <div className="flex h-[60dvh] w-[40dvw] shrink-0 flex-col rounded-[20px] border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800">
+                    <span className="text-6xl">2</span>
                     <h3 className="mt-4 text-2xl font-bold">The Gap</h3>
                   </div>
 
                   {/* Card 3 */}
-                  <div className="h-[60dvh] w-[40dvw] shrink-0 rounded-[20px] bg-blue-100 p-8 shadow">
-                    <span className="text-6xl">03</span>
+                  <div className="flex h-[60dvh] w-[40dvw] shrink-0 flex-col rounded-[20px] border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800">
+                    <span className="text-6xl">3</span>
                     <h3 className="mt-4 text-2xl font-bold">The Solution</h3>
                   </div>
                 </motion.div>
               </div>
             </div>
           </div>
-          <SubSectionHeading
-            iconNumber={3}
-            headingText="New problem statement"
-            textColorClass={textColorClass}
-            bgColorClass={bgColorClass}
-          />
-          <p className="mb-24 p-2 text-lg leading-normal">
+          <SubSectionHeading number="3" heading="New problem statement" />
+          <p className="mb-24 px-2 text-lg leading-normal">
             To further understand our problem space, we reached out to our
             network of colleagues in the tech industry.
           </p>
-          <SubSectionHeading
-            iconNumber={4}
-            headingText="The pivot"
-            textColorClass={textColorClass}
-            bgColorClass={bgColorClass}
-          />
-          <p className="mb-6 p-2 text-lg leading-normal">
+          <SubSectionHeading number="4" heading="The pivot" />
+          <p className="mb-6 px-2 text-lg leading-normal">
             To further understand our problem space, we reached out to our
             network of colleagues in the tech industry.
           </p>
         </ContentCard>
       </section>
       {/*Section 4*/}
-      <section id="section-4" className="scroll-mt-24">
+      <section id="section-4" className="snap-start scroll-mt-24">
         <ContentCard
           title="Ideation & Exploration"
           icon={LightbulbFilamentIcon}
@@ -469,26 +431,16 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           borderColor={"rgba(0,0,0,0)"}
           cardClass=""
         >
-          <SubSectionHeading
-            iconNumber={1}
-            headingText="Ideation"
-            textColorClass={textColorClass}
-            bgColorClass={bgColorClass}
-          />
+          <SubSectionHeading number="1" heading="Ideation" />
           <p className="mb-6 p-2 text-lg leading-normal">
             To further understand our problem space, we reached out to our
             network of colleagues in the tech industry.
           </p>
-          <SubSectionHeading
-            iconNumber={2}
-            headingText="Exploration"
-            textColorClass={textColorClass}
-            bgColorClass={bgColorClass}
-          />
+          <SubSectionHeading number="2" heading="Exploration" />
         </ContentCard>
       </section>
       {/*Section 5*/}
-      <section id="section-5" className="scroll-mt-24">
+      <section id="section-5" className="snap-start scroll-mt-24">
         <ContentCard
           title={`The "One"`}
           icon={RocketLaunchIcon}
@@ -497,13 +449,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           borderColor={"rgba(0,0,0,0)"}
           cardClass=""
         >
-          <SubSectionHeading
-            iconNumber={1}
-            headingText="User journey "
-            textColorClass={textColorClass}
-            bgColorClass={bgColorClass}
-          />
-          <p className="mb-6 p-2 text-lg leading-normal">
+          <SubSectionHeading number="1" heading="User journey " />
+          <p className="mb-10 px-2 text-lg leading-normal">
             We launched a closed beta with 12 teams and saw strong engagement.
             Teams used the tool to test landing page flows, signup friction, and
             feature comprehension. Feedback praised its speed and clarity. The
@@ -511,20 +458,15 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             teams make design decisions with evidence, not guesswork—and
             reshaping what quantitative UX looks like in practice.
           </p>
-          <SubSectionHeading
-            iconNumber={2}
-            headingText="User interface"
-            textColorClass={textColorClass}
-            bgColorClass={bgColorClass}
-          />
-          <p className="mb-6 p-2 text-lg leading-normal">
+          <SubSectionHeading number="2" heading="User interface" />
+          <p className="mb-10 px-2 text-lg leading-normal">
             To further understand our problem space, we reached out to our
             network of colleagues in the tech industry.
           </p>
         </ContentCard>
       </section>
       {/*Section 6*/}
-      <section id="section-6" className="scroll-mt-24">
+      <section id="section-6" className="snap-start scroll-mt-24">
         <ContentCard
           title={`Impact & Reflection`}
           icon={PresentationChartIcon}
@@ -533,13 +475,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           borderColor={borderColor}
           cardClass=""
         >
-          <SubSectionHeading
-            iconNumber={1}
-            headingText="Launch"
-            textColorClass={textColorClass}
-            bgColorClass={bgColorClass}
-          />
-          <p className="mb-6 p-2 text-lg leading-normal">
+          <SubSectionHeading number="1" heading="Launch" />
+          <p className="mb-10 px-2 text-lg leading-normal">
             We launched a closed beta with 12 teams and saw strong engagement.
             Teams used the tool to test landing page flows, signup friction, and
             feature comprehension. Feedback praised its speed and clarity. The
@@ -547,13 +484,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             teams make design decisions with evidence, not guesswork—and
             reshaping what quantitative UX looks like in practice.
           </p>
-          <SubSectionHeading
-            iconNumber={2}
-            headingText="Feedback"
-            textColorClass={textColorClass}
-            bgColorClass={bgColorClass}
-          />
-          <p className="mb-6 p-2 text-lg leading-normal">
+          <SubSectionHeading number="2" heading="Feedback" />
+          <p className="mb-10 px-2 text-lg leading-normal">
             We launched a closed beta with 12 teams and saw strong engagement.
             Teams used the tool to test landing page flows, signup friction, and
             feature comprehension. Feedback praised its speed and clarity. The
@@ -561,13 +493,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             teams make design decisions with evidence, not guesswork—and
             reshaping what quantitative UX looks like in practice.
           </p>
-          <SubSectionHeading
-            iconNumber={3}
-            headingText="Lessons learned"
-            textColorClass={textColorClass}
-            bgColorClass={bgColorClass}
-          />
-          <p className="mb-6 p-2 text-lg leading-normal">
+          <SubSectionHeading number="3" heading="Lessons learned" />
+          <p className="mb-10 px-2 text-lg leading-normal">
             We launched a closed beta with 12 teams and saw strong engagement.
             Teams used the tool to test landing page flows, signup friction, and
             feature comprehension. Feedback praised its speed and clarity. The

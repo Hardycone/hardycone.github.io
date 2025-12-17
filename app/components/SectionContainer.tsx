@@ -1,4 +1,4 @@
-// app/components/ContentCard.tsx
+// app/components/SectionContainer.tsx
 
 "use client";
 
@@ -13,7 +13,7 @@ import {
 } from "framer-motion";
 import { useRef } from "react";
 
-interface ContentCardProps {
+interface SectionContainerProps {
   title: string;
   icon: React.ComponentType<IconProps>;
   textColorClass?: string;
@@ -24,14 +24,14 @@ interface ContentCardProps {
   children: ReactNode;
 }
 
-export default function ContentCard({
+export default function SectionContainer({
   title,
   icon: Icon,
   textColorClass,
   bgColorClass,
   bgOpacityClass = "bg-opacity-20 dark:bg-opacity-20",
   borderColor,
-  cardClass = "",
+  cardClass = "mb-12",
   children,
 }: ContentCardProps) {
   return (
@@ -39,15 +39,13 @@ export default function ContentCard({
       className={`flex flex-col rounded-[44px] border bg-background/60 p-6 text-foreground backdrop-blur-xl dark:bg-dark-background/60 dark:text-dark-foreground ${cardClass}`}
       style={{ borderColor }}
     >
-      <div className={`mb-8 flex items-center gap-4`}>
+      <div className={`mb-2 flex items-center gap-4`}>
         <Icon size={40} weight="duotone" className={`${textColorClass}`} />
         <h3 className={`font-sans text-4xl font-bold ${textColorClass}`}>
           {title}
         </h3>
       </div>
-      {/* <div
-        className={`mb-6 h-[2px] w-full rounded-full ${dividerColorClass} ${dividerOpacityClass}`}
-      /> */}
+      <div className={`mb-16 h-[3px] w-full rounded-full ${bgColorClass}`} />
       {children}
     </motion.div>
   );

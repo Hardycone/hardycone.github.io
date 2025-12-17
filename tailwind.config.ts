@@ -9,18 +9,16 @@ export default {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   safelist: [
-    "text-intro",
-    "text-flux",
-    "text-fantail",
-    "text-suits",
-    "text-wolcott",
-    "text-chinatown",
-    "text-dark-intro",
-    "text-dark-flux",
-    "text-dark-fantail",
-    "text-dark-suits",
-    "text-dark-wolcott",
-    "text-dark-chinatown",
+    {
+      pattern:
+        /(text|bg)-(intro|flux|fantail|suits|wolcott|chinatown)(-secondary)?/,
+      variants: ["dark"], // Safelists dark:text-dark-flux, etc.
+    },
+    {
+      pattern:
+        /(text|bg)-dark-(intro|flux|fantail|suits|wolcott|chinatown)(-secondary)?/,
+      variants: ["dark"],
+    },
   ],
   theme: {
     extend: {

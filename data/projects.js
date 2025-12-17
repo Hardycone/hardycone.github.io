@@ -35,7 +35,7 @@ const projects = [
     tagline: "Democratizing quantitative UX research",
     tags: ["Quantitative UX", "B2B SaaS", "Startup", "Data Visualization"],
     description:
-      "I co-founded a company on a mission to demystify and democratize rigorous quantitative UX insights for product teams of all sizes. This case study recounts our 0-to-1 journey.",
+      "I co-founded a company on a mission to demystify and democratize rigorous quantitative UX insights for all product teams. This case study recounts how we went from 0 to 1 with a design-forward approach.",
     bullets: ["Duration: 2 year", "Role: Co-founder"],
     image: "/images/hero-flux.jpg",
     button: "Look Inside",
