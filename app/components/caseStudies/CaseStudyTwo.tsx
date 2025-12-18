@@ -79,7 +79,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
   return (
     <article>
       {/*Section 1*/}
-      <section id="section-1" className="snap-start scroll-mt-24">
+      <section id="section-1" className="scroll-mt-24">
         <ContentCard
           title="Quick Take"
           icon={ScrollIcon}
@@ -115,7 +115,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         </ContentCard>
       </section>
       {/*Section 2*/}
-      <section id="section-2" className="snap-start scroll-mt-24">
+      <section id="section-2" className="scroll-mt-24">
         <ContentCard
           title={`The "Zero"`}
           icon={SealQuestionIcon}
@@ -303,7 +303,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             <div className="relative flex-1">
               <div
                 ref={triggerOneRef}
-                className="h-[calc(100dvh_-_6rem)] max-h-[800px] snap-start scroll-mt-[6rem] pb-8 text-lg"
+                className="h-[calc(100dvh_-_6rem)] max-h-[800px] scroll-mt-[6rem] pb-8 text-lg"
               >
                 <div className="flex h-full flex-col items-end justify-between overflow-clip rounded-[20px] border border-white p-[15%] shadow dark:border-white/25">
                   <div
@@ -325,7 +325,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               </div>
               <div
                 ref={triggerTwoRef}
-                className="h-[calc(100dvh_-_6rem)] max-h-[800px] snap-start scroll-mt-[6rem] pb-8 text-lg"
+                className="h-[calc(100dvh_-_6rem)] max-h-[800px] scroll-mt-[6rem] pb-8 text-lg"
               >
                 <div className="flex h-full items-end justify-center overflow-clip rounded-[20px] border border-white p-12 pl-36 shadow dark:border-white/25">
                   To detect meaningful difference, researchers often need to
@@ -335,7 +335,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               </div>
               <div
                 ref={triggerThreeRef}
-                className="h-[calc(100dvh_-_6rem)] max-h-[800px] snap-start scroll-mt-[6rem] text-lg"
+                className="h-[calc(100dvh_-_6rem)] max-h-[800px] scroll-mt-[6rem] text-lg"
               >
                 <div className="flex h-full items-end justify-center overflow-clip rounded-[20px] border border-white p-12 pl-36 shadow dark:border-white/25">
                   The existing workflow for quantitative research involves
@@ -350,7 +350,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         </ContentCard>
       </section>
       {/*Section 3*/}
-      <section id="section-3" className="snap-start scroll-mt-24">
+      <section id="section-3" className="scroll-mt-24">
         <ContentCard
           title="Research & Disovery"
           icon={MagnifyingGlassIcon}
@@ -420,7 +420,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         </ContentCard>
       </section>
       {/*Section 4*/}
-      <section id="section-4" className="snap-start scroll-mt-24">
+      <section id="section-4" className="scroll-mt-24">
         <ContentCard
           title="Ideation & Exploration"
           icon={LightbulbFilamentIcon}
@@ -438,7 +438,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         </ContentCard>
       </section>
       {/*Section 5*/}
-      <section id="section-5" className="snap-start scroll-mt-24">
+      <section id="section-5" className="scroll-mt-24">
         <ContentCard
           title={`The "One"`}
           icon={RocketLaunchIcon}
@@ -464,7 +464,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         </ContentCard>
       </section>
       {/*Section 6*/}
-      <section id="section-6" className="snap-start scroll-mt-24">
+      <section id="section-6" className="scroll-mt-24">
         <ContentCard
           title={`Impact & Reflection`}
           icon={PresentationChartIcon}
