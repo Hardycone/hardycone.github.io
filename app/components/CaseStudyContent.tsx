@@ -10,7 +10,6 @@ import {
 import projects from "@/data/projects";
 import { useEffect } from "react";
 import { useTheme } from "next-themes";
-import { useLighting, getShadows } from "../context/LightingContext";
 
 import CaseStudyOne from "./caseStudies/CaseStudyOne";
 import CaseStudyTwo from "./caseStudies/CaseStudyTwo";

@@ -4,12 +4,11 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-
+import { useMouseShadow } from "@/hooks/useMouseShadow";
 import { motion, MotionValue, useTransform, useSpring } from "framer-motion";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
-import { useLighting, getShadows } from "../context/LightingContext";
 import projects from "../../data/projects";
 
 function useHasMounted() {
@@ -70,13 +69,18 @@ export default function ProjectSummary({
     [1.1, 1],
   );
 
-  const { a, b } = useLighting();
+  const {
+    cardLightShadow,
+    cardDarkShadow,
+    cardHoverLightShadow,
+    cardHoverDarkShadow,
+  } = useMouseShadow();
 
-  const themeShadows = getShadows(
-    a,
-    b,
-    resolvedTheme === "dark" ? "dark" : "light",
-  );
+  const cardShadow =
+    resolvedTheme === "dark" ? cardDarkShadow : cardLightShadow;
+
+  const cardHoverShadow =
+    resolvedTheme === "dark" ? cardHoverDarkShadow : cardHoverLightShadow;
 
   const project =
     variant === "bottom"
@@ -129,7 +133,6 @@ export default function ProjectSummary({
       animate: {
         y: 0,
         opacity: 1,
-        boxShadow: themeShadows.baseCard,
         transition: {
           y: { duration: 0.1, ease: "easeInOut" },
           boxShadow: { duration: 0.1, ease: "easeInOut" },
@@ -145,14 +148,11 @@ export default function ProjectSummary({
       }),
     },
     header: {
-      initial: {
-        boxShadow: themeShadows.baseCard,
-      },
+      initial: {},
       animate: {
         opacity: 1,
         y: 0,
         scale: 1,
-        boxShadow: "none",
         transition: {
           boxShadow: { delay: 0.5, duration: 0.2, ease: "easeIn" },
         },
@@ -162,13 +162,11 @@ export default function ProjectSummary({
     bottom: {
       initial: {
         y: 44,
-        boxShadow: themeShadows.baseCard,
       },
       animate: {
         y: 44,
         scale: 1,
         opacity: 1,
-        boxShadow: themeShadows.baseCard,
         transition: { duration: 0.2, ease: "easeInOut" },
       },
       exit: {
@@ -181,7 +179,11 @@ export default function ProjectSummary({
     },
   };
 
-  // --- Pick correct project
+  const ghostVariants = {
+    initial: { opacity: 0 },
+    hover: { opacity: 1, transition: { duration: 0.3 } },
+    exit: { opacity: 0 },
+  };
 
   const containerClasses =
     variant === "header"
@@ -227,11 +229,7 @@ export default function ProjectSummary({
         initial="initial"
         animate="animate"
         exit="exit"
-        whileHover={
-          variant === "header"
-            ? undefined
-            : { scale: 1, boxShadow: themeShadows.hoverCard }
-        }
+        whileHover={variant === "header" ? undefined : "hover"}
         onLayoutAnimationComplete={() => {
           // If we were morphing (click), commit the latest project once the layout animation finished.
           if (isMorphingRef.current) {
@@ -243,8 +241,25 @@ export default function ProjectSummary({
             if (setTransitioningToNext) setTransitioningToNext(false);
           }
         }}
-        className={`flex w-full rounded-[44px] bg-background dark:bg-dark-background ${cardClasses}`}
+        className={`relative flex w-full rounded-[44px] bg-background dark:bg-dark-background ${cardClasses}`}
       >
+        {variant !== "header" && (
+          <motion.div
+            variants={ghostVariants}
+            style={{ boxShadow: cardHoverShadow }}
+            className="absolute inset-0 rounded-[44px]"
+          />
+        )}
+        <motion.div
+          // 1. Live Shadow
+          style={{ boxShadow: cardShadow }}
+          // 2. Logic: Visible on 'preview' and 'bottom', Invisible on 'header'
+          animate={{ opacity: variant === "header" ? 0 : 1 }}
+          // 3. Smooth fade transition
+          transition={{ duration: 0.3, delay: 0.2 }}
+          // 4. Positioning (Matches your request + z-index fix)
+          className="absolute inset-0 rounded-[44px]"
+        />
         {/* Left */}
         <div
           className={`flex h-full w-full flex-1 ${variant === "bottom" ? "" : "flex-col"}`}
@@ -260,10 +275,9 @@ export default function ProjectSummary({
                 <h6 className="text-lg font-bold">Next Up </h6>
                 {/* Button */}
                 <motion.button
-                  animate={{ boxShadow: themeShadows.baseButton }}
+                  animate={{}}
                   whileHover={{
                     scale: 0.97,
-                    boxShadow: themeShadows.hoverButton,
                   }}
                   className={`px-4 py-2 text-lg font-bold ${theme.textColorClass} whitespace-nowrap rounded-full`}
                 >
@@ -333,12 +347,11 @@ export default function ProjectSummary({
             <div className={`mt-auto flex w-full justify-start`}>
               {/* Button */}
               <motion.button
-                animate={{ boxShadow: themeShadows.baseButton }}
+                animate={{}}
                 whileHover={{
                   scale: 0.97,
-                  boxShadow: themeShadows.hoverButton,
                 }}
-                className={`px-4 py-2 text-lg font-bold ${theme.textColorClass} whitespace-nowrap rounded-full`}
+                className={`z-20 px-4 py-2 text-lg font-bold ${theme.textColorClass} whitespace-nowrap rounded-full`}
               >
                 {displayedProject.button}
               </motion.button>

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import projects from "@/data/projects";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
+import { useMouseShadow } from "@/hooks/useMouseShadow";
 
 import {
   ScrollIcon,
@@ -28,8 +29,6 @@ import ThemeToggle from "./ThemeToggle";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 
-import { useLighting, getShadows } from "../context/LightingContext";
-
 export default function TopBar() {
   const { viewMode } = useViewMode();
   const { activeIndex } = useActiveProject();
@@ -37,16 +36,13 @@ export default function TopBar() {
   const pathname = usePathname();
   const [showTitle, setShowTitle] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const { a, b } = useLighting();
   const { resolvedTheme } = useTheme();
 
   const theme = useProjectTheme(projects[activeIndex].id);
 
-  const themeShadows = getShadows(
-    a,
-    b,
-    resolvedTheme === "dark" ? "dark" : "light",
-  );
+  const { barLightShadow, barDarkShadow } = useMouseShadow();
+
+  const barShadow = resolvedTheme === "dark" ? barDarkShadow : barLightShadow;
 
   const activeProject = projects[activeIndex];
 
@@ -208,7 +204,7 @@ export default function TopBar() {
         >
           <motion.button
             title="Home"
-            animate={{ boxShadow: themeShadows.topBar }}
+            style={{ boxShadow: barShadow }}
             transition={{ duration: 0.1 }}
             whileHover={{ scale: 1.1 }}
             className="h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors hover:scale-110 dark:bg-dark-background dark:text-dark-foreground"
@@ -223,8 +219,8 @@ export default function TopBar() {
               <motion.div
                 key={`title-${activeIndex}`}
                 initial={{ x: "-50%", y: -60, opacity: 0 }}
+                style={{ boxShadow: barShadow }}
                 animate={{
-                  boxShadow: themeShadows.topBar,
                   x: "-50%",
                   y: 0,
                   opacity: 1,
@@ -296,7 +292,7 @@ export default function TopBar() {
         {/*Resume button*/}
         <motion.button
           title="About Me"
-          animate={{ boxShadow: themeShadows.topBar }}
+          style={{ boxShadow: barShadow }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
           className="h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground"
@@ -321,7 +317,7 @@ export default function TopBar() {
         {/* LinkedIn */}
         <motion.button
           title="Find Me on LinkedIn"
-          animate={{ boxShadow: themeShadows.topBar }}
+          style={{ boxShadow: barShadow }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
           className="h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground"
@@ -337,7 +333,7 @@ export default function TopBar() {
         </motion.button>
 
         <motion.div
-          animate={{ boxShadow: themeShadows.topBar }}
+          style={{ boxShadow: barShadow }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
           className="z-50 flex h-11 w-11 rounded-full bg-background text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground"

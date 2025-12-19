@@ -33,7 +33,7 @@ export default function SectionContainer({
   borderColor,
   cardClass = "mb-12",
   children,
-}: ContentCardProps) {
+}: SectionContainerProps) {
   return (
     <motion.div
       className={`flex flex-col rounded-[44px] border bg-background/60 p-6 text-foreground backdrop-blur-xl dark:bg-dark-background/60 dark:text-dark-foreground ${cardClass}`}
@@ -45,7 +45,7 @@ export default function SectionContainer({
           {title}
         </h3>
       </div>
-      <div className={`mb-16 h-[3px] w-full rounded-full ${bgColorClass}`} />
+      <div className={`mb-16 h-[2px] w-full rounded-full ${bgColorClass}`} />
       {children}
     </motion.div>
   );

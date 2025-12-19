@@ -1,5 +1,4 @@
 // case-studies/project-two.tsx
-import { useLighting } from "../../context/LightingContext";
 import { useTheme } from "next-themes";
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";

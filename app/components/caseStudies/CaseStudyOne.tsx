@@ -2,7 +2,6 @@
 "use client";
 
 import { useRef } from "react";
-import { useLighting, getShadows } from "../../context/LightingContext";
 import { useTheme } from "next-themes";
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
@@ -25,16 +24,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   const { resolvedTheme } = useTheme();
   const { activeIndex } = useActiveProject();
 
-  const { a, b } = useLighting();
-
   const theme = useProjectTheme(projects[activeIndex].id);
 
-  const themeShadows = getShadows(
-    a,
-    b,
-
-    resolvedTheme === "dark" ? "dark" : "light",
-  );
   const targetRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -92,8 +83,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             {/*Download Button*/}
             <motion.button
               className="rounded-full px-4 py-2 font-semibold"
-              animate={{ boxShadow: themeShadows.baseButton }}
-              whileHover={{ boxShadow: themeShadows.hoverButton }}
+              animate={{ boxShadow: "none" }}
+              whileHover={{ boxShadow: "none" }}
             >
               Download a Copy
             </motion.button>

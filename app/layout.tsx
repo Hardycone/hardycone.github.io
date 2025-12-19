@@ -5,7 +5,6 @@ import "./globals.css";
 import { ViewModeProvider } from "./context/ViewModeContext";
 import { ActiveProjectProvider } from "./context/ActiveProjectContext";
 import { ThemeProvider } from "next-themes";
-import { LightingProvider } from "./context/LightingContext";
 
 import MainContent from "./components/MainContent";
 
@@ -42,9 +41,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ActiveProjectProvider>
             <ViewModeProvider>
-              <LightingProvider>
-                <MainContent>{children}</MainContent>
-              </LightingProvider>
+              <MainContent>{children}</MainContent>
             </ViewModeProvider>
           </ActiveProjectProvider>
         </ThemeProvider>

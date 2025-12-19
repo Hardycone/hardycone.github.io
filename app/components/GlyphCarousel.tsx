@@ -6,7 +6,7 @@ import projects from "../../data/projects";
 import { useActiveProject, wrapIndex } from "../context/ActiveProjectContext";
 import { useViewMode } from "../context/ViewModeContext";
 import { useTheme } from "next-themes";
-import { useLighting, getShadows } from "../context/LightingContext";
+import { useMouseShadow } from "@/hooks/useMouseShadow";
 
 export default function GlyphCarousel() {
   const { activeIndex, setActiveIndex } = useActiveProject();
@@ -16,13 +16,12 @@ export default function GlyphCarousel() {
   const { resolvedTheme } = useTheme();
 
   const isInteractive = viewMode === "home";
-  const { a, b } = useLighting();
 
-  const themeShadows = getShadows(
-    a,
-    b,
-    resolvedTheme === "dark" ? "dark" : "light",
-  );
+  const { glyphLightShadow, glyphDarkShadow } = useMouseShadow();
+
+  const glyphShadow =
+    resolvedTheme === "dark" ? glyphDarkShadow : glyphLightShadow;
+
   const touchStartY = useRef<number | null>(null);
   const keyboardLocked = useRef(false);
   const lastScrollTime = useRef(0);
@@ -173,10 +172,10 @@ export default function GlyphCarousel() {
           <motion.div
             key={project.id}
             animate={{
-              boxShadow: isActive ? themeShadows.glyph : "none",
               scale,
               opacity,
             }}
+            style={{ boxShadow: isActive ? glyphShadow : "none" }}
             transition={{ type: "tween", stiffness: 500, damping: 20 }}
             className="h-10 w-10 cursor-pointer touch-manipulation select-none rounded-full p-1 md:h-20 md:w-20 md:p-2"
             onClick={() => isInteractive && setActiveIndex(index)}
