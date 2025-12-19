@@ -85,13 +85,13 @@ export default function TopBar() {
       setIsNavigatingHome(false);
     };
 
-    if (window.scrollY > 0) {
+    if (window.scrollY >= 5) {
       window.addEventListener("wheel", preventScroll, { passive: false });
       window.addEventListener("touchmove", preventScroll, { passive: false });
       window.addEventListener("keydown", keydownHandler, { passive: false });
 
       onScroll = () => {
-        if (window.scrollY === 0) {
+        if (window.scrollY < 5) {
           cleanup();
           router.push("/");
         }
@@ -102,8 +102,10 @@ export default function TopBar() {
 
       scrollTimeout.current = window.setTimeout(() => {
         cleanup();
-        if (window.scrollY === 0) router.push("/");
-      }, 1500);
+        // The following line makes it so that the timeout is purely for unlocking control, without forcing router push.
+        // if (window.scrollY < 5)
+        router.push("/");
+      }, 2000);
     } else {
       router.push("/");
       setIsNavigatingHome(false);
