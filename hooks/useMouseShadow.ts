@@ -71,24 +71,23 @@ export function useMouseShadow() {
   const barLightShadow = useTransform(
     [x, y],
     ([latestX, latestY]: number[]) => ` 
-      ${-latestX * 1.5}px ${-latestY * 1.5}px 16px 0px rgba(0, 0, 0, 0.2)
+      ${-latestX * 1.5}px ${-latestY * 1.5}px 16px rgba(0, 0, 0, 0.2)
     `,
   );
 
   const barDarkShadow = useTransform(
     [x, y],
     ([latestX, latestY]: number[]) => `
-      ${-latestX * 1.5}px ${-latestY * 1.5}px 16px 0px rgba(0, 0, 0, 1), 
-      inset ${-latestX / 4}px ${-latestY / 4}px 2px 0px rgba(255,255,255,0.4)
+      ${-latestX * 1.5}px ${-latestY * 1.5}px 16px rgba(0, 0, 0, 1), 
+      inset ${-latestX / 4}px ${-latestY / 4}px 2px rgba(255,255,255,0.4)
     `,
   );
 
   const glyphLightShadow = useTransform(
     [x, y],
     ([latestX, latestY]: number[]) => `
-      ${latestX / 3}px ${latestY / 3}px 4px 0px rgba(255,255,255,0.7),
-      ${latestX / 2}px ${latestY / 2}px 2px 0px rgba(255,255,255,1),
-      ${-latestX / 2}px ${-latestY / 2}px 2px 0px rgba(0, 0, 0, 0.1)
+      ${latestX / 3}px ${latestY / 3}px 4px 0px rgba(255,255,255,1),
+      ${-latestX / 2}px ${-latestY / 2}px 4px 0px rgba(0, 0, 0, 0.2)
     `,
   );
 

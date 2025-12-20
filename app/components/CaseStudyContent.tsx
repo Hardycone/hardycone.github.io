@@ -68,7 +68,7 @@ export default function CaseStudyContent({ scrollY }: CaseStudyContentProps) {
           key={project.id}
           className="z-40 flex w-full flex-col"
           initial={{
-            y: 100,
+            y: 400,
             opacity: 0,
             // boxShadow: themeShadows.content,
           }}

@@ -1,13 +1,38 @@
 // app/data/projects.js
+import React from "react";
 import ProjectOneLogo from "../app/icons/ProjectOneLogo";
 import ProjectTwoLogo from "../app/icons/ProjectTwoLogo";
 import ProjectFourLogo from "../app/icons/ProjectFourLogo";
 import ProjectFiveLogo from "../app/icons/ProjectFiveLogo";
 
-const projects = [
+export interface ProjectSection {
+  id: string;
+  label: string;
+  icon: string;
+}
+
+export interface Project {
+  id: string;
+  slug: string;
+  role?: string;
+  title: string;
+  tagline?: string;
+  tags?: string[];
+  description?: string;
+  bullets?: string[];
+  image: string;
+  button: string;
+  textColor: string;
+  bgColor: string;
+  glyph: React.ElementType | Record<string, unknown>;
+  sections: ProjectSection[];
+}
+
+const projects: Project[] = [
   {
     id: "intro",
     slug: "case-study-one",
+    role: "human-centered designer",
     title: "About Me",
     tagline: "Human-Centered Designer with 10 Years of Experience",
     tags: ["Designer", "Researcher", "Builder"],
@@ -32,6 +57,7 @@ const projects = [
     id: "flux",
     slug: "case-study-two",
     title: "Flux",
+    role: "product builder",
     tagline: "Democratizing quantitative UX research",
     tags: ["Quantitative UX", "B2B SaaS", "Startup", "Data Visualization"],
     description:
@@ -66,6 +92,7 @@ const projects = [
   {
     id: "fantail",
     slug: "case-study-three",
+    role: "creative ally",
     title: "Fantail",
     tagline: "Empowering filmmakers to bring their stories to life",
     tags: ["Generative AI", "Empowering Creatives", "Startup"],
@@ -89,6 +116,7 @@ const projects = [
   {
     id: "suits",
     slug: "case-study-four",
+    role: "tech enthusiast",
     title: "Astrohuskies",
     tagline: "Building AR interfaces for next gen NASA missions",
     tags: ["Augmented Reality", "Next Gen NASA Spacesuits", "Artemis Program"],
@@ -112,6 +140,7 @@ const projects = [
   {
     id: "wolcott",
     slug: "case-study-five",
+    role: "stakeholder manager",
     title: "Wolcott Falls",
     tagline: "Co-designing a community space for a small rural New York town",
     tags: ["Co-Design", "Stakeholder Management", "Environmental Justice"],
@@ -135,6 +164,7 @@ const projects = [
   {
     id: "chinatown",
     slug: "case-study-six",
+    role: "community builder",
     title: "The Ribbon",
     tagline:
       "Telling the story of an ethnic enclave through narrative landscape architecture",

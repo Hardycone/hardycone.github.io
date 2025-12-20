@@ -20,6 +20,7 @@ import GlyphCarousel from "./GlyphCarousel";
 import TopBar from "./TopBar";
 import ProjectSummary from "./ProjectSummary";
 import CaseStudyContent from "./CaseStudyContent";
+import MyName from "./MyName";
 
 export default function MainContent({ children }: { children: ReactNode }) {
   const { activeIndex } = useActiveProject();
@@ -203,6 +204,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       <motion.div
         className={`relative flex w-full max-w-5xl flex-col items-center gap-6 px-2`}
       >
+        <MyName />
         {viewMode === "home" && showPrompt && (
           <motion.div
             initial={{ y: -100, opacity: 0 }}
@@ -232,7 +234,6 @@ export default function MainContent({ children }: { children: ReactNode }) {
           </motion.div>
         )}
         {viewMode === "case-study" && <CaseStudyContent scrollY={scrollY} />}
-
         <AnimatePresence mode="wait">
           {summaryVariant && (
             <ProjectSummary
@@ -242,7 +243,6 @@ export default function MainContent({ children }: { children: ReactNode }) {
             />
           )}
         </AnimatePresence>
-
         {children}
       </motion.div>
       <div className="min-w-0 flex-1" />
