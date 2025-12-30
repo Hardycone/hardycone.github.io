@@ -200,7 +200,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               className={`group absolute left-1/2 top-[28%] flex w-3/4 -translate-x-1/2 -translate-y-1/2 items-center gap-2`}
             >
               <div
-                className={`flex w-64 cursor-default flex-col items-center gap-2 rounded-xl border border-flux/40 bg-fluxBackground bg-opacity-10 p-4 text-center text-flux shadow-xl backdrop-blur-sm group-hover:shadow-2xl dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
+                className={`bg-fluxBackground flex w-64 cursor-default flex-col items-center gap-2 rounded-xl border border-flux/40 bg-opacity-10 p-4 text-center text-flux shadow-xl backdrop-blur-sm group-hover:shadow-2xl dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
               >
                 <span className={`font-sans text-lg font-semibold`}>
                   Quantitative UX research
@@ -211,29 +211,29 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               </div>
               <div className="flex min-w-12 flex-1 items-center gap-[2%]">
                 <div
-                  className={`flex h-4 w-full bg-fluxBackground transition-all duration-200 ease-in-out [clip-path:polygon(0%_50%,100%_100%,100%_0%)] group-hover:h-8`}
+                  className={`bg-fluxBackground flex h-4 w-full transition-all duration-200 ease-in-out [clip-path:polygon(0%_50%,100%_100%,100%_0%)] group-hover:h-8`}
                 />
                 <div
-                  className={`flex h-2 w-full bg-fluxBackground bg-opacity-80 transition-all duration-200 ease-in-out group-hover:h-4`}
+                  className={`bg-fluxBackground flex h-2 w-full bg-opacity-80 transition-all duration-200 ease-in-out group-hover:h-4`}
                 />
                 <div
-                  className={`flex h-2 w-full bg-fluxBackground bg-opacity-70 transition-all duration-200 ease-in-out group-hover:h-4`}
+                  className={`bg-fluxBackground flex h-2 w-full bg-opacity-70 transition-all duration-200 ease-in-out group-hover:h-4`}
                 />
                 <div
-                  className={`flex h-2 w-full bg-fluxBackground bg-opacity-70 transition-all duration-200 ease-in-out group-hover:h-4`}
+                  className={`bg-fluxBackground flex h-2 w-full bg-opacity-70 transition-all duration-200 ease-in-out group-hover:h-4`}
                 />
                 <div
-                  className={`flex h-2 w-full bg-fluxBackground bg-opacity-50 transition-all duration-200 ease-in-out group-hover:h-4`}
+                  className={`bg-fluxBackground flex h-2 w-full bg-opacity-50 transition-all duration-200 ease-in-out group-hover:h-4`}
                 />
                 <div
-                  className={`flex h-2 w-full bg-fluxBackground bg-opacity-40 transition-all duration-200 ease-in-out group-hover:h-4 group-hover:w-[150%]`}
+                  className={`bg-fluxBackground flex h-2 w-full bg-opacity-40 transition-all duration-200 ease-in-out group-hover:h-4 group-hover:w-[150%]`}
                 />
                 <div
-                  className={`flex h-2 w-full bg-fluxBackground bg-opacity-30 transition-all duration-200 ease-in-out group-hover:h-4 group-hover:w-[200%]`}
+                  className={`bg-fluxBackground flex h-2 w-full bg-opacity-30 transition-all duration-200 ease-in-out group-hover:h-4 group-hover:w-[200%]`}
                 />
               </div>
               <div
-                className={`flex w-64 cursor-default flex-col items-center gap-2 rounded-xl border border-dashed border-flux/40 bg-fluxBackground bg-opacity-10 p-4 text-center text-flux opacity-40 shadow backdrop-blur-sm dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
+                className={`bg-fluxBackground flex w-64 cursor-default flex-col items-center gap-2 rounded-xl border border-dashed border-flux/40 bg-opacity-10 p-4 text-center text-flux opacity-40 shadow backdrop-blur-sm dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
               >
                 <span className={`font-sans text-lg font-semibold`}>
                   Quantitative UX research

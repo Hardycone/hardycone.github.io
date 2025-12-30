@@ -4,6 +4,7 @@ import ProjectOneLogo from "../app/icons/ProjectOneLogo";
 import ProjectTwoLogo from "../app/icons/ProjectTwoLogo";
 import ProjectFourLogo from "../app/icons/ProjectFourLogo";
 import ProjectFiveLogo from "../app/icons/ProjectFiveLogo";
+import ProjectThreeLogo from "../app/icons/ProjectThreeLogo";
 
 export interface ProjectSection {
   id: string;
@@ -24,7 +25,7 @@ export interface Project {
   button: string;
   textColor: string;
   bgColor: string;
-  glyph: React.ElementType | Record<string, unknown>;
+  glyph: React.ElementType;
   sections: ProjectSection[];
 }
 
@@ -32,7 +33,7 @@ const projects: Project[] = [
   {
     id: "intro",
     slug: "case-study-one",
-    role: "human-centered designer",
+    role: "with empathy.",
     title: "About Me",
     tagline: "Human-Centered Designer with 10 Years of Experience",
     tags: ["Designer", "Researcher", "Builder"],
@@ -57,7 +58,7 @@ const projects: Project[] = [
     id: "flux",
     slug: "case-study-two",
     title: "Flux",
-    role: "product builder",
+    role: "from Zero to One.",
     tagline: "Democratizing quantitative UX research",
     tags: ["Quantitative UX", "B2B SaaS", "Startup", "Data Visualization"],
     description:
@@ -92,7 +93,7 @@ const projects: Project[] = [
   {
     id: "fantail",
     slug: "case-study-three",
-    role: "creative ally",
+    role: "human-centered AI.",
     title: "Fantail",
     tagline: "Empowering filmmakers to bring their stories to life",
     tags: ["Generative AI", "Empowering Creatives", "Startup"],
@@ -116,7 +117,7 @@ const projects: Project[] = [
   {
     id: "suits",
     slug: "case-study-four",
-    role: "tech enthusiast",
+    role: "next-gen interfaces.",
     title: "Astrohuskies",
     tagline: "Building AR interfaces for next gen NASA missions",
     tags: ["Augmented Reality", "Next Gen NASA Spacesuits", "Artemis Program"],
@@ -140,7 +141,7 @@ const projects: Project[] = [
   {
     id: "wolcott",
     slug: "case-study-five",
-    role: "stakeholder manager",
+    role: "alongside communities.",
     title: "Wolcott Falls",
     tagline: "Co-designing a community space for a small rural New York town",
     tags: ["Co-Design", "Stakeholder Management", "Environmental Justice"],
@@ -164,7 +165,7 @@ const projects: Project[] = [
   {
     id: "chinatown",
     slug: "case-study-six",
-    role: "community builder",
+    role: "with deep research.",
     title: "The Ribbon",
     tagline:
       "Telling the story of an ethnic enclave through narrative landscape architecture",

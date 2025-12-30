@@ -102,6 +102,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   // Use useMotionValueEvent for efficient scroll handling
   useMotionValueEvent(scrollY, "change", (y) => {
+    if (viewMode === "not-found") return;
     if (viewMode !== "case-study") {
       setSummaryVariant("preview");
       return;
@@ -174,16 +175,16 @@ export default function MainContent({ children }: { children: ReactNode }) {
   }, [activeIndex, viewMode]);
 
   useEffect(() => {
-    if (showLandscapeBlocker) {
+    if (viewMode === "home") {
       document.body.style.overflow = "hidden";
-      document.body.style.position = "fixed";
-      document.body.style.width = "100%";
+      // document.body.style.position = "fixed";
+      // document.body.style.width = "100%";
     } else {
-      document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.width = "";
+      document.body.style.overflow = "auto";
+      // document.body.style.position = "";
+      // document.body.style.width = "";
     }
-  }, [showLandscapeBlocker]);
+  }, [viewMode]);
 
   if (!mounted) return null;
 
@@ -201,38 +202,39 @@ export default function MainContent({ children }: { children: ReactNode }) {
       >
         <GlyphCarousel />
       </div>
+      {viewMode === "home" && showPrompt && (
+        <motion.div
+          initial={{ x: "-50%", y: -100, opacity: 0 }}
+          animate={{
+            x: "-50%",
+            y: [0, 0, 8, 0, 0, -8, 0, 0],
+            opacity: 1,
+            transition: {
+              y: {
+                delay: 0.5,
+                repeat: Infinity,
+                repeatType: "loop",
+                duration: 3,
+                ease: "easeInOut",
+              },
+              opacity: { duration: 0.5 },
+            },
+          }}
+          exit={{ x: "-50%", y: -100, opacity: 0 }}
+          className="pointer-events-none fixed bottom-6 left-1/2 z-50 flex items-center space-x-2 rounded-lg bg-foreground px-4 py-2 font-sans text-sm text-background shadow-md dark:bg-dark-foreground dark:text-dark-background md:text-lg"
+        >
+          <span className="whitespace-nowrap">Use scroll</span>
+          <MouseScrollIcon size={24} />
+          <span className="whitespace-nowrap"> or arrow keys</span>
+          <ArrowSquareUpIcon size={24} />
+          <ArrowSquareDownIcon size={24} />
+          <span className="whitespace-nowrap">to explore</span>
+        </motion.div>
+      )}
       <motion.div
         className={`relative flex w-full max-w-5xl flex-col items-center gap-6 px-2`}
       >
         <MyName />
-        {viewMode === "home" && showPrompt && (
-          <motion.div
-            initial={{ y: -100, opacity: 0 }}
-            animate={{
-              y: [0, 0, 8, 0, 0, -8, 0, 0],
-              opacity: 1,
-              transition: {
-                y: {
-                  delay: 0.5,
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  duration: 3,
-                  ease: "easeInOut",
-                },
-                opacity: { duration: 0.5 },
-              },
-            }}
-            exit={{ y: -100, opacity: 0 }}
-            className="pointer-events-none fixed bottom-6 z-50 flex items-center space-x-2 rounded-lg bg-foreground px-4 py-2 font-sans text-sm text-background shadow-md dark:bg-dark-foreground dark:text-dark-background md:text-lg"
-          >
-            <span>Use scroll</span>
-            <MouseScrollIcon size={24} />
-            <span> or arrow keys</span>
-            <ArrowSquareUpIcon size={24} />
-            <ArrowSquareDownIcon size={24} />
-            <span>to explore</span>
-          </motion.div>
-        )}
         {viewMode === "case-study" && <CaseStudyContent scrollY={scrollY} />}
         <AnimatePresence mode="wait">
           {summaryVariant && (
@@ -244,9 +246,12 @@ export default function MainContent({ children }: { children: ReactNode }) {
           )}
         </AnimatePresence>
         {children}
+        {viewMode === "home" && (
+          <motion.div className={`flex h-full w-full flex-1 bg-red-100`} />
+        )}
       </motion.div>
       <div className="min-w-0 flex-1" />
-      {showLandscapeBlocker && (
+      {/* {showLandscapeBlocker && (
         <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-background text-center text-foreground">
           <motion.svg
             xmlns="http://www.w3.org/2000/svg"
@@ -274,7 +279,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
             Please rotate your phone to portrait mode to view Home.
           </p>
         </div>
-      )}
+      )} */}
     </main>
   );
 }

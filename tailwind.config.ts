@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import { PALETTE } from "./lib/palette";
+import containerQueries from "@tailwindcss/container-queries";
 
 export default {
   darkMode: "class",
@@ -11,12 +12,12 @@ export default {
   safelist: [
     {
       pattern:
-        /(text|bg)-(intro|flux|fantail|suits|wolcott|chinatown)(-secondary)?/,
+        /(text|bg|border)-(intro|flux|fantail|suits|wolcott|chinatown)(-secondary)?/,
       variants: ["dark"], // Safelists dark:text-dark-flux, etc.
     },
     {
       pattern:
-        /(text|bg)-dark-(intro|flux|fantail|suits|wolcott|chinatown)(-secondary)?/,
+        /(text|bg|border)-dark-(intro|flux|fantail|suits|wolcott|chinatown)(-secondary)?/,
       variants: ["dark"],
     },
   ],
@@ -87,7 +88,14 @@ export default {
           "chinatown-soft": PALETTE.chinatown.dark.soft,
         },
       },
+      screens: {
+        tall: { raw: "(max-aspect-ratio:3/4)" },
+        short: { raw: "(min-aspect-ratio:4/3)" },
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    // 2. Use the imported variable here
+    containerQueries,
+  ],
 } satisfies Config;

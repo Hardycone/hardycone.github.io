@@ -68,7 +68,7 @@ export default function CaseStudyContent({ scrollY }: CaseStudyContentProps) {
           key={project.id}
           className="z-40 flex w-full flex-col"
           initial={{
-            y: 400,
+            y: 200,
             opacity: 0,
             // boxShadow: themeShadows.content,
           }}
@@ -91,7 +91,7 @@ export default function CaseStudyContent({ scrollY }: CaseStudyContentProps) {
           <CaseStudyComponent scrollY={scrollY} />
         </motion.div>
       </AnimatePresence>
-      <div className="min-h-[25vh]" />
+      <div className="mb-12 mt-12 h-[100dvh] max-h-[240px]" />
     </>
   );
 }

@@ -25,7 +25,7 @@ export default function MyName() {
   const motionVariants = {
     initial: (dir: "up" | "down") => ({ y: dir === "up" ? "100%" : "-100%" }),
     animate: { y: 0 },
-    exist: (dir: "up" | "down") => ({ y: dir === "up" ? "-100%" : "100%" }),
+    exit: (dir: "up" | "down") => ({ y: dir === "up" ? "-100%" : "100%" }),
   };
 
   // Fallback if your project data doesn't have a 'role' field yet
@@ -38,38 +38,41 @@ export default function MyName() {
         <motion.div
           // Slide down and fade out when leaving Home
           initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+          animate={{ y: 0, opacity: 1, transition: { delay: 0.2 } }}
           exit={{ y: -100, opacity: 0 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
-          className="pointer-events-none absolute left-0 top-12 flex max-w-5xl flex-col text-7xl text-foreground dark:text-dark-foreground"
+          className={`z-999 pointer-events-none mt-4 flex h-full w-full flex-1 flex-col whitespace-nowrap bg-red-100 leading-tight text-foreground dark:text-dark-foreground sm:bg-orange-100 md:bg-yellow-100 lg:bg-green-100 xl:bg-indigo-100 2xl:bg-blue-100 tall:mt-7`}
         >
           <motion.span
             //   style={{ textShadow: textShadow }}
-            className="z-10 mb-8"
+            className="z-999 text-[30px] tall:text-xl"
           >
-            I'm Haichao, a&nbsp;
+            Hi! I'm Haichao.
           </motion.span>
 
           {/* Flip Container */}
-          <motion.span
-            key={activeIndex}
-            custom={direction}
-            variants={motionVariants}
-            // style={{ textShadow: textShadow }}
-            // The "Slot Machine" Flip Effect
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{
-              type: "spring",
-              stiffness: 500,
-              damping: 20,
-              mass: 0.5,
-            }}
-            className={`flex ${theme.textColorClass}`}
-          >
-            {role}
-          </motion.span>
+          <div className="z-999 text flex">
+            I design&nbsp;
+            <motion.span
+              key={activeIndex}
+              custom={direction}
+              variants={motionVariants}
+              // style={{ textShadow: textShadow }}
+              // The "Slot Machine" Flip Effect
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 20,
+                mass: 0.5,
+              }}
+              className={`${theme.textColorClass} `}
+            >
+              {role}
+            </motion.span>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

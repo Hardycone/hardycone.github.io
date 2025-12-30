@@ -7,6 +7,8 @@ import Image from "next/image";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
 import { motion, MotionValue, useTransform, useSpring } from "framer-motion";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
+import SpinButton from "./SpinButton";
+import Kbd from "./Kbd";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
 import projects from "../../data/projects";
@@ -55,13 +57,13 @@ export default function ProjectSummary({
   );
 
   const headerScale = useTransform(
-    smoothScrollY,
+    scrollY,
     [0, window.innerHeight / 2],
     [1, 0.95],
   );
 
   const bottomScale = useTransform(
-    smoothScrollY,
+    scrollY,
     [
       document.body.scrollHeight - window.innerHeight * 1.5,
       document.body.scrollHeight - window.innerHeight,
@@ -98,8 +100,19 @@ export default function ProjectSummary({
   // near the top of ProjectSummary component
   const isMorphingRef = useRef(false);
 
+  const [isNavigating, setIsNavigating] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    // Cleanup timer on unmount
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
   const handleClick = () => {
     if (variant === "header") return;
+    setIsNavigating(true);
     if (variant === "bottom" && setTransitioningToNext) {
       // mark that a click-initiated morph started
       isMorphingRef.current = true;
@@ -107,8 +120,16 @@ export default function ProjectSummary({
       setKey(`project-${projects[(activeIndex + 1) % projects.length].id}`);
       setdisplayedProject(project);
     }
-    setTimeout(() => router.push(`/${project.slug}`), 200);
+    timerRef.current = setTimeout(() => {
+      router.push(`/${project.slug}`);
+      // No need to set isNavigating(false) here,
+      // the useEffect above will handle it when the page/props change.
+    }, 200);
   };
+
+  useEffect(() => {
+    setIsNavigating(false);
+  }, [project.id, variant]);
 
   useEffect(() => {
     // Only avoid updating displayedProject if a click-initiated morph is in progress.
@@ -160,17 +181,13 @@ export default function ProjectSummary({
       exit: { transition: { duration: 0.2 } },
     },
     bottom: {
-      initial: {
-        y: 44,
-      },
+      initial: {},
       animate: {
-        y: 44,
         scale: 1,
         opacity: 1,
         transition: { duration: 0.2, ease: "easeInOut" },
       },
       exit: {
-        y: 44,
         transition: {
           y: { delay: 0, duration: 0, ease: "easeInOut" },
           duration: 0.2,
@@ -187,17 +204,17 @@ export default function ProjectSummary({
 
   const containerClasses =
     variant === "header"
-      ? " fixed inset-0 w-full h-screen items-center justify-center p-12"
+      ? " fixed inset-0 w-full h-screen items-center justify-center md:p-12"
       : variant === "preview"
-        ? " relative my-auto w-full max-w-5xl"
+        ? "relative my-auto w-full max-w-5xl justify-center"
         : "fixed items-center justify-end w-full h-screen max-w-5xl px-2 pt-2 ";
 
   const cardClasses =
     variant === "header"
       ? "cursor-default h-full max-w-[2650px] gap-12 p-6"
       : variant === "preview"
-        ? " cursor-pointer gap-6 p-6"
-        : " cursor-pointer pb-12 pt-6 px-6";
+        ? " cursor-pointer gap-6 p-3 md:p-6 tall:h-[80dvh]"
+        : " cursor-pointer p-6 h-[100dvh] max-h-[240px] mb-12";
 
   return (
     // Container
@@ -209,13 +226,13 @@ export default function ProjectSummary({
             ? headerOpacity
             : variant === "bottom"
               ? bottomOpacity
-              : undefined,
+              : 1,
         scale:
           variant === "header"
             ? headerScale
             : variant === "bottom"
               ? bottomScale
-              : undefined,
+              : 1,
       }}
       onClick={variant === "header" ? undefined : handleClick}
       className={`z-10 flex flex-col ${containerClasses}`}
@@ -241,13 +258,13 @@ export default function ProjectSummary({
             if (setTransitioningToNext) setTransitioningToNext(false);
           }
         }}
-        className={`relative flex w-full rounded-[44px] bg-background dark:bg-dark-background ${cardClasses}`}
+        className={`relative flex w-full rounded-[24px] bg-background dark:bg-dark-background md:rounded-[44px] tall:flex-col ${cardClasses}`}
       >
         {variant !== "header" && (
           <motion.div
             variants={ghostVariants}
             style={{ boxShadow: cardHoverShadow }}
-            className="absolute inset-0 rounded-[44px]"
+            className="absolute inset-0 rounded-[24px] md:rounded-[44px]"
           />
         )}
         <motion.div
@@ -258,11 +275,11 @@ export default function ProjectSummary({
           // 3. Smooth fade transition
           transition={{ duration: 0.3, delay: 0.2 }}
           // 4. Positioning (Matches your request + z-index fix)
-          className="absolute inset-0 rounded-[44px]"
+          className="absolute inset-0 rounded-[24px] md:rounded-[44px]"
         />
         {/* Left */}
         <div
-          className={`flex h-full w-full flex-1 ${variant === "bottom" ? "" : "flex-col"}`}
+          className={`flex h-full w-full flex-1 tall:order-1 ${variant === "bottom" ? "" : "flex-col"}`}
         >
           {/* Text */}
           <div className="flex-0 flex w-full flex-col gap-4">
@@ -274,15 +291,9 @@ export default function ProjectSummary({
                 {/* "Next Up" */}
                 <h6 className="text-lg font-bold">Next Up </h6>
                 {/* Button */}
-                <motion.button
-                  animate={{}}
-                  whileHover={{
-                    scale: 0.97,
-                  }}
-                  className={`px-4 py-2 text-lg font-bold ${theme.textColorClass} whitespace-nowrap rounded-full`}
-                >
+                <SpinButton isLoading={isNavigating} className={``}>
                   {displayedProject.button}
-                </motion.button>
+                </SpinButton>
               </div>
             )}
             {/* Title block */}
@@ -291,18 +302,18 @@ export default function ProjectSummary({
               <div className="flex">
                 {/* Title text */}
                 <h1
-                  className={`font-sans font-bold ${theme.textColorClass} ${variant === "header" ? "text-6xl" : "text-5xl"}`}
+                  className={`font-sans font-bold ${theme.textColorClass} ${variant === "header" ? "text-3xl md:text-6xl" : "text-3xl md:text-5xl"}`}
                 >
                   {displayedProject.title}
                 </h1>
               </div>
               {/* Tags */}
               {variant !== "bottom" && displayedProject.tags && (
-                <div className={`my-4 flex flex-wrap gap-2`}>
+                <div className={`my-2 flex flex-wrap gap-1 md:my-4 md:gap-2`}>
                   {displayedProject.tags.map((tag) => (
                     <span
                       key={tag}
-                      className={`px-2 py-1 font-sans ${variant === "header" ? "text-sm" : "text-xs"} font-semibold ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
+                      className={`px-1 font-sans md:px-2 md:py-1 ${variant === "header" ? "text-sm" : "text-xs"} font-semibold ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
                     >
                       {tag}
                     </span>
@@ -311,8 +322,10 @@ export default function ProjectSummary({
               )}
               {/* Tagline */}
               <h2
-                className={`mb-2 font-sans font-semibold text-foreground opacity-70 dark:text-dark-foreground ${
-                  variant === "header" ? "text-3xl" : "text-2xl"
+                className={`font-sans font-semibold leading-tight text-foreground opacity-70 dark:text-dark-foreground md:mb-2 ${
+                  variant === "header"
+                    ? "text-lg md:text-3xl"
+                    : "text-lg md:text-2xl"
                 }`}
               >
                 {displayedProject.tagline}
@@ -321,8 +334,8 @@ export default function ProjectSummary({
             {/* Description */}
             {variant !== "bottom" && (
               <p
-                className={`mb-4 text-base text-foreground dark:text-dark-foreground ${
-                  variant === "preview" ? "line-clamp-6" : ""
+                className={`text-sm text-foreground dark:text-dark-foreground md:mb-4 md:text-base ${
+                  variant === "preview" ? "line-clamp-4 md:line-clamp-6" : ""
                 }`}
               >
                 {displayedProject.description}
@@ -334,7 +347,7 @@ export default function ProjectSummary({
                 {displayedProject.bullets.map((bullet) => (
                   <li
                     key={bullet}
-                    className={`px-2 py-1 font-sans text-xl font-semibold text-foreground dark:text-dark-foreground`}
+                    className={`font-sans text-lg font-semibold text-foreground dark:text-dark-foreground md:py-1 md:text-xl`}
                   >
                     {bullet}
                   </li>
@@ -346,15 +359,12 @@ export default function ProjectSummary({
           {variant === "preview" && (
             <div className={`mt-auto flex w-full justify-start`}>
               {/* Button */}
-              <motion.button
-                animate={{}}
-                whileHover={{
-                  scale: 0.97,
-                }}
-                className={`z-20 px-4 py-2 text-lg font-bold ${theme.textColorClass} whitespace-nowrap rounded-full`}
+              <SpinButton
+                isLoading={isNavigating}
+                className={`${theme.textColorClass} border-2 ${theme.borderColorClass} border-opacity-40 hover:border-opacity-100 active:border-0 ${theme.bgSoftColorClass} h-[40px]`}
               >
                 {displayedProject.button}
-              </motion.button>
+              </SpinButton>
             </div>
           )}
         </div>
@@ -362,22 +372,16 @@ export default function ProjectSummary({
         {/* Image container*/}
         {displayedProject.image && (
           <div
-            className={`${variant === "bottom" ? "flex-0" : "flex-1"} relative overflow-hidden rounded-[20px]`}
+            className={`${variant === "bottom" ? "flex-0" : "flex-1"} relative h-full w-full overflow-hidden rounded-[12px] md:rounded-[24px]`}
           >
             {/* Image */}
-            <div
-              className={`relative w-full ${
-                variant === "header" ? "h-full" : "pb-[100%]"
-              }`}
-            >
-              <Image
-                src={displayedProject.image}
-                alt={displayedProject.title}
-                fill
-                className="object-cover"
-                priority={variant === "header"}
-              />
-            </div>
+            <Image
+              src={displayedProject.image}
+              alt={displayedProject.title}
+              fill
+              className="object-cover"
+              priority={variant === "header"}
+            />
           </div>
         )}
       </motion.div>

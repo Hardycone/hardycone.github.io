@@ -137,13 +137,13 @@ export default function GlyphCarousel() {
   const isLarge = useTailwindBreakpoint();
   const yOffset = isLarge
     ? -80 * (2 * activeIndex + 1 / 2)
-    : -40 * (2 * activeIndex + 1 / 2);
+    : -32 * (2 * activeIndex + 1 / 2);
 
   if (!hasMounted || viewMode === "not-found") return null;
 
   return (
     <motion.div
-      className="xl:px-20= flex flex-col items-end gap-10 px-4 pt-[calc(50dvh)] md:gap-20 md:px-12 lg:px-16"
+      className="flex flex-col items-end gap-8 px-4 pt-[calc(50dvh+32px)] md:gap-20 md:px-12 md:pt-[calc(50dvh)] lg:px-16 xl:px-20"
       animate={{
         y: yOffset,
         x: isInteractive ? 0 : -300,
@@ -177,7 +177,7 @@ export default function GlyphCarousel() {
             }}
             style={{ boxShadow: isActive ? glyphShadow : "none" }}
             transition={{ type: "tween", stiffness: 500, damping: 20 }}
-            className="h-10 w-10 cursor-pointer touch-manipulation select-none rounded-full p-1 md:h-20 md:w-20 md:p-2"
+            className="h-8 w-8 cursor-pointer touch-manipulation select-none rounded-full p-0.5 md:h-20 md:w-20 md:p-2"
             onClick={() => isInteractive && setActiveIndex(index)}
           >
             <Glyph />

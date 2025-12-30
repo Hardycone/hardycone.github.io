@@ -85,13 +85,13 @@ export default function TopBar() {
       setIsNavigatingHome(false);
     };
 
-    if (window.scrollY >= 5) {
+    if (window.scrollY >= 20) {
       window.addEventListener("wheel", preventScroll, { passive: false });
       window.addEventListener("touchmove", preventScroll, { passive: false });
       window.addEventListener("keydown", keydownHandler, { passive: false });
 
       onScroll = () => {
-        if (window.scrollY < 5) {
+        if (window.scrollY < 20) {
           cleanup();
           router.push("/");
         }
@@ -209,7 +209,7 @@ export default function TopBar() {
             style={{ boxShadow: barShadow }}
             transition={{ duration: 0.1 }}
             whileHover={{ scale: 1.1 }}
-            className="h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors hover:scale-110 dark:bg-dark-background dark:text-dark-foreground"
+            className="h-9 w-9 rounded-full bg-background p-2 text-foreground transition-colors hover:scale-110 dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
             onClick={handleHomeClick}
           >
             <Home />
@@ -265,7 +265,7 @@ export default function TopBar() {
                           e.stopPropagation();
                           handleScrollToSection(section.id);
                         }}
-                        className={`h-11 w-11 rounded-full p-2 ${
+                        className={`h-9 w-9 rounded-full p-2 md:h-11 md:w-11 ${
                           activeSection === section.id
                             ? `${theme.textColorClass}`
                             : "text-foreground opacity-40 hover:opacity-100 dark:text-dark-foreground"
@@ -297,7 +297,7 @@ export default function TopBar() {
           style={{ boxShadow: barShadow }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
-          className="h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground"
+          className="h-9 w-9 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
           onClick={() => {
             if (pathname === "/case-study-one") {
               if (window.scrollY > 30) {
@@ -322,7 +322,7 @@ export default function TopBar() {
           style={{ boxShadow: barShadow }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
-          className="h-11 w-11 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground"
+          className="h-9 w-9 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
           onClick={() =>
             window.open(
               "https://www.google.com",
@@ -338,7 +338,7 @@ export default function TopBar() {
           style={{ boxShadow: barShadow }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
-          className="z-50 flex h-11 w-11 rounded-full bg-background text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground"
+          className="z-50 flex h-9 w-9 rounded-full bg-background text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
         >
           <ThemeToggle />
         </motion.div>
