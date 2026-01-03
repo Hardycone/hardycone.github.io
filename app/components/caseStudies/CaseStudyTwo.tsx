@@ -1,5 +1,4 @@
-// case-studies/project-two.tsx
-
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { useTheme } from "next-themes";
@@ -23,7 +22,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
-import ContentCard from "../SectionContainer";
+import SectionContainer from "../SectionContainer";
 import SubSectionHeading from "../SubSectionHeading";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 
@@ -79,7 +78,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
     <article>
       {/*Section 1*/}
       <section id="section-1" className="scroll-mt-24">
-        <ContentCard
+        <SectionContainer
           title="Quick Take"
           icon={ScrollIcon}
           textColorClass={theme.textColorClass}
@@ -111,11 +110,11 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               className="object-cover"
             />
           </div>
-        </ContentCard>
+        </SectionContainer>
       </section>
       {/*Section 2*/}
       <section id="section-2" className="scroll-mt-24">
-        <ContentCard
+        <SectionContainer
           title={`The "Zero"`}
           icon={SealQuestionIcon}
           textColorClass={theme.textColorClass}
@@ -346,11 +345,11 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               <div className="absolute bottom-0 h-0 w-full"></div>
             </div>
           </div>
-        </ContentCard>
+        </SectionContainer>
       </section>
       {/*Section 3*/}
       <section id="section-3" className="scroll-mt-24">
-        <ContentCard
+        <SectionContainer
           title="Research & Disovery"
           icon={MagnifyingGlassIcon}
           textColorClass={theme.textColorClass}
@@ -416,11 +415,11 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             To further understand our problem space, we reached out to our
             network of colleagues in the tech industry.
           </p>
-        </ContentCard>
+        </SectionContainer>
       </section>
       {/*Section 4*/}
       <section id="section-4" className="scroll-mt-24">
-        <ContentCard
+        <SectionContainer
           title="Ideation & Exploration"
           icon={LightbulbFilamentIcon}
           textColorClass={theme.textColorClass}
@@ -434,11 +433,11 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             network of colleagues in the tech industry.
           </p>
           <SubSectionHeading number="2" heading="Exploration" />
-        </ContentCard>
+        </SectionContainer>
       </section>
       {/*Section 5*/}
       <section id="section-5" className="scroll-mt-24">
-        <ContentCard
+        <SectionContainer
           title={`The "One"`}
           icon={RocketLaunchIcon}
           textColorClass={theme.textColorClass}
@@ -460,11 +459,11 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             To further understand our problem space, we reached out to our
             network of colleagues in the tech industry.
           </p>
-        </ContentCard>
+        </SectionContainer>
       </section>
       {/*Section 6*/}
       <section id="section-6" className="scroll-mt-24">
-        <ContentCard
+        <SectionContainer
           title={`Impact & Reflection`}
           icon={PresentationChartIcon}
           textColorClass={theme.textColorClass}
@@ -499,7 +498,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             teams make design decisions with evidence, not guesswork—and
             reshaping what quantitative UX looks like in practice.
           </p>
-        </ContentCard>
+        </SectionContainer>
       </section>
     </article>
   );

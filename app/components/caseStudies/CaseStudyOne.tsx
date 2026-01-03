@@ -15,6 +15,7 @@ import {
 import Image from "next/image";
 import { FileTextIcon } from "@phosphor-icons/react";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
+import SectionContainer from "../SectionContainer";
 
 interface CaseStudyOneProps {
   scrollY: MotionValue<number>;
@@ -41,7 +42,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
 
   // --- 1. USE 'vw' for 'useTransform' ---
   // We are moving the "filmstrip" by full viewport widths
-  const x = useTransform(smoothScrollYProgress, [0, 1], ["0vw", "-200vw"]);
+  const x = useTransform(scrollYProgress, [0, 1], ["0vw", "-200vw"]);
   const borderOpacity = useTransform(
     scrollY,
     [
@@ -64,32 +65,13 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       {/*Section 1: Resume*/}
       <section id="section-1" className="mb-16 scroll-mt-24">
         {/*Section Header Block*/}
-
-        <motion.div
-          className="mb-24 flex flex-col rounded-[44px] border p-6 text-foreground backdrop-blur-xl dark:text-dark-foreground"
-          style={{ borderColor }}
+        <SectionContainer
+          title="My Resume"
+          icon={FileTextIcon}
+          textColorClass={theme.textColorClass}
+          bgColorClass={theme.bgColorClass}
+          borderColor={borderColor}
         >
-          <div className="mb-4 flex w-full items-start justify-between">
-            {/*Section Title*/}
-            <div className="flex items-center gap-2">
-              <FileTextIcon weight="duotone" size={32} className={`text-red`} />
-              <h2
-                className={`font-sans text-3xl font-semibold ${theme.textColorClass}`}
-              >
-                My Resume
-              </h2>
-            </div>
-
-            {/*Download Button*/}
-            <motion.button
-              className="rounded-full px-4 py-2 font-semibold"
-              animate={{ boxShadow: "none" }}
-              whileHover={{ boxShadow: "none" }}
-            >
-              Download a Copy
-            </motion.button>
-          </div>
-          <div className="mb-6 h-[1px] w-full rounded-full bg-white dark:bg-white/25" />
           {/*Subsection 1: Experience*/}
           <div className="mb-8">
             {/*Subheader*/}
@@ -548,24 +530,26 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               </li>
             </ul>
           </div>
-        </motion.div>
+        </SectionContainer>
       </section>
       {/*Section 2: Story*/}
       <section id="section-2" className="mb-16 scroll-mt-24">
-        {/*Section Header*/}
-        <h2
-          className={`font-sans text-3xl font-semibold ${theme.textColorClass} mb-8`}
+        <SectionContainer
+          title="My Story"
+          icon={FileTextIcon}
+          textColorClass={theme.textColorClass}
+          bgColorClass={theme.bgColorClass}
+          borderColor={borderColor}
         >
-          My Story
-        </h2>
-        <p>My interest in designing products comes from</p>
-        <p>
-          Whether I’m prototyping UX flows in Figma, guiding product direction
-          with founders, or co-designing with local communities, I bring a
-          principled but curious approach. This portfolio shares six
-          representative projects—from startups to NASA to grassroots urbanism.
-          Thanks for exploring.
-        </p>
+          <p>My interest in designing products comes from</p>
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+        </SectionContainer>
       </section>
       <section ref={targetRef} className="relative h-[200vh]">
         {/* The "Sticky" Element */}
@@ -624,125 +608,127 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       </section>
       {/*Section 3: Interests*/}
       <section id="section-3" className="scroll-mt-24">
-        {/*Section Header*/}
-        <h2
-          className={`font-sans text-3xl font-semibold ${theme.textColorClass} mb-8`}
+        <SectionContainer
+          title="My Interests"
+          icon={FileTextIcon}
+          textColorClass={theme.textColorClass}
+          bgColorClass={theme.bgColorClass}
+          borderColor={borderColor}
         >
-          My Interests
-        </h2>
-        <p className="text-lg">
-          In my spare time, I enjoy hiking, running, practicing barre chords on
-          my acoustic guitar, and taking pictures with a mirrorless camera. I
-          also enjoy making physical things.
-        </p>
-        {/*Image Grid Container*/}
-        <div className="relative left-1/2 mx-auto w-screen max-w-[1440px] -translate-x-1/2 px-6">
-          {/*Image Grid*/}
-          <div className="grid grid-cols-4 grid-rows-4 gap-2">
-            {/* Image 1 - 4 cells horizontally */}
-            <div className="relative col-span-4 row-span-1">
-              <Image
-                src="/images/20230624-HWP00734-Edit.jpg"
-                fill
-                alt="Dummy Image 1"
-                className="h-full w-full rounded-[20px] object-cover"
-              />
-            </div>
-            {/* Image 2 - 2x2 square */}
-            <div className="relative col-span-2 row-span-2 aspect-[1/1]">
-              <Image
-                src="/images/20230624-HWP00734-Edit.jpg"
-                fill
-                alt="Dummy Image 2"
-                className="h-full w-full rounded-[20px] object-cover"
-              />
-            </div>
-            {/* Image 3 - 2 cells vertically adjacent */}
-            <div className="relative col-span-1 row-span-2">
-              <Image
-                src="/images/20230624-HWP00734-Edit.jpg"
-                fill
-                alt="Dummy Image 3"
-                className="h-full w-full rounded-[20px] object-cover"
-              />
-            </div>
-            {/* Remaining cells */}
-            <div className="relative">
-              <Image
-                src="/images/20230624-HWP00734"
-                fill
-                alt="Dummy Image 4"
-                className="h-full w-full rounded-[20px] object-cover"
-              />
-            </div>
-            <div className="relative">
-              <Image
-                src="/images/20230624-HWP00734-Edit.jpg"
-                fill
-                alt="Dummy Image 5"
-                className="h-full w-full rounded-[20px] object-cover"
-              />
-            </div>
-            <div className="relative">
-              <Image
-                src="/images/20230624-HWP00734-Edit.jpg"
-                fill
-                alt="Dummy Image 7"
-                className="h-full w-full rounded-[20px] object-cover"
-              />
-            </div>
-            <div className="relative col-span-3 row-span-1">
-              <Image
-                src="/images/20240704-HWP03580-Edit.jpg"
-                fill
-                alt="Dummy Image 6"
-                className="h-full w-full rounded-[20px] object-cover object-top"
-              />
+          <p className="text-lg">
+            In my spare time, I enjoy hiking, running, practicing barre chords
+            on my acoustic guitar, and taking pictures with a mirrorless camera.
+            I also enjoy making physical things.
+          </p>
+          {/*Image Grid Container*/}
+          <div className="relative left-1/2 mx-auto w-screen max-w-[1440px] -translate-x-1/2 px-6">
+            {/*Image Grid*/}
+            <div className="grid grid-cols-4 grid-rows-4 gap-2">
+              {/* Image 1 - 4 cells horizontally */}
+              <div className="relative col-span-4 row-span-1">
+                <Image
+                  src="/images/20230624-HWP00734-Edit.jpg"
+                  fill
+                  alt="Dummy Image 1"
+                  className="h-full w-full rounded-[20px] object-cover"
+                />
+              </div>
+              {/* Image 2 - 2x2 square */}
+              <div className="relative col-span-2 row-span-2 aspect-[1/1]">
+                <Image
+                  src="/images/20230624-HWP00734-Edit.jpg"
+                  fill
+                  alt="Dummy Image 2"
+                  className="h-full w-full rounded-[20px] object-cover"
+                />
+              </div>
+              {/* Image 3 - 2 cells vertically adjacent */}
+              <div className="relative col-span-1 row-span-2">
+                <Image
+                  src="/images/20230624-HWP00734-Edit.jpg"
+                  fill
+                  alt="Dummy Image 3"
+                  className="h-full w-full rounded-[20px] object-cover"
+                />
+              </div>
+              {/* Remaining cells */}
+              <div className="relative">
+                <Image
+                  src="/images/20230624-HWP00734"
+                  fill
+                  alt="Dummy Image 4"
+                  className="h-full w-full rounded-[20px] object-cover"
+                />
+              </div>
+              <div className="relative">
+                <Image
+                  src="/images/20230624-HWP00734-Edit.jpg"
+                  fill
+                  alt="Dummy Image 5"
+                  className="h-full w-full rounded-[20px] object-cover"
+                />
+              </div>
+              <div className="relative">
+                <Image
+                  src="/images/20230624-HWP00734-Edit.jpg"
+                  fill
+                  alt="Dummy Image 7"
+                  className="h-full w-full rounded-[20px] object-cover"
+                />
+              </div>
+              <div className="relative col-span-3 row-span-1">
+                <Image
+                  src="/images/20240704-HWP03580-Edit.jpg"
+                  fill
+                  alt="Dummy Image 6"
+                  className="h-full w-full rounded-[20px] object-cover object-top"
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <p>
-          Whether I’m prototyping UX flows in Figma, guiding product direction
-          with founders, or co-designing with local communities, I bring a
-          principled but curious approach. This portfolio shares six
-          representative projects—from startups to NASA to grassroots urbanism.
-          Thanks for exploring.
-        </p>
-        <p>
-          Whether I’m prototyping UX flows in Figma, guiding product direction
-          with founders, or co-designing with local communities, I bring a
-          principled but curious approach. This portfolio shares six
-          representative projects—from startups to NASA to grassroots urbanism.
-          Thanks for exploring.
-        </p>
-        <p>
-          Whether I’m prototyping UX flows in Figma, guiding product direction
-          with founders, or co-designing with local communities, I bring a
-          principled but curious approach. This portfolio shares six
-          representative projects—from startups to NASA to grassroots urbanism.
-          Thanks for exploring.
-        </p>
-        <p>
-          Whether I’m prototyping UX flows in Figma, guiding product direction
-          with founders, or co-designing with local communities, I bring a
-          principled but curious approach. This portfolio shares six
-          representative projects—from startups to NASA to grassroots urbanism.
-          Thanks for exploring.
-        </p>
-        <p>
-          Whether I’m prototyping UX flows in Figma, guiding product direction
-          with founders, or co-designing with local communities, I bring a
-          principled but curious approach. This portfolio shares six
-          representative projects—from startups to NASA to grassroots urbanism.
-          Thanks for exploring.
-        </p>
-        <p>
-          Whether I’m prototyping UX flows in Figma, guiding product direction
-          with founders, or co-designing with local communities, I bring a
-          principled but curious approach. This portfolio shares six
-          representative projects—from startups to NASA to grassroots urbanism.
-          Thanks for exploring.
-        </p>{" "}
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+        </SectionContainer>
       </section>
     </article>
   );

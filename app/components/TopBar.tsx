@@ -57,6 +57,18 @@ export default function TopBar() {
     if (isNavigatingHome) return; // prevent double triggers
     setIsNavigatingHome(true);
 
+    const isMobileDevice =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+
+    if (isMobileDevice) {
+      // 🚀 MOBILE: Instant navigation (skip scroll animation)
+      router.push("/");
+      setIsNavigatingHome(false);
+      return;
+    }
+
     const preventScroll = (e: Event) => e.preventDefault();
     const keydownHandler = (e: KeyboardEvent) => {
       const keys = [

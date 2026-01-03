@@ -91,7 +91,7 @@ export default function CaseStudyContent({ scrollY }: CaseStudyContentProps) {
           <CaseStudyComponent scrollY={scrollY} />
         </motion.div>
       </AnimatePresence>
-      <div className="mb-12 mt-12 h-[100dvh] max-h-[240px]" />
+      <div className="mb-6 mt-12 h-[100dvh] max-h-[360px]" />
     </>
   );
 }

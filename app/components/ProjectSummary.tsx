@@ -204,17 +204,17 @@ export default function ProjectSummary({
 
   const containerClasses =
     variant === "header"
-      ? " fixed inset-0 w-full h-screen items-center justify-center md:p-12"
+      ? " fixed inset-0 w-full h-[100dvh] items-center justify-center md:p-12"
       : variant === "preview"
-        ? "relative my-auto w-full max-w-5xl justify-center"
+        ? "relative h-[100dvh] w-full max-w-5xl justify-center"
         : "fixed items-center justify-end w-full h-screen max-w-5xl px-2 pt-2 ";
 
   const cardClasses =
     variant === "header"
       ? "cursor-default h-full max-w-[2650px] gap-12 p-6"
       : variant === "preview"
-        ? " cursor-pointer gap-6 p-3 md:p-6 tall:h-[80dvh]"
-        : " cursor-pointer p-6 h-[100dvh] max-h-[240px] mb-12";
+        ? "supertall:top-[32px] wide:top-[24px] superwide:top-0 cursor-pointer p-2 md:p-6 h-[clamp(240px,50dvh,320px)] wide:h-[clamp(100px,70dvh,600px)] superwide:h-[clamp(100px,80dvh,600px)] tall:h-[70dvh] supertall:h-[85dvh]"
+        : "cursor-pointer p-6 h-[100dvh] max-h-[360px] mb-12";
 
   return (
     // Container
@@ -234,7 +234,6 @@ export default function ProjectSummary({
               ? bottomScale
               : 1,
       }}
-      onClick={variant === "header" ? undefined : handleClick}
       className={`z-10 flex flex-col ${containerClasses}`}
     >
       {/* Card */}
@@ -247,6 +246,7 @@ export default function ProjectSummary({
         animate="animate"
         exit="exit"
         whileHover={variant === "header" ? undefined : "hover"}
+        onClick={variant === "header" ? undefined : handleClick}
         onLayoutAnimationComplete={() => {
           // If we were morphing (click), commit the latest project once the layout animation finished.
           if (isMorphingRef.current) {
@@ -258,8 +258,9 @@ export default function ProjectSummary({
             if (setTransitioningToNext) setTransitioningToNext(false);
           }
         }}
-        className={`relative flex w-full rounded-[24px] bg-background dark:bg-dark-background md:rounded-[44px] tall:flex-col ${cardClasses}`}
+        className={`relative flex w-full flex-col rounded-[24px] bg-background dark:bg-dark-background md:rounded-[44px] ${cardClasses}`}
       >
+        {/* Ghost div to display hover shadow in non-header variants */}
         {variant !== "header" && (
           <motion.div
             variants={ghostVariants}
@@ -267,123 +268,125 @@ export default function ProjectSummary({
             className="absolute inset-0 rounded-[24px] md:rounded-[44px]"
           />
         )}
+
+        {/* Ghost div to display shadow in non-header variants */}
         <motion.div
-          // 1. Live Shadow
           style={{ boxShadow: cardShadow }}
-          // 2. Logic: Visible on 'preview' and 'bottom', Invisible on 'header'
           animate={{ opacity: variant === "header" ? 0 : 1 }}
-          // 3. Smooth fade transition
           transition={{ duration: 0.3, delay: 0.2 }}
-          // 4. Positioning (Matches your request + z-index fix)
           className="absolute inset-0 rounded-[24px] md:rounded-[44px]"
         />
-        {/* Left */}
-        <div
-          className={`flex h-full w-full flex-1 tall:order-1 ${variant === "bottom" ? "" : "flex-col"}`}
-        >
-          {/* Text */}
-          <div className="flex-0 flex w-full flex-col gap-4">
-            {/*Title button*/}
-            {variant === "bottom" && (
-              <div
-                className={`mb-auto flex w-full flex-1 items-center justify-between`}
-              >
-                {/* "Next Up" */}
-                <h6 className="text-lg font-bold">Next Up </h6>
+
+        {/* Bottom variant title bar */}
+        {variant === "bottom" && (
+          <div className={`mb-6 flex w-full justify-between`}>
+            {/* "Next Up" */}
+            <h6 className="text-lg font-bold">Next Up </h6>
+            {/* Button */}
+            <SpinButton
+              isLoading={isNavigating}
+              className={`${theme.textColorClass} border-2 ${theme.borderColorClass} border-opacity-40 hover:border-opacity-100 active:border-0 ${theme.bgSoftColorClass} h-[24px] md:h-[40px]`}
+            >
+              {displayedProject.button}
+            </SpinButton>
+          </div>
+        )}
+
+        {/* Main portion */}
+        <div className="flex h-full w-full gap-2 tall:flex-col">
+          {/* 1st half of card */}
+          <div
+            className={`flex min-h-0 min-w-0 flex-1 justify-between tall:order-1 ${variant === "bottom" ? "flex-row" : "flex-col"}`}
+          >
+            {/* Text */}
+            <div className="flex w-full flex-col">
+              {/* Title block */}
+              <div className="flex flex-col">
+                {/* Title text */}
+                <h1
+                  className={`mb-1 flex font-sans font-bold md:mb-4 ${theme.textColorClass} ${variant === "header" ? "text-3xl md:text-6xl" : "superwide:text-3xl text-xl md:text-5xl"}`}
+                >
+                  {displayedProject.title}
+                </h1>
+                {/* Tags */}
+                {variant !== "bottom" && displayedProject.tags && (
+                  <div
+                    className={`mb-2 flex flex-wrap gap-1 space-x-1 md:mb-4 md:gap-2 ${variant === "header" ? "block" : "hidden tall:block"}`}
+                  >
+                    {displayedProject.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className={`px-1 font-sans md:px-2 md:py-1 ${variant === "header" ? "text-sm" : "text-xs"} font-semibold ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {/* Tagline */}
+                <h2
+                  className={`extremelywide:hidden mb-1 line-clamp-2 font-sans font-semibold leading-none text-foreground opacity-70 dark:text-dark-foreground md:mb-2 ${
+                    variant === "header"
+                      ? "text-lg md:text-3xl"
+                      : "text-md md:text-2xl"
+                  }`}
+                >
+                  {displayedProject.tagline}
+                </h2>
+              </div>
+              {/* Description */}
+              {variant !== "bottom" && (
+                <p
+                  className={`superwide:hidden text-xs leading-none text-foreground dark:text-dark-foreground md:mb-4 md:text-base ${
+                    variant === "preview" ? "line-clamp-4 md:line-clamp-6" : ""
+                  }`}
+                >
+                  {displayedProject.description}
+                </p>
+              )}
+              {/* Bullet points */}
+              {variant === "header" && displayedProject.bullets && (
+                <ul>
+                  {displayedProject.bullets.map((bullet) => (
+                    <li
+                      key={bullet}
+                      className={`font-sans text-lg font-semibold text-foreground dark:text-dark-foreground md:py-1 md:text-xl`}
+                    >
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            {/* Button container */}
+            {variant === "preview" && (
+              <div className={`flex w-full justify-start`}>
                 {/* Button */}
-                <SpinButton isLoading={isNavigating} className={``}>
+                <SpinButton
+                  isLoading={isNavigating}
+                  className={`${theme.textColorClass} border-2 ${theme.borderColorClass} border-opacity-40 hover:border-opacity-100 active:border-0 ${theme.bgSoftColorClass} h-[24px] md:h-[40px]`}
+                >
                   {displayedProject.button}
                 </SpinButton>
               </div>
             )}
-            {/* Title block */}
-            <div className="flex flex-col">
-              {/* Title */}
-              <div className="flex">
-                {/* Title text */}
-                <h1
-                  className={`font-sans font-bold ${theme.textColorClass} ${variant === "header" ? "text-3xl md:text-6xl" : "text-3xl md:text-5xl"}`}
-                >
-                  {displayedProject.title}
-                </h1>
-              </div>
-              {/* Tags */}
-              {variant !== "bottom" && displayedProject.tags && (
-                <div className={`my-2 flex flex-wrap gap-1 md:my-4 md:gap-2`}>
-                  {displayedProject.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className={`px-1 font-sans md:px-2 md:py-1 ${variant === "header" ? "text-sm" : "text-xs"} font-semibold ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-              {/* Tagline */}
-              <h2
-                className={`font-sans font-semibold leading-tight text-foreground opacity-70 dark:text-dark-foreground md:mb-2 ${
-                  variant === "header"
-                    ? "text-lg md:text-3xl"
-                    : "text-lg md:text-2xl"
-                }`}
-              >
-                {displayedProject.tagline}
-              </h2>
-            </div>
-            {/* Description */}
-            {variant !== "bottom" && (
-              <p
-                className={`text-sm text-foreground dark:text-dark-foreground md:mb-4 md:text-base ${
-                  variant === "preview" ? "line-clamp-4 md:line-clamp-6" : ""
-                }`}
-              >
-                {displayedProject.description}
-              </p>
-            )}
-            {/* Bullet points */}
-            {variant === "header" && displayedProject.bullets && (
-              <ul>
-                {displayedProject.bullets.map((bullet) => (
-                  <li
-                    key={bullet}
-                    className={`font-sans text-lg font-semibold text-foreground dark:text-dark-foreground md:py-1 md:text-xl`}
-                  >
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
-            )}
           </div>
-          {/* Button container */}
-          {variant === "preview" && (
-            <div className={`mt-auto flex w-full justify-start`}>
-              {/* Button */}
-              <SpinButton
-                isLoading={isNavigating}
-                className={`${theme.textColorClass} border-2 ${theme.borderColorClass} border-opacity-40 hover:border-opacity-100 active:border-0 ${theme.bgSoftColorClass} h-[40px]`}
-              >
-                {displayedProject.button}
-              </SpinButton>
+          {/* 2nd half of card */}
+          {displayedProject.image && (
+            <div
+              className={`relative min-h-0 min-w-0 flex-1 overflow-hidden rounded-[16px] md:rounded-[24px]`}
+            >
+              {/* Image */}
+              <Image
+                src={displayedProject.image}
+                alt={displayedProject.title}
+                fill
+                className="object-cover"
+                priority={variant === "header"}
+              />
             </div>
           )}
         </div>
-
-        {/* Image container*/}
-        {displayedProject.image && (
-          <div
-            className={`${variant === "bottom" ? "flex-0" : "flex-1"} relative h-full w-full overflow-hidden rounded-[12px] md:rounded-[24px]`}
-          >
-            {/* Image */}
-            <Image
-              src={displayedProject.image}
-              alt={displayedProject.title}
-              fill
-              className="object-cover"
-              priority={variant === "header"}
-            />
-          </div>
-        )}
       </motion.div>
     </motion.div>
   );

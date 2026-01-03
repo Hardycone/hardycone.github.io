@@ -19,7 +19,7 @@ export default function SpinButton({
     <div
       // We use a div here because the Parent (ProjectSummary) handles the click.
       // This button is purely visual decoration inside the clickable card.
-      className={`relative flex items-center gap-2 rounded-full pl-5 pr-3 text-lg font-semibold transition-all hover:scale-[0.97] active:scale-95 active:text-opacity-20 ${className}`}
+      className={`relative flex h-[32px] items-center gap-2 rounded-full pl-2 pr-3 text-sm font-semibold transition-all hover:scale-[0.97] active:scale-95 active:text-opacity-20 ${className}`}
     >
       <span>{children}</span>
 

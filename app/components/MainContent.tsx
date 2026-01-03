@@ -13,6 +13,8 @@ import {
   MouseScrollIcon,
 } from "@phosphor-icons/react";
 
+import DebugViewport from "./DebugViewport";
+
 import { useViewMode } from "../context/ViewModeContext";
 import { useActiveProject } from "../context/ActiveProjectContext";
 
@@ -190,11 +192,20 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   return (
     <main
-      className={`relative flex w-full bg-background transition-colors dark:bg-dark-background ${
+      className={`relative flex h-[100dvh] w-full bg-background transition-colors dark:bg-dark-background sm:bg-orange-300 md:bg-yellow-100 lg:bg-green-100 xl:bg-indigo-100 2xl:bg-blue-100 ${
         viewMode === "home" ? "touch-none overflow-y-hidden" : "touch-auto"
       }`}
     >
       <TopBar />
+      <span className="wide:hidden fixed tall:hidden">Normal</span>
+      <span className="superwide:hidden wide:block fixed hidden">Wide</span>
+      <span className="superwide:block extremelywide:hidden fixed hidden">
+        Super Wide
+      </span>
+      <span className="extremelywide:block fixed hidden">Extremely Wide</span>
+      <span className="supertall:hidden fixed hidden tall:block">Tall</span>
+      <span className="supertall:block fixed hidden">Super Tall</span>
+      <DebugViewport />
       <div
         className={`relative flex h-screen flex-1 flex-col overflow-hidden ${
           viewMode === "home" ? "min-w-max" : ""
@@ -246,9 +257,6 @@ export default function MainContent({ children }: { children: ReactNode }) {
           )}
         </AnimatePresence>
         {children}
-        {viewMode === "home" && (
-          <motion.div className={`flex h-full w-full flex-1 bg-red-100`} />
-        )}
       </motion.div>
       <div className="min-w-0 flex-1" />
       {/* {showLandscapeBlocker && (

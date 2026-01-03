@@ -89,8 +89,11 @@ export default {
         },
       },
       screens: {
-        tall: { raw: "(max-aspect-ratio:3/4)" },
-        short: { raw: "(min-aspect-ratio:4/3)" },
+        tall: { raw: "(max-aspect-ratio:4/5)" },
+        supertall: { raw: "(max-aspect-ratio:2/3)" },
+        wide: { raw: "(min-aspect-ratio:4/3)" },
+        superwide: { raw: "(min-aspect-ratio:16/9)" },
+        extremelywide: { raw: "(min-aspect-ratio:3/1)" },
       },
     },
   },
