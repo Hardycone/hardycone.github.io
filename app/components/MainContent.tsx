@@ -192,22 +192,30 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   return (
     <main
-      className={`relative flex h-[100dvh] w-full bg-background transition-colors dark:bg-dark-background sm:bg-orange-300 md:bg-yellow-100 lg:bg-green-100 xl:bg-indigo-100 2xl:bg-blue-100 ${
-        viewMode === "home" ? "touch-none overflow-y-hidden" : "touch-auto"
+      className={`relative flex w-full bg-background transition-colors dark:bg-dark-background sm:bg-orange-300 md:bg-yellow-100 lg:bg-green-100 xl:bg-indigo-100 2xl:bg-blue-100 ${
+        viewMode === "home"
+          ? "h-[100dvh] touch-none overflow-y-hidden"
+          : "touch-auto"
       }`}
     >
       <TopBar />
-      <span className="wide:hidden fixed tall:hidden">Normal</span>
-      <span className="superwide:hidden wide:block fixed hidden">Wide</span>
-      <span className="superwide:block extremelywide:hidden fixed hidden">
+      <span className="fixed z-50 tall:hidden wide:hidden">Normal</span>
+      <span className="fixed z-50 hidden wide:block superwide:hidden">
+        Wide
+      </span>
+      <span className="fixed z-50 hidden superwide:block extremelywide:hidden">
         Super Wide
       </span>
-      <span className="extremelywide:block fixed hidden">Extremely Wide</span>
-      <span className="supertall:hidden fixed hidden tall:block">Tall</span>
-      <span className="supertall:block fixed hidden">Super Tall</span>
+      <span className="fixed z-50 hidden extremelywide:block">
+        Extremely Wide
+      </span>
+      <span className="fixed z-50 hidden tall:block supertall:hidden">
+        Tall
+      </span>
+      <span className="fixed z-50 hidden supertall:block">Super Tall</span>
       <DebugViewport />
       <div
-        className={`relative flex h-screen flex-1 flex-col overflow-hidden ${
+        className={`relative flex flex-1 flex-col overflow-hidden ${
           viewMode === "home" ? "min-w-max" : ""
         }`}
       >

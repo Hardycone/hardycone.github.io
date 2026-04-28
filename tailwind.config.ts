@@ -12,12 +12,12 @@ export default {
   safelist: [
     {
       pattern:
-        /(text|bg|border)-(intro|flux|fantail|suits|wolcott|chinatown)(-secondary)?/,
+        /(text|bg|border|from|to)-(intro|flux|fantail|suits|wolcott|chinatown)(-secondary)?/,
       variants: ["dark"], // Safelists dark:text-dark-flux, etc.
     },
     {
       pattern:
-        /(text|bg|border)-dark-(intro|flux|fantail|suits|wolcott|chinatown)(-secondary)?/,
+        /(text|bg|border|from|to)-dark-(intro|flux|fantail|suits|wolcott|chinatown)(-secondary)?/,
       variants: ["dark"],
     },
   ],
@@ -89,7 +89,7 @@ export default {
         },
       },
       screens: {
-        tall: { raw: "(max-aspect-ratio:4/5)" },
+        tall: { raw: "(max-aspect-ratio:1/1)" },
         supertall: { raw: "(max-aspect-ratio:2/3)" },
         wide: { raw: "(min-aspect-ratio:4/3)" },
         superwide: { raw: "(min-aspect-ratio:16/9)" },

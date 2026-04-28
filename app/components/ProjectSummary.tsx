@@ -8,6 +8,8 @@ import { useMouseShadow } from "@/hooks/useMouseShadow";
 import { motion, MotionValue, useTransform, useSpring } from "framer-motion";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SpinButton from "./SpinButton";
+import { PALETTE } from "@/lib/palette";
+
 import Kbd from "./Kbd";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
@@ -43,8 +45,8 @@ export default function ProjectSummary({
 
   const headerOpacity = useTransform(
     scrollY,
-    [0, window.innerHeight / 2],
-    [1, 0],
+    [0, 50, window.innerHeight / 2],
+    [1, 1, 0],
   );
 
   const bottomOpacity = useTransform(
@@ -58,8 +60,8 @@ export default function ProjectSummary({
 
   const headerScale = useTransform(
     scrollY,
-    [0, window.innerHeight / 2],
-    [1, 0.95],
+    [0, 50, window.innerHeight / 2],
+    [1, 1, 0.95],
   );
 
   const bottomScale = useTransform(
@@ -76,6 +78,8 @@ export default function ProjectSummary({
     cardDarkShadow,
     cardHoverLightShadow,
     cardHoverDarkShadow,
+    buttonLightShadow,
+    buttonDarkShadow,
   } = useMouseShadow();
 
   const cardShadow =
@@ -83,6 +87,9 @@ export default function ProjectSummary({
 
   const cardHoverShadow =
     resolvedTheme === "dark" ? cardHoverDarkShadow : cardHoverLightShadow;
+
+  const buttonShadow =
+    resolvedTheme === "dark" ? buttonDarkShadow : buttonLightShadow;
 
   const project =
     variant === "bottom"
@@ -204,17 +211,17 @@ export default function ProjectSummary({
 
   const containerClasses =
     variant === "header"
-      ? " fixed inset-0 w-full h-[100dvh] items-center justify-center md:p-12"
+      ? "fixed inset-0 w-full h-[100svh] items-center justify-center md:p-12"
       : variant === "preview"
-        ? "relative h-[100dvh] w-full max-w-5xl justify-center"
-        : "fixed items-center justify-end w-full h-screen max-w-5xl px-2 pt-2 ";
+        ? "relative h-[100svh] w-full max-w-5xl justify-center"
+        : "fixed items-center justify-end w-full h-[100svh] max-w-5xl px-2 pt-2 ";
 
   const cardClasses =
     variant === "header"
       ? "cursor-default h-full max-w-[2650px] gap-12 p-6"
       : variant === "preview"
-        ? "supertall:top-[32px] wide:top-[24px] superwide:top-0 cursor-pointer p-2 md:p-6 h-[clamp(240px,50dvh,320px)] wide:h-[clamp(100px,70dvh,600px)] superwide:h-[clamp(100px,80dvh,600px)] tall:h-[70dvh] supertall:h-[85dvh]"
-        : "cursor-pointer p-6 h-[100dvh] max-h-[360px] mb-12";
+        ? "supertall:top-[3rem] wide:top-[2.5rem] superwide:top-0 cursor-pointer p-3 md:p-6 h-[clamp(16rem,50svh,20rem)] wide:h-[clamp(7rem,70svh,38rem)] superwide:h-[clamp(5rem,80svh,38rem)] tall:h-[70svh] supertall:h-[85svh]"
+        : "cursor-pointer p-6 h-[100svh] max-h-[360px] mb-12";
 
   return (
     // Container
@@ -258,14 +265,14 @@ export default function ProjectSummary({
             if (setTransitioningToNext) setTransitioningToNext(false);
           }
         }}
-        className={`relative flex w-full flex-col rounded-[24px] bg-background dark:bg-dark-background md:rounded-[44px] ${cardClasses}`}
+        className={`relative flex w-full flex-col rounded-[1.5rem] bg-background dark:bg-dark-background md:rounded-[2.75rem] ${cardClasses}`}
       >
         {/* Ghost div to display hover shadow in non-header variants */}
         {variant !== "header" && (
           <motion.div
             variants={ghostVariants}
             style={{ boxShadow: cardHoverShadow }}
-            className="absolute inset-0 rounded-[24px] md:rounded-[44px]"
+            className="absolute inset-0 rounded-[1.5rem] md:rounded-[2.75rem]"
           />
         )}
 
@@ -274,7 +281,7 @@ export default function ProjectSummary({
           style={{ boxShadow: cardShadow }}
           animate={{ opacity: variant === "header" ? 0 : 1 }}
           transition={{ duration: 0.3, delay: 0.2 }}
-          className="absolute inset-0 rounded-[24px] md:rounded-[44px]"
+          className="absolute inset-0 rounded-[1.5rem] md:rounded-[2.75rem]"
         />
 
         {/* Bottom variant title bar */}
@@ -285,7 +292,7 @@ export default function ProjectSummary({
             {/* Button */}
             <SpinButton
               isLoading={isNavigating}
-              className={`${theme.textColorClass} border-2 ${theme.borderColorClass} border-opacity-40 hover:border-opacity-100 active:border-0 ${theme.bgSoftColorClass} h-[24px] md:h-[40px]`}
+              className={`border-2 ${theme.borderColorClass} border-opacity-40 hover:border-opacity-100 active:border-0 ${theme.bgSoftColorClass} h-[1.5rem] md:h-[2.5rem]`}
             >
               {displayedProject.button}
             </SpinButton>
@@ -304,19 +311,19 @@ export default function ProjectSummary({
               <div className="flex flex-col">
                 {/* Title text */}
                 <h1
-                  className={`mb-1 flex font-sans font-bold md:mb-4 ${theme.textColorClass} ${variant === "header" ? "text-3xl md:text-6xl" : "superwide:text-3xl text-xl md:text-5xl"}`}
+                  className={`flex font-sans font-bold ${theme.textColorClass} ${variant === "header" ? "text-3xl md:text-6xl" : "mb-1 text-2xl extremelywide:mb-0 extremelywide:text-sm"}`}
                 >
                   {displayedProject.title}
                 </h1>
                 {/* Tags */}
                 {variant !== "bottom" && displayedProject.tags && (
                   <div
-                    className={`mb-2 flex flex-wrap gap-1 space-x-1 md:mb-4 md:gap-2 ${variant === "header" ? "block" : "hidden tall:block"}`}
+                    className={`flex flex-wrap gap-1 ${variant === "header" ? "mb-2" : "mb-1 hidden tall:flex"}`}
                   >
                     {displayedProject.tags.map((tag) => (
                       <span
                         key={tag}
-                        className={`px-1 font-sans md:px-2 md:py-1 ${variant === "header" ? "text-sm" : "text-xs"} font-semibold ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
+                        className={`px-1 font-sans md:px-2 md:py-1 ${variant === "header" ? "text-xs" : "text-xs"} font-semibold ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
                       >
                         {tag}
                       </span>
@@ -325,10 +332,8 @@ export default function ProjectSummary({
                 )}
                 {/* Tagline */}
                 <h2
-                  className={`extremelywide:hidden mb-1 line-clamp-2 font-sans font-semibold leading-none text-foreground opacity-70 dark:text-dark-foreground md:mb-2 ${
-                    variant === "header"
-                      ? "text-lg md:text-3xl"
-                      : "text-md md:text-2xl"
+                  className={`line-clamp-2 font-sans font-semibold leading-tight text-foreground opacity-70 dark:text-dark-foreground md:mb-2 extremelywide:hidden ${
+                    variant === "header" ? "text-md mb-2" : "text-md mb-2"
                   }`}
                 >
                   {displayedProject.tagline}
@@ -337,8 +342,10 @@ export default function ProjectSummary({
               {/* Description */}
               {variant !== "bottom" && (
                 <p
-                  className={`superwide:hidden text-xs leading-none text-foreground dark:text-dark-foreground md:mb-4 md:text-base ${
-                    variant === "preview" ? "line-clamp-4 md:line-clamp-6" : ""
+                  className={`text-xs leading-tight text-foreground dark:text-dark-foreground md:mb-4 md:text-base superwide:hidden ${
+                    variant === "preview"
+                      ? "line-clamp-6 wide:line-clamp-5"
+                      : "mb-2"
                   }`}
                 >
                   {displayedProject.description}
@@ -350,7 +357,7 @@ export default function ProjectSummary({
                   {displayedProject.bullets.map((bullet) => (
                     <li
                       key={bullet}
-                      className={`font-sans text-lg font-semibold text-foreground dark:text-dark-foreground md:py-1 md:text-xl`}
+                      className={`font-sans text-base font-semibold text-foreground dark:text-dark-foreground md:py-1 md:text-xl`}
                     >
                       {bullet}
                     </li>
@@ -364,7 +371,11 @@ export default function ProjectSummary({
                 {/* Button */}
                 <SpinButton
                   isLoading={isNavigating}
-                  className={`${theme.textColorClass} border-2 ${theme.borderColorClass} border-opacity-40 hover:border-opacity-100 active:border-0 ${theme.bgSoftColorClass} h-[24px] md:h-[40px]`}
+                  className={`${theme.textColorClass} h-[1.5rem] dark:bg-dark-${displayedProject.id}-soft md:h-[2.5rem]`}
+                  style={{
+                    boxShadow: buttonShadow,
+                    backgroundImage: buttonShadow,
+                  }}
                 >
                   {displayedProject.button}
                 </SpinButton>
@@ -374,7 +385,7 @@ export default function ProjectSummary({
           {/* 2nd half of card */}
           {displayedProject.image && (
             <div
-              className={`relative min-h-0 min-w-0 flex-1 overflow-hidden rounded-[16px] md:rounded-[24px]`}
+              className={`relative min-h-0 min-w-0 flex-1 overflow-hidden rounded-[1rem] md:rounded-[1.5rem]`}
             >
               {/* Image */}
               <Image

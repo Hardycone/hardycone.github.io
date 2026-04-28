@@ -41,17 +41,17 @@ export default function MyName() {
           animate={{ y: 0, opacity: 1, transition: { delay: 0.2 } }}
           exit={{ y: -100, opacity: 0 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
-          className={`z-999 superwide:hidden pointer-events-none absolute mt-4 flex h-full w-full flex-1 flex-col whitespace-nowrap leading-tight text-foreground dark:text-dark-foreground tall:mt-7`}
+          className={`pointer-events-none absolute z-50 mt-4 flex h-full w-full flex-1 flex-col whitespace-nowrap text-foreground dark:text-dark-foreground supertall:mt-7 superwide:hidden`}
         >
           <motion.span
-            //   style={{ textShadow: textShadow }}
-            className="z-999 text-md"
+            style={{ textShadow: textShadow }}
+            className="z-50 text-xl"
           >
             Hi! I'm Haichao.
           </motion.span>
 
           {/* Flip Container */}
-          <div className="z-999 flex text-sm">
+          <div className="z-50 flex text-lg">
             I design&nbsp;
             <motion.span
               key={activeIndex}

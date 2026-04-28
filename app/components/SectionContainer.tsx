@@ -36,7 +36,7 @@ export default function SectionContainer({
 }: SectionContainerProps) {
   return (
     <motion.div
-      className={`flex flex-col rounded-[44px] border bg-background/60 p-6 text-foreground backdrop-blur-xl dark:bg-dark-background/60 dark:text-dark-foreground ${cardClass}`}
+      className={`flex flex-col rounded-[2.75rem] border bg-background/60 p-6 text-foreground backdrop-blur-xl dark:bg-dark-background/60 dark:text-dark-foreground ${cardClass}`}
       style={{ borderColor }}
     >
       <div className={`mb-2 flex items-center gap-4`}>

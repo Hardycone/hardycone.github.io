@@ -99,6 +99,22 @@ export function useMouseShadow() {
     `,
   );
 
+  const buttonLightShadow = useTransform(
+    [x, y],
+    ([latestX, latestY]: number[]) => `
+      ${latestX / 4}px ${latestY / 4}px 2px 0px rgba(255,255,255,1), 
+      ${-latestX / 4}px ${-latestY / 4}px 4px 0px rgba(0, 0, 0, 0.2)
+    `,
+  );
+
+  const buttonDarkShadow = useTransform(
+    [x, y],
+    ([latestX, latestY]: number[]) => `
+      ${-latestX / 4}px ${-latestY / 4}px 4px 0px rgba(0, 0, 0, 1), 
+      inset ${-latestX / 4}px ${-latestY / 4}px 2px 0px rgba(255,255,255,0.1)
+    `,
+  );
+
   return {
     cardLightShadow,
     cardDarkShadow,
@@ -108,5 +124,7 @@ export function useMouseShadow() {
     barDarkShadow,
     glyphLightShadow,
     glyphDarkShadow,
+    buttonLightShadow,
+    buttonDarkShadow,
   };
 }

@@ -60,8 +60,8 @@ export default function CaseStudyContent({ scrollY }: CaseStudyContentProps) {
   }, [project.id]);
 
   return (
-    <>
-      <div className="min-h-[calc(100dvh-48px)]" />
+    <div className="flex flex-col">
+      <div className="min-h-[calc(100svh-48px)]" />
       <AnimatePresence mode="wait">
         <motion.div
           layout
@@ -91,7 +91,7 @@ export default function CaseStudyContent({ scrollY }: CaseStudyContentProps) {
           <CaseStudyComponent scrollY={scrollY} />
         </motion.div>
       </AnimatePresence>
-      <div className="mb-6 mt-12 h-[100dvh] max-h-[360px]" />
-    </>
+      <div className="mb-12 mt-12 h-[100svh] max-h-[360px]" />
+    </div>
   );
 }

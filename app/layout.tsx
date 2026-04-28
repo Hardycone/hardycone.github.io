@@ -36,8 +36,24 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${jost.variable} ${besley.variable} h-full overflow-x-hidden bg-background font-serif text-foreground antialiased transition-colors dark:bg-dark-background dark:text-dark-foreground`}
+        className={`${jost.variable} ${besley.variable} overflow-x-hidden bg-background font-serif text-foreground antialiased transition-colors dark:bg-dark-background dark:text-dark-foreground`}
       >
+        {/* <svg
+          viewBox="0 0 2000 2000"
+          xmlns="http://www.w3.org/2000/svg"
+          className="absolute inset-0 z-10"
+        >
+          <filter id="noiseFilter">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.65"
+              numOctaves="3"
+              stitchTiles="stitch"
+            />
+          </filter>
+
+          <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+        </svg> */}
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ActiveProjectProvider>
             <ViewModeProvider>

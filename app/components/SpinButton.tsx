@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, MotionStyle } from "framer-motion";
 import { CircleNotchIcon, ArrowElbowDownLeftIcon } from "@phosphor-icons/react";
 import { ReactNode } from "react";
 
@@ -8,18 +8,21 @@ interface SpinButtonProps {
   isLoading: boolean;
   children: ReactNode;
   className?: string;
+  style?: MotionStyle;
 }
 
 export default function SpinButton({
   isLoading,
   children,
   className = "",
+  style,
 }: SpinButtonProps) {
   return (
-    <div
+    <motion.div
       // We use a div here because the Parent (ProjectSummary) handles the click.
       // This button is purely visual decoration inside the clickable card.
-      className={`relative flex h-[32px] items-center gap-2 rounded-full pl-2 pr-3 text-sm font-semibold transition-all hover:scale-[0.97] active:scale-95 active:text-opacity-20 ${className}`}
+      className={`transition-scale relative flex h-[32px] items-center gap-2 rounded-[16px] px-3 text-sm font-semibold hover:scale-[0.97] active:scale-95 active:text-opacity-20 ${className}`}
+      style={style}
     >
       <span>{children}</span>
 
@@ -55,6 +58,6 @@ export default function SpinButton({
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 }
