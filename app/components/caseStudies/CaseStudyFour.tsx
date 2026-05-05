@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
+import LazyVideo from "../LazyVideo";
 import SectionContainer from "../SectionContainer";
 import {
   ScrollIcon,
@@ -60,21 +61,13 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           >
             My Resume
           </h2>{" "}
-          <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-lg">
-            <video
-              controls
-              preload="metadata"
-              playsInline
-              className="h-auto w-full"
-            >
-              {/* Replace this with your new custom Cloudflare URL */}
-              <source
-                src="https://assets.haichaowang.com/promo-export-01.mp4"
-                type="video/mp4"
-              />
-              Your browser does not support the video tag.
-            </video>
-          </div>
+          <LazyVideo
+            src="https://assets.haichaowang.com/promo-export-01.mp4"
+            poster="/images/promo-export-01-poster.jpg"
+            controls
+            playsInline
+            className="mx-auto max-w-4xl rounded-lg"
+          />
           <p>
             NASA challenged student teams to imagine how AR could augment
             spacesuits for lunar and Martian missions. Our team—a mix of

@@ -22,6 +22,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
+import LazyVideo from "../LazyVideo";
 import SectionContainer from "../SectionContainer";
 import SubSectionHeading from "../SubSectionHeading";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
@@ -101,14 +102,13 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             </span>
             .
           </p>
-          <div
-            className={`relative aspect-[16/9] w-full overflow-hidden rounded-[20px]`}
-          >
-            <video
-              src="https://assets.haichaowang.com/promo-export-01.mp4"
-              controls
-            />
-          </div>
+          <LazyVideo
+            src="https://assets.haichaowang.com/promo-export-01.mp4"
+            poster="/images/promo-export-01-poster.jpg"
+            controls
+            playsInline
+            className="rounded-[20px]"
+          />
         </SectionContainer>
       </section>
       {/*Section 2*/}
