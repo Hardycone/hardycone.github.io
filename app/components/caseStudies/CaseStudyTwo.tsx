@@ -84,6 +84,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           textColorClass={theme.textColorClass}
           bgColorClass={theme.bgColorClass}
           borderColor={borderColor}
+          revealOnScroll={false}
         >
           <p className="mb-10 px-2 text-lg leading-normal">
             Quantitative UX insights can be game-changing, but often out of
