@@ -14,6 +14,7 @@ import Kbd from "./Kbd";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
 import projects from "../../data/projects";
+import type { Project } from "../../data/projects";
 
 function useHasMounted() {
   const [hasMounted, setHasMounted] = useState(false);
@@ -24,14 +25,20 @@ function useHasMounted() {
 interface ProjectSummaryProps {
   variant: "preview" | "header" | "bottom";
   scrollY: MotionValue<number>;
+  onLayoutAnimationComplete?: () => void;
 }
 
 export default function ProjectSummary({
   variant,
   scrollY,
+  onLayoutAnimationComplete,
 }: ProjectSummaryProps) {
-  const { setTransitioningToNext, activeIndex, previousIndex } =
-    useActiveProject();
+  const {
+    setTransitioningToNext,
+    transitioningToNext,
+    activeIndex,
+    previousIndex,
+  } = useActiveProject();
   const hasMounted = useHasMounted();
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
@@ -96,16 +103,16 @@ export default function ProjectSummary({
       ? projects[(activeIndex + 1) % projects.length]
       : projects[activeIndex];
 
-  const theme = useProjectTheme(project.id);
-
   const direction =
     previousIndex !== undefined && activeIndex < previousIndex ? "down" : "up";
 
   const [key, setKey] = useState(`project-${project.id}`);
   const [displayedProject, setdisplayedProject] = useState(project);
+  const theme = useProjectTheme(displayedProject.id);
 
   // near the top of ProjectSummary component
   const isMorphingRef = useRef(false);
+  const morphTargetRef = useRef<Project | null>(null);
 
   const [isNavigating, setIsNavigating] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -123,15 +130,17 @@ export default function ProjectSummary({
     if (variant === "bottom" && setTransitioningToNext) {
       // mark that a click-initiated morph started
       isMorphingRef.current = true;
+      morphTargetRef.current = project;
       setTransitioningToNext(true);
-      setKey(`project-${projects[(activeIndex + 1) % projects.length].id}`);
+      setKey(`project-${project.id}`);
       setdisplayedProject(project);
     }
+    const navigationDelay = variant === "bottom" ? 340 : 200;
     timerRef.current = setTimeout(() => {
       router.push(`/${project.slug}`);
       // No need to set isNavigating(false) here,
       // the useEffect above will handle it when the page/props change.
-    }, 200);
+    }, navigationDelay);
   };
 
   useEffect(() => {
@@ -147,6 +156,22 @@ export default function ProjectSummary({
   }, [project, variant]);
 
   if (!hasMounted) return null;
+
+  const layoutDependency = `${variant}-${displayedProject.id}`;
+  const summaryOpacity = transitioningToNext
+    ? 1
+    : variant === "header"
+      ? headerOpacity
+      : variant === "bottom"
+        ? bottomOpacity
+        : 1;
+  const summaryScale = transitioningToNext
+    ? 1
+    : variant === "header"
+      ? headerScale
+      : variant === "bottom"
+        ? bottomScale
+        : 1;
 
   // --- Framer Motion variants
   const motionVariants = {
@@ -228,24 +253,15 @@ export default function ProjectSummary({
     <motion.div
       ref={ref}
       style={{
-        opacity:
-          variant === "header"
-            ? headerOpacity
-            : variant === "bottom"
-              ? bottomOpacity
-              : 1,
-        scale:
-          variant === "header"
-            ? headerScale
-            : variant === "bottom"
-              ? bottomScale
-              : 1,
+        opacity: summaryOpacity,
+        scale: summaryScale,
       }}
       className={`z-10 flex flex-col ${containerClasses}`}
     >
       {/* Card */}
       <motion.div
         layout
+        layoutDependency={layoutDependency}
         key={key}
         custom={variant === "preview" ? direction : undefined}
         variants={motionVariants[variant]}
@@ -255,12 +271,15 @@ export default function ProjectSummary({
         whileHover={variant === "header" ? undefined : "hover"}
         onClick={variant === "header" ? undefined : handleClick}
         onLayoutAnimationComplete={() => {
+          onLayoutAnimationComplete?.();
+
           // If we were morphing (click), commit the latest project once the layout animation finished.
           if (isMorphingRef.current) {
             isMorphingRef.current = false;
-            // commit displayedProject to the latest "project"
-            setKey(`project-${project.id}`);
-            setdisplayedProject(project);
+            const targetProject = morphTargetRef.current ?? project;
+            morphTargetRef.current = null;
+            setKey(`project-${targetProject.id}`);
+            setdisplayedProject(targetProject);
             // clear the global transitioning flag if exists
             if (setTransitioningToNext) setTransitioningToNext(false);
           }

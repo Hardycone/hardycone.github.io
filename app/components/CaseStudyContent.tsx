@@ -1,15 +1,9 @@
 "use client";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
-import {
-  motion,
-  AnimatePresence,
-  MotionValue,
-  useTransform,
-} from "framer-motion";
+import { motion, AnimatePresence, MotionValue } from "framer-motion";
 import projects from "@/data/projects";
 import { useEffect } from "react";
-import { useTheme } from "next-themes";
 
 import CaseStudyOne from "./caseStudies/CaseStudyOne";
 import CaseStudyTwo from "./caseStudies/CaseStudyTwo";
@@ -19,6 +13,8 @@ import CaseStudyFive from "./caseStudies/CaseStudyFive";
 import CaseStudySix from "./caseStudies/CaseStudySix";
 interface CaseStudyContentProps {
   scrollY: MotionValue<number>;
+  isVisible?: boolean;
+  exitDirection?: "up" | "down";
 }
 
 type ProjectSlug =
@@ -41,14 +37,26 @@ const caseStudyComponents: Record<
   "case-study-six": CaseStudySix,
 };
 
-export default function CaseStudyContent({ scrollY }: CaseStudyContentProps) {
-  const { activeIndex, transitioningToNext, setTransitioningToNext } =
-    useActiveProject();
+const contentVariants = {
+  initial: { y: 200, opacity: 0 },
+  animate: { y: 0, opacity: 1 },
+  exit: (direction: "up" | "down") => ({
+    y: direction === "up" ? -500 : 500,
+    opacity: 0,
+    transition: { duration: 0.2, ease: "easeInOut" },
+  }),
+};
+
+export default function CaseStudyContent({
+  scrollY,
+  isVisible = true,
+  exitDirection = "down",
+}: CaseStudyContentProps) {
+  const { activeIndex } = useActiveProject();
 
   const project = projects[activeIndex];
   const slug = project.slug as ProjectSlug;
   const CaseStudyComponent = caseStudyComponents[slug];
-  const exitY = transitioningToNext ? -500 : 500;
 
   // Dispatch event after animation completes
   useEffect(() => {
@@ -62,34 +70,20 @@ export default function CaseStudyContent({ scrollY }: CaseStudyContentProps) {
   return (
     <div className="flex flex-col">
       <div className="min-h-[calc(100svh-48px)]" />
-      <AnimatePresence mode="wait">
-        <motion.div
-          layout
-          key={project.id}
-          className="z-40 flex w-full flex-col"
-          initial={{
-            y: 200,
-            opacity: 0,
-            // boxShadow: themeShadows.content,
-          }}
-          animate={{
-            y: 0,
-            opacity: 1,
-            // boxShadow: themeShadows.content,
-          }}
-          exit={{
-            y: exitY,
-            opacity: 0,
-            transition: { duration: 0.2, ease: "easeInOut" },
-          }}
-          onAnimationComplete={() => {
-            if (transitioningToNext) {
-              setTransitioningToNext(false);
-            }
-          }}
-        >
-          <CaseStudyComponent scrollY={scrollY} />
-        </motion.div>
+      <AnimatePresence mode="wait" custom={exitDirection}>
+        {isVisible && (
+          <motion.div
+            key={project.id}
+            custom={exitDirection}
+            variants={contentVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="z-40 flex w-full flex-col"
+          >
+            <CaseStudyComponent scrollY={scrollY} />
+          </motion.div>
+        )}
       </AnimatePresence>
       <div className="mb-12 mt-12 h-[100svh] max-h-[360px]" />
     </div>

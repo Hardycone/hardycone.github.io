@@ -103,11 +103,9 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           <div
             className={`relative aspect-[16/9] w-full overflow-hidden rounded-[20px]`}
           >
-            <Image
-              src="/images/project-1.jpg"
-              alt=""
-              fill
-              className="object-cover"
+            <video
+              src="https://assets.haichaowang.com/promo-export-01.mp4"
+              controls
             />
           </div>
         </SectionContainer>
@@ -378,7 +376,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               {/* --- PART B: THE MOVING FILMSTRIP --- */}
               {/* This moves horizontally while Part A stays put */}
               <div className="mb-24">
-                <motion.div style={{ x }} className="flex gap-8">
+                <motion.div style={{ x }} className="flex max-w-5xl gap-8">
                   {/* Card 1 */}
                   <div className="flex h-[60dvh] w-[40dvw] shrink-0 flex-col rounded-[20px] border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800">
                     <span className="text-6xl">1</span>

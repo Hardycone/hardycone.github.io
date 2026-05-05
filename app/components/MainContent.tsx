@@ -25,15 +25,17 @@ import CaseStudyContent from "./CaseStudyContent";
 import MyName from "./MyName";
 
 export default function MainContent({ children }: { children: ReactNode }) {
-  const { activeIndex } = useActiveProject();
+  const { activeIndex, transitioningToNext } = useActiveProject();
   const { viewMode } = useViewMode();
 
   const [showPrompt, setShowPrompt] = useState(false);
   const hasPromptShown = useRef(false);
   const [showLandscapeBlocker, setShowLandscapeBlocker] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [caseStudyContentReady, setCaseStudyContentReady] = useState(false);
 
   const { scrollY } = useScroll();
+  const caseStudyExitDirection = transitioningToNext ? "up" : "down";
 
   // State for document dimensions
   const [docDimensions, setDocDimensions] = useState({
@@ -188,11 +190,46 @@ export default function MainContent({ children }: { children: ReactNode }) {
     }
   }, [viewMode]);
 
+  useEffect(() => {
+    if (viewMode !== "case-study") {
+      setCaseStudyContentReady(false);
+    }
+  }, [viewMode]);
+
+  useEffect(() => {
+    if (viewMode === "case-study") {
+      setCaseStudyContentReady(false);
+    }
+  }, [activeIndex, viewMode]);
+
+  useEffect(() => {
+    if (transitioningToNext) {
+      setCaseStudyContentReady(false);
+    }
+  }, [transitioningToNext]);
+
+  // Keep the heavy case-study subtree out of the summary layout morph.
+  useEffect(() => {
+    if (
+      viewMode !== "case-study" ||
+      summaryVariant !== "header" ||
+      caseStudyContentReady
+    ) {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setCaseStudyContentReady(true);
+    }, 700);
+
+    return () => clearTimeout(timeout);
+  }, [caseStudyContentReady, summaryVariant, viewMode]);
+
   if (!mounted) return null;
 
   return (
     <main
-      className={`relative flex w-full bg-background transition-colors dark:bg-dark-background sm:bg-orange-300 md:bg-yellow-100 lg:bg-green-100 xl:bg-indigo-100 2xl:bg-blue-100 ${
+      className={`relative flex w-full bg-background transition-colors dark:bg-dark-background ${
         viewMode === "home"
           ? "h-[100dvh] touch-none overflow-y-hidden"
           : "touch-auto"
@@ -254,13 +291,25 @@ export default function MainContent({ children }: { children: ReactNode }) {
         className={`relative flex w-full max-w-5xl flex-col items-center gap-6 px-2`}
       >
         <MyName />
-        {viewMode === "case-study" && <CaseStudyContent scrollY={scrollY} />}
+        {viewMode === "case-study" &&
+          (caseStudyContentReady || transitioningToNext) && (
+            <CaseStudyContent
+              scrollY={scrollY}
+              isVisible={caseStudyContentReady && !transitioningToNext}
+              exitDirection={caseStudyExitDirection}
+            />
+          )}
         <AnimatePresence mode="wait">
           {summaryVariant && (
             <ProjectSummary
               key="project-summary"
               variant={summaryVariant}
               scrollY={scrollY}
+              onLayoutAnimationComplete={() => {
+                if (viewMode === "case-study" && summaryVariant === "header") {
+                  setCaseStudyContentReady(true);
+                }
+              }}
             />
           )}
         </AnimatePresence>

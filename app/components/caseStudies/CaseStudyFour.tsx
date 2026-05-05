@@ -60,6 +60,21 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           >
             My Resume
           </h2>{" "}
+          <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-lg">
+            <video
+              controls
+              preload="metadata"
+              playsInline
+              className="h-auto w-full"
+            >
+              {/* Replace this with your new custom Cloudflare URL */}
+              <source
+                src="https://assets.haichaowang.com/promo-export-01.mp4"
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
           <p>
             NASA challenged student teams to imagine how AR could augment
             spacesuits for lunar and Martian missions. Our team—a mix of
