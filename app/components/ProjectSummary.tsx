@@ -135,7 +135,7 @@ export default function ProjectSummary({
       setKey(`project-${project.id}`);
       setdisplayedProject(project);
     }
-    const navigationDelay = variant === "bottom" ? 340 : 200;
+    const navigationDelay = variant === "bottom" ? 200 : 200;
     timerRef.current = setTimeout(() => {
       router.push(`/${project.slug}`);
       // No need to set isNavigating(false) here,

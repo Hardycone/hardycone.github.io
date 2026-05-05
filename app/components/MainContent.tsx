@@ -36,6 +36,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   const { scrollY } = useScroll();
   const caseStudyExitDirection = transitioningToNext ? "up" : "down";
+  const isCaseStudyScrollLocked =
+    viewMode === "case-study" &&
+    (!caseStudyContentReady || transitioningToNext);
+  const isHomeScrollLocked = viewMode === "home";
+  const isPageScrollLocked = isHomeScrollLocked || isCaseStudyScrollLocked;
 
   // State for document dimensions
   const [docDimensions, setDocDimensions] = useState({
@@ -179,7 +184,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
   }, [activeIndex, viewMode]);
 
   useEffect(() => {
-    if (viewMode === "home") {
+    if (isPageScrollLocked) {
       document.body.style.overflow = "hidden";
       // document.body.style.position = "fixed";
       // document.body.style.width = "100%";
@@ -188,7 +193,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       // document.body.style.position = "";
       // document.body.style.width = "";
     }
-  }, [viewMode]);
+  }, [isPageScrollLocked]);
 
   useEffect(() => {
     if (viewMode !== "case-study") {
@@ -230,9 +235,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
   return (
     <main
       className={`relative flex w-full bg-background transition-colors dark:bg-dark-background ${
-        viewMode === "home"
+        isHomeScrollLocked
           ? "h-[100dvh] touch-none overflow-y-hidden"
-          : "touch-auto"
+          : isCaseStudyScrollLocked
+            ? "touch-none"
+            : "touch-auto"
       }`}
     >
       <TopBar />
