@@ -41,6 +41,13 @@ export default function MainContent({ children }: { children: ReactNode }) {
     (!caseStudyContentReady || transitioningToNext);
   const isHomeScrollLocked = viewMode === "home";
   const isPageScrollLocked = isHomeScrollLocked || isCaseStudyScrollLocked;
+  // Keep the home rail's intrinsic width during the preview-to-header morph so
+  // Framer measures the ProjectSummary from a stable source rect.
+  const shouldReserveGlyphRail =
+    viewMode === "home" ||
+    (viewMode === "case-study" &&
+      !caseStudyContentReady &&
+      !transitioningToNext);
 
   // State for document dimensions
   const [docDimensions, setDocDimensions] = useState({
@@ -260,7 +267,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       <DebugViewport />
       <div
         className={`relative flex flex-1 flex-col overflow-hidden ${
-          viewMode === "home" ? "min-w-max" : ""
+          shouldReserveGlyphRail ? "min-w-max" : ""
         }`}
       >
         <GlyphCarousel />
