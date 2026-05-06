@@ -12,19 +12,13 @@ import {
   SealQuestionIcon,
   LightbulbFilamentIcon,
 } from "@phosphor-icons/react";
-import {
-  MotionValue,
-  useTransform,
-  motion,
-  useScroll,
-  useSpring,
-  useInView,
-} from "framer-motion";
+import { MotionValue, useTransform, motion } from "framer-motion";
 import Image from "next/image";
-import { useRef } from "react";
+import HorizontalFilmstrip from "../HorizontalScrollGroup";
 import LazyVideo from "../LazyVideo";
 import SectionContainer from "../SectionContainer";
 import SubSectionHeading from "../SubSectionHeading";
+import VerticalScrollCards from "../VerticalScrollGroup";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 
 interface CaseStudyTwoProps {
@@ -34,28 +28,6 @@ interface CaseStudyTwoProps {
 export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
   const { resolvedTheme } = useTheme();
   const { activeIndex } = useActiveProject();
-  const targetRef = useRef<HTMLDivElement>(null);
-
-  const triggerOneRef = useRef<HTMLDivElement>(null);
-  const triggerTwoRef = useRef<HTMLDivElement>(null);
-  const triggerThreeRef = useRef<HTMLDivElement>(null);
-
-  const isOneInView = useInView(triggerOneRef, { amount: 0.6 });
-  const isTwoInView = useInView(triggerTwoRef, { amount: 0.6 });
-  const isThreeInView = useInView(triggerThreeRef, { amount: 0.6 });
-
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ["start start", "end end"],
-  });
-
-  // const smoothScrollYProgress = useSpring(scrollYProgress, {
-  //   stiffness: 120,
-  //   damping: 20,
-  //   mass: 0.2,
-  // });
-  const x = useTransform(scrollYProgress, [0, 1], ["0vw", "-63dvw"]);
-
   const theme = useProjectTheme(projects[activeIndex].id);
 
   const borderOpacity = useTransform(
@@ -242,9 +214,10 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               </div>
             </div>
           </div>
-          <div className="relative flex">
-            <div className="w-96 flex-none">
-              <div className="sticky top-24 h-[calc(100dvh_-_6rem)] max-h-[800px]">
+          <VerticalScrollCards
+            highlightOnIntersect
+            sideContent={({ activeIndex }) => (
+              <>
                 <SubSectionHeading
                   number="3"
                   heading="Initial problem statement"
@@ -255,11 +228,12 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 <p className="pb-2 pl-2 text-2xl">
                   <motion.span
                     animate={{
-                      color: isOneInView
-                        ? theme.hex.primary
-                        : theme.hex.foreground,
-                      fontSize: isOneInView ? "30px" : "24px",
-                      fontWeight: isOneInView ? "700" : "400",
+                      color:
+                        activeIndex === 0
+                          ? theme.hex.primary
+                          : theme.hex.foreground,
+                      fontSize: activeIndex === 0 ? "30px" : "24px",
+                      fontWeight: activeIndex === 0 ? "700" : "400",
                     }}
                   >
                     intimidating
@@ -269,11 +243,12 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 <p className="pb-2 pl-2 text-2xl">
                   <motion.span
                     animate={{
-                      color: isTwoInView
-                        ? theme.hex.primary
-                        : theme.hex.foreground,
-                      fontSize: isTwoInView ? "30px" : "24px",
-                      fontWeight: isTwoInView ? "700" : "400",
+                      color:
+                        activeIndex === 1
+                          ? theme.hex.primary
+                          : theme.hex.foreground,
+                      fontSize: activeIndex === 1 ? "30px" : "24px",
+                      fontWeight: activeIndex === 1 ? "700" : "400",
                     }}
                   >
                     time-consuming
@@ -284,77 +259,72 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 <p className="pl-2 text-2xl">
                   <motion.span
                     animate={{
-                      color: isThreeInView
-                        ? theme.hex.primary
-                        : theme.hex.foreground,
-                      fontSize: isThreeInView ? "30px" : "24px",
-                      fontWeight: isThreeInView ? "700" : "400",
+                      color:
+                        activeIndex === 2
+                          ? theme.hex.primary
+                          : theme.hex.foreground,
+                      fontSize: activeIndex === 2 ? "30px" : "24px",
+                      fontWeight: activeIndex === 2 ? "700" : "400",
                     }}
                   >
                     fragmented workflow
                   </motion.span>
                   .
                 </p>
-              </div>
-            </div>
-            <div className="relative flex-1">
-              <div
-                ref={triggerOneRef}
-                className="h-[calc(100dvh_-_6rem)] max-h-[800px] scroll-mt-[6rem] pb-8 text-lg"
-              >
-                <div className="flex h-full flex-col items-end justify-between overflow-clip rounded-[20px] border border-white p-[15%] shadow dark:border-white/25">
-                  <div
-                    className={`relative aspect-square w-full overflow-hidden`}
-                  >
-                    <Image
-                      src="/images/Avalon-3D-Shapes-1_10.png"
-                      alt=""
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <p className="ml-[0%]">
-                    Quantitative UX research is inherently scientific. It's a
-                    practical application of statistics. Doing it well requires
-                    an expertise in math.
-                  </p>
-                </div>
-              </div>
-              <div
-                ref={triggerTwoRef}
-                className="h-[calc(100dvh_-_6rem)] max-h-[800px] scroll-mt-[6rem] pb-8 text-lg"
-              >
-                <div className="flex h-full items-end justify-center overflow-clip rounded-[20px] border border-white p-12 pl-36 shadow dark:border-white/25">
-                  To detect meaningful difference, researchers often need to
-                  design a rigorous experiment and recruit hundreds of
-                  participants. A study could take weeks to finish.
-                </div>
-              </div>
-              <div
-                ref={triggerThreeRef}
-                className="h-[calc(100dvh_-_6rem)] max-h-[800px] scroll-mt-[6rem] text-lg"
-              >
-                <div className="flex h-full items-end justify-center overflow-clip rounded-[20px] border border-white p-12 pl-36 shadow dark:border-white/25">
-                  The existing workflow for quantitative research involves
-                  integrating design prototypes with survey platforms. The data
-                  then need to be further analyzed and synthesized into a
-                  report. This process involves multiple tools.
-                </div>
-              </div>
-              <div className="absolute bottom-0 h-0 w-full"></div>
-            </div>
-          </div>
+              </>
+            )}
+            cards={[
+              {
+                id: "intimidating",
+                className:
+                  "flex h-auto flex-col items-end justify-between gap-6 p-6 md:h-full md:gap-0 md:p-[15%]",
+                content: (
+                  <>
+                    <div
+                      className={`relative aspect-square w-full max-w-80 self-center overflow-hidden md:max-w-none md:self-auto`}
+                    >
+                      <Image
+                        src="/images/Avalon-3D-Shapes-1_10.png"
+                        alt=""
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <p className="ml-[0%]">
+                      Quantitative UX research is inherently scientific. It's a
+                      practical application of statistics. Doing it well
+                      requires an expertise in math.
+                    </p>
+                  </>
+                ),
+              },
+              {
+                id: "time-consuming",
+                className:
+                  "flex h-auto items-start justify-center p-6 md:h-full md:items-end md:p-12 md:pl-36",
+                content:
+                  "To detect meaningful difference, researchers often need to design a rigorous experiment and recruit hundreds of participants. A study could take weeks to finish.",
+              },
+              {
+                id: "fragmented-workflow",
+                className:
+                  "flex h-auto items-start justify-center p-6 md:h-full md:items-end md:p-12 md:pl-36",
+                content:
+                  "The existing workflow for quantitative research involves integrating design prototypes with survey platforms. The data then need to be further analyzed and synthesized into a report. This process involves multiple tools.",
+              },
+            ]}
+          />
         </SectionContainer>
       </section>
       {/*Section 3*/}
       <section id="section-3" className="scroll-mt-24">
         <SectionContainer
-          title="Research & Disovery"
+          title="Research & Discovery"
           icon={MagnifyingGlassIcon}
           textColorClass={theme.textColorClass}
           bgColorClass={theme.bgColorClass}
           borderColor={"rgba(0,0,0,0)"}
-          cardClass=""
+          cardClass="w-full min-w-0"
         >
           <SubSectionHeading number="1" heading="Research method" />
           <p className="mb-10 p-2 text-lg leading-normal">
@@ -362,24 +332,21 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             network of colleagues in the tech industry.
           </p>
 
-          <div ref={targetRef} className="relative h-[300vh]">
-            {/* THE TV SCREEN: Sticky, takes up full height, locks at top */}
-            <div className="sticky top-24 flex flex-col">
-              {/* --- PART A: THE STATIC HEADER --- */}
-              {/* This stays centered and visible the whole time */}
-              <div className="relative z-10 mb-8">
+          <HorizontalFilmstrip
+            body={
+              <>
                 <SubSectionHeading number="2" heading="Insights" />
                 <p className="mb-6 px-2 text-lg leading-normal">
                   To further understand our problem space, we reached out to our
                   network of colleagues in the tech industry.
                 </p>
-              </div>
-              {/* --- PART B: THE MOVING FILMSTRIP --- */}
-              {/* This moves horizontally while Part A stays put */}
-              <div className="mb-24">
-                <motion.div style={{ x }} className="flex max-w-5xl gap-8">
-                  {/* Card 1 */}
-                  <div className="flex h-[60dvh] w-[40dvw] shrink-0 flex-col rounded-[20px] border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800">
+              </>
+            }
+            cards={[
+              {
+                id: "quant-research-resistance",
+                content: (
+                  <>
                     <span className="text-6xl">1</span>
                     <div className="flex h-full items-center justify-center">
                       <h3 className="text-2xl font-bold">
@@ -387,23 +354,29 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                         are you kidding?
                       </h3>
                     </div>
-                  </div>
-
-                  {/* Card 2 */}
-                  <div className="flex h-[60dvh] w-[40dvw] shrink-0 flex-col rounded-[20px] border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800">
+                  </>
+                ),
+              },
+              {
+                id: "gap",
+                content: (
+                  <>
                     <span className="text-6xl">2</span>
                     <h3 className="mt-4 text-2xl font-bold">The Gap</h3>
-                  </div>
-
-                  {/* Card 3 */}
-                  <div className="flex h-[60dvh] w-[40dvw] shrink-0 flex-col rounded-[20px] border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800">
+                  </>
+                ),
+              },
+              {
+                id: "solution",
+                content: (
+                  <>
                     <span className="text-6xl">3</span>
                     <h3 className="mt-4 text-2xl font-bold">The Solution</h3>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
-          </div>
+                  </>
+                ),
+              },
+            ]}
+          />
           <SubSectionHeading number="3" heading="New problem statement" />
           <p className="mb-24 px-2 text-lg leading-normal">
             To further understand our problem space, we reached out to our
