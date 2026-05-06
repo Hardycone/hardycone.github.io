@@ -4,6 +4,7 @@ import { useMemo, useCallback, useEffect, useState, useRef } from "react";
 import { useViewMode } from "../context/ViewModeContext";
 import { useActiveProject } from "../context/ActiveProjectContext";
 import { useRouter } from "next/navigation";
+import { flushSync } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import projects from "@/data/projects";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
@@ -30,8 +31,8 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 
 export default function TopBar() {
-  const { viewMode } = useViewMode();
-  const { activeIndex } = useActiveProject();
+  const { viewMode, setViewMode } = useViewMode();
+  const { activeIndex, setActiveIndex } = useActiveProject();
   const router = useRouter();
   const pathname = usePathname();
   const [showTitle, setShowTitle] = useState(false);
@@ -321,7 +322,13 @@ export default function TopBar() {
                 }, 1000);
               }
             } else {
-              router.push("/case-study-one");
+              flushSync(() => {
+                setActiveIndex(0);
+                setViewMode("home");
+              });
+              requestAnimationFrame(() => {
+                router.push("/case-study-one");
+              });
             }
           }}
         >
