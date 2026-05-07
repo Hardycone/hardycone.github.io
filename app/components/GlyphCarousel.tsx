@@ -7,6 +7,7 @@ import { useActiveProject, wrapIndex } from "../context/ActiveProjectContext";
 import { useViewMode } from "../context/ViewModeContext";
 import { useTheme } from "next-themes";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
+import AnimatedGlyph from "./AnimatedGlyph";
 
 export default function GlyphCarousel() {
   const { activeIndex, setActiveIndex } = useActiveProject();
@@ -143,7 +144,7 @@ export default function GlyphCarousel() {
 
   return (
     <motion.div
-      className="supertall:pt-[calc(50svh+3rem)] wide:pt-[calc(50svh+2.5rem)] superwide:pt-[calc(50svh)] flex flex-col items-end gap-8 px-4 pt-[calc(50svh)] md:gap-20 md:px-12 lg:px-16 xl:px-20"
+      className="flex flex-col items-end gap-8 px-4 pt-[calc(50svh)] md:gap-20 md:px-12 lg:px-16 xl:px-20 supertall:pt-[calc(50svh+3rem)] wide:pt-[calc(50svh+2.5rem)] superwide:pt-[calc(50svh)]"
       animate={{
         y: yOffset,
         x: isInteractive ? 0 : -300,
@@ -153,7 +154,6 @@ export default function GlyphCarousel() {
       style={{ pointerEvents: isInteractive ? "auto" : "none" }}
     >
       {projects.map((project, index) => {
-        const Glyph = project.glyph;
         const isActive = index === activeIndex;
         const isPreview = index === previewIndex;
 
@@ -177,10 +177,13 @@ export default function GlyphCarousel() {
             }}
             style={{ boxShadow: isActive ? glyphShadow : "none" }}
             transition={{ type: "tween", stiffness: 500, damping: 20 }}
-            className="h-8 w-8 cursor-pointer touch-manipulation select-none rounded-full p-0.5 md:h-20 md:w-20 md:p-2"
+            className="h-8 w-8 cursor-pointer touch-manipulation select-none rounded-full p-0.5 md:h-20 md:w-20 md:p-1"
             onClick={() => isInteractive && setActiveIndex(index)}
           >
-            <Glyph />
+            <AnimatedGlyph
+              animationData={project.glyphAnimation}
+              isActive={isActive}
+            />
           </motion.div>
         );
       })}

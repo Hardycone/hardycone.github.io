@@ -1,10 +1,15 @@
 // app/data/projects.js
-import React from "react";
-import ProjectOneLogo from "../app/icons/ProjectOneLogo";
-import ProjectTwoLogo from "../app/icons/ProjectTwoLogo";
-import ProjectFourLogo from "../app/icons/ProjectFourLogo";
-import ProjectFiveLogo from "../app/icons/ProjectFiveLogo";
-import ProjectThreeLogo from "../app/icons/ProjectThreeLogo";
+import glyphOneAnimation from "../public/animations/glyph-one.json";
+import glyphTwoAnimation from "../public/animations/glyph-two.json";
+import glyphThreeAnimation from "../public/animations/glyph-three.json";
+import glyphFourAnimation from "../public/animations/glyph-four.json";
+import glyphFiveAnimation from "../public/animations/glyph-five.json";
+import glyphSixAnimation from "../public/animations/glyph-six.json";
+
+export type GlyphAnimationData = {
+  op: number;
+  [key: string]: unknown;
+};
 
 export interface ProjectSection {
   id: string;
@@ -25,7 +30,7 @@ export interface Project {
   button: string;
   textColor: string;
   bgColor: string;
-  glyph: React.ElementType;
+  glyphAnimation: GlyphAnimationData;
   sections: ProjectSection[];
 }
 
@@ -44,7 +49,7 @@ const projects: Project[] = [
     button: "More About Me",
     textColor: "intro",
     bgColor: "introBackground",
-    glyph: ProjectOneLogo,
+    glyphAnimation: glyphOneAnimation as GlyphAnimationData,
     sections: [
       { id: "section-1", label: "My Resume", icon: "ScrollIcon" },
       { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
@@ -68,7 +73,7 @@ const projects: Project[] = [
     button: "Look Inside",
     textColor: "flux",
     bgColor: "fluxBackground",
-    glyph: ProjectTwoLogo,
+    glyphAnimation: glyphTwoAnimation as GlyphAnimationData,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
       { id: "section-2", label: 'The "Zero"', icon: "SealQuestionIcon" },
@@ -104,7 +109,7 @@ const projects: Project[] = [
     image: "/images/hero-fantail.png",
     textColor: "fantail",
     bgColor: "fantailBackground",
-    glyph: ProjectOneLogo,
+    glyphAnimation: glyphThreeAnimation as GlyphAnimationData,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
       { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
@@ -128,7 +133,7 @@ const projects: Project[] = [
     image: "/images/hero-fantail.png",
     textColor: "suits",
     bgColor: "suitsBackground",
-    glyph: ProjectFourLogo,
+    glyphAnimation: glyphFourAnimation as GlyphAnimationData,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
       { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
@@ -152,7 +157,7 @@ const projects: Project[] = [
     image: "/images/hero-wolcott.jpg",
     textColor: "wolcott",
     bgColor: "wolcottBackground",
-    glyph: ProjectFiveLogo,
+    glyphAnimation: glyphFiveAnimation as GlyphAnimationData,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
       { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
@@ -177,7 +182,7 @@ const projects: Project[] = [
     image: "/images/hero-ribbon.png",
     textColor: "chinatown",
     bgColor: "chinatownBackground",
-    glyph: ProjectOneLogo,
+    glyphAnimation: glyphSixAnimation as GlyphAnimationData,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
       { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
