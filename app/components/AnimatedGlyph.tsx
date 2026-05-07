@@ -7,11 +7,13 @@ import type { GlyphAnimationData } from "@/data/projects";
 interface AnimatedGlyphProps {
   animationData: GlyphAnimationData;
   isActive: boolean;
+  shouldAnimate?: boolean;
 }
 
 export default function AnimatedGlyph({
   animationData,
   isActive,
+  shouldAnimate = true,
 }: AnimatedGlyphProps) {
   const lottieRef = useRef<LottieRefCurrentProps | null>(null);
   const wasActive = useRef(isActive);
@@ -48,10 +50,22 @@ export default function AnimatedGlyph({
 
   useEffect(() => {
     isActiveRef.current = isActive;
-  }, [isActive]);
+    if (isPlaying.current && shouldAnimate) {
+      lottieRef.current?.setSpeed(isActive ? 1 : 2);
+    }
+  }, [isActive, shouldAnimate]);
 
   useEffect(() => {
     if (!isReady || !lottieRef.current) return;
+
+    if (!shouldAnimate) {
+      isPlaying.current = false;
+      pendingReplay.current = false;
+      hasInitialized.current = true;
+      resetToStatic();
+      wasActive.current = isActive;
+      return;
+    }
 
     if (!hasInitialized.current) {
       hasInitialized.current = true;
@@ -70,7 +84,7 @@ export default function AnimatedGlyph({
     }
 
     wasActive.current = isActive;
-  }, [isActive, isReady, playFromStart, resetToStatic]);
+  }, [isActive, isReady, playFromStart, resetToStatic, shouldAnimate]);
 
   return (
     <Lottie

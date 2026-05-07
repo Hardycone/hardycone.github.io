@@ -177,12 +177,13 @@ export default function GlyphCarousel() {
             }}
             style={{ boxShadow: isActive ? glyphShadow : "none" }}
             transition={{ type: "tween", stiffness: 500, damping: 20 }}
-            className="h-8 w-8 cursor-pointer touch-manipulation select-none rounded-full p-0.5 md:h-20 md:w-20 md:p-1"
+            className="h-8 w-8 cursor-pointer touch-manipulation select-none rounded-full p-0.5 md:h-20 md:w-20 md:p-0"
             onClick={() => isInteractive && setActiveIndex(index)}
           >
             <AnimatedGlyph
               animationData={project.glyphAnimation}
               isActive={isActive}
+              shouldAnimate={isLarge}
             />
           </motion.div>
         );
