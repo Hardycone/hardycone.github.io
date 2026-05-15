@@ -228,12 +228,6 @@ export default function ProjectSummary({
     },
   };
 
-  const ghostVariants = {
-    initial: { opacity: 0 },
-    hover: { opacity: 1, transition: { duration: 0.3 } },
-    exit: { opacity: 0 },
-  };
-
   const containerClasses =
     variant === "header"
       ? "fixed inset-0 w-full h-[100svh] items-center justify-center md:p-12"
@@ -268,7 +262,6 @@ export default function ProjectSummary({
         initial="initial"
         animate="animate"
         exit="exit"
-        whileHover={variant === "header" ? undefined : "hover"}
         onClick={variant === "header" ? undefined : handleClick}
         onLayoutAnimationComplete={() => {
           onLayoutAnimationComplete?.();
@@ -284,14 +277,13 @@ export default function ProjectSummary({
             if (setTransitioningToNext) setTransitioningToNext(false);
           }
         }}
-        className={`relative flex w-full flex-col rounded-[1.5rem] bg-background dark:bg-dark-background md:rounded-[2.75rem] ${cardClasses}`}
+        className={`group relative flex w-full flex-col rounded-[1.5rem] bg-background dark:bg-dark-background md:rounded-[2.75rem] ${cardClasses}`}
       >
         {/* Ghost div to display hover shadow in non-header variants */}
         {variant !== "header" && (
           <motion.div
-            variants={ghostVariants}
             style={{ boxShadow: cardHoverShadow }}
-            className="absolute inset-0 rounded-[1.5rem] md:rounded-[2.75rem]"
+            className="pointer-events-none absolute inset-0 rounded-[1.5rem] opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:rounded-[2.75rem]"
           />
         )}
 
@@ -300,7 +292,7 @@ export default function ProjectSummary({
           style={{ boxShadow: cardShadow }}
           animate={{ opacity: variant === "header" ? 0 : 1 }}
           transition={{ duration: 0.3, delay: 0.2 }}
-          className="absolute inset-0 rounded-[1.5rem] md:rounded-[2.75rem]"
+          className="pointer-events-none absolute inset-0 rounded-[1.5rem] md:rounded-[2.75rem]"
         />
 
         {/* Bottom variant title bar */}

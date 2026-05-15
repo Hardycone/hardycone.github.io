@@ -2,7 +2,15 @@
 
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+
+const iconColors = {
+  light: "#27272a",
+  transition: "#ffc600",
+  dark: "#f4f4f5",
+};
+
+const colorTransitionDurationMs = 1050;
 
 const rayPositions = Array.from({ length: 8 }, (_, index) => {
   const angle = (index * Math.PI) / 4;
@@ -12,7 +20,13 @@ const rayPositions = Array.from({ length: 8 }, (_, index) => {
   };
 });
 
-function AnimatedThemeIcon({ isDark }: { isDark: boolean }) {
+function AnimatedThemeIcon({
+  isDark,
+  color,
+}: {
+  isDark: boolean;
+  color: string;
+}) {
   const maskId = useId().replace(/:/g, "");
   const ease = [0.22, 1, 0.36, 1] as const;
   const rayTransition = isDark
@@ -30,7 +44,8 @@ function AnimatedThemeIcon({ isDark }: { isDark: boolean }) {
       preserveAspectRatio="xMidYMid meet"
       aria-hidden="true"
       initial={false}
-      transition={bodyTransition}
+      animate={{ color }}
+      transition={{ color: { duration: 0.25, ease: "easeInOut" } }}
     >
       <defs>
         <mask
@@ -83,15 +98,41 @@ function AnimatedThemeIcon({ isDark }: { isDark: boolean }) {
 export default function ThemeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [isColorTransitioning, setIsColorTransitioning] = useState(false);
+  const colorTransitionTimeout = useRef<number | null>(null);
 
   // Ensure client-only rendering to avoid hydration mismatch
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    return () => {
+      if (colorTransitionTimeout.current) {
+        window.clearTimeout(colorTransitionTimeout.current);
+      }
+    };
+  }, []);
+
   if (!mounted) return null;
 
   const isDark = resolvedTheme === "dark";
+  const iconColor = isColorTransitioning
+    ? iconColors.transition
+    : isDark
+      ? iconColors.dark
+      : iconColors.light;
 
   const toggleTheme = () => {
+    if (colorTransitionTimeout.current) {
+      window.clearTimeout(colorTransitionTimeout.current);
+    }
+
+    setIsColorTransitioning(true);
     setTheme(isDark ? "light" : "dark");
+
+    colorTransitionTimeout.current = window.setTimeout(() => {
+      setIsColorTransitioning(false);
+      colorTransitionTimeout.current = null;
+    }, colorTransitionDurationMs);
   };
 
   return (
@@ -100,9 +141,9 @@ export default function ThemeToggle() {
       onClick={toggleTheme}
       title={`Switch to ${isDark ? "Light" : "Dark"} Mode`}
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-      className="p-2"
+      className="h-full w-full rounded-full p-2"
     >
-      <AnimatedThemeIcon isDark={isDark} />
+      <AnimatedThemeIcon isDark={isDark} color={iconColor} />
     </button>
   );
 }
