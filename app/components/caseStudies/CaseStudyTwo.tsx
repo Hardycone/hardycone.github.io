@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useTheme } from "next-themes";
@@ -13,7 +14,6 @@ import {
   LightbulbFilamentIcon,
 } from "@phosphor-icons/react";
 import { MotionValue, useTransform, motion } from "framer-motion";
-import Image from "next/image";
 import HorizontalFilmstrip from "../HorizontalScrollGroup";
 import LazyVideo from "../LazyVideo";
 import SectionContainer from "../SectionContainer";
@@ -283,11 +283,10 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                     <div
                       className={`relative aspect-square w-full max-w-80 self-center overflow-hidden md:max-w-none md:self-auto`}
                     >
-                      <Image
+                      <img
                         src="/images/Avalon-3D-Shapes-1_10.png"
                         alt=""
-                        fill
-                        className="object-cover"
+                        className="absolute inset-0 h-full w-full object-cover"
                       />
                     </div>
                     <p className="ml-[0%]">

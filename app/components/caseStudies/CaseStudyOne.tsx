@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useRef } from "react";
@@ -12,7 +13,6 @@ import {
   useSpring,
   MotionValue,
 } from "framer-motion";
-import Image from "next/image";
 import { FileTextIcon } from "@phosphor-icons/react";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
@@ -82,11 +82,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <div className="mb-4 flex gap-4">
               {/*Left: Image*/}
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl">
-                <Image
+                <img
                   src="/images/logo-flux.png"
-                  fill
                   alt="logo"
-                  className="object-cover"
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
               </div>
               {/*Right: Description*/}
@@ -119,11 +118,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <div className="mb-4 flex gap-4">
               {/*Left: Image*/}
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
-                <Image
+                <img
                   src="/images/logo-aslf.png"
-                  fill
                   alt="logo"
-                  className="object-cover dark:invert"
+                  className="absolute inset-0 h-full w-full object-cover dark:invert"
                 />
               </div>
               {/*Right: Description*/}
@@ -173,11 +171,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <div className="mb-4 flex gap-4">
               {/*Left: Image*/}
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
-                <Image
+                <img
                   src="/images/logo-nps.png"
-                  fill
                   alt="logo"
-                  className="object-cover"
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
               </div>
               {/*Right: Description*/}
@@ -219,17 +216,15 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <div className="mb-4 flex gap-4">
               {/*Left: Image*/}
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
-                <Image
+                <img
                   src="/images/logo-uw.png"
-                  fill
                   alt="logo"
-                  className="object-cover dark:hidden"
+                  className="absolute inset-0 h-full w-full object-cover dark:hidden"
                 />
-                <Image
+                <img
                   src="/images/logo-uw-gold.png"
-                  fill
                   alt="logo"
-                  className="hidden object-cover dark:block"
+                  className="absolute inset-0 hidden h-full w-full object-cover dark:block"
                 />
               </div>
               {/*Right: Description*/}
@@ -252,17 +247,15 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <div className="mb-4 flex gap-4">
               {/*Left: Image*/}
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
-                <Image
+                <img
                   src="/images/logo-esf.png"
-                  fill
                   alt="logo"
-                  className="object-cover dark:hidden"
+                  className="absolute inset-0 h-full w-full object-cover dark:hidden"
                 />{" "}
-                <Image
+                <img
                   src="/images/logo-esf-light.png"
-                  fill
                   alt="logo"
-                  className="hidden object-cover dark:block"
+                  className="absolute inset-0 hidden h-full w-full object-cover dark:block"
                 />
               </div>
               {/*Right: Description*/}
@@ -285,11 +278,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <div className="mb-4 flex gap-4">
               {/*Left: Image*/}
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
-                <Image
+                <img
                   src="/images/logo-bnu.png"
-                  fill
                   alt="logo"
-                  className="object-cover dark:brightness-[50] dark:saturate-0"
+                  className="absolute inset-0 h-full w-full object-cover dark:brightness-[50] dark:saturate-0"
                 />
               </div>
               {/*Right: Description*/}
@@ -323,11 +315,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 <div className="flex gap-2">
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                    <Image
+                    <img
                       src="/images/logo-nasa.png"
-                      fill
                       alt="logo"
-                      className="object-cover"
+                      className="absolute inset-0 h-full w-full object-cover"
                     />
                   </div>
                   {/*Description*/}
@@ -348,11 +339,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 <div className="flex gap-2">
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                    <Image
+                    <img
                       src="/images/logo-epa.png"
-                      fill
                       alt="logo"
-                      className="object-cover dark:brightness-[10]"
+                      className="absolute inset-0 h-full w-full object-cover dark:brightness-[10]"
                     />
                   </div>
                   {/*Description*/}
@@ -370,11 +360,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 <div className="flex gap-2">
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                    <Image
+                    <img
                       src="/images/logo-wep.png"
-                      fill
                       alt="logo"
-                      className="object-cover"
+                      className="absolute inset-0 h-full w-full object-cover"
                     />
                   </div>
                   {/*Description*/}
@@ -392,11 +381,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 <div className="flex gap-2">
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                    <Image
+                    <img
                       src="/images/logo-usda.png"
-                      fill
                       alt="logo"
-                      className="object-cover dark:brightness-200"
+                      className="absolute inset-0 h-full w-full object-cover dark:brightness-200"
                     />
                   </div>
                   {/*Description*/}
@@ -414,11 +402,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 <div className="flex gap-2">
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                    <Image
+                    <img
                       src="/images/logo-noaa.png"
-                      fill
                       alt="logo"
-                      className="object-cover"
+                      className="absolute inset-0 h-full w-full object-cover"
                     />
                   </div>
                   {/*Description*/}
@@ -436,11 +423,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 <div className="flex gap-2">
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                    <Image
+                    <img
                       src="/images/logo-nys.png"
-                      fill
                       alt="logo"
-                      className="object-cover dark:brightness-200 dark:saturate-0"
+                      className="absolute inset-0 h-full w-full object-cover dark:brightness-200 dark:saturate-0"
                     />
                   </div>
                   {/*Description*/}
@@ -458,11 +444,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 <div className="flex gap-2">
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
-                    <Image
+                    <img
                       src="/images/logo-usda.png"
-                      fill
                       alt="logo"
-                      className="object-cover dark:brightness-200"
+                      className="absolute inset-0 h-full w-full object-cover dark:brightness-200"
                     />
                   </div>
                   {/*Description*/}
@@ -572,62 +557,55 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <div className="grid grid-cols-4 grid-rows-4 gap-2">
               {/* Image 1 - 4 cells horizontally */}
               <div className="relative col-span-4 row-span-1">
-                <Image
+                <img
                   src="/images/20230624-HWP00734-Edit.jpg"
-                  fill
                   alt="Dummy Image 1"
-                  className="h-full w-full rounded-[20px] object-cover"
+                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
                 />
               </div>
               {/* Image 2 - 2x2 square */}
               <div className="relative col-span-2 row-span-2 aspect-[1/1]">
-                <Image
+                <img
                   src="/images/20230624-HWP00734-Edit.jpg"
-                  fill
                   alt="Dummy Image 2"
-                  className="h-full w-full rounded-[20px] object-cover"
+                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
                 />
               </div>
               {/* Image 3 - 2 cells vertically adjacent */}
               <div className="relative col-span-1 row-span-2">
-                <Image
+                <img
                   src="/images/20230624-HWP00734-Edit.jpg"
-                  fill
                   alt="Dummy Image 3"
-                  className="h-full w-full rounded-[20px] object-cover"
+                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
                 />
               </div>
               {/* Remaining cells */}
               <div className="relative">
-                <Image
-                  src="/images/20230624-HWP00734"
-                  fill
+                <img
+                  src="/images/20230624-HWP00734-Edit.jpg"
                   alt="Dummy Image 4"
-                  className="h-full w-full rounded-[20px] object-cover"
+                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
                 />
               </div>
               <div className="relative">
-                <Image
+                <img
                   src="/images/20230624-HWP00734-Edit.jpg"
-                  fill
                   alt="Dummy Image 5"
-                  className="h-full w-full rounded-[20px] object-cover"
+                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
                 />
               </div>
               <div className="relative">
-                <Image
+                <img
                   src="/images/20230624-HWP00734-Edit.jpg"
-                  fill
                   alt="Dummy Image 7"
-                  className="h-full w-full rounded-[20px] object-cover"
+                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
                 />
               </div>
               <div className="relative col-span-3 row-span-1">
-                <Image
+                <img
                   src="/images/20240704-HWP03580-Edit.jpg"
-                  fill
                   alt="Dummy Image 6"
-                  className="h-full w-full rounded-[20px] object-cover object-top"
+                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover object-top"
                 />
               </div>
             </div>

@@ -1,9 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import Image from "next/image";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
 import { motion, MotionValue, useTransform, useSpring } from "framer-motion";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
@@ -242,6 +242,9 @@ export default function ProjectSummary({
         ? "supertall:top-[3rem] wide:top-[2.5rem] superwide:top-0 cursor-pointer p-3 md:p-6 h-[clamp(16rem,50svh,20rem)] wide:h-[clamp(7rem,70svh,38rem)] superwide:h-[clamp(5rem,80svh,38rem)] tall:h-[70svh] supertall:h-[85svh]"
         : "cursor-pointer p-6 h-[100svh] max-h-[360px] mb-12";
 
+  const backgroundImageClasses =
+    variant === "preview" ? "inset-3 md:inset-3" : "inset-6";
+
   return (
     // Container
     <motion.div
@@ -279,6 +282,18 @@ export default function ProjectSummary({
         }}
         className={`group relative flex w-full flex-col rounded-[1.5rem] bg-background dark:bg-dark-background md:rounded-[2.75rem] ${cardClasses}`}
       >
+        {displayedProject.image && (
+          <div
+            className={`pointer-events-none absolute overflow-hidden rounded-[1rem] md:rounded-[2.25rem] ${backgroundImageClasses}`}
+          >
+            <img
+              src={displayedProject.image}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
+        )}
+
         {/* Ghost div to display hover shadow in non-header variants */}
         {variant !== "header" && (
           <motion.div
@@ -297,7 +312,7 @@ export default function ProjectSummary({
 
         {/* Bottom variant title bar */}
         {variant === "bottom" && (
-          <div className={`mb-6 flex w-full justify-between`}>
+          <div className={`relative z-10 mb-6 flex w-full justify-between`}>
             {/* "Next Up" */}
             <h6 className="text-lg font-bold">Next Up </h6>
             {/* Button */}
@@ -311,7 +326,7 @@ export default function ProjectSummary({
         )}
 
         {/* Main portion */}
-        <div className="flex h-full w-full gap-2 tall:flex-col">
+        <div className="relative z-10 flex h-full w-full gap-2 tall:flex-col">
           {/* 1st half of card */}
           <div
             className={`flex min-h-0 min-w-0 flex-1 justify-between tall:order-1 ${variant === "bottom" ? "flex-row" : "flex-col"}`}
@@ -393,20 +408,9 @@ export default function ProjectSummary({
               </div>
             )}
           </div>
-          {/* 2nd half of card */}
+          {/* 2nd half spacer keeps the existing layout geometry while the image becomes the card background. */}
           {displayedProject.image && (
-            <div
-              className={`relative min-h-0 min-w-0 flex-1 overflow-hidden rounded-[1rem] md:rounded-[1.5rem]`}
-            >
-              {/* Image */}
-              <Image
-                src={displayedProject.image}
-                alt={displayedProject.title}
-                fill
-                className="object-cover"
-                priority={variant === "header"}
-              />
-            </div>
+            <div className="min-h-0 min-w-0 flex-1" aria-hidden="true" />
           )}
         </div>
       </motion.div>
