@@ -5,12 +5,13 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
-import { motion, MotionValue, useTransform, useSpring } from "framer-motion";
+import { motion, MotionValue, useTransform } from "framer-motion";
+// import { useSpring } from "framer-motion";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SpinButton from "./SpinButton";
-import { PALETTE } from "@/lib/palette";
+// import { PALETTE } from "@/lib/palette";
 
-import Kbd from "./Kbd";
+// import Kbd from "./Kbd";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
 import projects from "../../data/projects";
@@ -44,11 +45,11 @@ export default function ProjectSummary({
   const ref = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
 
-  const smoothScrollY = useSpring(scrollY, {
-    stiffness: 120,
-    damping: 20,
-    mass: 0.2,
-  });
+  // const smoothScrollY = useSpring(scrollY, {
+  //   stiffness: 120,
+  //   damping: 20,
+  //   mass: 0.2,
+  // });
 
   const headerOpacity = useTransform(
     scrollY,
