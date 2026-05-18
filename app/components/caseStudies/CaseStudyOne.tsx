@@ -2,17 +2,10 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useRef } from "react";
 import { useTheme } from "next-themes";
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  MotionValue,
-} from "framer-motion";
+import { useTransform, MotionValue } from "framer-motion";
 import { FileTextIcon } from "@phosphor-icons/react";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
@@ -26,23 +19,22 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   const { activeIndex } = useActiveProject();
 
   const theme = useProjectTheme(projects[activeIndex].id);
+  // const targetRef = useRef<HTMLDivElement>(null);
 
-  const targetRef = useRef<HTMLDivElement>(null);
+  // const { scrollYProgress } = useScroll({
+  //   target: targetRef,
+  //   offset: ["start start", "end end"],
+  // });
 
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ["start start", "end end"],
-  });
+  // const smoothScrollYProgress = useSpring(scrollYProgress, {
+  //   stiffness: 120,
+  //   damping: 20,
+  //   mass: 0.2,
+  // });
 
-  const smoothScrollYProgress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 20,
-    mass: 0.2,
-  });
-
-  // --- 1. USE 'vw' for 'useTransform' ---
-  // We are moving the "filmstrip" by full viewport widths
-  const x = useTransform(scrollYProgress, [0, 1], ["0vw", "-200vw"]);
+  // // --- 1. USE 'vw' for 'useTransform' ---
+  // // We are moving the "filmstrip" by full viewport widths
+  // const x = useTransform(scrollYProgress, [0, 1], ["0vw", "-200vw"]);
   const borderOpacity = useTransform(
     scrollY,
     [

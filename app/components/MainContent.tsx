@@ -25,12 +25,14 @@ import CaseStudyContent from "./CaseStudyContent";
 import MyName from "./MyName";
 
 export default function MainContent({ children }: { children: ReactNode }) {
-  const { activeIndex, transitioningToNext } = useActiveProject();
+  const { activeIndex, transitioningToNext, setTransitioningToNext } =
+    useActiveProject();
   const { viewMode } = useViewMode();
 
   const [showPrompt, setShowPrompt] = useState(false);
   const hasPromptShown = useRef(false);
-  const [showLandscapeBlocker, setShowLandscapeBlocker] = useState(false);
+  // const [showLandscapeBlocker, setShowLandscapeBlocker] = useState(false);
+
   const [mounted, setMounted] = useState(false);
   const [caseStudyContentReady, setCaseStudyContentReady] = useState(false);
 
@@ -141,27 +143,29 @@ export default function MainContent({ children }: { children: ReactNode }) {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    const handleOrientationChange = () => {
-      const isMobile = /iPhone|Android/i.test(navigator.userAgent);
-      const isLandscape = window.matchMedia("(orientation: landscape)").matches;
-      const shouldBlock = isMobile && isLandscape && viewMode === "home";
-      setShowLandscapeBlocker(shouldBlock);
-    };
+  // useEffect(() => {
+  //   const handleOrientationChange = () => {
+  //     const isMobile = /iPhone|Android/i.test(navigator.userAgent);
+  //     const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+  //     const shouldBlock = isMobile && isLandscape && viewMode === "home";
+  //     setShowLandscapeBlocker(shouldBlock);
+  //   };
 
-    handleOrientationChange();
-    window.addEventListener("orientationchange", handleOrientationChange);
-    window.addEventListener("resize", handleOrientationChange);
-    return () => {
-      window.removeEventListener("orientationchange", handleOrientationChange);
-      window.removeEventListener("resize", handleOrientationChange);
-    };
-  }, [viewMode]);
-
+  //   handleOrientationChange();
+  //   window.addEventListener("orientationchange", handleOrientationChange);
+  //   window.addEventListener("resize", handleOrientationChange);
+  //   return () => {
+  //     window.removeEventListener("orientationchange", handleOrientationChange);
+  //     window.removeEventListener("resize", handleOrientationChange);
+  //   };
+  // }, [viewMode]);
   useEffect(() => {
     // Scroll to top on page/view change
     const timeout = setTimeout(() => {
       window.scrollTo({ top: 0, behavior: "auto" });
+      if (viewMode === "case-study") {
+        setSummaryVariant("header");
+      }
     }, 0);
     return () => clearTimeout(timeout);
   }, [activeIndex, viewMode]);
@@ -219,6 +223,33 @@ export default function MainContent({ children }: { children: ReactNode }) {
       setCaseStudyContentReady(false);
     }
   }, [transitioningToNext]);
+
+  // Never let a missed layout-complete callback strand the case study in its
+  // scroll-locked transition state. This is mostly a mobile Safari guardrail.
+  useEffect(() => {
+    if (viewMode !== "case-study" || caseStudyContentReady) {
+      return;
+    }
+
+    const timeout = setTimeout(
+      () => {
+        setSummaryVariant("header");
+        setCaseStudyContentReady(true);
+        if (transitioningToNext) {
+          setTransitioningToNext(false);
+        }
+      },
+      transitioningToNext ? 900 : 700,
+    );
+
+    return () => clearTimeout(timeout);
+  }, [
+    activeIndex,
+    caseStudyContentReady,
+    setTransitioningToNext,
+    transitioningToNext,
+    viewMode,
+  ]);
 
   // Keep the heavy case-study subtree out of the summary layout morph.
   useEffect(() => {

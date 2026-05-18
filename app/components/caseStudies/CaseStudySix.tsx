@@ -1,20 +1,11 @@
-/* eslint-disable react/no-unescaped-entities */
 import { useTheme } from "next-themes";
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
-import {
-  ScrollIcon,
-  MagnifyingGlassIcon,
-  RocketLaunchIcon,
-  PresentationChartIcon,
-  SealQuestionIcon,
-  LightbulbFilamentIcon,
-} from "@phosphor-icons/react";
+import { ScrollIcon } from "@phosphor-icons/react";
 
-import { motion, MotionValue, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { MotionValue, useTransform } from "framer-motion";
 
 interface CaseStudySixProps {
   scrollY: MotionValue<number>;

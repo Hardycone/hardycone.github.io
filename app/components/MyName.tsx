@@ -47,7 +47,7 @@ export default function MyName() {
             style={{ textShadow: textShadow }}
             className="z-50 text-xl"
           >
-            Hi! I'm Haichao.
+            Hi! I&apos;m Haichao.
           </motion.span>
 
           {/* Flip Container */}

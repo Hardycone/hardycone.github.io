@@ -11,7 +11,8 @@ interface SectionContainerProps {
   icon: React.ComponentType<IconProps>;
   textColorClass?: string;
   bgColorClass?: string;
-  bgOpacityClass?: string;
+  // bgOpacityClass?: string;
+
   borderColor?: MotionValue<string> | string;
   cardClass?: string;
   revealOnScroll?: boolean;
@@ -23,7 +24,8 @@ export default function SectionContainer({
   icon: Icon,
   textColorClass,
   bgColorClass,
-  bgOpacityClass = "bg-opacity-20 dark:bg-opacity-20",
+  // bgOpacityClass = "bg-opacity-20 dark:bg-opacity-20",
+
   borderColor,
   cardClass = "mb-12",
   revealOnScroll = true,
