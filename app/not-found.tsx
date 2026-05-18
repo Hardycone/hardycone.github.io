@@ -2,7 +2,7 @@
 // app/not-found.tsx
 export default function NotFound() {
   return (
-    <div className="flex h-full flex-col items-center justify-center p-8 text-center">
+    <div className="flex h-[100svh] flex-col items-center justify-center p-8 text-center">
       <h1 className="mb-4 font-sans text-4xl font-bold">
         404 – Page Not Found
       </h1>

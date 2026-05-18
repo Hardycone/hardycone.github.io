@@ -22,8 +22,23 @@ function isValidSlug(slug: string): boolean {
   return projects.some((p) => p.slug === slug);
 }
 
+function getViewModeFromPathname(pathname: string): ViewMode {
+  if (pathname === "/") {
+    return "home";
+  }
+
+  const slug = pathname.split("/")[1] || "";
+  return isValidSlug(slug) ? "case-study" : "not-found";
+}
+
 export function ViewModeProvider({ children }: { children: ReactNode }) {
-  const [viewMode, setViewMode] = useState<ViewMode>("home");
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    if (typeof window === "undefined") {
+      return "home";
+    }
+
+    return getViewModeFromPathname(window.location.pathname);
+  });
 
   return (
     <ViewModeContext.Provider value={{ viewMode, setViewMode }}>
@@ -43,17 +58,7 @@ function ViewModeSyncer({
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname === "/") {
-      setViewMode("home");
-      return;
-    }
-
-    const slug = pathname.split("/")[1] || "";
-    if (isValidSlug(slug)) {
-      setViewMode("case-study");
-    } else {
-      setViewMode("not-found");
-    }
+    setViewMode(getViewModeFromPathname(pathname));
   }, [pathname, setViewMode]);
 
   return null;

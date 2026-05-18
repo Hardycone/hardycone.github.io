@@ -15,6 +15,7 @@ interface CaseStudyContentProps {
   scrollY: MotionValue<number>;
   isVisible?: boolean;
   exitDirection?: "up" | "down";
+  onExitComplete?: () => void;
 }
 
 type ProjectSlug =
@@ -51,6 +52,7 @@ export default function CaseStudyContent({
   scrollY,
   isVisible = true,
   exitDirection = "down",
+  onExitComplete,
 }: CaseStudyContentProps) {
   const { activeIndex } = useActiveProject();
 
@@ -70,7 +72,11 @@ export default function CaseStudyContent({
   return (
     <div className="flex flex-col">
       <div className="min-h-[calc(100svh-48px)]" />
-      <AnimatePresence mode="wait" custom={exitDirection}>
+      <AnimatePresence
+        mode="wait"
+        custom={exitDirection}
+        onExitComplete={onExitComplete}
+      >
         {isVisible && (
           <motion.div
             key={project.id}

@@ -27,12 +27,14 @@ interface ProjectSummaryProps {
   variant: "preview" | "header" | "bottom";
   scrollY: MotionValue<number>;
   onLayoutAnimationComplete?: () => void;
+  onBottomNavigationStart?: (slug: string) => void;
 }
 
 export default function ProjectSummary({
   variant,
   scrollY,
   onLayoutAnimationComplete,
+  onBottomNavigationStart,
 }: ProjectSummaryProps) {
   const {
     setTransitioningToNext,
@@ -135,8 +137,10 @@ export default function ProjectSummary({
       setTransitioningToNext(true);
       setKey(`project-${project.id}`);
       setdisplayedProject(project);
+      onBottomNavigationStart?.(project.slug);
+      return;
     }
-    const navigationDelay = variant === "bottom" ? 200 : 200;
+    const navigationDelay = 200;
     timerRef.current = setTimeout(() => {
       router.push(`/${project.slug}`);
       // No need to set isNavigating(false) here,

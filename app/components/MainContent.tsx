@@ -6,12 +6,14 @@ import {
   AnimatePresence,
   useMotionValueEvent,
 } from "framer-motion";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   ArrowSquareUpIcon,
   ArrowSquareDownIcon,
   MouseScrollIcon,
 } from "@phosphor-icons/react";
+import projects from "@/data/projects";
 
 import DebugViewport from "./DebugViewport";
 
@@ -24,10 +26,16 @@ import ProjectSummary from "./ProjectSummary";
 import CaseStudyContent from "./CaseStudyContent";
 import MyName from "./MyName";
 
+type BottomNavigationState = {
+  slug: string;
+  phase: "exit" | "morph" | "route";
+};
+
 export default function MainContent({ children }: { children: ReactNode }) {
   const { activeIndex, transitioningToNext, setTransitioningToNext } =
     useActiveProject();
   const { viewMode } = useViewMode();
+  const router = useRouter();
 
   const [showPrompt, setShowPrompt] = useState(false);
   const hasPromptShown = useRef(false);
@@ -35,6 +43,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   const [mounted, setMounted] = useState(false);
   const [caseStudyContentReady, setCaseStudyContentReady] = useState(false);
+  const [bottomNavigation, setBottomNavigation] =
+    useState<BottomNavigationState | null>(null);
 
   const { scrollY } = useScroll();
   const caseStudyExitDirection = transitioningToNext ? "up" : "down";
@@ -43,6 +53,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     (!caseStudyContentReady || transitioningToNext);
   const isHomeScrollLocked = viewMode === "home";
   const isPageScrollLocked = isHomeScrollLocked || isCaseStudyScrollLocked;
+  const isBottomNavigationActive = bottomNavigation !== null;
   // Keep the home rail's intrinsic width during the preview-to-header morph so
   // Framer measures the ProjectSummary from a stable source rect.
   const shouldReserveGlyphRail =
@@ -170,6 +181,85 @@ export default function MainContent({ children }: { children: ReactNode }) {
     return () => clearTimeout(timeout);
   }, [activeIndex, viewMode]);
 
+  const handleBottomNavigationStart = useCallback((slug: string) => {
+    setBottomNavigation({ slug, phase: "exit" });
+  }, []);
+
+  const handleCaseStudyExitComplete = useCallback(() => {
+    setBottomNavigation((navigation) => {
+      if (!navigation || navigation.phase !== "exit") {
+        return navigation;
+      }
+
+      return { ...navigation, phase: "morph" };
+    });
+  }, []);
+
+  useEffect(() => {
+    if (bottomNavigation?.phase !== "morph") {
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      setSummaryVariant("header");
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [bottomNavigation]);
+
+  useEffect(() => {
+    if (bottomNavigation?.phase !== "route") {
+      return;
+    }
+
+    if (projects[activeIndex]?.slug !== bottomNavigation.slug) {
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => {
+      setCaseStudyContentReady(true);
+      setBottomNavigation(null);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [activeIndex, bottomNavigation]);
+
+  useEffect(() => {
+    if (!bottomNavigation || bottomNavigation.phase === "route") {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      setSummaryVariant("header");
+      setBottomNavigation({ slug: bottomNavigation.slug, phase: "route" });
+      setTransitioningToNext(false);
+      router.push(`/${bottomNavigation.slug}`);
+    }, 1800);
+
+    return () => clearTimeout(timeout);
+  }, [bottomNavigation, router, setTransitioningToNext]);
+
+  const handleSummaryLayoutComplete = useCallback(() => {
+    if (viewMode !== "case-study" || summaryVariant !== "header") {
+      return;
+    }
+
+    if (bottomNavigation?.phase === "morph") {
+      const targetSlug = bottomNavigation.slug;
+      setBottomNavigation({ slug: targetSlug, phase: "route" });
+      router.push(`/${targetSlug}`);
+      return;
+    }
+
+    if (bottomNavigation) {
+      return;
+    }
+
+    setCaseStudyContentReady(true);
+  }, [bottomNavigation, router, summaryVariant, viewMode]);
+
   // Inactivity prompt logic
   useEffect(() => {
     if (viewMode !== "home" || hasPromptShown.current) return;
@@ -227,7 +317,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
   // Never let a missed layout-complete callback strand the case study in its
   // scroll-locked transition state. This is mostly a mobile Safari guardrail.
   useEffect(() => {
-    if (viewMode !== "case-study" || caseStudyContentReady) {
+    if (
+      viewMode !== "case-study" ||
+      caseStudyContentReady ||
+      isBottomNavigationActive
+    ) {
       return;
     }
 
@@ -246,6 +340,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
   }, [
     activeIndex,
     caseStudyContentReady,
+    isBottomNavigationActive,
     setTransitioningToNext,
     transitioningToNext,
     viewMode,
@@ -256,7 +351,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
     if (
       viewMode !== "case-study" ||
       summaryVariant !== "header" ||
-      caseStudyContentReady
+      caseStudyContentReady ||
+      isBottomNavigationActive
     ) {
       return;
     }
@@ -266,7 +362,12 @@ export default function MainContent({ children }: { children: ReactNode }) {
     }, 700);
 
     return () => clearTimeout(timeout);
-  }, [caseStudyContentReady, summaryVariant, viewMode]);
+  }, [
+    caseStudyContentReady,
+    isBottomNavigationActive,
+    summaryVariant,
+    viewMode,
+  ]);
 
   if (!mounted) return null;
 
@@ -342,6 +443,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
               scrollY={scrollY}
               isVisible={caseStudyContentReady && !transitioningToNext}
               exitDirection={caseStudyExitDirection}
+              onExitComplete={handleCaseStudyExitComplete}
             />
           )}
         <AnimatePresence mode="wait">
@@ -350,11 +452,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
               key="project-summary"
               variant={summaryVariant}
               scrollY={scrollY}
-              onLayoutAnimationComplete={() => {
-                if (viewMode === "case-study" && summaryVariant === "header") {
-                  setCaseStudyContentReady(true);
-                }
-              }}
+              onLayoutAnimationComplete={handleSummaryLayoutComplete}
+              onBottomNavigationStart={handleBottomNavigationStart}
             />
           )}
         </AnimatePresence>
