@@ -42,6 +42,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           textColorClass={theme.textColorClass}
           bgColorClass={theme.bgColorClass}
           borderColor={borderColor}
+          revealOnScroll={false}
         >
           <p className="mb-6 text-lg">
             Our team set out to solve a common but underexplored problem: how do

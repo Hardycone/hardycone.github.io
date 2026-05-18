@@ -63,6 +63,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           textColorClass={theme.textColorClass}
           bgColorClass={theme.bgColorClass}
           borderColor={borderColor}
+          revealOnScroll={false}
         >
           {/*Subsection 1: Experience*/}
           <div className="mb-8">

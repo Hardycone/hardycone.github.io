@@ -44,6 +44,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           textColorClass={theme.textColorClass}
           bgColorClass={theme.bgColorClass}
           borderColor={borderColor}
+          revealOnScroll={false}
         >
           <h2
             className={`font-sans text-3xl font-semibold ${theme.textColorClass} leading-loose`}
