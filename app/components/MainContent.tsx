@@ -25,6 +25,7 @@ import TopBar from "./TopBar";
 import ProjectSummary from "./ProjectSummary";
 import CaseStudyContent from "./CaseStudyContent";
 import MyName from "./MyName";
+import HomeSymbolBackdrop from "./HomeSymbolBackdrop";
 
 type BottomNavigationState = {
   slug: string;
@@ -105,6 +106,10 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   // Set initial variant based on viewMode
   useEffect(() => {
+    if (bottomNavigation) {
+      return;
+    }
+
     if (viewMode === "not-found") {
       setSummaryVariant(null);
       return;
@@ -127,10 +132,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
         setSummaryVariant(null);
       }
     }
-  }, [viewMode, docDimensions, scrollY]);
+  }, [bottomNavigation, viewMode, docDimensions, scrollY]);
 
   // Use useMotionValueEvent for efficient scroll handling
   useMotionValueEvent(scrollY, "change", (y) => {
+    if (bottomNavigation) return;
     if (viewMode === "not-found") return;
     if (viewMode !== "case-study") {
       setSummaryVariant("preview");
@@ -182,6 +188,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
   }, [activeIndex, viewMode]);
 
   const handleBottomNavigationStart = useCallback((slug: string) => {
+    setSummaryVariant("bottom");
     setBottomNavigation({ slug, phase: "exit" });
   }, []);
 
@@ -201,7 +208,6 @@ export default function MainContent({ children }: { children: ReactNode }) {
     }
 
     const frame = requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, behavior: "auto" });
       setSummaryVariant("header");
     });
 
@@ -217,13 +223,27 @@ export default function MainContent({ children }: { children: ReactNode }) {
       return;
     }
 
-    const frame = requestAnimationFrame(() => {
-      setCaseStudyContentReady(true);
-      setBottomNavigation(null);
+    let secondFrame: number | null = null;
+    const firstFrame = requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      scrollY.set(0);
+
+      secondFrame = requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "auto" });
+        scrollY.set(0);
+        setCaseStudyContentReady(true);
+        setTransitioningToNext(false);
+        setBottomNavigation(null);
+      });
     });
 
-    return () => cancelAnimationFrame(frame);
-  }, [activeIndex, bottomNavigation]);
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      if (secondFrame !== null) {
+        cancelAnimationFrame(secondFrame);
+      }
+    };
+  }, [activeIndex, bottomNavigation, scrollY, setTransitioningToNext]);
 
   useEffect(() => {
     if (!bottomNavigation || bottomNavigation.phase === "route") {
@@ -232,14 +252,14 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
     const timeout = setTimeout(() => {
       window.scrollTo({ top: 0, behavior: "auto" });
+      scrollY.set(0);
       setSummaryVariant("header");
       setBottomNavigation({ slug: bottomNavigation.slug, phase: "route" });
-      setTransitioningToNext(false);
       router.push(`/${bottomNavigation.slug}`);
     }, 1800);
 
     return () => clearTimeout(timeout);
-  }, [bottomNavigation, router, setTransitioningToNext]);
+  }, [bottomNavigation, router, scrollY]);
 
   const handleSummaryLayoutComplete = useCallback(() => {
     if (viewMode !== "case-study" || summaryVariant !== "header") {
@@ -249,6 +269,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
     if (bottomNavigation?.phase === "morph") {
       const targetSlug = bottomNavigation.slug;
       setBottomNavigation({ slug: targetSlug, phase: "route" });
+      window.scrollTo({ top: 0, behavior: "auto" });
+      scrollY.set(0);
       router.push(`/${targetSlug}`);
       return;
     }
@@ -258,7 +280,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     }
 
     setCaseStudyContentReady(true);
-  }, [bottomNavigation, router, summaryVariant, viewMode]);
+  }, [bottomNavigation, router, scrollY, summaryVariant, viewMode]);
 
   // Inactivity prompt logic
   useEffect(() => {
@@ -373,7 +395,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   return (
     <main
-      className={`relative flex w-full bg-background transition-colors dark:bg-dark-background ${
+      className={`relative isolate flex w-full bg-background transition-colors dark:bg-dark-background ${
         isHomeScrollLocked
           ? "h-[100dvh] touch-none overflow-y-hidden"
           : isCaseStudyScrollLocked
@@ -381,6 +403,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
             : "touch-auto"
       }`}
     >
+      {viewMode === "home" && <HomeSymbolBackdrop activeIndex={activeIndex} />}
       <TopBar />
       <span className="fixed z-50 tall:hidden wide:hidden">Normal</span>
       <span className="fixed z-50 hidden wide:block superwide:hidden">
@@ -398,7 +421,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       <span className="fixed z-50 hidden supertall:block">Super Tall</span>
       <DebugViewport />
       <div
-        className={`relative flex flex-1 flex-col overflow-hidden ${
+        className={`relative z-10 flex flex-1 flex-col overflow-hidden ${
           shouldReserveGlyphRail ? "min-w-max" : ""
         }`}
       >
@@ -434,7 +457,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
         </motion.div>
       )}
       <motion.div
-        className={`relative flex w-full max-w-5xl flex-col items-center gap-6 px-2`}
+        className={`relative z-10 flex w-full max-w-5xl flex-col items-center gap-6 px-2`}
       >
         <MyName />
         {viewMode === "case-study" &&
@@ -452,6 +475,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
               key="project-summary"
               variant={summaryVariant}
               scrollY={scrollY}
+              isTransitionLocked={isBottomNavigationActive}
               onLayoutAnimationComplete={handleSummaryLayoutComplete}
               onBottomNavigationStart={handleBottomNavigationStart}
             />
@@ -459,7 +483,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
         </AnimatePresence>
         {children}
       </motion.div>
-      <div className="min-w-0 flex-1" />
+      <div className="relative z-10 min-w-0 flex-1" />
       {/* {showLandscapeBlocker && (
         <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-background text-center text-foreground">
           <motion.svg

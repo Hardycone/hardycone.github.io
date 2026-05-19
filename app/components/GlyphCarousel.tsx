@@ -145,6 +145,7 @@ export default function GlyphCarousel() {
   return (
     <motion.div
       className="flex flex-col items-end gap-8 px-4 pt-[calc(50svh)] md:gap-20 md:px-12 lg:px-16 xl:px-20 supertall:pt-[calc(50svh+3rem)] wide:pt-[calc(50svh+2.5rem)] superwide:pt-[calc(50svh)]"
+      initial={false}
       animate={{
         y: yOffset,
         x: isInteractive ? 0 : -300,
@@ -177,7 +178,7 @@ export default function GlyphCarousel() {
             }}
             style={{ boxShadow: isActive ? glyphShadow : "none" }}
             transition={{ type: "tween", stiffness: 500, damping: 20 }}
-            className="h-8 w-8 cursor-pointer touch-manipulation select-none rounded-full p-0.5 md:h-20 md:w-20 md:p-0"
+            className="h-8 w-8 cursor-pointer touch-manipulation select-none rounded-full bg-background p-0.5 dark:bg-dark-background md:h-20 md:w-20 md:p-0"
             onClick={() => isInteractive && setActiveIndex(index)}
           >
             <AnimatedGlyph

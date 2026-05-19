@@ -26,6 +26,7 @@ function useHasMounted() {
 interface ProjectSummaryProps {
   variant: "preview" | "header" | "bottom";
   scrollY: MotionValue<number>;
+  isTransitionLocked?: boolean;
   onLayoutAnimationComplete?: () => void;
   onBottomNavigationStart?: (slug: string) => void;
 }
@@ -33,6 +34,7 @@ interface ProjectSummaryProps {
 export default function ProjectSummary({
   variant,
   scrollY,
+  isTransitionLocked = false,
   onLayoutAnimationComplete,
   onBottomNavigationStart,
 }: ProjectSummaryProps) {
@@ -154,29 +156,31 @@ export default function ProjectSummary({
 
   useEffect(() => {
     // Only avoid updating displayedProject if a click-initiated morph is in progress.
-    if (!isMorphingRef.current) {
+    if (!isMorphingRef.current && !isTransitionLocked) {
       setKey(`project-${project.id}`);
       setdisplayedProject(project);
     }
-  }, [project, variant]);
+  }, [isTransitionLocked, project, variant]);
 
   if (!hasMounted) return null;
 
   const layoutDependency = `${variant}-${displayedProject.id}`;
-  const summaryOpacity = transitioningToNext
-    ? 1
-    : variant === "header"
-      ? headerOpacity
-      : variant === "bottom"
-        ? bottomOpacity
-        : 1;
-  const summaryScale = transitioningToNext
-    ? 1
-    : variant === "header"
-      ? headerScale
-      : variant === "bottom"
-        ? bottomScale
-        : 1;
+  const summaryOpacity =
+    isTransitionLocked || transitioningToNext
+      ? 1
+      : variant === "header"
+        ? headerOpacity
+        : variant === "bottom"
+          ? bottomOpacity
+          : 1;
+  const summaryScale =
+    isTransitionLocked || transitioningToNext
+      ? 1
+      : variant === "header"
+        ? headerScale
+        : variant === "bottom"
+          ? bottomScale
+          : 1;
 
   // --- Framer Motion variants
   const motionVariants = {
@@ -281,8 +285,6 @@ export default function ProjectSummary({
             morphTargetRef.current = null;
             setKey(`project-${targetProject.id}`);
             setdisplayedProject(targetProject);
-            // clear the global transitioning flag if exists
-            if (setTransitioningToNext) setTransitioningToNext(false);
           }
         }}
         className={`group relative flex w-full flex-col rounded-[1.5rem] bg-background dark:bg-dark-background md:rounded-[2.75rem] ${cardClasses}`}
@@ -331,13 +333,17 @@ export default function ProjectSummary({
         )}
 
         {/* Main portion */}
-        <div className="relative z-10 flex h-full w-full gap-2 tall:flex-col">
+        <div
+          className={`relative z-10 flex h-full min-h-0 w-1/2 min-w-0 flex-1 justify-between gap-2 bg-red-50 tall:order-1 tall:flex-col ${variant === "bottom" ? "flex-row" : "flex-col"}`}
+        >
           {/* 1st half of card */}
           <div
             className={`flex min-h-0 min-w-0 flex-1 justify-between tall:order-1 ${variant === "bottom" ? "flex-row" : "flex-col"}`}
           >
             {/* Text */}
-            <div className="flex w-full flex-col">
+            <div
+              className={`flex w-full flex-col ${variant === "header" ? "pointer-events-none" : ""}`}
+            >
               {/* Title block */}
               <div className="flex flex-col">
                 {/* Title text */}
@@ -414,9 +420,9 @@ export default function ProjectSummary({
             )}
           </div>
           {/* 2nd half spacer keeps the existing layout geometry while the image becomes the card background. */}
-          {displayedProject.image && (
+          {/* {displayedProject.image && (
             <div className="min-h-0 min-w-0 flex-1" aria-hidden="true" />
-          )}
+          )} */}
         </div>
       </motion.div>
     </motion.div>
