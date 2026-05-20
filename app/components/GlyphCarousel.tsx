@@ -137,7 +137,7 @@ export default function GlyphCarousel() {
 
   const isLarge = useTailwindBreakpoint();
   const yOffset = isLarge
-    ? -80 * (2 * activeIndex + 1 / 2)
+    ? -80 * (3 * activeIndex + 1)
     : -32 * (2 * activeIndex + 1 / 2);
 
   if (!hasMounted || viewMode === "not-found") return null;
@@ -160,13 +160,13 @@ export default function GlyphCarousel() {
 
         const scale = isLarge
           ? isActive
-            ? 2
+            ? 1
             : isPreview
-              ? 1.2
-              : 1
+              ? 0.6
+              : 0.5
           : isActive
-            ? 1.5
-            : 1;
+            ? 1
+            : 0.75;
         const opacity = isActive ? 1 : isPreview ? 0.7 : 0.3;
 
         return (
@@ -178,7 +178,7 @@ export default function GlyphCarousel() {
             }}
             style={{ boxShadow: isActive ? glyphShadow : "none" }}
             transition={{ type: "tween", stiffness: 500, damping: 20 }}
-            className="h-8 w-8 cursor-pointer touch-manipulation select-none rounded-full bg-background p-0.5 dark:bg-dark-background md:h-20 md:w-20 md:p-0"
+            className="h-12 w-12 cursor-pointer touch-manipulation select-none rounded-full bg-background p-0.5 dark:bg-dark-background md:h-40 md:w-40 md:p-0"
             onClick={() => isInteractive && setActiveIndex(index)}
           >
             <AnimatedGlyph

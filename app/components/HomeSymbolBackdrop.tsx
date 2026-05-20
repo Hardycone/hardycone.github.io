@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 
 type FlipMode = "idle" | "in" | "out" | "swap";
@@ -18,49 +18,94 @@ type CellState = {
 };
 
 const SYMBOL_SETS = [
-  ["@", "H", "W", "01"],
-  ["+", "%", "=", "fx"],
-  ["*", "~", "AI", "◇"],
-  ["◐", "HUD", "△", "⊕"],
-  ["↘", "○", "W", "NY"],
-  ["文", "街", "—", "▢"],
+  ["\uf000", "\uf001", "\uf002", "\uf003", "\uf004", "\uf005"],
+  ["\uf00f", "\uf00e", "\uf00d", "\uf010", "\uf011"],
+  ["\uf012", "\uf013", "\uf014", "\uf016", "\uf017", "\uf015"],
+  ["\uf019", "\uf01a", "\uf01b", "\uf01c"],
+  ["\uf01d", "\uf022", "\uf021", "\uf020", "\uf01f"],
+  ["\uf00a", "\uf00c", "\uf009", "\uf018", "\uf006", "\uf023"],
 ];
 
-const BASE_ACTIVE_PROBABILITY = 0.1;
+const BASE_ACTIVE_PROBABILITY = 0.05;
 const HOVER_ACTIVE_PROBABILITY = 0.8;
 const BEAT_MS = 2000;
 const TARGET_FPS = 24;
-const DESKTOP_CELL_SIZE = 36;
-const MOBILE_CELL_SIZE = 26;
+const MD_BREAKPOINT = 768;
+const CELL_SIZE = 36;
 const FLIP_EASE = 0.25;
 const MIN_SYMBOL_SCALE = 1;
-const MAX_SYMBOL_SCALE = 2;
+const MAX_SYMBOL_SCALE = 1.6;
+const SYMBOL_FONT_FAMILY = "HomeSymbols";
+const SYMBOL_FONT_SCALE = 0.4;
+
+function getSymbolFont(cellSize: number) {
+  return `${Math.round(cellSize * SYMBOL_FONT_SCALE)}px "${SYMBOL_FONT_FAMILY}"`;
+}
+
+async function waitForSymbolFont() {
+  if (!document.fonts?.load) {
+    return;
+  }
+
+  await document.fonts.load(`16px "${SYMBOL_FONT_FAMILY}"`, "\uf009");
+}
 
 function getSymbolSet(activeIndex: number) {
   return SYMBOL_SETS[activeIndex % SYMBOL_SETS.length];
 }
 
-function getCanvasSize(canvas: HTMLCanvasElement) {
-  const rect = canvas.getBoundingClientRect();
+function getGridSize(width: number, height: number) {
+  if (width < MD_BREAKPOINT) {
+    return { columns: 0, rows: 0 };
+  }
 
   return {
-    width: Math.max(0, Math.round(rect.width || window.innerWidth)),
-    height: Math.max(0, Math.round(rect.height || window.innerHeight)),
+    columns: Math.ceil(width / CELL_SIZE),
+    rows: Math.ceil(height / CELL_SIZE),
   };
 }
 
-function createCells(width: number, height: number, cellSize: number) {
-  const columns = Math.ceil(width / cellSize) + 2;
-  const rows = Math.ceil(height / cellSize) + 2;
-  const offsetX = (width - (columns - 1) * cellSize) / 2;
-  const offsetY = (height - (rows - 1) * cellSize) / 2;
+function getCanvasSize(canvas: HTMLCanvasElement) {
+  const rect = canvas.getBoundingClientRect();
+  const width =
+    window.innerWidth >= MD_BREAKPOINT
+      ? window.innerWidth
+      : Math.round(rect.width);
+  const height =
+    window.innerWidth >= MD_BREAKPOINT
+      ? window.innerHeight
+      : Math.round(rect.height);
+
+  return {
+    width: Math.max(0, width),
+    height: Math.max(0, height),
+  };
+}
+
+function createCells(
+  columns: number,
+  rows: number,
+  previousCells: CellState[] = [],
+) {
+  const previousCellsByPosition = new Map(
+    previousCells.map((cell) => [`${cell.x}:${cell.y}`, cell]),
+  );
   const cells: CellState[] = [];
 
   for (let row = 0; row < rows; row += 1) {
     for (let column = 0; column < columns; column += 1) {
+      const x = column * CELL_SIZE + CELL_SIZE / 2;
+      const y = row * CELL_SIZE + CELL_SIZE / 2;
+      const existingCell = previousCellsByPosition.get(`${x}:${y}`);
+
+      if (existingCell) {
+        cells.push(existingCell);
+        continue;
+      }
+
       cells.push({
-        x: offsetX + column * cellSize,
-        y: offsetY + row * cellSize,
+        x,
+        y,
         visible: false,
         flipProgress: 1,
         flipMode: "idle",
@@ -118,7 +163,7 @@ function getCursorScale(
   return MIN_SYMBOL_SCALE + (MAX_SYMBOL_SCALE - MIN_SYMBOL_SCALE) * influence;
 }
 
-function getFlipScaleX(cell: CellState) {
+function getFlipScale(cell: CellState) {
   switch (cell.flipMode) {
     case "in":
       return cell.flipProgress;
@@ -164,9 +209,15 @@ export default function HomeSymbolBackdrop({
   const activeIndexRef = useRef(activeIndex);
   const { resolvedTheme } = useTheme();
   const themeRef = useRef(resolvedTheme);
+  const [canRender, setCanRender] = useState(false);
 
   useEffect(() => {
+    if (activeIndexRef.current === activeIndex) {
+      return;
+    }
+
     activeIndexRef.current = activeIndex;
+    window.dispatchEvent(new CustomEvent("home-symbols-index-change"));
   }, [activeIndex]);
 
   useEffect(() => {
@@ -174,6 +225,18 @@ export default function HomeSymbolBackdrop({
   }, [resolvedTheme]);
 
   useEffect(() => {
+    const media = window.matchMedia(`(min-width: ${MD_BREAKPOINT}px)`);
+    const updateCanRender = () => setCanRender(media.matches);
+
+    updateCanRender();
+    media.addEventListener("change", updateCanRender);
+
+    return () => media.removeEventListener("change", updateCanRender);
+  }, []);
+
+  useEffect(() => {
+    if (!canRender) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -190,18 +253,33 @@ export default function HomeSymbolBackdrop({
     };
 
     let cells: CellState[] = [];
-    let cellSize = DESKTOP_CELL_SIZE;
+    let gridColumns = 0;
+    let gridRows = 0;
     let frame = 0;
     let lastRenderAt = 0;
     let lastBeatAt = Number.NEGATIVE_INFINITY;
     let shouldRevealNearCursor = false;
+    let shouldWaitForNextBeat = false;
+    let isFontReady = false;
+    let isCancelled = false;
+
+    const hideVisibleCells = () => {
+      for (const cell of cells) {
+        if (!cell.visible || cell.flipMode === "out") continue;
+
+        cell.nextSymbolSetIndex = cell.symbolSetIndex;
+        cell.nextSymbolIndex = cell.symbolIndex;
+        cell.flipProgress = 0;
+        cell.flipMode = "out";
+      }
+    };
 
     const revealCellsNearCursor = () => {
       if (!mouse.active) return;
 
       const symbolSetIndex = activeIndexRef.current;
       const symbols = getSymbolSet(symbolSetIndex);
-      const hoverRadius = Math.max(cellSize * 3, 150);
+      const hoverRadius = Math.max(CELL_SIZE * 3, 150);
 
       for (const cell of cells) {
         if (cell.visible) continue;
@@ -232,9 +310,13 @@ export default function HomeSymbolBackdrop({
     const applyBeat = (settle = false) => {
       const nextSymbolSetIndex = activeIndexRef.current;
       const symbols = getSymbolSet(nextSymbolSetIndex);
-      const hoverRadius = Math.max(cellSize * 3, 150);
+      const hoverRadius = Math.max(CELL_SIZE * 3, 150);
 
       for (const cell of cells) {
+        if (!settle && cell.flipMode === "out") {
+          continue;
+        }
+
         const probability = getActivationProbability(cell, mouse, hoverRadius);
         const nextVisible = Math.random() < probability;
         const nextSymbolIndex = Math.floor(Math.random() * symbols.length);
@@ -290,31 +372,41 @@ export default function HomeSymbolBackdrop({
     const resize = (settle = false, force = false) => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const { width, height } = getCanvasSize(canvas);
+      const { columns, rows } = getGridSize(width, height);
 
-      if (width === 0 || height === 0) {
+      if (width === 0 || height === 0 || columns === 0 || rows === 0) {
         return false;
       }
 
-      const nextCellSize = width < 768 ? MOBILE_CELL_SIZE : DESKTOP_CELL_SIZE;
       const pixelWidth = Math.max(1, Math.floor(width * dpr));
       const pixelHeight = Math.max(1, Math.floor(height * dpr));
-      const didResize =
-        canvas.width !== pixelWidth ||
-        canvas.height !== pixelHeight ||
-        cellSize !== nextCellSize;
+      const didCanvasResize =
+        canvas.width !== pixelWidth || canvas.height !== pixelHeight;
+      const didGridResize = gridColumns !== columns || gridRows !== rows;
 
-      if (!didResize && !force) {
+      if (!didCanvasResize && !didGridResize && !force) {
         return true;
       }
 
-      canvas.width = pixelWidth;
-      canvas.height = pixelHeight;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cellSize = nextCellSize;
-      cells = createCells(width, height, cellSize);
-      applyBeat(settle);
+      if (didCanvasResize || force) {
+        canvas.width = pixelWidth;
+        canvas.height = pixelHeight;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      if (didGridResize || cells.length === 0 || force) {
+        const hadCells = cells.length > 0;
+        gridColumns = columns;
+        gridRows = rows;
+        cells = createCells(columns, rows, cells);
+
+        if (!hadCells || settle) {
+          applyBeat(settle);
+        }
+      }
+
       return true;
     };
 
@@ -343,27 +435,32 @@ export default function HomeSymbolBackdrop({
     const draw = () => {
       const { width, height } = getCanvasSize(canvas);
       const isDark = themeRef.current === "dark";
-      const hoverRadius = Math.max(cellSize * 3, 150);
+      const hoverRadius = Math.max(CELL_SIZE * 3, 150);
 
       if (width === 0 || height === 0) {
         return;
       }
 
       context.clearRect(0, 0, width, height);
+
+      if (!isFontReady) {
+        return;
+      }
+
       context.textAlign = "center";
       context.textBaseline = "middle";
-      context.font = `600 ${Math.round(cellSize * 0.3)}px var(--font-jost), ui-sans-serif, system-ui, sans-serif`;
+      context.font = getSymbolFont(CELL_SIZE);
 
       for (const cell of cells) {
         if (!cell.visible) continue;
 
         const symbol = getDrawableSymbol(cell);
-        const flipScaleX = getFlipScaleX(cell);
+        const flipScale = getFlipScale(cell);
 
-        if (flipScaleX <= 0.01) continue;
+        if (flipScale <= 0.01) continue;
 
         const cursorScale = getCursorScale(cell, mouse, hoverRadius);
-        const symbolOpacity = isDark ? 0.28 : 0.2;
+        const symbolOpacity = isDark ? 0.15 : 0.1;
 
         context.fillStyle = isDark
           ? `rgba(244, 244, 245, ${symbolOpacity})`
@@ -371,7 +468,7 @@ export default function HomeSymbolBackdrop({
 
         context.save();
         context.translate(cell.x, cell.y);
-        context.scale(cursorScale * flipScaleX, cursorScale);
+        context.scale(cursorScale * flipScale, cursorScale * flipScale);
         context.fillText(symbol, 0, 0);
         context.restore();
       }
@@ -397,9 +494,10 @@ export default function HomeSymbolBackdrop({
       if (beatAt !== lastBeatAt) {
         lastBeatAt = beatAt;
         applyBeat();
+        shouldWaitForNextBeat = false;
       }
 
-      if (shouldRevealNearCursor) {
+      if (shouldRevealNearCursor && !shouldWaitForNextBeat) {
         shouldRevealNearCursor = false;
         revealCellsNearCursor();
       }
@@ -421,13 +519,22 @@ export default function HomeSymbolBackdrop({
     };
 
     const handleResize = () => {
-      if (resize(true, true)) {
+      if (resize()) {
         draw();
-        lastBeatAt = Math.floor(performance.now() / BEAT_MS) * BEAT_MS;
       }
     };
 
+    const handleActiveIndexChange = () => {
+      shouldWaitForNextBeat = true;
+      shouldRevealNearCursor = false;
+      hideVisibleCells();
+    };
+
     const initialize = () => {
+      if (isCancelled) {
+        return;
+      }
+
       if (!resize(true, true)) {
         initializeFrame = requestAnimationFrame(initialize);
         return;
@@ -438,40 +545,60 @@ export default function HomeSymbolBackdrop({
       frame = requestAnimationFrame(render);
 
       requestAnimationFrame(() => {
-        if (resize(true, true)) {
-          draw();
+        if (isCancelled) {
+          return;
         }
-      });
 
-      document.fonts?.ready.then(() => {
-        if (resize(true, true)) {
+        if (resize()) {
           draw();
         }
       });
     };
 
-    let initializeFrame = requestAnimationFrame(initialize);
+    let initializeFrame = 0;
+
+    waitForSymbolFont().finally(() => {
+      if (isCancelled) {
+        return;
+      }
+
+      isFontReady = true;
+      initializeFrame = requestAnimationFrame(initialize);
+    });
 
     window.addEventListener("pointermove", handlePointerMove, {
       passive: true,
     });
     window.addEventListener("pointerleave", handlePointerLeave);
     window.addEventListener("resize", handleResize);
+    window.addEventListener(
+      "home-symbols-index-change",
+      handleActiveIndexChange,
+    );
 
     return () => {
+      isCancelled = true;
       cancelAnimationFrame(initializeFrame);
       cancelAnimationFrame(frame);
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerleave", handlePointerLeave);
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener(
+        "home-symbols-index-change",
+        handleActiveIndexChange,
+      );
     };
-  }, []);
+  }, [canRender]);
+
+  if (!canRender) {
+    return null;
+  }
 
   return (
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 h-[100svh] w-full"
+      className="pointer-events-none fixed inset-0 z-0 h-full w-full"
     />
   );
 }
