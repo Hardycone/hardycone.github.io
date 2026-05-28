@@ -40,8 +40,8 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
         <SectionContainer
           title="Quick Take"
           icon={ScrollIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
           revealOnScroll={false}
         >
@@ -131,8 +131,8 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
         <SectionContainer
           title="Quick Take"
           icon={ScrollIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
         >
           <h2>Research</h2>
@@ -214,8 +214,8 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
         <SectionContainer
           title="Quick Take"
           icon={ScrollIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
         >
           <h2>Design</h2>
@@ -297,8 +297,8 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
         <SectionContainer
           title="Quick Take"
           icon={ScrollIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
         >
           <h2>Outcome</h2>
@@ -441,8 +441,8 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
         <SectionContainer
           title="Quick Take"
           icon={ScrollIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
         >
           <h2>Outcome</h2>

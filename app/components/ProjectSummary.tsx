@@ -446,24 +446,24 @@ export default function ProjectSummary({
           </motion.p>
 
           {/* Bullet points */}
-          {/* {variant === "header" && displayedProject.bullets && ( */}
-          {/* // <div className="overflow-clip"> */}
-          {/* <motion.ul
+          {variant === "header" && displayedProject.bullets && (
+            <div className="overflow-clip">
+              <motion.ul
                 initial={{ y: 100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.2, ease: "easeOut" }}
-              > */}
-          {/* {displayedProject.bullets.map((bullet) => (
+              >
+                {displayedProject.bullets.map((bullet) => (
                   <li
                     key={bullet}
                     className={`font-sans text-base font-semibold text-foreground dark:text-dark-foreground md:py-1 md:text-xl`}
                   >
                     {bullet}
                   </li>
-                ))} */}
-          {/* </motion.ul> */}
-          {/* // </div> */}
-          {/* // )} */}
+                ))}
+              </motion.ul>
+            </div>
+          )}
         </motion.div>
 
         {/* Button container */}

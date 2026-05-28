@@ -88,8 +88,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <SectionContainer
           title={`The "Zero"`}
           icon={SealQuestionIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
         >
           <SubSectionHeading number="1" heading="Spotting the gap" />
@@ -320,8 +320,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <SectionContainer
           title="Research & Discovery"
           icon={MagnifyingGlassIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={"rgba(0,0,0,0)"}
           cardClass="w-full min-w-0"
         >
@@ -393,8 +393,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <SectionContainer
           title="Ideation & Exploration"
           icon={LightbulbFilamentIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={"rgba(0,0,0,0)"}
           cardClass=""
         >
@@ -411,8 +411,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <SectionContainer
           title={`The "One"`}
           icon={RocketLaunchIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={"rgba(0,0,0,0)"}
           cardClass=""
         >
@@ -437,8 +437,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <SectionContainer
           title={`Impact & Reflection`}
           icon={PresentationChartIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
           cardClass=""
         >

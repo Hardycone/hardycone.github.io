@@ -60,8 +60,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
         <SectionContainer
           title="My Resume"
           icon={FileTextIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
           revealOnScroll={false}
         >
@@ -515,8 +515,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
         <SectionContainer
           title="My Story"
           icon={FileTextIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
         >
           <p>My interest in designing products comes from</p>
@@ -535,8 +535,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
         <SectionContainer
           title="My Interests"
           icon={FileTextIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
         >
           <p className="text-lg">
