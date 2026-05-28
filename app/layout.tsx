@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Jost, Besley } from "next/font/google";
+import { Inter, Besley, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 
 import { ViewModeProvider } from "./context/ViewModeContext";
@@ -8,17 +8,21 @@ import { ThemeProvider } from "next-themes";
 
 import MainContent from "./components/MainContent";
 
-const jost = Jost({
-  variable: "--font-jost",
+const bricolageGrotesque = Bricolage_Grotesque({
+  variable: "--font-bricolage-grotesque",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
   display: "swap",
 });
 
 const besley = Besley({
   variable: "--font-besley",
   subsets: ["latin"],
-  weight: ["400", "700"],
   display: "swap",
 });
 
@@ -34,10 +38,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${jost.variable} ${besley.variable} overflow-x-hidden bg-background font-serif text-foreground antialiased transition-colors dark:bg-dark-background dark:text-dark-foreground`}
-      >
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${besley.variable} ${bricolageGrotesque.variable}`}
+    >
+      <body className="overflow-x-hidden bg-background font-serif text-foreground antialiased transition-colors dark:bg-dark-background dark:text-dark-foreground">
         {/* <svg
           viewBox="0 0 2000 2000"
           xmlns="http://www.w3.org/2000/svg"

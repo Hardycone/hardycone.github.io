@@ -7,6 +7,7 @@ import { useActiveProject, wrapIndex } from "../context/ActiveProjectContext";
 import { useViewMode } from "../context/ViewModeContext";
 import { useTheme } from "next-themes";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
+import { useIsMdUp } from "@/hooks/useIsMdUp";
 import AnimatedGlyph from "./AnimatedGlyph";
 
 export default function GlyphCarousel() {
@@ -119,32 +120,14 @@ export default function GlyphCarousel() {
     };
   }, [isInteractive, activeIndex, setActiveIndex]);
 
-  function useTailwindBreakpoint(query = "(min-width: 768px)") {
-    const [matches, setMatches] = useState(false);
-
-    useEffect(() => {
-      const media = window.matchMedia(query);
-      setMatches(media.matches);
-
-      const listener = () => setMatches(media.matches);
-      media.addEventListener("change", listener);
-
-      return () => media.removeEventListener("change", listener);
-    }, [query]);
-
-    return matches;
-  }
-
-  const isLarge = useTailwindBreakpoint();
-  const yOffset = isLarge
-    ? -80 * (3 * activeIndex + 1)
-    : -32 * (2 * activeIndex + 1 / 2);
+  const isMdUp = useIsMdUp();
+  const yOffset = isMdUp ? -80 - activeIndex * 200 : -24 - activeIndex * 64;
 
   if (!hasMounted || viewMode === "not-found") return null;
 
   return (
     <motion.div
-      className="flex flex-col items-end gap-8 px-4 pt-[calc(50svh)] md:gap-20 md:px-12 lg:px-16 xl:px-20 supertall:pt-[calc(50svh+3rem)] wide:pt-[calc(50svh+2.5rem)] superwide:pt-[calc(50svh)]"
+      className="flex flex-col items-end gap-4 px-2 pt-[calc(50svh+2rem)] md:gap-10 md:px-6 lg:px-8 xl:px-10 supertall:pt-[calc(50svh+3rem)] superwide:pt-[calc(50svh)]"
       initial={false}
       animate={{
         y: yOffset,
@@ -158,7 +141,7 @@ export default function GlyphCarousel() {
         const isActive = index === activeIndex;
         const isPreview = index === previewIndex;
 
-        const scale = isLarge
+        const scale = isMdUp
           ? isActive
             ? 1
             : isPreview
@@ -167,14 +150,12 @@ export default function GlyphCarousel() {
           : isActive
             ? 1
             : 0.75;
-        const opacity = isActive ? 1 : isPreview ? 0.7 : 0.3;
 
         return (
           <motion.div
             key={project.id}
             animate={{
               scale,
-              opacity,
             }}
             style={{ boxShadow: isActive ? glyphShadow : "none" }}
             transition={{ type: "tween", stiffness: 500, damping: 20 }}
@@ -184,7 +165,7 @@ export default function GlyphCarousel() {
             <AnimatedGlyph
               animationData={project.glyphAnimation}
               isActive={isActive}
-              shouldAnimate={isLarge}
+              shouldAnimate={isMdUp}
             />
           </motion.div>
         );

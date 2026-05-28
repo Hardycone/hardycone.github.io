@@ -71,7 +71,7 @@ export default function CaseStudyContent({
 
   return (
     <div className="flex flex-col">
-      <div className="min-h-[calc(100svh-48px)]" />
+      <div className="h-[calc(100svh-4rem)] sm:h-[calc(100svh-4rem)] md:h-[calc(100svh-6rem)] xl:h-[calc(100svh-6rem)] tall:h-[max(70svh,26rem)]" />
       <AnimatePresence
         mode="wait"
         custom={exitDirection}
@@ -91,7 +91,7 @@ export default function CaseStudyContent({
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="mb-12 mt-12 h-[100svh] max-h-[360px]" />
+      <div className="h-[calc(70svh+1rem)]" />
     </div>
   );
 }

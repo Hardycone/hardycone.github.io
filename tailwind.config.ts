@@ -24,7 +24,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-jost)", "sans-serif"],
+        sans: ["var(--font-inter)", "sans-serif"],
+        heading: ["var(--font-bricolage-grotesque)", "sans-serif"],
         serif: ["var(--font-besley)", "serif"],
       },
       colors: {
@@ -92,8 +93,7 @@ export default {
         tall: { raw: "(max-aspect-ratio:1/1)" },
         supertall: { raw: "(max-aspect-ratio:2/3)" },
         wide: { raw: "(min-aspect-ratio:4/3)" },
-        superwide: { raw: "(min-aspect-ratio:16/9)" },
-        extremelywide: { raw: "(min-aspect-ratio:3/1)" },
+        superwide: { raw: "(min-aspect-ratio:2.7)" },
       },
     },
   },

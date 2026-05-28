@@ -47,7 +47,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           revealOnScroll={false}
         >
           <h2
-            className={`font-sans text-3xl font-semibold ${theme.textColorClass} leading-loose`}
+            className={`font-sans text-xl font-semibold md:text-3xl ${theme.textColorClass} leading-loose`}
           >
             W1232
           </h2>{" "}

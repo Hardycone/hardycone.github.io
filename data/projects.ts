@@ -127,7 +127,7 @@ const projects: Project[] = [
     tagline: "Building AR interfaces for next gen NASA missions",
     tags: ["Augmented Reality", "Next Gen NASA Spacesuits", "Artemis Program"],
     description:
-      "The next generation of lunar and Mars missions call for interfaces that can effectively relay information and aid extra-vehicular missions on alien terrains. Our team went on to become a finalist in NASA's 2023 SUITS challenge and tested our prototype with astronauts and engineers at the Johnson Space Center.",
+      "The next generation of lunar and Mars missions call for interfaces that can effectively relay information and aid extra-vehicular missions on alien terrains. Our team went on to become a finalist in NASA's 2023 SUITS challenge and tested our prototype with NASA engineers at the Johnson Space Center.",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     button: "Look Inside",
     image: "/images/hero-fantail.png",

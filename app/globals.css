@@ -47,4 +47,56 @@ body {
     border-right: 2px solid black;
     pointer-events: none;
   }
+
+  .project-summary-scrollbar::-webkit-scrollbar {
+    width: 24px;
+  }
+
+  .project-summary-scrollbar::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  .project-summary-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .project-summary-scrollbar::-webkit-scrollbar-thumb {
+    min-height: 2rem;
+    border: 6px solid transparent;
+    border-radius: 9999px;
+    background: rgb(var(--summary-scrollbar-thumb-rgb) / 0.4);
+    background-clip: content-box;
+  }
+
+  .project-summary-scrollbar::-webkit-scrollbar-thumb:hover,
+  .project-summary-scrollbar::-webkit-scrollbar-thumb:active {
+    background: rgb(var(--summary-scrollbar-thumb-rgb) / 0.6);
+    background-clip: content-box;
+  }
+
+  .glyph-lottie > svg {
+    transform: none !important;
+  }
+}
+
+@layer base {
+  h1 {
+    @apply font-heading text-[2.5rem] font-extrabold leading-tight sm:text-[2.75rem] md:text-[3.5rem] xl:text-[4rem] tall:text-[2.25rem] sm:tall:text-[2.75rem] md:tall:text-[3.5rem];
+  }
+
+  h2 {
+    @apply font-sans text-base font-semibold leading-tight sm:text-xl;
+  }
+
+  p {
+    @apply font-sans text-sm sm:text-lg;
+  }
+
+  h3 {
+    @apply font-sans text-2xl font-bold md:text-4xl;
+  }
+
+  h4 {
+    @apply font-sans text-xl font-semibold;
+  }
 }

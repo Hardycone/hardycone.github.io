@@ -1,4 +1,6 @@
-import { useMotionValue, useTransform, useSpring } from "framer-motion";
+import { useMotionValue, useTransform } from "framer-motion";
+// import { useSpring } from "framer-motion";
+
 import { useEffect } from "react";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import projects from "@/data/projects";
@@ -9,8 +11,8 @@ export function useMouseShadow() {
   const y = useMotionValue(0);
 
   // Smooth physics (Spring) prevents jittering and feels premium
-  const smoothX = useSpring(x, { stiffness: 100, damping: 20 });
-  const smoothY = useSpring(y, { stiffness: 100, damping: 20 });
+  // const smoothX = useSpring(x, { stiffness: 100, damping: 20 });
+  // const smoothY = useSpring(y, { stiffness: 100, damping: 20 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -102,16 +104,29 @@ export function useMouseShadow() {
   const buttonLightShadow = useTransform(
     [x, y],
     ([latestX, latestY]: number[]) => `
-      ${latestX / 4}px ${latestY / 4}px 2px 0px rgba(255,255,255,1), 
-      ${-latestX / 4}px ${-latestY / 4}px 4px 0px rgba(0, 0, 0, 0.2)
+      inset ${latestX / 4}px ${latestY / 4}px 4px rgba(0,0,0,0.2),
+      inset ${-latestX / 4}px ${-latestY / 4}px 4px rgba(255,255,255,1)
     `,
   );
 
   const buttonDarkShadow = useTransform(
     [x, y],
     ([latestX, latestY]: number[]) => `
-      ${-latestX / 4}px ${-latestY / 4}px 4px 0px rgba(0, 0, 0, 1), 
-      inset ${-latestX / 4}px ${-latestY / 4}px 2px 0px rgba(255,255,255,0.1)
+      inset ${-latestX / 4}px ${-latestY / 4}px 2px rgba(255,255,255,0.4)
+    `,
+  );
+
+  const frameLightShadow = useTransform(
+    [x, y],
+    ([latestX, latestY]: number[]) => `
+      inset ${-latestX / 4}px ${-latestY / 4}px 2px rgba(255,255,255,0.6)
+    `,
+  );
+
+  const frameDarkShadow = useTransform(
+    [x, y],
+    ([latestX, latestY]: number[]) => `
+      inset ${-latestX / 4}px ${-latestY / 4}px 2px rgba(255,255,255,0.1)
     `,
   );
 
@@ -126,5 +141,7 @@ export function useMouseShadow() {
     glyphDarkShadow,
     buttonLightShadow,
     buttonDarkShadow,
+    frameLightShadow,
+    frameDarkShadow,
   };
 }

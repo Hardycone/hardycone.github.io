@@ -44,7 +44,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           borderColor={borderColor}
           revealOnScroll={false}
         >
-          <p className="mb-6 text-lg">
+          <p className="mb-6">
             Our team set out to solve a common but underexplored problem: how do
             product teams know which design works best—really know, with data?
             While qualitative methods dominate early design, we noticed a gap in

@@ -205,7 +205,7 @@ export default function TopBar() {
   }, []);
 
   return (
-    <div className="fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[1440px] p-2 md:p-4">
+    <div className="fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[1440px] p-1.5 md:p-4">
       <AnimatePresence>
         <motion.div
           key="topbar"

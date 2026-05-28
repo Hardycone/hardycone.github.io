@@ -109,7 +109,7 @@ export default function AnimatedGlyph({
         pendingReplay.current = false;
       }}
       rendererSettings={{ preserveAspectRatio: "xMidYMid meet" }}
-      className="h-full w-full"
+      className="glyph-lottie h-full w-full"
     />
   );
 }

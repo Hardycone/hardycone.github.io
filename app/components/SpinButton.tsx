@@ -21,7 +21,7 @@ export default function SpinButton({
     <motion.div
       // We use a div here because the Parent (ProjectSummary) handles the click.
       // This button is purely visual decoration inside the clickable card.
-      className={`transition-scale relative flex h-[32px] items-center gap-2 rounded-[16px] px-3 text-sm font-semibold hover:scale-[0.97] active:scale-95 active:text-opacity-20 ${className}`}
+      className={`transition-scale hover:scale-[0.97] active:scale-95 active:text-opacity-20 ${className}`}
       style={style}
     >
       <span>{children}</span>

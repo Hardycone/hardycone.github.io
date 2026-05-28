@@ -45,9 +45,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           borderColor={borderColor}
           revealOnScroll={false}
         >
-          <h2
-            className={`font-sans text-3xl font-semibold ${theme.textColorClass} leading-loose`}
-          >
+          <h2 className={`text-3xl${theme.textColorClass} leading-loose`}>
             My Resume
           </h2>
           <p>

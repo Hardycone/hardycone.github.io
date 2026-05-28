@@ -45,13 +45,13 @@ export default function MyName() {
         >
           <motion.span
             style={{ textShadow: textShadow }}
-            className="z-50 text-xl"
+            className="z-50 text-xl md:text-3xl 2xl:text-5xl sm:tall:text-3xl md:tall:text-4xl"
           >
             Hi! I&apos;m Haichao.
           </motion.span>
 
           {/* Flip Container */}
-          <div className="z-50 flex text-lg">
+          <div className="z-50 flex text-lg md:text-2xl 2xl:text-4xl sm:tall:text-2xl md:tall:text-3xl">
             I design&nbsp;
             <motion.span
               key={activeIndex}

@@ -54,12 +54,12 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <SectionContainer
           title="Quick Take"
           icon={ScrollIcon}
-          textColorClass={theme.textColorClass}
-          bgColorClass={theme.bgColorClass}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
           revealOnScroll={false}
         >
-          <p className="mb-10 px-2 text-lg leading-normal">
+          <p className="mb-10 px-2">
             Quantitative UX insights can be game-changing, but often out of
             reach. Rigorous A/B testing is prohibitively expensive and time
             consuming, a luxury reserved for mature organizations. With Flux,
@@ -79,7 +79,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             poster="/images/promo-export-01-poster.jpg"
             controls
             playsInline
-            className="rounded-[20px]"
+            className="rounded-[0.5rem]"
           />
         </SectionContainer>
       </section>
@@ -93,7 +93,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           borderColor={borderColor}
         >
           <SubSectionHeading number="1" heading="Spotting the gap" />
-          <p className="mb-10 px-2 text-lg leading-normal">
+          <p className="mb-10 px-2">
             We started Flux with a simple observation: UX practices are heavily
             skewed toward qualitative methods. While designers and researchers
             are comfortable with user interviews, surprisingly few leverage
@@ -108,7 +108,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             <span className={`font-bold ${theme.textColorClass} `}>Why?</span>
           </p>
           <SubSectionHeading number="2" heading="The UX research landscape" />
-          <p className="mb-10 px-2 text-lg leading-normal">
+          <p className="mb-10 px-2">
             We had a hunch: people don't do it because they don't know how.
             Quantitative research is inherently scientific. While the core
             concept isn't necessarily difficult to grasp, doing it well requires
@@ -326,7 +326,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           cardClass="w-full min-w-0"
         >
           <SubSectionHeading number="1" heading="Research method" />
-          <p className="mb-10 p-2 text-lg leading-normal">
+          <p className="mb-10 p-2">
             To further understand our problem space, we reached out to our
             network of colleagues in the tech industry.
           </p>
@@ -335,7 +335,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             body={
               <>
                 <SubSectionHeading number="2" heading="Insights" />
-                <p className="mb-6 px-2 text-lg leading-normal">
+                <p className="mb-6 px-2">
                   To further understand our problem space, we reached out to our
                   network of colleagues in the tech industry.
                 </p>
@@ -377,12 +377,12 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             ]}
           />
           <SubSectionHeading number="3" heading="New problem statement" />
-          <p className="mb-24 px-2 text-lg leading-normal">
+          <p className="mb-24 px-2">
             To further understand our problem space, we reached out to our
             network of colleagues in the tech industry.
           </p>
           <SubSectionHeading number="4" heading="The pivot" />
-          <p className="mb-6 px-2 text-lg leading-normal">
+          <p className="mb-6 px-2">
             To further understand our problem space, we reached out to our
             network of colleagues in the tech industry.
           </p>
@@ -399,7 +399,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           cardClass=""
         >
           <SubSectionHeading number="1" heading="Ideation" />
-          <p className="mb-6 p-2 text-lg leading-normal">
+          <p className="mb-6 p-2">
             To further understand our problem space, we reached out to our
             network of colleagues in the tech industry.
           </p>
@@ -417,7 +417,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           cardClass=""
         >
           <SubSectionHeading number="1" heading="User journey " />
-          <p className="mb-10 px-2 text-lg leading-normal">
+          <p className="mb-10 px-2">
             We launched a closed beta with 12 teams and saw strong engagement.
             Teams used the tool to test landing page flows, signup friction, and
             feature comprehension. Feedback praised its speed and clarity. The
@@ -426,7 +426,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             reshaping what quantitative UX looks like in practice.
           </p>
           <SubSectionHeading number="2" heading="User interface" />
-          <p className="mb-10 px-2 text-lg leading-normal">
+          <p className="mb-10 px-2">
             To further understand our problem space, we reached out to our
             network of colleagues in the tech industry.
           </p>
@@ -443,7 +443,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           cardClass=""
         >
           <SubSectionHeading number="1" heading="Launch" />
-          <p className="mb-10 px-2 text-lg leading-normal">
+          <p className="mb-10 px-2">
             We launched a closed beta with 12 teams and saw strong engagement.
             Teams used the tool to test landing page flows, signup friction, and
             feature comprehension. Feedback praised its speed and clarity. The
@@ -452,7 +452,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             reshaping what quantitative UX looks like in practice.
           </p>
           <SubSectionHeading number="2" heading="Feedback" />
-          <p className="mb-10 px-2 text-lg leading-normal">
+          <p className="mb-10 px-2">
             We launched a closed beta with 12 teams and saw strong engagement.
             Teams used the tool to test landing page flows, signup friction, and
             feature comprehension. Feedback praised its speed and clarity. The
@@ -461,7 +461,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             reshaping what quantitative UX looks like in practice.
           </p>
           <SubSectionHeading number="3" heading="Lessons learned" />
-          <p className="mb-10 px-2 text-lg leading-normal">
+          <p className="mb-10 px-2">
             We launched a closed beta with 12 teams and saw strong engagement.
             Teams used the tool to test landing page flows, signup friction, and
             feature comprehension. Feedback praised its speed and clarity. The

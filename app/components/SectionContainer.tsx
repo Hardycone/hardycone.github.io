@@ -5,6 +5,7 @@
 import { ReactNode } from "react";
 import { IconProps } from "@phosphor-icons/react";
 import { MotionValue, motion, useReducedMotion } from "framer-motion";
+import { useIsMdUp } from "@/hooks/useIsMdUp";
 
 interface SectionContainerProps {
   title: string;
@@ -34,9 +35,11 @@ export default function SectionContainer({
   const shouldReduceMotion = useReducedMotion();
   const shouldRevealOnScroll = revealOnScroll && !shouldReduceMotion;
 
+  const isMdUp = useIsMdUp();
+
   return (
     <motion.div
-      className={`flex flex-col rounded-[2.75rem] border bg-background/60 p-6 text-foreground backdrop-blur-xl dark:bg-dark-background/60 dark:text-dark-foreground ${cardClass}`}
+      className={`flex flex-col rounded-[1rem] border bg-background/60 p-3 text-foreground backdrop-blur-xl dark:bg-dark-background/60 dark:text-dark-foreground md:rounded-[2rem] md:p-6 ${cardClass}`}
       style={{ borderColor }}
       initial={
         shouldRevealOnScroll ? { opacity: 0, y: 56, scale: 0.98 } : false
@@ -59,10 +62,12 @@ export default function SectionContainer({
       }
     >
       <div className={`mb-2 flex items-center gap-4`}>
-        <Icon size={40} weight="duotone" className={`${textColorClass}`} />
-        <h3 className={`font-sans text-4xl font-bold ${textColorClass}`}>
-          {title}
-        </h3>
+        <Icon
+          size={isMdUp ? 40 : 30}
+          weight="duotone"
+          className={`${textColorClass}`}
+        />
+        <h3 className={` ${textColorClass}`}>{title}</h3>
       </div>
       <div className={`mb-16 h-[2px] w-full rounded-full ${bgColorClass}`} />
       {children}

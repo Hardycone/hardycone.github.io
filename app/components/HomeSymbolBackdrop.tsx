@@ -279,7 +279,7 @@ export default function HomeSymbolBackdrop({
 
       const symbolSetIndex = activeIndexRef.current;
       const symbols = getSymbolSet(symbolSetIndex);
-      const hoverRadius = Math.max(CELL_SIZE * 3, 150);
+      const hoverRadius = Math.max(CELL_SIZE * 3, 100);
 
       for (const cell of cells) {
         if (cell.visible) continue;
