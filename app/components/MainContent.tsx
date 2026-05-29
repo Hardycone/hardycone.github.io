@@ -15,8 +15,6 @@ import {
 } from "@phosphor-icons/react";
 import projects from "@/data/projects";
 
-import DebugViewport from "./DebugViewport";
-
 import { useViewMode } from "../context/ViewModeContext";
 import { useActiveProject } from "../context/ActiveProjectContext";
 

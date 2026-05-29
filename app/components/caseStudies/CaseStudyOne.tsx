@@ -3,11 +3,11 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import projects from "@/data/projects";
-import { useActiveProject } from "@/app/context/ActiveProjectContext";
+// import projects from "@/data/projects";
+// import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useTransform, MotionValue } from "framer-motion";
 import { FileTextIcon } from "@phosphor-icons/react";
-import { useProjectTheme } from "@/hooks/useProjectTheme";
+// import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
 
 interface CaseStudyOneProps {
@@ -16,9 +16,9 @@ interface CaseStudyOneProps {
 
 export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   const { resolvedTheme } = useTheme();
-  const { activeIndex } = useActiveProject();
+  // const { activeIndex } = useActiveProject();
 
-  const theme = useProjectTheme(projects[activeIndex].id);
+  // const theme = useProjectTheme(projects[activeIndex].id);
   // const targetRef = useRef<HTMLDivElement>(null);
 
   // const { scrollYProgress } = useScroll({
