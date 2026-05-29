@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Besley, Bricolage_Grotesque } from "next/font/google";
+import { Inter, Domine, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 
 import { ViewModeProvider } from "./context/ViewModeContext";
@@ -20,8 +20,8 @@ const inter = Inter({
   display: "swap",
 });
 
-const besley = Besley({
-  variable: "--font-besley",
+const domine = Domine({
+  variable: "--font-domine",
   subsets: ["latin"],
   display: "swap",
 });
@@ -41,7 +41,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${besley.variable} ${bricolageGrotesque.variable}`}
+      className={`${inter.variable} ${domine.variable} ${bricolageGrotesque.variable}`}
     >
       <body className="overflow-x-hidden bg-background font-serif text-foreground antialiased transition-colors dark:bg-dark-background dark:text-dark-foreground">
         {/* <svg

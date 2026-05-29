@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence, MotionStyle } from "framer-motion";
-import { CircleNotchIcon, ArrowElbowDownLeftIcon } from "@phosphor-icons/react";
+import { CircleNotchIcon, ArrowCircleRightIcon } from "@phosphor-icons/react";
 import { ReactNode } from "react";
 
 interface SpinButtonProps {
@@ -24,10 +24,8 @@ export default function SpinButton({
       className={`transition-scale hover:scale-[0.97] active:scale-95 active:text-opacity-20 ${className}`}
       style={style}
     >
-      <span>{children}</span>
-
       {/* Fixed width container to prevent layout shifts when icon swaps */}
-      <div className="relative flex h-5 w-5 items-center justify-center">
+      <div className="relative flex h-6 w-6 items-center justify-center">
         <AnimatePresence mode="wait">
           {isLoading ? (
             <motion.div
@@ -53,11 +51,12 @@ export default function SpinButton({
               exit={{ opacity: 0, x: 5 }}
               transition={{ duration: 0.2 }}
             >
-              <ArrowElbowDownLeftIcon size={20} weight="bold" />
+              <ArrowCircleRightIcon size={24} weight="bold" />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
+      <span>{children}</span>
     </motion.div>
   );
 }

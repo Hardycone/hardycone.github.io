@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { useEffect, useId, useRef, useState } from "react";
+import { type Ref, useEffect, useId, useRef, useState } from "react";
 
 const iconColors = {
   light: "#27272a",
@@ -95,7 +95,11 @@ function AnimatedThemeIcon({
   );
 }
 
-export default function ThemeToggle() {
+interface ThemeToggleProps {
+  buttonRef?: Ref<HTMLButtonElement>;
+}
+
+export default function ThemeToggle({ buttonRef }: ThemeToggleProps) {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isColorTransitioning, setIsColorTransitioning] = useState(false);
@@ -137,6 +141,7 @@ export default function ThemeToggle() {
 
   return (
     <button
+      ref={buttonRef}
       type="button"
       onClick={toggleTheme}
       title={`Switch to ${isDark ? "Light" : "Dark"} Mode`}

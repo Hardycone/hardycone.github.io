@@ -26,7 +26,7 @@ export default {
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],
         heading: ["var(--font-bricolage-grotesque)", "sans-serif"],
-        serif: ["var(--font-besley)", "serif"],
+        serif: ["var(--font-domine)", "serif"],
       },
       colors: {
         // 1. Base UI

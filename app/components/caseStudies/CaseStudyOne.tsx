@@ -53,9 +53,9 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   );
 
   return (
-    <article>
+    <article className="mx-auto w-full min-w-0 max-w-5xl">
       {/*Section 1: Resume*/}
-      <section id="section-1" className="mb-16 scroll-mt-24">
+      <section id="section-1" className="mb-16 w-full min-w-0 scroll-mt-24">
         {/*Section Header Block*/}
         <SectionContainer
           title="My Resume"
@@ -511,7 +511,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
         </SectionContainer>
       </section>
       {/*Section 2: Story*/}
-      <section id="section-2" className="mb-16 scroll-mt-24">
+      <section id="section-2" className="mb-16 w-full min-w-0 scroll-mt-24">
         <SectionContainer
           title="My Story"
           icon={FileTextIcon}
@@ -531,7 +531,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       </section>
 
       {/*Section 3: Interests*/}
-      <section id="section-3" className="scroll-mt-24">
+      <section id="section-3" className="w-full min-w-0 scroll-mt-24">
         <SectionContainer
           title="My Interests"
           icon={FileTextIcon}
@@ -545,7 +545,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             I also enjoy making physical things.
           </p>
           {/*Image Grid Container*/}
-          <div className="relative left-1/2 mx-auto w-screen max-w-[1440px] -translate-x-1/2 px-6">
+          <div className="relative left-1/2 mx-auto w-[100svw] max-w-[1440px] -translate-x-1/2 px-6">
             {/*Image Grid*/}
             <div className="grid grid-cols-4 grid-rows-4 gap-2">
               {/* Image 1 - 4 cells horizontally */}

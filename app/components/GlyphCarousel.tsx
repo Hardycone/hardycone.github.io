@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import projects from "../../data/projects";
 import { useActiveProject, wrapIndex } from "../context/ActiveProjectContext";
 import { useViewMode } from "../context/ViewModeContext";
@@ -10,11 +10,46 @@ import { useMouseShadow } from "@/hooks/useMouseShadow";
 import { useIsMdUp } from "@/hooks/useIsMdUp";
 import AnimatedGlyph from "./AnimatedGlyph";
 
+function isEditableKeyboardTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) return false;
+
+  const tagName = target.tagName.toLowerCase();
+
+  return (
+    target.isContentEditable ||
+    tagName === "input" ||
+    tagName === "textarea" ||
+    tagName === "select" ||
+    tagName === "button" ||
+    tagName === "a"
+  );
+}
+
+function KeyboardHint({
+  children,
+  isPressed = false,
+}: {
+  children: string;
+  isPressed?: boolean;
+}) {
+  return (
+    <motion.span
+      animate={{ scale: isPressed ? 0.9 : 1 }}
+      transition={{ duration: 0.08, ease: "easeOut" }}
+      className="pointer-events-none flex h-6 w-6 items-center justify-center rounded-md bg-sky-600 font-sans text-xs font-semibold text-background dark:bg-sky-400 dark:text-dark-background"
+    >
+      {children}
+    </motion.span>
+  );
+}
+
 export default function GlyphCarousel() {
   const { activeIndex, setActiveIndex } = useActiveProject();
   const { viewMode } = useViewMode();
   const [hasMounted, setHasMounted] = useState(false);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+  const [showKeyboardHints, setShowKeyboardHints] = useState(false);
+  const [pressedShortcut, setPressedShortcut] = useState<string | null>(null);
   const { resolvedTheme } = useTheme();
 
   const isInteractive = viewMode === "home";
@@ -29,12 +64,53 @@ export default function GlyphCarousel() {
   const lastScrollTime = useRef(0);
   const wheelAccum = useRef(0);
   const ticking = useRef(false);
+  const pressedShortcutTimeout = useRef<number | null>(null);
 
   const SCROLL_THRESHOLD = 10;
   const SCROLL_COOLDOWN = 500;
+  const flashShortcutHint = (shortcut: string) => {
+    setPressedShortcut(shortcut);
+    if (pressedShortcutTimeout.current) {
+      window.clearTimeout(pressedShortcutTimeout.current);
+    }
+    pressedShortcutTimeout.current = window.setTimeout(() => {
+      setPressedShortcut(null);
+      pressedShortcutTimeout.current = null;
+    }, 120);
+  };
 
   useEffect(() => {
     setHasMounted(true);
+    return () => {
+      if (pressedShortcutTimeout.current) {
+        window.clearTimeout(pressedShortcutTimeout.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.repeat || isEditableKeyboardTarget(event.target)) return;
+      setShowKeyboardHints(true);
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType === "mouse") setShowKeyboardHints(false);
+    };
+
+    const handleMouseMove = () => {
+      setShowKeyboardHints(false);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, []);
 
   useEffect(() => {
@@ -78,6 +154,7 @@ export default function GlyphCarousel() {
         e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
       if (!direction) return;
 
+      flashShortcutHint(direction > 0 ? "down" : "up");
       setActiveIndex((prev) => wrapIndex(prev + direction, projects.length));
       setPreviewIndex(null);
 
@@ -159,7 +236,7 @@ export default function GlyphCarousel() {
             }}
             style={{ boxShadow: isActive ? glyphShadow : "none" }}
             transition={{ type: "tween", stiffness: 500, damping: 20 }}
-            className="h-12 w-12 cursor-pointer touch-manipulation select-none rounded-full bg-background p-0.5 dark:bg-dark-background md:h-40 md:w-40 md:p-0"
+            className="relative h-12 w-12 cursor-pointer touch-manipulation select-none rounded-full bg-background p-0.5 dark:bg-dark-background md:h-40 md:w-40 md:p-0"
             onClick={() => isInteractive && setActiveIndex(index)}
           >
             <AnimatedGlyph
@@ -167,6 +244,29 @@ export default function GlyphCarousel() {
               isActive={isActive}
               shouldAnimate={isMdUp}
             />
+            <AnimatePresence>
+              {isInteractive && isActive && showKeyboardHints && (
+                <motion.div
+                  className="pointer-events-none absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col gap-[2rem] md:gap-[8.5rem]"
+                  initial={{ opacity: 0 }}
+                  animate={{
+                    opacity: 1,
+                    transition: { delay: 0.3, duration: 0.2, ease: "easeOut" },
+                  }}
+                  exit={{
+                    opacity: 0,
+                    transition: { duration: 0.2, ease: "easeOut" },
+                  }}
+                >
+                  <KeyboardHint isPressed={pressedShortcut === "up"}>
+                    ↑
+                  </KeyboardHint>
+                  <KeyboardHint isPressed={pressedShortcut === "down"}>
+                    ↓
+                  </KeyboardHint>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         );
       })}

@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
@@ -41,6 +41,21 @@ function hexToRgbChannels(hex: string) {
   const value = Number.parseInt(expanded, 16);
 
   return `${(value >> 16) & 255} ${(value >> 8) & 255} ${value & 255}`;
+}
+
+function isEditableKeyboardTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) return false;
+
+  const tagName = target.tagName.toLowerCase();
+
+  return (
+    target.isContentEditable ||
+    tagName === "input" ||
+    tagName === "textarea" ||
+    tagName === "select" ||
+    tagName === "button" ||
+    tagName === "a"
+  );
 }
 
 interface ProjectSummaryProps {
@@ -156,16 +171,33 @@ export default function ProjectSummary({
   const morphTargetRef = useRef<Project | null>(null);
 
   const [isNavigating, setIsNavigating] = useState(false);
+  const [showKeyboardHints, setShowKeyboardHints] = useState(false);
+  const [pressedShortcut, setPressedShortcut] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const pressedShortcutTimeout = useRef<number | null>(null);
+
+  const flashShortcutHint = useCallback((shortcut: string) => {
+    setPressedShortcut(shortcut);
+    if (pressedShortcutTimeout.current) {
+      window.clearTimeout(pressedShortcutTimeout.current);
+    }
+    pressedShortcutTimeout.current = window.setTimeout(() => {
+      setPressedShortcut(null);
+      pressedShortcutTimeout.current = null;
+    }, 120);
+  }, []);
 
   useEffect(() => {
     // Cleanup timer on unmount
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
+      if (pressedShortcutTimeout.current) {
+        window.clearTimeout(pressedShortcutTimeout.current);
+      }
     };
   }, []);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (variant === "header") return;
     setIsNavigating(true);
     if (variant === "bottom" && setTransitioningToNext) {
@@ -184,7 +216,63 @@ export default function ProjectSummary({
       // No need to set isNavigating(false) here,
       // the useEffect above will handle it when the page/props change.
     }, navigationDelay);
-  };
+  }, [
+    onBottomNavigationStart,
+    project,
+    router,
+    setTransitioningToNext,
+    variant,
+  ]);
+
+  useEffect(() => {
+    if (variant === "header") return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.key !== "Enter" ||
+        event.repeat ||
+        event.defaultPrevented ||
+        isEditableKeyboardTarget(event.target)
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      flashShortcutHint("enter");
+      handleClick();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [flashShortcutHint, handleClick, variant]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.repeat || isEditableKeyboardTarget(event.target)) return;
+      setShowKeyboardHints(true);
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType === "mouse") setShowKeyboardHints(false);
+    };
+
+    const handleMouseMove = () => {
+      setShowKeyboardHints(false);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
 
   useEffect(() => {
     setIsNavigating(false);
@@ -391,7 +479,7 @@ export default function ProjectSummary({
         <motion.div
           layout
           layoutDependency={layoutDependency}
-          className={`project-summary-scrollbar z-10 flex h-fit ${floatingPaneClasses} flex-col ${floatingPaneOverflowY} overflow-x-hidden rounded-[0.75rem] md:rounded-[1.5rem] ${theme.bgSoftColorClass} bg-opacity-80 backdrop-blur-md dark:bg-dark-background/40`}
+          className={`project-summary-scrollbar z-10 flex h-fit ${floatingPaneClasses} flex-col ${floatingPaneOverflowY} overflow-x-hidden rounded-[0.75rem] md:rounded-[1.5rem] ${theme.bgSoftColorClass} bg-opacity-90 backdrop-blur-md dark:bg-opacity-90`}
           style={mainFloatingStyle}
         >
           {/* Title text */}
@@ -436,7 +524,7 @@ export default function ProjectSummary({
             layoutDependency={layoutDependency}
             className={`text-xs leading-tight text-foreground dark:text-dark-foreground sm:text-sm xl:text-base ${
               variant === "header"
-                ? "mb-2 md:border-l-4 md:border-foreground md:py-2 md:pl-4 md:dark:border-dark-foreground xl:w-[70%]"
+                ? "mb-2 md:mb-4 md:border-l-4 md:border-foreground md:py-2 md:pl-4 md:dark:border-dark-foreground lg:mb-5 xl:mb-6 xl:w-[70%] 2xl:mb-7"
                 : variant === "preview"
                   ? ""
                   : "hidden"
@@ -452,6 +540,7 @@ export default function ProjectSummary({
                 initial={{ y: 100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.2, ease: "easeOut" }}
+                className="flex flex-row gap-12 tall:flex-col tall:gap-0"
               >
                 {displayedProject.bullets.map((bullet) => (
                   <li
@@ -479,11 +568,24 @@ export default function ProjectSummary({
               {/* Button */}
               <SpinButton
                 isLoading={isNavigating}
-                className={`${theme.textColorClass} relative flex items-center gap-2 rounded-[0.75rem] px-6 text-sm font-semibold md:rounded-[1.5rem] bg-${displayedProject.id}-soft dark:bg-dark-${displayedProject.id}-soft h-[2.5rem] md:h-[3rem]`}
+                className={`relative flex h-[2.5rem] items-center gap-2 rounded-[0.75rem] bg-background pl-2 pr-4 font-sans text-base font-semibold text-foreground dark:bg-dark-background dark:text-dark-foreground md:h-[3rem] md:rounded-[1.5rem] md:pl-3 md:pr-5`}
                 style={{ boxShadow: buttonShadow }}
               >
                 {displayedProject.button}
               </SpinButton>
+              {showKeyboardHints && (
+                <div className="pointer-events-none absolute left-[calc(100%-0.75rem)] top-1/2 -translate-y-1/2 whitespace-nowrap">
+                  <motion.div
+                    animate={{ scale: pressedShortcut === "enter" ? 0.9 : 1 }}
+                    transition={{ duration: 0.08, ease: "easeOut" }}
+                    className="block rounded-md bg-sky-700"
+                  >
+                    <div className="flex h-6 w-11 items-center justify-center rounded-md bg-sky-600 font-sans text-xs font-semibold text-background dark:bg-sky-400 dark:text-dark-background">
+                      Enter
+                    </div>
+                  </motion.div>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>

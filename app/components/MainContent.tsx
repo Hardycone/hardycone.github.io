@@ -405,28 +405,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
     >
       {viewMode === "home" && <HomeSymbolBackdrop activeIndex={activeIndex} />}
       <TopBar />
-      <span className="fixed z-50 tall:hidden wide:hidden">Normal</span>
-      <span className="fixed z-50 hidden wide:block superwide:hidden">
-        Wide
-      </span>
-      <span className="extremelywide:hidden fixed z-50 hidden superwide:block">
-        Super Wide
-      </span>
-      <span className="extremelywide:block fixed z-50 hidden">
-        Extremely Wide
-      </span>
-      <span className="fixed z-50 hidden tall:block supertall:hidden">
-        Tall
-      </span>
-      <span className="fixed z-50 hidden supertall:block">Super Tall</span>
-      <span className="fixed top-6 sm:hidden">Normal</span>
-      <span className="fixed top-6 hidden sm:block md:hidden">sm</span>
-      <span className="fixed top-6 hidden md:block lg:hidden">md</span>
-      <span className="fixed top-6 hidden lg:block xl:hidden">lg</span>
-      <span className="fixed top-6 hidden xl:block 2xl:hidden">xl</span>
-      <span className="fixed top-6 hidden 2xl:block">2xl</span>
 
-      <DebugViewport />
+      {/* <DebugViewport /> */}
       <div
         className={`relative z-10 flex flex-1 flex-col overflow-hidden ${
           shouldReserveGlyphRail ? "min-w-max" : ""
