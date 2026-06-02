@@ -251,6 +251,11 @@ export default function ProjectSummary({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Tab") {
+        setShowKeyboardHints(false);
+        return;
+      }
+
       if (event.repeat || isEditableKeyboardTarget(event.target)) return;
       setShowKeyboardHints(true);
     };
@@ -560,7 +565,7 @@ export default function ProjectSummary({
           {variant === "preview" && (
             <motion.div
               key="preview-button"
-              className={`absolute bottom-3 left-3 md:bottom-6 md:left-6 wide:hidden lg:wide:block lg:superwide:hidden`}
+              className={`rihgt-3 absolute bottom-3 md:bottom-6 md:left-6 wide:hidden lg:wide:block lg:superwide:hidden`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, transition: { delay: 0.4, ease: "easeOut" } }}

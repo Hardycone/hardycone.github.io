@@ -9,9 +9,9 @@ import {
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  ArrowSquareUpIcon,
-  ArrowSquareDownIcon,
-  MouseScrollIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  ArrowsVerticalIcon,
 } from "@phosphor-icons/react";
 import projects from "@/data/projects";
 
@@ -434,10 +434,16 @@ export default function MainContent({ children }: { children: ReactNode }) {
           className="pointer-events-none fixed bottom-6 left-1/2 z-50 flex items-center space-x-2 rounded-lg bg-foreground px-4 py-2 font-sans text-sm text-background shadow-md dark:bg-dark-foreground dark:text-dark-background md:text-lg"
         >
           <span className="whitespace-nowrap">Use scroll</span>
-          <MouseScrollIcon size={24} />
+          <span className="flex h-6 w-4 items-center justify-center rounded-full bg-sky-600 dark:bg-sky-400">
+            <ArrowsVerticalIcon size={16} />
+          </span>
           <span className="whitespace-nowrap"> or arrow keys</span>
-          <ArrowSquareUpIcon size={24} />
-          <ArrowSquareDownIcon size={24} />
+          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-sky-600 dark:bg-sky-400">
+            <ArrowUpIcon size={12} weight="bold" />
+          </span>
+          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-sky-600 dark:bg-sky-400">
+            <ArrowDownIcon size={12} weight="bold" />
+          </span>
           <span className="whitespace-nowrap">to explore</span>
         </motion.div>
       )}

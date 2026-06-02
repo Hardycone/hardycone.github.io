@@ -90,6 +90,11 @@ export default function GlyphCarousel() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Tab") {
+        setShowKeyboardHints(false);
+        return;
+      }
+
       if (event.repeat || isEditableKeyboardTarget(event.target)) return;
       setShowKeyboardHints(true);
     };
@@ -228,8 +233,12 @@ export default function GlyphCarousel() {
             ? 1
             : 0.75;
 
+        const isNearby = Math.abs(index - activeIndex) <= 1;
+
         return (
-          <motion.div
+          <motion.button
+            type="button"
+            tabIndex={isNearby ? 0 : -1}
             key={project.id}
             animate={{
               scale,
@@ -267,7 +276,7 @@ export default function GlyphCarousel() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.div>
+          </motion.button>
         );
       })}
     </motion.div>

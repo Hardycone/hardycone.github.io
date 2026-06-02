@@ -18,9 +18,8 @@ export default function SpinButton({
   style,
 }: SpinButtonProps) {
   return (
-    <motion.div
-      // We use a div here because the Parent (ProjectSummary) handles the click.
-      // This button is purely visual decoration inside the clickable card.
+    <motion.button
+      type="button"
       className={`transition-scale hover:scale-[0.97] active:scale-95 active:text-opacity-20 ${className}`}
       style={style}
     >
@@ -57,6 +56,6 @@ export default function SpinButton({
         </AnimatePresence>
       </div>
       <span>{children}</span>
-    </motion.div>
+    </motion.button>
   );
 }

@@ -144,6 +144,7 @@ export default function ThemeToggle({ buttonRef }: ThemeToggleProps) {
       ref={buttonRef}
       type="button"
       onClick={toggleTheme}
+      onPointerUp={(event) => event.currentTarget.blur()}
       title={`Switch to ${isDark ? "Light" : "Dark"} Mode`}
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
       className="h-full w-full rounded-full p-2"

@@ -312,6 +312,11 @@ export default function TopBar() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Tab") {
+        setShowKeyboardHints(false);
+        return;
+      }
+
       if (event.repeat || isEditableKeyboardTarget(event.target)) return;
       setShowKeyboardHints(true);
     };
