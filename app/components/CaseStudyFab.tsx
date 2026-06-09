@@ -85,6 +85,7 @@ export default function CaseStudyFab() {
   const barShadow = resolvedTheme === "dark" ? barDarkShadow : barLightShadow;
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isToggleHovered, setIsToggleHovered] = useState(false);
   const fabRef = useRef<HTMLDivElement>(null);
 
   const project = projects[activeIndex];
@@ -93,6 +94,7 @@ export default function CaseStudyFab() {
   const isVisible = viewMode === "case-study";
 
   const handleToggle = useCallback(() => {
+    setIsToggleHovered(false);
     setIsOpen((prev) => !prev);
   }, []);
 
@@ -103,6 +105,7 @@ export default function CaseStudyFab() {
   useEffect(() => {
     if (!isVisible) {
       setIsOpen(false);
+      setIsToggleHovered(false);
     }
   }, [isVisible]);
 
@@ -175,11 +178,13 @@ export default function CaseStudyFab() {
               style={{ boxShadow: barShadow }}
               transition={{ duration: 0.1 }}
               whileHover={{ scale: 1.1 }}
+              onHoverStart={() => setIsToggleHovered(true)}
+              onHoverEnd={() => setIsToggleHovered(false)}
               onClick={handleToggle}
               className="relative h-9 w-9 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
               title={isOpen ? "Close links" : "Open links"}
             >
-              <FabToggle isOpen={isOpen} />
+              <FabToggle isOpen={isOpen} isHovered={isToggleHovered} />
             </motion.button>
           </div>
         </motion.div>

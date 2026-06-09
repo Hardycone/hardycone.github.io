@@ -560,7 +560,7 @@ export default function TopBar() {
             animate={
               isGreetingHovered
                 ? {
-                    rotate: [0, 10, 10, -10, 10, -10, 0],
+                    rotate: [0, 5, 5, -10, 10, -10, 0],
                     scale: [1, 1.05, 1.05, 1.05, 1.05, 1.05, 1],
                   }
                 : { rotate: 0, scale: 1 }
