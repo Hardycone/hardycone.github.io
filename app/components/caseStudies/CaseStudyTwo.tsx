@@ -349,7 +349,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                     <span className="text-6xl">1</span>
                     <div className="flex h-full items-center justify-center">
                       <h3 className="text-2xl font-bold">
-                        Nobody wants to do quantitative research. Come on. Who
+                        Everyone wants to do quantitative research. Come on. Who
                         are you kidding?
                       </h3>
                     </div>

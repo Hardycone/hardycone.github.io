@@ -22,6 +22,39 @@ import SpinButton from "./SpinButton";
 import { useActiveProject } from "../context/ActiveProjectContext";
 import projects from "../../data/projects";
 import type { Project } from "../../data/projects";
+import {
+  PenNibIcon,
+  MagnifyingGlassIcon,
+  WrenchIcon,
+  ChartBarIcon,
+  SparkleIcon,
+  RocketIcon,
+  ChartLineIcon,
+  FilmSlateIcon,
+  VisorIcon,
+  PlanetIcon,
+  UsersThreeIcon,
+  HandshakeIcon,
+  FlowerTulipIcon,
+  BuildingsIcon,
+} from "@phosphor-icons/react";
+
+const tagIconRegistry: Record<string, React.ElementType> = {
+  PenNibIcon,
+  MagnifyingGlassIcon,
+  WrenchIcon,
+  ChartBarIcon,
+  SparkleIcon,
+  RocketIcon,
+  ChartLineIcon,
+  FilmSlateIcon,
+  VisorIcon,
+  PlanetIcon,
+  UsersThreeIcon,
+  HandshakeIcon,
+  FlowerTulipIcon,
+  BuildingsIcon,
+};
 
 function useHasMounted() {
   const [hasMounted, setHasMounted] = useState(false);
@@ -119,7 +152,16 @@ export default function ProjectSummary({
   const headerBlur = useTransform(
     scrollY,
     [0, 50, window.innerHeight / 2],
-    ["blur(0px)", "blur(0px)", "blur(20px)"],
+    ["blur(0px)", "blur(0px)", "blur(10px)"],
+  );
+
+  const bottomBlur = useTransform(
+    scrollY,
+    [
+      document.body.scrollHeight - window.innerHeight * 1.5,
+      document.body.scrollHeight - window.innerHeight,
+    ],
+    ["blur(10px)", "blur(0px)"],
   );
 
   const bottomScale = useTransform(
@@ -321,7 +363,9 @@ export default function ProjectSummary({
       ? "blur(0px)"
       : variant === "header"
         ? headerBlur
-        : "blur(0px)";
+        : variant === "bottom"
+          ? bottomBlur
+          : "blur(0px)";
   const floatingPaneOverflowY =
     isTransitionLocked || transitioningToNext
       ? "overflow-y-hidden"
@@ -418,6 +462,7 @@ export default function ProjectSummary({
         opacity: summaryOpacity,
         scale: summaryScale,
         filter: summaryFilter,
+        willChange: variant === "header" ? "filter, opacity" : undefined,
       }}
       className={`z-10 flex flex-col ${containerClasses}`}
     >
@@ -484,7 +529,7 @@ export default function ProjectSummary({
         <motion.div
           layout
           layoutDependency={layoutDependency}
-          className={`project-summary-scrollbar z-10 flex h-fit ${floatingPaneClasses} flex-col ${floatingPaneOverflowY} overflow-x-hidden rounded-[0.75rem] md:rounded-[1.5rem] ${theme.bgSoftColorClass} bg-opacity-90 backdrop-blur-md dark:bg-opacity-90`}
+          className={`project-summary-scrollbar z-10 flex h-fit ${floatingPaneClasses} flex-col ${floatingPaneOverflowY} overflow-x-hidden rounded-[0.75rem] md:rounded-[1.5rem] ${theme.bgSoftColorClass} bg-opacity-90 ${variant !== "header" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
           style={mainFloatingStyle}
         >
           {/* Title text */}
@@ -503,14 +548,24 @@ export default function ProjectSummary({
               layoutDependency={layoutDependency}
               className={`mb-2 flex flex-wrap gap-1 md:mb-4 lg:mb-5 xl:mb-6 2xl:mb-7`}
             >
-              {displayedProject.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className={`rounded-full px-2 font-sans text-xs font-semibold md:px-2 md:py-1 ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
-                >
-                  {tag}
-                </span>
-              ))}
+              {displayedProject.tags.map((tag) => {
+                const IconComponent = tagIconRegistry[tag.icon];
+                return (
+                  <span
+                    key={tag.label}
+                    className={`inline-flex items-center gap-1 rounded-full px-2 font-sans text-xs font-semibold md:px-2 md:py-1 ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
+                  >
+                    {IconComponent && (
+                      <IconComponent
+                        size={16}
+                        weight="bold"
+                        className="shrink-0"
+                      />
+                    )}
+                    {tag.label}
+                  </span>
+                );
+              })}
             </motion.div>
           )}
           {/* Tagline */}
@@ -565,7 +620,7 @@ export default function ProjectSummary({
           {variant === "preview" && (
             <motion.div
               key="preview-button"
-              className={`rihgt-3 absolute bottom-3 md:bottom-6 md:left-6 wide:hidden lg:wide:block lg:superwide:hidden`}
+              className={`absolute bottom-3 left-3 md:bottom-6 md:left-6 wide:hidden lg:wide:block lg:superwide:hidden`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, transition: { delay: 0.4, ease: "easeOut" } }}

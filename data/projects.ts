@@ -17,13 +17,24 @@ export interface ProjectSection {
   icon: string;
 }
 
+export interface Tag {
+  label: string;
+  icon: string;
+}
+
+export interface ExternalLink {
+  label: string;
+  url: string;
+  icon: string;
+}
+
 export interface Project {
   id: string;
   slug: string;
   role?: string;
   title: string;
   tagline?: string;
-  tags?: string[];
+  tags?: Tag[];
   description?: string;
   bullets?: string[];
   image: string;
@@ -32,6 +43,7 @@ export interface Project {
   bgColor: string;
   glyphAnimation: GlyphAnimationData;
   sections: ProjectSection[];
+  externalLinks: ExternalLink[];
 }
 
 const projects: Project[] = [
@@ -41,7 +53,11 @@ const projects: Project[] = [
     role: "with empathy.",
     title: "About Me",
     tagline: "Human-Centered Designer with 10 Years of Experience",
-    tags: ["Designer", "Researcher", "Builder"],
+    tags: [
+      { label: "Designer", icon: "PenNibIcon" },
+      { label: "Researcher", icon: "MagnifyingGlassIcon" },
+      { label: "Builder", icon: "WrenchIcon" },
+    ],
     description:
       "My expertise ranges across design, research, and project management. I have worked on everything from public initiatives deeply rooted in stakeholder engagement, to enterprise software aiding complex workflows. The throughline of all my work is a commitment to solving real problems for real people.",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
@@ -58,6 +74,14 @@ const projects: Project[] = [
       { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
       { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
+    externalLinks: [
+      {
+        label: "Github",
+        url: "https://github.com/Hardycone",
+        icon: "GithubLogoIcon",
+      },
+      { label: "Resume", url: "https://google.com", icon: "FileTextIcon" },
+    ],
   },
   {
     id: "flux",
@@ -65,7 +89,12 @@ const projects: Project[] = [
     title: "Flux",
     role: "from Zero to One.",
     tagline: "Democratizing quantitative UX research",
-    tags: ["Quantitative UX", "B2B SaaS", "Startup", "Data Visualization"],
+    tags: [
+      { label: "AI", icon: "SparkleIcon" },
+      { label: "Startup", icon: "RocketIcon" },
+      { label: "Quant UX", icon: "ChartBarIcon" },
+      { label: "Data Vis", icon: "ChartLineIcon" },
+    ],
     description:
       "I co-founded a company on a mission to demystify and democratize rigorous quantitative UX insights for all product teams. This case study recounts how we went from 0 to 1 with a design-forward approach.",
     bullets: ["Duration: 2 year", "Role: Co-founder"],
@@ -94,6 +123,19 @@ const projects: Project[] = [
         icon: "PresentationChartIcon",
       },
     ],
+    externalLinks: [
+      {
+        label: "GitHub",
+        url: "https://github.com/Hardycone",
+        icon: "GithubLogoIcon",
+      },
+      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
+      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
+      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
+      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
+      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
+      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
+    ],
   },
   {
     id: "fantail",
@@ -101,7 +143,11 @@ const projects: Project[] = [
     role: "human-centered AI.",
     title: "Fantail",
     tagline: "Empowering filmmakers to bring their stories to life",
-    tags: ["Generative AI", "Empowering Creatives", "Startup"],
+    tags: [
+      { label: "AI", icon: "SparkleIcon" },
+      { label: "Startup", icon: "RocketIcon" },
+      { label: "Filmmaking", icon: "FilmSlateIcon" },
+    ],
     description:
       "Incubated during my time at University of Washington, Fantail is an AI-powered story development platform that helps filmmakers brainstorm, organize, storyboard, and pitch their projects.",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
@@ -118,6 +164,10 @@ const projects: Project[] = [
       { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
       { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
+    externalLinks: [
+      { label: "GitHub", url: "https://google.com", icon: "GithubLogoIcon" },
+      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
+    ],
   },
   {
     id: "suits",
@@ -125,7 +175,10 @@ const projects: Project[] = [
     role: "next-gen interfaces.",
     title: "Astrohuskies",
     tagline: "Building AR interfaces for next gen NASA missions",
-    tags: ["Augmented Reality", "Next Gen NASA Spacesuits", "Artemis Program"],
+    tags: [
+      { label: "XR", icon: "VisorIcon" },
+      { label: "Artemis", icon: "PlanetIcon" },
+    ],
     description:
       "The next generation of lunar and Mars missions call for interfaces that can effectively relay information and aid extra-vehicular missions on alien terrains. Our team went on to become a finalist in NASA's 2023 SUITS challenge and tested our prototype with NASA engineers at the Johnson Space Center.",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
@@ -142,6 +195,10 @@ const projects: Project[] = [
       { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
       { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
+    externalLinks: [
+      { label: "GitHub", url: "https://google.com", icon: "GithubLogoIcon" },
+      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
+    ],
   },
   {
     id: "wolcott",
@@ -149,7 +206,11 @@ const projects: Project[] = [
     role: "alongside communities.",
     title: "Wolcott Falls",
     tagline: "Co-designing a community space for a small rural New York town",
-    tags: ["Co-Design", "Stakeholder Management", "Environmental Justice"],
+    tags: [
+      { label: "Co-Design", icon: "UsersThreeIcon" },
+      { label: "Stakeholders", icon: "HandshakeIcon" },
+      { label: "Environmental Justice", icon: "FlowerTulipIcon" },
+    ],
     description:
       "I implemented a community-driven project that laid out a vision for the urban core of Wolcott, NY that promoted local pride, urban design, and watershed protection. Funded by the National Oceanic and Atmospheric Administration (NOAA).",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
@@ -166,6 +227,10 @@ const projects: Project[] = [
       { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
       { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
+    externalLinks: [
+      { label: "GitHub", url: "https://google.com", icon: "GithubLogoIcon" },
+      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
+    ],
   },
   {
     id: "chinatown",
@@ -174,7 +239,10 @@ const projects: Project[] = [
     title: "The Ribbon",
     tagline:
       "Telling the story of an ethnic enclave through narrative landscape architecture",
-    tags: ["Designer", "Researcher", "Entrepreneur"],
+    tags: [
+      { label: "Architecture", icon: "BuildingsIcon" },
+      { label: "Stakeholders", icon: "HandshakeIcon" },
+    ],
     description:
       "I studied Boston's Chinatown and delievered a suite of design recommendations to key stakeholders that aimed at promoting the neighorhood's cultural identity. Several of my proposals were later partially implemented.",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
@@ -190,6 +258,10 @@ const projects: Project[] = [
       { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
       { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
       { id: "section-6", label: "Reflection", icon: "BrainIcon" },
+    ],
+    externalLinks: [
+      { label: "GitHub", url: "https://google.com", icon: "GithubLogoIcon" },
+      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
     ],
   },
 ];

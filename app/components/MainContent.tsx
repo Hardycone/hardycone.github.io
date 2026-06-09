@@ -24,6 +24,7 @@ import ProjectSummary from "./ProjectSummary";
 import CaseStudyContent from "./CaseStudyContent";
 import MyName from "./MyName";
 import HomeSymbolBackdrop from "./HomeSymbolBackdrop";
+import CaseStudyFab from "./CaseStudyFab";
 
 type BottomNavigationState = {
   slug: string;
@@ -475,35 +476,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
         {children}
       </motion.div>
       <div className="relative z-10 min-w-0 flex-1" />
-      {/* {showLandscapeBlocker && (
-        <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-background text-center text-foreground">
-          <motion.svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-            className="h-16 w-16"
-            animate={{
-              rotate: [90, 90, 0, 0, 0, 90, 90, 180, 180, 180, 90],
-              transition: {
-                rotate: {
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  duration: 6,
-                  ease: "easeInOut",
-                },
-              },
-            }}
-          >
-            <rect x="6" y="2" width="12" height="20" rx="2" ry="2" />
-            <line x1="12" y1="18" x2="12" y2="18" />
-          </motion.svg>
-          <p className="font-sans text-lg font-semibold">
-            Please rotate your phone to portrait mode to view Home.
-          </p>
-        </div>
-      )} */}
+
+      <CaseStudyFab />
     </main>
   );
 }

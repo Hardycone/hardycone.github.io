@@ -65,6 +65,42 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           borderColor={borderColor}
           revealOnScroll={false}
         >
+          A throughline of my career – empowerment. I enjoy building things that
+          enable people to do more and be more. This passion hasn’t changed
+          through my transition from landscape architecture into tech. It may
+          seem like a big jump, but in reality I’ve always been the same
+          designer speaking the same language, who looks for problems that
+          prevent people from realizing their potential and solves them. - I’m
+          currently working on Flux, a platform that unlocks quantitative UX
+          insights to every designer, researcher, and product manager alike.
+          With AI, product teams are iterating and prototyping fast. For one
+          reason or another, research is often overlooked in this process. Even
+          if done, it’s usually qualitative - great for getting directional
+          insights, but lacking in providing measurable confidence in the
+          decision. Quant testing is the answer. But it’s expensive and takes
+          forever. Flux is here to solve that. From prototype to quant UX
+          insights, with statistical rigor, in hours. Guardrails and guidance
+          are set in place to breakdown the myths surrounding quant UX, ensuring
+          anyone, regardless of whether they’ve had training in statistics, can
+          run a study and get real, legitimate results. - Before that, I started
+          and failed launching another idea – Fantail. Our vision – which we
+          still believe to this day – is that AI should serve the creative mind,
+          not replace it. Fantail brought AI into the early stages of
+          filmmaking. It’s not “prompt the AI to make your film”, it’s “let AI
+          help you bring what’s in your mind onto the paper”. In Fantail,
+          filmmakers could write, gather reference materials, create
+          storyboards, hear dialogues. I worked on this with another 2
+          cofounders for 6 months. Together we built a prototype and pursued
+          funding, but we were ultimately unable to continue. Lesson learned:
+          founder-market fit matters. We were naïve going into this with nothing
+          but a burning passion. We did textbook discovery and design research,
+          identified a real problem, and delivered a solution. But we didn’t
+          have to the industry knowhow. Investors saw that and turned us down. -
+          In another life, I was a landscape architecture. I was in a very
+          specific niche – environmental justice. It’s social justice manifested
+          in the landscape. Socioeconomically disadvantaged communities are
+          setup to fail. They quite literally don’t even breath the same air.
+          They have less access to recreational green spaces. As a
           {/*Subsection 1: Experience*/}
           <div className="mb-8">
             {/*Subheader*/}
@@ -135,8 +171,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                     ASLF is a leading nonprofit with a decades-long track record
                     of shaping US environmental policy through strategic
                     litigation. I joined as a landscape designer as the
-                    organizatoin aimed to refocus its efforts to implement
-                    impactful green projects in local communities.
+                    organizatoin refocused its efforts to implementing impactful
+                    green projects in local communities.
                   </p>
                   <ul className="mt-2 list-inside list-disc">
                     <li>

@@ -24,7 +24,7 @@ import {
 } from "@phosphor-icons/react";
 
 import Home from "../icons/Home";
-import Resume from "../icons/Resume";
+import Greetings from "../icons/Greetings";
 import LinkedIn from "../icons/LinkedIn";
 import ThemeToggle from "./ThemeToggle";
 import { usePathname } from "next/navigation";
@@ -88,6 +88,7 @@ export default function TopBar() {
   );
 
   const [isNavigatingHome, setIsNavigatingHome] = useState(false);
+  const [isGreetingHovered, setIsGreetingHovered] = useState(false);
   const scrollTimeout = useRef<number | null>(null);
   const pressedShortcutTimeout = useRef<number | null>(null);
   const themeToggleButtonRef = useRef<HTMLButtonElement>(null);
@@ -545,13 +546,29 @@ export default function TopBar() {
           style={{ boxShadow: barShadow }}
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.1 }}
+          onHoverStart={() => setIsGreetingHovered(true)}
+          onHoverEnd={() => setIsGreetingHovered(false)}
           className="relative h-9 w-9 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
           onClick={() => {
             flashShortcutHint("about");
             handleAboutClick();
           }}
         >
-          <Resume />
+          <motion.span
+            className="block h-full w-full"
+            style={{ transformOrigin: "bottom right" }}
+            animate={
+              isGreetingHovered
+                ? {
+                    rotate: [0, 10, 10, -10, 10, -10, 0],
+                    scale: [1, 1.05, 1.05, 1.05, 1.05, 1.05, 1],
+                  }
+                : { rotate: 0, scale: 1 }
+            }
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+          >
+            <Greetings />
+          </motion.span>
           {showKeyboardHints && (
             <KeyboardHint isPressed={pressedShortcut === "about"}>
               A

@@ -37,27 +37,24 @@ export default function MyName() {
       {viewMode === "home" && (
         <motion.div
           // Slide down and fade out when leaving Home
+          style={{ textShadow: textShadow }}
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1, transition: { delay: 0.2 } }}
           exit={{ y: -100, opacity: 0 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
           className={`pointer-events-none absolute z-50 mt-4 flex h-full w-full flex-1 flex-col whitespace-nowrap text-foreground dark:text-dark-foreground supertall:mt-7 superwide:hidden`}
         >
-          <motion.span
-            style={{ textShadow: textShadow }}
-            className="z-50 text-xl md:text-3xl 2xl:text-5xl sm:tall:text-3xl md:tall:text-4xl"
-          >
+          <motion.span className="z-50 text-xl md:text-3xl 2xl:text-5xl sm:tall:text-3xl md:tall:text-4xl">
             Hi! I&apos;m Haichao.
           </motion.span>
 
           {/* Flip Container */}
-          <div className="z-50 flex text-lg md:text-2xl 2xl:text-4xl sm:tall:text-2xl md:tall:text-3xl">
+          <motion.div className="z-50 flex text-lg md:text-2xl 2xl:text-4xl sm:tall:text-2xl md:tall:text-3xl">
             I design&nbsp;
             <motion.span
               key={activeIndex}
               custom={direction}
               variants={motionVariants}
-              // style={{ textShadow: textShadow }}
               // The "Slot Machine" Flip Effect
               initial="initial"
               animate="animate"
@@ -72,7 +69,7 @@ export default function MyName() {
             >
               {role}
             </motion.span>
-          </div>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
