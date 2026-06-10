@@ -1,7 +1,7 @@
 "use client";
 import { useAnimate, useInView } from "framer-motion";
 import { CaretDownIcon } from "@phosphor-icons/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface FlourishNameProps {
   name: string;
@@ -10,8 +10,14 @@ interface FlourishNameProps {
   onToggle: () => void;
   onFlourish?: () => void;
   logoSrc?: string;
+  gradientCenterColor?: string;
+  gradientMiddleColor?: string;
 }
-
+function parseRgb(rgba: string) {
+  const m = rgba.match(/^rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+  if (m) return { r: +m[1], g: +m[2], b: +m[3] };
+  return null;
+}
 export default function FlourishName({
   name,
   bgColor,
@@ -19,13 +25,19 @@ export default function FlourishName({
   onToggle,
   onFlourish,
   logoSrc,
+  gradientCenterColor = "#ef4444",
+  gradientMiddleColor = "#a855f7",
 }: FlourishNameProps) {
   const [scope, animate] = useAnimate();
   const hasTriggered = useRef(false);
+  const [isHovered, setIsHovered] = useState(false);
   const isInView = useInView(scope, {
     once: true,
     margin: "0px 0px -50% 0px",
   });
+
+  const rgb = parseRgb(bgColor);
+  const hoverBg = rgb ? `rgba(${rgb.r},${rgb.g},${rgb.b},0.20)` : bgColor;
 
   useEffect(() => {
     if (!hasTriggered.current && isInView) {
@@ -48,7 +60,7 @@ export default function FlourishName({
         const gradSize = Math.max(buttonWidth * 4, 200);
         const halfGrad = gradSize;
 
-        el.style.backgroundImage = `radial-gradient(circle at center, #ef4444 0%, #a855f7 30%, transparent 65%)`;
+        el.style.backgroundImage = `radial-gradient(circle at center, ${gradientCenterColor} 0%, ${gradientMiddleColor} 40%, transparent 75%)`;
         el.style.backgroundSize = `${gradSize}px ${gradSize}px`;
         el.style.backgroundRepeat = "no-repeat";
         el.style.backgroundPosition = `-${halfGrad}px center`;
@@ -73,15 +85,25 @@ export default function FlourishName({
       };
       doFlourish();
     }
-  }, [isInView, animate, scope, bgColor, onFlourish]);
+  }, [
+    isInView,
+    animate,
+    scope,
+    bgColor,
+    onFlourish,
+    gradientCenterColor,
+    gradientMiddleColor,
+  ]);
 
   return (
     <button
       ref={scope}
       onClick={onToggle}
       type="button"
-      className="inline-flex translate-y-[0.4em] cursor-pointer items-center gap-[0.15em] rounded-[0.25em] px-[0.15em] py-[0.15em] font-bold"
-      style={{ backgroundColor: bgColor }}
+      className="inline-flex translate-y-[0.4em] cursor-pointer items-center gap-[0.15em] rounded-[0.25em] px-[0.15em] py-[0.15em] font-bold transition-colors duration-150"
+      style={{ backgroundColor: isHovered ? hoverBg : bgColor }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {logoSrc && (
         <img

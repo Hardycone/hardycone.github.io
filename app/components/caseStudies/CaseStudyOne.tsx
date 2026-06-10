@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 // import projects from "@/data/projects";
 // import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useTransform, MotionValue } from "framer-motion";
-import { LineSegmentIcon } from "@phosphor-icons/react";
+import { PathIcon, CameraIcon } from "@phosphor-icons/react";
 import { hexToRgba } from "@/lib/palette";
 // import { useProjectTheme } from "@/hooks/useProjectTheme";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
@@ -73,7 +73,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
         {/*Section Header Block*/}
         <SectionContainer
           title="My Path"
-          icon={LineSegmentIcon}
+          icon={PathIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
@@ -91,7 +91,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             I’m currently working on{" "}
             <FlourishName
               name="Flux"
-              bgColor={hexToRgba(fluxTheme.hex.primary, 0.05)}
+              bgColor={hexToRgba(fluxTheme.hex.primary, 0.1)}
               isActive={isFluxOpen}
               onToggle={() => setIsFluxOpen((prev) => !prev)}
               onFlourish={() => setIsFluxOpen(true)}
@@ -107,7 +107,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             approachable, guided, and genuinely useful.
           </p>
           <NarrativeAccordion isOpen={isFluxOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-xl bg-flux/5 p-8 dark:bg-dark-flux/5">
+            <div className="mb-4 mt-4 flex gap-4 rounded-xl bg-flux/10 p-8 dark:bg-dark-flux/10">
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl">
                 <img
                   src="/images/logo-flux.png"
@@ -845,42 +845,28 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           </div>
         </SectionContainer>
       </section>
-      {/*Section 2: Story*/}
-      <section id="section-2" className="mb-16 w-full min-w-0 scroll-mt-24">
-        <SectionContainer
-          title="My Story"
-          icon={LineSegmentIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
-          borderColor={borderColor}
-        >
-          <p>My interest in designing products comes from</p>
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
-          </p>
-        </SectionContainer>
-      </section>
 
       {/*Section 3: Interests*/}
       <section id="section-3" className="w-full min-w-0 scroll-mt-24">
         <SectionContainer
           title="My Interests"
-          icon={LineSegmentIcon}
+          icon={CameraIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
         >
-          <p className="text-lg">
-            In my spare time, I enjoy hiking, running, practicing barre chords
-            on my acoustic guitar, and taking pictures with a mirrorless camera.
-            I also enjoy making physical things.
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring. In my spare time, I enjoy hiking,
+            running, practicing barre chords on my acoustic guitar, and taking
+            pictures with a mirrorless camera. I also enjoy making physical
+            things.
           </p>
           {/*Image Grid Container*/}
-          <div className="relative left-1/2 mx-auto w-[100svw] max-w-[1440px] -translate-x-1/2 px-6">
+          <div className="relative left-1/2 mx-auto w-[calc(100svw-2rem)] max-w-[1440px] -translate-x-1/2">
             {/*Image Grid*/}
             <div className="grid grid-cols-4 grid-rows-4 gap-2">
               {/* Image 1 - 4 cells horizontally */}
