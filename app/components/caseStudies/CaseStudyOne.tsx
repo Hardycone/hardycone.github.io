@@ -2,13 +2,17 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { useState } from "react";
 import { useTheme } from "next-themes";
 // import projects from "@/data/projects";
 // import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useTransform, MotionValue } from "framer-motion";
 import { FileTextIcon } from "@phosphor-icons/react";
 // import { useProjectTheme } from "@/hooks/useProjectTheme";
+import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
+import FlourishName from "../FlourishName";
+import NarrativeAccordion from "../NarrativeAccordion";
 
 interface CaseStudyOneProps {
   scrollY: MotionValue<number>;
@@ -16,6 +20,9 @@ interface CaseStudyOneProps {
 
 export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   const { resolvedTheme } = useTheme();
+  const [isFluxOpen, setIsFluxOpen] = useState(false);
+  const fluxTheme = useProjectTheme("flux");
+  const fluxColor = fluxTheme.hex.primary;
   // const { activeIndex } = useActiveProject();
 
   // const theme = useProjectTheme(projects[activeIndex].id);
@@ -65,42 +72,109 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           borderColor={borderColor}
           revealOnScroll={false}
         >
-          A throughline of my career – empowerment. I enjoy building things that
-          enable people to do more and be more. This passion hasn’t changed
-          through my transition from landscape architecture into tech. It may
-          seem like a big jump, but in reality I’ve always been the same
-          designer speaking the same language, who looks for problems that
-          prevent people from realizing their potential and solves them. - I’m
-          currently working on Flux, a platform that unlocks quantitative UX
-          insights to every designer, researcher, and product manager alike.
-          With AI, product teams are iterating and prototyping fast. For one
-          reason or another, research is often overlooked in this process. Even
-          if done, it’s usually qualitative - great for getting directional
-          insights, but lacking in providing measurable confidence in the
-          decision. Quant testing is the answer. But it’s expensive and takes
-          forever. Flux is here to solve that. From prototype to quant UX
-          insights, with statistical rigor, in hours. Guardrails and guidance
-          are set in place to breakdown the myths surrounding quant UX, ensuring
-          anyone, regardless of whether they’ve had training in statistics, can
-          run a study and get real, legitimate results. - Before that, I started
-          and failed launching another idea – Fantail. Our vision – which we
-          still believe to this day – is that AI should serve the creative mind,
-          not replace it. Fantail brought AI into the early stages of
-          filmmaking. It’s not “prompt the AI to make your film”, it’s “let AI
-          help you bring what’s in your mind onto the paper”. In Fantail,
-          filmmakers could write, gather reference materials, create
-          storyboards, hear dialogues. I worked on this with another 2
-          cofounders for 6 months. Together we built a prototype and pursued
-          funding, but we were ultimately unable to continue. Lesson learned:
-          founder-market fit matters. We were naïve going into this with nothing
-          but a burning passion. We did textbook discovery and design research,
-          identified a real problem, and delivered a solution. But we didn’t
-          have to the industry knowhow. Investors saw that and turned us down. -
-          In another life, I was a landscape architecture. I was in a very
-          specific niche – environmental justice. It’s social justice manifested
-          in the landscape. Socioeconomically disadvantaged communities are
-          setup to fail. They quite literally don’t even breath the same air.
-          They have less access to recreational green spaces. As a
+          <p>
+            A throughline of my career – empowerment. I enjoy building things
+            that enable people to do more and be more. This passion hasn’t
+            changed through my transition from landscape architecture into tech.
+            It may seem like a big jump, but in reality I’ve always been the
+            same designer speaking the same language, who looks for problems
+            that prevent people from realizing their potential and solves them.
+          </p>
+          <p className="mt-8">
+            I’m currently working on{" "}
+            <FlourishName
+              name="Flux"
+              settleColor={fluxColor}
+              isActive={isFluxOpen}
+              onToggle={() => setIsFluxOpen((prev) => !prev)}
+              onFlourish={() => setIsFluxOpen(true)}
+            />
+            , a platform that unlocks quantitative UX insights to every
+            designer, researcher, and product manager alike. With AI, product
+            teams are iterating and prototyping fast. For one reason or another,
+            research is often overlooked in this process. Even if done, it’s
+            usually qualitative - great for getting directional insights, but
+            lacking in providing measurable confidence in the decision. Quant
+            testing is the answer. But it’s expensive and takes forever. Flux is
+            here to solve that. From prototype to quant UX insights, with
+            statistical rigor, in hours. Guardrails and guidance are set in
+            place to breakdown the myths surrounding quant UX, ensuring anyone,
+            regardless of whether they’ve had training in statistics, can run a
+            study and get real, legitimate results.
+          </p>
+          <NarrativeAccordion isOpen={isFluxOpen}>
+            <div className="mb-4 mt-4 flex gap-4 rounded-xl border border-flux p-8">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl">
+                <img
+                  src="/images/logo-flux.png"
+                  alt="Flux logo"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
+              <div className="flex w-full flex-col">
+                <div className="flex justify-between font-sans text-xl">
+                  <div className="flex flex-col">
+                    <p className="font-semibold">Co-founder</p>
+                    <p>Flux</p>
+                  </div>
+                  <p>2023 - 2025</p>
+                </div>
+                <div className="mt-2 flex flex-col">
+                  <p>
+                    Flux is a quantitative UX research platform with a mission
+                    to democratize data-driven product design.
+                  </p>
+                  <ul className="mt-2 list-inside list-disc">
+                    <li>
+                      Led product design from concept to launch, defining the UX
+                      strategy, interaction patterns, and visual language
+                    </li>
+                    <li>
+                      Built and managed a design system spanning web
+                      application, marketing site, and data visualization
+                      components
+                    </li>
+                    <li>
+                      Conducted user research with designers, PMs, and
+                      researchers to validate product direction
+                    </li>
+                    <li>
+                      Designed and implemented quantitative UX testing workflows
+                      including statistical result visualizations
+                    </li>
+                    <li>
+                      Collaborated with engineers to ship a working MVP that
+                      users described as "intuitive" and "surprisingly powerful"
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </NarrativeAccordion>
+          <p className="mt-8">
+            Before that, I started and failed launching another idea – Fantail.
+            Our vision – which we still believe to this day – is that AI should
+            serve the creative mind, not replace it. Fantail brought AI into the
+            early stages of filmmaking. It’s not “prompt the AI to make your
+            film”, it’s “let AI help you bring what’s in your mind onto the
+            paper”. In Fantail, filmmakers could write, gather reference
+            materials, create storyboards, hear dialogues. I worked on this with
+            another 2 cofounders for 6 months. Together we built a prototype and
+            pursued funding, but we were ultimately unable to continue. Lesson
+            learned: founder-market fit matters. We were naïve going into this
+            with nothing but a burning passion. We did textbook discovery and
+            design research, identified a real problem, and delivered a
+            solution. But we didn’t have to the industry knowhow. Investors saw
+            that and turned us down.
+          </p>
+          <p>
+            In another life, I was a landscape architecture. I was in a very
+            specific niche – environmental justice. It’s social justice
+            manifested in the landscape. Socioeconomically disadvantaged
+            communities are setup to fail. They quite literally don’t even
+            breath the same air. They have less access to recreational green
+            spaces. As a
+          </p>
           {/*Subsection 1: Experience*/}
           <div className="mb-8">
             {/*Subheader*/}

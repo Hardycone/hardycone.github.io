@@ -55,8 +55,8 @@ const projects: Project[] = [
     tagline: "Human-Centered Designer with 10 Years of Experience",
     tags: [
       { label: "Designer", icon: "PenNibIcon" },
-      { label: "Researcher", icon: "MagnifyingGlassIcon" },
       { label: "Builder", icon: "WrenchIcon" },
+      { label: "Researcher", icon: "MagnifyingGlassIcon" },
     ],
     description:
       "My expertise ranges across design, research, and project management. I have worked on everything from public initiatives deeply rooted in stakeholder engagement, to enterprise software aiding complex workflows. The throughline of all my work is a commitment to solving real problems for real people.",
