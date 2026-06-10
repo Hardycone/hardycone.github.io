@@ -7,7 +7,8 @@ import { useTheme } from "next-themes";
 // import projects from "@/data/projects";
 // import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useTransform, MotionValue } from "framer-motion";
-import { FileTextIcon } from "@phosphor-icons/react";
+import { LineSegmentIcon } from "@phosphor-icons/react";
+import { hexToRgba } from "@/lib/palette";
 // import { useProjectTheme } from "@/hooks/useProjectTheme";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
@@ -22,7 +23,6 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   const { resolvedTheme } = useTheme();
   const [isFluxOpen, setIsFluxOpen] = useState(false);
   const fluxTheme = useProjectTheme("flux");
-  const fluxColor = fluxTheme.hex.primary;
   // const { activeIndex } = useActiveProject();
 
   // const theme = useProjectTheme(projects[activeIndex].id);
@@ -65,8 +65,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       <section id="section-1" className="mb-16 w-full min-w-0 scroll-mt-24">
         {/*Section Header Block*/}
         <SectionContainer
-          title="My Resume"
-          icon={FileTextIcon}
+          title="My Path"
+          icon={LineSegmentIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
@@ -84,26 +84,23 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             I’m currently working on{" "}
             <FlourishName
               name="Flux"
-              settleColor={fluxColor}
+              bgColor={hexToRgba(fluxTheme.hex.primary, 0.05)}
               isActive={isFluxOpen}
               onToggle={() => setIsFluxOpen((prev) => !prev)}
               onFlourish={() => setIsFluxOpen(true)}
+              logoSrc="/images/logo-flux.png"
             />
-            , a platform that unlocks quantitative UX insights to every
-            designer, researcher, and product manager alike. With AI, product
-            teams are iterating and prototyping fast. For one reason or another,
-            research is often overlooked in this process. Even if done, it’s
-            usually qualitative - great for getting directional insights, but
-            lacking in providing measurable confidence in the decision. Quant
-            testing is the answer. But it’s expensive and takes forever. Flux is
-            here to solve that. From prototype to quant UX insights, with
-            statistical rigor, in hours. Guardrails and guidance are set in
-            place to breakdown the myths surrounding quant UX, ensuring anyone,
-            regardless of whether they’ve had training in statistics, can run a
-            study and get real, legitimate results.
+            , a platform that makes quantitative UX research accessible to
+            designers, researchers, and product managers. As AI makes it easier
+            for teams to prototype and iterate quickly, research is often
+            compressed, skipped, or reduced to directional feedback. Flux helps
+            teams test prototypes with statistical rigor in hours, without
+            needing a background in statistics. My work focuses on turning a
+            traditionally intimidating research process into something
+            approachable, guided, and genuinely useful.
           </p>
           <NarrativeAccordion isOpen={isFluxOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-xl border border-flux p-8">
+            <div className="mb-4 mt-4 flex gap-4 rounded-xl bg-flux/5 p-8 dark:bg-dark-flux/5">
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl">
                 <img
                   src="/images/logo-flux.png"
@@ -624,7 +621,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       <section id="section-2" className="mb-16 w-full min-w-0 scroll-mt-24">
         <SectionContainer
           title="My Story"
-          icon={FileTextIcon}
+          icon={LineSegmentIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
@@ -644,7 +641,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       <section id="section-3" className="w-full min-w-0 scroll-mt-24">
         <SectionContainer
           title="My Interests"
-          icon={FileTextIcon}
+          icon={LineSegmentIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
