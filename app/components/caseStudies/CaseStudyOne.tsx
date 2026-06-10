@@ -22,8 +22,15 @@ interface CaseStudyOneProps {
 export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   const { resolvedTheme } = useTheme();
   const [isFluxOpen, setIsFluxOpen] = useState(false);
+  const [isFantailOpen, setIsFantailOpen] = useState(false);
+  const [isAslfOpen, setIsAslfOpen] = useState(false);
+  const [isUwOpen, setIsUwOpen] = useState(false);
+  const [isSyracuseOpen, setIsSyracuseOpen] = useState(false);
   const fluxTheme = useProjectTheme("flux");
-  // const { activeIndex } = useActiveProject();
+  const fantailTheme = useProjectTheme("fantail");
+  const wolcottTheme = useProjectTheme("wolcott");
+  const suitsTheme = useProjectTheme("suits");
+  const chinatownTheme = useProjectTheme("chinatown");
 
   // const theme = useProjectTheme(projects[activeIndex].id);
   // const targetRef = useRef<HTMLDivElement>(null);
@@ -149,11 +156,19 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             </div>
           </NarrativeAccordion>
           <p className="mt-8">
-            Before that, I started and failed launching another idea – Fantail.
-            Our vision – which we still believe to this day – is that AI should
-            serve the creative mind, not replace it. Fantail brought AI into the
-            early stages of filmmaking. It’s not “prompt the AI to make your
-            film”, it’s “let AI help you bring what’s in your mind onto the
+            Before that, I started and failed launching another idea —{" "}
+            <FlourishName
+              name="Fantail"
+              bgColor={hexToRgba(fantailTheme.hex.primary, 0.05)}
+              isActive={isFantailOpen}
+              onToggle={() => setIsFantailOpen((prev) => !prev)}
+              onFlourish={() => setIsFantailOpen(true)}
+              logoSrc="/images/logo-flux.png"
+            />
+            . Our vision – which we still believe to this day – is that AI
+            should serve the creative mind, not replace it. Fantail brought AI
+            into the early stages of filmmaking. It’s not “prompt the AI to make
+            your film”, it’s “let AI help you bring what’s in your mind onto the
             paper”. In Fantail, filmmakers could write, gather reference
             materials, create storyboards, hear dialogues. I worked on this with
             another 2 cofounders for 6 months. Together we built a prototype and
@@ -164,7 +179,220 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             solution. But we didn’t have to the industry knowhow. Investors saw
             that and turned us down.
           </p>
-          <p>
+          <NarrativeAccordion isOpen={isFantailOpen}>
+            <div className="mb-4 mt-4 flex gap-4 rounded-xl bg-fantail/5 p-8 dark:bg-dark-fantail/5">
+              <div className="flex w-full flex-col">
+                <div className="flex justify-between font-sans text-xl">
+                  <div className="flex flex-col">
+                    <p className="font-semibold">Co-founder</p>
+                    <p>Fantail</p>
+                  </div>
+                  <p>2023</p>
+                </div>
+                <div className="mt-2 flex flex-col">
+                  <p>
+                    Fantail was an AI-powered pre-production tool for
+                    filmmakers. The idea was to help creatives bring their
+                    vision to paper — storyboarding, reference gathering, script
+                    development — without replacing the human creative process.
+                  </p>
+                  <ul className="mt-2 list-inside list-disc">
+                    <li>
+                      Led product design and user research from concept to
+                      prototype
+                    </li>
+                    <li>
+                      Built and tested workflows for storyboarding and script
+                      visualization
+                    </li>
+                    <li>Pitched to investors alongside 2 cofounders</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </NarrativeAccordion>
+          <p className="mt-8">
+            <FlourishName
+              name="ASLF, Inc."
+              bgColor={hexToRgba(wolcottTheme.hex.primary, 0.05)}
+              isActive={isAslfOpen}
+              onToggle={() => setIsAslfOpen((prev) => !prev)}
+              onFlourish={() => setIsAslfOpen(true)}
+              logoSrc="/images/logo-aslf.png"
+            />{" "}
+            is where I spent seven years as a landscape designer and later
+            Design Director. The work sat at the intersection of environmental
+            justice, community engagement, and physical design. I led over a
+            dozen green infrastructure projects — community gardens, rain
+            gardens, park redesigns — in underserved neighborhoods across the
+            country. Each project was a lesson in listening: to the community,
+            to the land, and to the policy constraints that shape what gets
+            built.
+          </p>
+          <NarrativeAccordion isOpen={isAslfOpen}>
+            <div className="mb-4 mt-4 flex gap-4 rounded-xl bg-wolcott/5 p-8 dark:bg-dark-wolcott/5">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+                <img
+                  src="/images/logo-aslf.png"
+                  alt="ASLF logo"
+                  className="absolute inset-0 h-full w-full object-cover dark:invert"
+                />
+              </div>
+              <div className="flex w-full flex-col">
+                <div className="flex justify-between font-sans text-xl">
+                  <div className="flex flex-col">
+                    <p className="font-semibold">Design Director</p>
+                    <p>ASLF, Inc.</p>
+                  </div>
+                  <p>2015 - 2022</p>
+                </div>
+                <div className="mt-2 flex flex-col">
+                  <p>
+                    ASLF is a nonprofit that shapes US environmental policy
+                    through strategic litigation and community-based projects.
+                  </p>
+                  <ul className="mt-2 list-inside list-disc">
+                    <li>
+                      Designed and oversaw implementation of over a dozen green
+                      infrastructure projects
+                    </li>
+                    <li>
+                      Managed federal and local grants totaling over $3 million
+                    </li>
+                    <li>
+                      Built partnerships and secured funding through grant
+                      writing
+                    </li>
+                    <li>
+                      Led community workshops and interviews to co-design public
+                      spaces
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </NarrativeAccordion>
+          <p className="mt-8">
+            I went back to school for my{" "}
+            <FlourishName
+              name="Master's in HCI at UW"
+              bgColor={hexToRgba(suitsTheme.hex.primary, 0.05)}
+              isActive={isUwOpen}
+              onToggle={() => setIsUwOpen((prev) => !prev)}
+              onFlourish={() => setIsUwOpen(true)}
+              logoSrc="/images/logo-uw.png"
+            />
+            , where I dove headfirst into human-computer interaction research.
+            My focus was on making data-driven design tools accessible to
+            non-statisticians — a thread that eventually led me to co-found
+            Flux. At UW, I studied research methods, statistical analysis, and
+            prototyping, and applied them to projects ranging from NASA
+            spacesuit interfaces to quantitative UX testing tools.
+          </p>
+          <NarrativeAccordion isOpen={isUwOpen}>
+            <div className="mb-4 mt-4 flex gap-4 rounded-xl bg-suits/5 p-8 dark:bg-dark-suits/5">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+                <img
+                  src="/images/logo-uw.png"
+                  alt="UW logo"
+                  className="absolute inset-0 h-full w-full object-cover dark:hidden"
+                />
+                <img
+                  src="/images/logo-uw-gold.png"
+                  alt="UW logo"
+                  className="absolute inset-0 hidden h-full w-full object-cover dark:block"
+                />
+              </div>
+              <div className="flex w-full flex-col">
+                <div className="flex justify-between font-sans text-xl">
+                  <div className="flex flex-col">
+                    <p className="font-semibold">
+                      Master's in Human-Computer Interaction
+                    </p>
+                    <p>University of Washington - Seattle</p>
+                  </div>
+                  <p>2023</p>
+                </div>
+                <div className="mt-2 flex flex-col">
+                  <ul className="list-inside list-disc">
+                    <li>
+                      Researched quantitative UX methods and statistical
+                      workflows for designers
+                    </li>
+                    <li>
+                      Finalist in NASA SUITS — designed and tested AR interfaces
+                      at Johnson Space Center
+                    </li>
+                    <li>
+                      Built prototypes exploring AI-assisted research
+                      interpretation
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </NarrativeAccordion>
+          <p className="mt-8">
+            Before UW, I earned my{" "}
+            <FlourishName
+              name="Master's in Landscape Architecture at SUNY-ESF"
+              bgColor={hexToRgba(chinatownTheme.hex.primary, 0.05)}
+              isActive={isSyracuseOpen}
+              onToggle={() => setIsSyracuseOpen((prev) => !prev)}
+              onFlourish={() => setIsSyracuseOpen(true)}
+              logoSrc="/images/logo-esf.png"
+            />
+            , in Syracuse. This is where I first encountered environmental
+            justice as a design practice. I studied how landscape architecture
+            could repair — not just decorate — communities that had been
+            systematically underserved. My work included community-based design
+            studios, ecological restoration planning, and a thesis on equitable
+            access to green space. The throughline from Syracuse to Flux is
+            surprisingly direct: design is a tool for empowerment, whether the
+            medium is a park or a prototype.
+          </p>
+          <NarrativeAccordion isOpen={isSyracuseOpen}>
+            <div className="mb-4 mt-4 flex gap-4 rounded-xl bg-chinatown/5 p-8 dark:bg-dark-chinatown/5">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+                <img
+                  src="/images/logo-esf.png"
+                  alt="SUNY-ESF logo"
+                  className="absolute inset-0 h-full w-full object-cover dark:hidden"
+                />
+                <img
+                  src="/images/logo-esf-light.png"
+                  alt="SUNY-ESF logo"
+                  className="absolute inset-0 hidden h-full w-full object-cover dark:block"
+                />
+              </div>
+              <div className="flex w-full flex-col">
+                <div className="flex justify-between font-sans text-xl">
+                  <div className="flex flex-col">
+                    <p className="font-semibold">
+                      Master's in Landscape Architecture
+                    </p>
+                    <p>State University of New York - Syracuse</p>
+                  </div>
+                  <p>2015</p>
+                </div>
+                <div className="mt-2 flex flex-col">
+                  <ul className="list-inside list-disc">
+                    <li>
+                      Focused on environmental justice and community-based
+                      design
+                    </li>
+                    <li>
+                      Ecological restoration and green infrastructure planning
+                    </li>
+                    <li>
+                      Thesis on equitable access to recreational green space
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </NarrativeAccordion>
+          <p className="mt-8">
             In another life, I was a landscape architecture. I was in a very
             specific niche – environmental justice. It’s social justice
             manifested in the landscape. Socioeconomically disadvantaged
