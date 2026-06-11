@@ -50,7 +50,7 @@ const projects: Project[] = [
   {
     id: "intro",
     slug: "case-study-one",
-    role: "with empathy.",
+    role: "to empower.",
     title: "About Me",
     tagline: "Human-Centered Designer with 10 Years of Experience",
     tags: [
@@ -87,7 +87,7 @@ const projects: Project[] = [
     id: "flux",
     slug: "case-study-two",
     title: "Flux",
-    role: "from Zero to One.",
+    role: "from 0 to 1.",
     tagline: "Democratizing quantitative UX research",
     tags: [
       { label: "AI", icon: "SparkleIcon" },

@@ -72,7 +72,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       <section id="section-1" className="mb-16 w-full min-w-0 scroll-mt-24">
         {/*Section Header Block*/}
         <SectionContainer
-          title="My Path"
+          title="My Journey"
           icon={PathIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
@@ -92,6 +92,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <FlourishName
               name="Flux"
               bgColor={hexToRgba(fluxTheme.hex.primary, 0.1)}
+              gradientCenterColor={hexToRgba(fluxTheme.hex.soft, 1)}
+              gradientMiddleColor={hexToRgba(fluxTheme.hex.soft, 1)}
               isActive={isFluxOpen}
               onToggle={() => setIsFluxOpen((prev) => !prev)}
               onFlourish={() => setIsFluxOpen(true)}
@@ -126,7 +128,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 <div className="mt-2 flex flex-col">
                   <p>
                     Flux is a quantitative UX research platform with a mission
-                    to democratize data-driven product design.
+                    to democratize data-driven product design. Flux is a
+                    quantitative UX research platform with a mission to
+                    democratize data-driven product design. Design. Zero to One.
+                    Complex work flows .Design. Zero to One. Complex work flows
                   </p>
                   <ul className="mt-2 list-inside list-disc">
                     <li>
@@ -160,10 +165,13 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <FlourishName
               name="Fantail"
               bgColor={hexToRgba(fantailTheme.hex.primary, 0.05)}
+              gradientCenterColor={hexToRgba(fantailTheme.hex.soft, 1)}
+              gradientMiddleColor={hexToRgba(fantailTheme.hex.soft, 1)}
               isActive={isFantailOpen}
               onToggle={() => setIsFantailOpen((prev) => !prev)}
               onFlourish={() => setIsFantailOpen(true)}
-              logoSrc="/images/logo-flux.png"
+              logoSrc="                /images/logo-fantail.png
+"
             />
             . Our vision – which we still believe to this day – is that AI
             should serve the creative mind, not replace it. Fantail brought AI
@@ -215,10 +223,15 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <FlourishName
               name="ASLF, Inc."
               bgColor={hexToRgba(wolcottTheme.hex.primary, 0.05)}
+              gradientCenterColor={hexToRgba(wolcottTheme.hex.soft, 1)}
+              gradientMiddleColor={hexToRgba(wolcottTheme.hex.soft, 1)}
               isActive={isAslfOpen}
               onToggle={() => setIsAslfOpen((prev) => !prev)}
               onFlourish={() => setIsAslfOpen(true)}
-              logoSrc="/images/logo-aslf.png"
+              logoSrc={{
+                light: "/images/logo-aslf.png",
+                dark: "/images/logo-aslf-inverted.png",
+              }}
             />{" "}
             is where I spent seven years as a landscape designer and later
             Design Director. The work sat at the intersection of environmental
@@ -250,6 +263,18 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   <p>
                     ASLF is a nonprofit that shapes US environmental policy
                     through strategic litigation and community-based projects.
+                    ASLF is a leading nonprofit with a decades-long track record
+                    of shaping US environmental policy through strategic
+                    litigation. I joined as a landscape designer as the
+                    organizatoin refocused its efforts to implementing impactful
+                    green projects in local communities. Design and
+                    Implementation: I designed and oversaw the implementation of
+                    over a dozen green projects. Project Management: I managed
+                    several federal and local grants amassing a total budget of
+                    over $3 million. Program Development: I built partnerships
+                    and secured grants. Stakeholder Management: I heavily
+                    involved the local community in all my projects in the form
+                    of interviews and workshops.
                   </p>
                   <ul className="mt-2 list-inside list-disc">
                     <li>
@@ -277,10 +302,15 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <FlourishName
               name="Master's in HCI at UW"
               bgColor={hexToRgba(suitsTheme.hex.primary, 0.05)}
+              gradientCenterColor={hexToRgba(suitsTheme.hex.soft, 1)}
+              gradientMiddleColor={hexToRgba(suitsTheme.hex.soft, 1)}
               isActive={isUwOpen}
               onToggle={() => setIsUwOpen((prev) => !prev)}
               onFlourish={() => setIsUwOpen(true)}
-              logoSrc="/images/logo-uw.png"
+              logoSrc={{
+                light: "/images/logo-uw.png",
+                dark: "/images/logo-uw-gold.png",
+              }}
             />
             , where I dove headfirst into human-computer interaction research.
             My focus was on making data-driven design tools accessible to
@@ -337,10 +367,15 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <FlourishName
               name="Master's in Landscape Architecture at SUNY-ESF"
               bgColor={hexToRgba(chinatownTheme.hex.primary, 0.05)}
+              gradientCenterColor={hexToRgba(chinatownTheme.hex.soft, 1)}
+              gradientMiddleColor={hexToRgba(chinatownTheme.hex.soft, 1)}
               isActive={isSyracuseOpen}
               onToggle={() => setIsSyracuseOpen((prev) => !prev)}
               onFlourish={() => setIsSyracuseOpen(true)}
-              logoSrc="/images/logo-esf.png"
+              logoSrc={{
+                light: "/images/logo-esf.png",
+                dark: "/images/logo-esf-light.png",
+              }}
             />
             , in Syracuse. This is where I first encountered environmental
             justice as a design practice. I studied how landscape architecture
@@ -406,95 +441,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             <h3 className="mb-4 font-sans text-2xl font-semibold">
               Experience
             </h3>
-            {/*Entry 1*/}
-            <div className="mb-4 flex gap-4">
-              {/*Left: Image*/}
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl">
-                <img
-                  src="/images/logo-flux.png"
-                  alt="logo"
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-              </div>
-              {/*Right: Description*/}
-              <div className="flex w-full flex-col">
-                {/*Header*/}
-                <div className="flex justify-between font-sans text-xl">
-                  {/*Title Block*/}
-                  <div className="flex flex-col">
-                    <p className="font-semibold">Co-founder</p>
-                    <p>Flux</p>
-                  </div>
-                  {/*Years*/}
-                  <p>2023 - 2025</p>
-                </div>
-                {/*Description*/}
-                <div className="mt-2 flex flex-col">
-                  <p>
-                    Flux is a quantitative UX research platform with a mission
-                    to democratize data-driven product design
-                  </p>
-                  <ul className="mt-2 list-inside list-disc">
-                    <li>Design</li>
-                    <li>Zero to One</li>
-                    <li>Complex work flows</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            {/*Entry 2*/}
-            <div className="mb-4 flex gap-4">
-              {/*Left: Image*/}
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
-                <img
-                  src="/images/logo-aslf.png"
-                  alt="logo"
-                  className="absolute inset-0 h-full w-full object-cover dark:invert"
-                />
-              </div>
-              {/*Right: Description*/}
-              <div className="flex w-full flex-col">
-                {/*Header*/}
-                <div className="flex justify-between font-sans text-xl">
-                  {/*Title Block*/}
-                  <div className="flex flex-col">
-                    <p className="font-semibold">Design Director</p>
-                    <p>ASLF, Inc.</p>
-                  </div>
-                  {/*Years*/}
-                  <p>2015 - 2022</p>
-                </div>
-                {/*Description*/}
-                <div className="mt-2 flex flex-col">
-                  <p>
-                    ASLF is a leading nonprofit with a decades-long track record
-                    of shaping US environmental policy through strategic
-                    litigation. I joined as a landscape designer as the
-                    organizatoin refocused its efforts to implementing impactful
-                    green projects in local communities.
-                  </p>
-                  <ul className="mt-2 list-inside list-disc">
-                    <li>
-                      Design and Implementation: I designed and oversaw the
-                      implementation of over a dozen green projects.
-                    </li>
-                    <li>
-                      Project Management: I managed several federal and local
-                      grants amassing a total budget of over $3 million.
-                    </li>
-                    <li>
-                      Program Development: I built partnerships and secured
-                      grants.
-                    </li>
-                    <li>
-                      Stakeholder Management: I heavily involved the local
-                      community in all my projects in the form of interviews and
-                      workshops.
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+
             {/*Entry 3*/}
             <div className="mb-4 flex gap-4">
               {/*Left: Image*/}
@@ -866,64 +813,121 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             things.
           </p>
           {/*Image Grid Container*/}
-          <div className="relative left-1/2 mx-auto w-[calc(100svw-2rem)] max-w-[1440px] -translate-x-1/2">
-            {/*Image Grid*/}
-            <div className="grid grid-cols-4 grid-rows-4 gap-2">
-              {/* Image 1 - 4 cells horizontally */}
-              <div className="relative col-span-4 row-span-1">
-                <img
-                  src="/images/20230624-HWP00734-Edit.jpg"
-                  alt="Dummy Image 1"
-                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
-                />
-              </div>
-              {/* Image 2 - 2x2 square */}
-              <div className="relative col-span-2 row-span-2 aspect-[1/1]">
-                <img
-                  src="/images/20230624-HWP00734-Edit.jpg"
-                  alt="Dummy Image 2"
-                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
-                />
-              </div>
-              {/* Image 3 - 2 cells vertically adjacent */}
-              <div className="relative col-span-1 row-span-2">
-                <img
-                  src="/images/20230624-HWP00734-Edit.jpg"
-                  alt="Dummy Image 3"
-                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
-                />
-              </div>
-              {/* Remaining cells */}
-              <div className="relative">
-                <img
-                  src="/images/20230624-HWP00734-Edit.jpg"
-                  alt="Dummy Image 4"
-                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
-                />
-              </div>
-              <div className="relative">
-                <img
-                  src="/images/20230624-HWP00734-Edit.jpg"
-                  alt="Dummy Image 5"
-                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
-                />
-              </div>
-              <div className="relative">
-                <img
-                  src="/images/20230624-HWP00734-Edit.jpg"
-                  alt="Dummy Image 7"
-                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
-                />
-              </div>
-              <div className="relative col-span-3 row-span-1">
-                <img
-                  src="/images/20240704-HWP03580-Edit.jpg"
-                  alt="Dummy Image 6"
-                  className="absolute inset-0 h-full w-full rounded-[20px] object-cover object-top"
-                />
-              </div>
+
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring.
+          </p>
+        </SectionContainer>
+        <div className="relative left-1/2 mx-auto w-[calc(100svw-2rem)] max-w-[1440px] -translate-x-1/2">
+          {/*Image Grid*/}
+          <div className="grid grid-cols-4 grid-rows-4 gap-2">
+            {/* Image 1 - 4 cells horizontally */}
+            <div className="relative col-span-4 row-span-1">
+              <img
+                src="/images/20230624-HWP00734-Edit.jpg"
+                alt="Dummy Image 1"
+                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            {/* Image 2 - 2x2 square */}
+            <div className="relative col-span-2 row-span-2 aspect-[1/1]">
+              <img
+                src="/images/20230624-HWP00734-Edit.jpg"
+                alt="Dummy Image 2"
+                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            {/* Image 3 - 2 cells vertically adjacent */}
+            <div className="relative col-span-1 row-span-2">
+              <img
+                src="/images/20230624-HWP00734-Edit.jpg"
+                alt="Dummy Image 3"
+                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            {/* Remaining cells */}
+            <div className="relative">
+              <img
+                src="/images/20230624-HWP00734-Edit.jpg"
+                alt="Dummy Image 4"
+                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            <div className="relative">
+              <img
+                src="/images/20230624-HWP00734-Edit.jpg"
+                alt="Dummy Image 5"
+                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            <div className="relative">
+              <img
+                src="/images/20230624-HWP00734-Edit.jpg"
+                alt="Dummy Image 7"
+                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+              />
+            </div>
+            <div className="relative col-span-3 row-span-1">
+              <img
+                src="/images/20240704-HWP03580-Edit.jpg"
+                alt="Dummy Image 6"
+                className="absolute inset-0 h-full w-full rounded-[20px] object-cover object-top"
+              />
             </div>
           </div>
+        </div>
+        <SectionContainer showHeading={false} borderColor={borderColor}>
+          <p>
+            Whether I’m prototyping UX flows in Figma, guiding product direction
+            with founders, or co-designing with local communities, I bring a
+            principled but curious approach. This portfolio shares six
+            representative projects—from startups to NASA to grassroots
+            urbanism. Thanks for exploring. In my spare time, I enjoy hiking,
+            running, practicing barre chords on my acoustic guitar, and taking
+            pictures with a mirrorless camera. I also enjoy making physical
+            things.
+          </p>
+          {/*Image Grid Container*/}
+
           <p>
             Whether I’m prototyping UX flows in Figma, guiding product direction
             with founders, or co-designing with local communities, I bring a

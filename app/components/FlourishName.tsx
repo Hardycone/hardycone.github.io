@@ -3,13 +3,31 @@ import { useAnimate, useInView } from "framer-motion";
 import { CaretDownIcon } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 
+let activeFlourishOwner: symbol | null = null;
+const flourishReleaseWaiters = new Set<() => void>();
+
+function releaseFlourish(owner: symbol) {
+  if (activeFlourishOwner !== owner) return;
+
+  activeFlourishOwner = null;
+
+  const waiters = Array.from(flourishReleaseWaiters);
+  flourishReleaseWaiters.clear();
+  waiters.forEach((retry) => retry());
+}
+
+function isInFlourishZone(element: HTMLElement) {
+  const rect = element.getBoundingClientRect();
+  return rect.top < window.innerHeight * 0.4 && rect.bottom > 0;
+}
+
 interface FlourishNameProps {
   name: string;
   bgColor: string;
   isActive: boolean;
   onToggle: () => void;
   onFlourish?: () => void;
-  logoSrc?: string;
+  logoSrc?: string | { light: string; dark: string };
   gradientCenterColor?: string;
   gradientMiddleColor?: string;
 }
@@ -30,70 +48,123 @@ export default function FlourishName({
 }: FlourishNameProps) {
   const [scope, animate] = useAnimate();
   const hasTriggered = useRef(false);
+  const attemptedThisIntersection = useRef(false);
+  const flourishOwner = useRef(Symbol(name));
+  const flourishConfig = useRef({
+    onFlourish,
+    gradientCenterColor,
+    gradientMiddleColor,
+  });
   const [isHovered, setIsHovered] = useState(false);
   const isInView = useInView(scope, {
-    once: true,
-    margin: "0px 0px -50% 0px",
+    margin: "0px 0px -60% 0px",
   });
 
   const rgb = parseRgb(bgColor);
   const hoverBg = rgb ? `rgba(${rgb.r},${rgb.g},${rgb.b},0.20)` : bgColor;
 
   useEffect(() => {
-    if (!hasTriggered.current && isInView) {
-      hasTriggered.current = true;
-      onFlourish?.();
+    flourishConfig.current = {
+      onFlourish,
+      gradientCenterColor,
+      gradientMiddleColor,
+    };
+  }, [onFlourish, gradientCenterColor, gradientMiddleColor]);
 
-      const el = scope.current;
-      if (!el) return;
-      const basePx = parseFloat(getComputedStyle(el).fontSize);
-      const growPx = Math.round(basePx * 1.25);
+  useEffect(() => {
+    return () => {
+      if (activeFlourishOwner === flourishOwner.current) {
+        activeFlourishOwner = null;
+        flourishReleaseWaiters.clear();
+      }
+    };
+  }, []);
 
-      const doFlourish = async () => {
-        await animate(
-          el,
-          { fontSize: `${growPx}px` },
-          { duration: 0.3, ease: "easeOut" },
-        );
-
-        const buttonWidth = el.offsetWidth;
-        const gradSize = Math.max(buttonWidth * 4, 200);
-        const halfGrad = gradSize;
-
-        el.style.backgroundImage = `radial-gradient(circle at center, ${gradientCenterColor} 0%, ${gradientMiddleColor} 40%, transparent 75%)`;
-        el.style.backgroundSize = `${gradSize}px ${gradSize}px`;
-        el.style.backgroundRepeat = "no-repeat";
-        el.style.backgroundPosition = `-${halfGrad}px center`;
-
-        await animate(
-          el,
-          { backgroundPosition: `${buttonWidth + halfGrad}px center` },
-          { duration: 1.5, ease: "easeInOut" },
-        );
-
-        el.style.backgroundImage = "";
-        el.style.backgroundSize = "";
-        el.style.backgroundRepeat = "";
-        el.style.backgroundPosition = "";
-
-        await animate(
-          el,
-          { fontSize: `${basePx}px` },
-          { duration: 0.6, ease: "easeInOut" },
-        );
-        el.style.fontSize = "";
-      };
-      doFlourish();
+  useEffect(() => {
+    if (!isInView) {
+      attemptedThisIntersection.current = false;
+      return;
     }
-  }, [
-    isInView,
-    animate,
-    scope,
-    bgColor,
-    onFlourish,
-    gradientCenterColor,
-    gradientMiddleColor,
-  ]);
+
+    if (hasTriggered.current || attemptedThisIntersection.current) return;
+    attemptedThisIntersection.current = true;
+
+    const owner = flourishOwner.current;
+    let retryOnRelease: (() => void) | null = null;
+
+    const startFlourish = (waitIfLocked: boolean) => {
+      const el2 = scope.current;
+      if (!el2 || hasTriggered.current || !isInFlourishZone(el2)) return;
+
+      if (activeFlourishOwner !== null) {
+        if (waitIfLocked) {
+          retryOnRelease = () => {
+            retryOnRelease = null;
+            startFlourish(false);
+          };
+          flourishReleaseWaiters.add(retryOnRelease);
+        }
+        return;
+      }
+
+      activeFlourishOwner = owner;
+      hasTriggered.current = true;
+
+      const flourish = async () => {
+        try {
+          const config = flourishConfig.current;
+          config.onFlourish?.();
+
+          const basePx = parseFloat(getComputedStyle(el2).fontSize);
+          const growPx = Math.round(basePx * 1.25);
+
+          await animate(
+            el2,
+            { fontSize: `${growPx}px` },
+            { duration: 0.3, ease: "easeOut" },
+          );
+
+          const buttonWidth = el2.offsetWidth;
+          const gradSize = buttonWidth * 8;
+
+          el2.style.backgroundImage = `radial-gradient(circle at center, ${config.gradientCenterColor} 0%, ${config.gradientMiddleColor} 15%, transparent 50%)`;
+          el2.style.backgroundSize = `${gradSize}px ${gradSize}px`;
+          el2.style.backgroundRepeat = "no-repeat";
+          el2.style.backgroundPosition = `-${gradSize}px center`;
+
+          await animate(
+            el2,
+            { backgroundPosition: `${buttonWidth}px center` },
+            { duration: 1, ease: "easeOut" },
+          );
+
+          el2.style.backgroundImage = "";
+          el2.style.backgroundSize = "";
+          el2.style.backgroundRepeat = "";
+          el2.style.backgroundPosition = "";
+
+          await animate(
+            el2,
+            { fontSize: `${basePx}px` },
+            { duration: 0.3, ease: "easeInOut" },
+          );
+          el2.style.fontSize = "";
+        } finally {
+          releaseFlourish(owner);
+        }
+      };
+
+      void flourish();
+    };
+
+    startFlourish(true);
+
+    return () => {
+      if (retryOnRelease) {
+        flourishReleaseWaiters.delete(retryOnRelease);
+      }
+    };
+  }, [isInView, animate, scope]);
 
   return (
     <button
@@ -105,13 +176,27 @@ export default function FlourishName({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {logoSrc && (
-        <img
-          src={logoSrc}
-          alt=""
-          className="inline-block h-[1.5em] w-[1.5em] shrink-0 object-cover"
-        />
-      )}
+      {logoSrc &&
+        (typeof logoSrc === "string" ? (
+          <img
+            src={logoSrc}
+            alt=""
+            className="inline-block h-[1.5em] w-[1.5em] shrink-0 object-cover"
+          />
+        ) : (
+          <>
+            <img
+              src={logoSrc.light}
+              alt=""
+              className="block h-[1.5em] w-[1.5em] shrink-0 object-cover dark:hidden"
+            />
+            <img
+              src={logoSrc.dark}
+              alt=""
+              className="hidden h-[1.5em] w-[1.5em] shrink-0 object-cover dark:block"
+            />
+          </>
+        ))}
       {name}
       <span
         className="flex h-[1.5em] w-[1.5em] items-center justify-center"
