@@ -290,9 +290,9 @@ export default function CaseStudyFab() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="pointer-events-none fixed inset-x-0 bottom-4 z-50 m-auto w-full max-w-[1440px] px-1.5 md:px-4"
+          className="pointer-events-auto relative"
         >
-          <div ref={fabRef} className="pointer-events-auto relative">
+          <div ref={fabRef} className="relative">
             {/* Link buttons — vertical stack above FAB */}
             <div className="absolute bottom-full mb-6 ml-0 flex flex-col-reverse items-start gap-6 font-serif md:ml-1">
               <AnimatePresence>

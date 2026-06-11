@@ -25,8 +25,8 @@ import ProjectSummary from "./ProjectSummary";
 import CaseStudyContent from "./CaseStudyContent";
 import MyName from "./MyName";
 import HomeSymbolBackdrop from "./HomeSymbolBackdrop";
-import CaseStudyFab from "./CaseStudyFab";
-import DebugViewport from "./DebugViewport";
+// import DebugViewport from "./DebugViewport";
+import BottomBar from "./BottomBar";
 type BottomNavigationState = {
   slug: string;
   phase: "exit" | "morph" | "route";
@@ -442,7 +442,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       {viewMode === "home" && <HomeSymbolBackdrop activeIndex={activeIndex} />}
       <TopBar />
 
-      <DebugViewport />
+      {/* <DebugViewport /> */}
       <div
         className={`relative z-10 flex flex-1 flex-col overflow-hidden ${
           shouldReserveGlyphRail ? "min-w-max" : ""
@@ -469,7 +469,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
             },
           }}
           exit={{ x: "-50%", y: -100, opacity: 0 }}
-          className="pointer-events-none fixed bottom-6 left-1/2 z-50 flex items-center space-x-2 rounded-lg bg-foreground px-4 py-2 font-sans text-sm text-background shadow-md dark:bg-dark-foreground dark:text-dark-background md:text-lg"
+          className="rounded-2 pointer-events-none fixed bottom-6 left-1/2 z-50 flex items-center space-x-2 bg-foreground px-4 py-2 font-sans text-sm text-background shadow-md dark:bg-dark-foreground dark:text-dark-background md:text-lg"
         >
           <span className="whitespace-nowrap">Use scroll</span>
           <span className="flex h-6 w-4 items-center justify-center rounded-full bg-sky-600 dark:bg-sky-400">
@@ -524,7 +524,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       </motion.div>
       <div className="relative z-10 min-w-0 flex-1" />
 
-      <CaseStudyFab />
+      <BottomBar />
     </main>
   );
 }

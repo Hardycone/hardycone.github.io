@@ -219,6 +219,13 @@ export default function TopBar() {
 
     const handleHomeKeyDown = (event: KeyboardEvent) => {
       if (
+        event.key === "Escape" &&
+        document.getElementById("message-me-form")
+      ) {
+        return;
+      }
+
+      if (
         event.repeat ||
         event.defaultPrevented ||
         isEditableKeyboardTarget(event.target) ||
