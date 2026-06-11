@@ -4,16 +4,94 @@ import { CaretDownIcon } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 
 let activeFlourishOwner: symbol | null = null;
-const flourishReleaseWaiters = new Set<() => void>();
+let arbitrationFrame: number | null = null;
+let allowHandoffOnRelease = false;
+
+const flourishPriority = [
+  "Flux",
+  "Fantail",
+  "ASLF, Inc.",
+  "Master's in HCI at UW",
+  "Master's in Landscape Architecture at SUNY-ESF",
+];
+
+interface FlourishCandidate {
+  owner: symbol;
+  name: string;
+  canStart: () => boolean;
+  start: () => boolean;
+}
+
+const flourishCandidates = new Map<symbol, FlourishCandidate>();
+
+function candidatePriority(candidate: FlourishCandidate) {
+  const index = flourishPriority.indexOf(candidate.name);
+  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+}
+
+function runArbitration(isHandoff: boolean) {
+  arbitrationFrame = null;
+  if (activeFlourishOwner !== null) return;
+
+  const candidates = Array.from(flourishCandidates.values()).sort(
+    (a, b) => candidatePriority(a) - candidatePriority(b),
+  );
+
+  for (const candidate of candidates) {
+    if (!candidate.canStart()) {
+      flourishCandidates.delete(candidate.owner);
+      continue;
+    }
+
+    activeFlourishOwner = candidate.owner;
+    flourishCandidates.delete(candidate.owner);
+
+    if (candidate.start()) {
+      allowHandoffOnRelease = !isHandoff;
+      return;
+    }
+
+    activeFlourishOwner = null;
+  }
+
+  flourishCandidates.clear();
+}
+
+function scheduleArbitration(isHandoff = false) {
+  if (arbitrationFrame !== null) return;
+
+  arbitrationFrame = window.requestAnimationFrame(() => {
+    runArbitration(isHandoff);
+  });
+}
+
+function registerCandidate(candidate: FlourishCandidate) {
+  flourishCandidates.set(candidate.owner, candidate);
+
+  // A genuinely new intersection during an active flourish earns one fresh
+  // handoff when that flourish finishes.
+  if (activeFlourishOwner !== null) {
+    allowHandoffOnRelease = true;
+  }
+
+  scheduleArbitration();
+}
+
+function unregisterCandidate(owner: symbol) {
+  flourishCandidates.delete(owner);
+}
 
 function releaseFlourish(owner: symbol) {
   if (activeFlourishOwner !== owner) return;
 
   activeFlourishOwner = null;
 
-  const waiters = Array.from(flourishReleaseWaiters);
-  flourishReleaseWaiters.clear();
-  waiters.forEach((retry) => retry());
+  if (allowHandoffOnRelease) {
+    allowHandoffOnRelease = false;
+    scheduleArbitration(true);
+  } else {
+    flourishCandidates.clear();
+  }
 }
 
 function isInFlourishZone(element: HTMLElement) {
@@ -61,7 +139,7 @@ export default function FlourishName({
   });
 
   const rgb = parseRgb(bgColor);
-  const hoverBg = rgb ? `rgba(${rgb.r},${rgb.g},${rgb.b},0.20)` : bgColor;
+  const hoverBg = rgb ? `rgba(${rgb.r},${rgb.g},${rgb.b},0.30)` : bgColor;
 
   useEffect(() => {
     flourishConfig.current = {
@@ -73,41 +151,37 @@ export default function FlourishName({
 
   useEffect(() => {
     return () => {
+      unregisterCandidate(flourishOwner.current);
+
       if (activeFlourishOwner === flourishOwner.current) {
         activeFlourishOwner = null;
-        flourishReleaseWaiters.clear();
+        allowHandoffOnRelease = false;
+        flourishCandidates.clear();
       }
     };
   }, []);
 
   useEffect(() => {
+    const owner = flourishOwner.current;
+
     if (!isInView) {
       attemptedThisIntersection.current = false;
+      unregisterCandidate(owner);
       return;
     }
 
     if (hasTriggered.current || attemptedThisIntersection.current) return;
     attemptedThisIntersection.current = true;
 
-    const owner = flourishOwner.current;
-    let retryOnRelease: (() => void) | null = null;
-
-    const startFlourish = (waitIfLocked: boolean) => {
+    const canStart = () => {
       const el2 = scope.current;
-      if (!el2 || hasTriggered.current || !isInFlourishZone(el2)) return;
+      return Boolean(el2 && !hasTriggered.current && isInFlourishZone(el2));
+    };
 
-      if (activeFlourishOwner !== null) {
-        if (waitIfLocked) {
-          retryOnRelease = () => {
-            retryOnRelease = null;
-            startFlourish(false);
-          };
-          flourishReleaseWaiters.add(retryOnRelease);
-        }
-        return;
-      }
+    const startFlourish = () => {
+      const el2 = scope.current;
+      if (!el2 || !canStart()) return false;
 
-      activeFlourishOwner = owner;
       hasTriggered.current = true;
 
       const flourish = async () => {
@@ -116,7 +190,7 @@ export default function FlourishName({
           config.onFlourish?.();
 
           const basePx = parseFloat(getComputedStyle(el2).fontSize);
-          const growPx = Math.round(basePx * 1.25);
+          const growPx = Math.round(basePx * 1.1);
 
           await animate(
             el2,
@@ -155,16 +229,20 @@ export default function FlourishName({
       };
 
       void flourish();
+      return true;
     };
 
-    startFlourish(true);
+    registerCandidate({
+      owner,
+      name,
+      canStart,
+      start: startFlourish,
+    });
 
     return () => {
-      if (retryOnRelease) {
-        flourishReleaseWaiters.delete(retryOnRelease);
-      }
+      unregisterCandidate(owner);
     };
-  }, [isInView, animate, scope]);
+  }, [isInView, animate, name, scope]);
 
   return (
     <button

@@ -84,9 +84,7 @@ export default function SectionContainer({
             />
             <h3 className={` ${textColorClass}`}>{title}</h3>
           </div>
-          <div
-            className={`mb-16 h-[2px] w-full rounded-full ${bgColorClass}`}
-          />
+          <div className={`mb-16 h-0.5 w-full rounded-full ${bgColorClass}`} />
         </>
       ) : null}
       {children}

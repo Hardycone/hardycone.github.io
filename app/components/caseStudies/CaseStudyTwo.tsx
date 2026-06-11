@@ -79,7 +79,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             poster="/images/promo-export-01-poster.jpg"
             controls
             playsInline
-            className="rounded-[0.5rem]"
+            className="rounded-1 md:rounded-2"
           />
         </SectionContainer>
       </section>
@@ -100,7 +100,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             quantitative methods like A/B testing.
           </p>
           <p
-            className={`${theme.bgColorClass} mb-16 rounded-[20px] border border-white bg-zinc-100 p-12 text-2xl leading-normal dark:bg-opacity-5`}
+            className={`${theme.bgColorClass} rounded-1 md:rounded-2 mb-16 border border-white bg-zinc-100 p-12 text-2xl leading-normal dark:bg-opacity-5`}
           >
             Even though quantitative UX research has the potential to deliver
             clearer insights with higher confidence, it is only done by large
@@ -115,7 +115,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             specialized training in statistics.
           </p>
           <div
-            className={`relative mb-16 h-screen max-h-[600px] w-full rounded-[20px] border border-white bg-gradient-to-br from-emerald-500/5 to-rose-500/5 dark:border-white/25 dark:bg-opacity-5`}
+            className={`rounded-1 md:rounded-2 relative mb-16 h-screen max-h-[600px] w-full border border-white bg-gradient-to-br from-emerald-500/5 to-rose-500/5 dark:border-white/25 dark:bg-opacity-5`}
           >
             <div className="absolute flex h-full w-full flex-col items-center gap-1 text-xs font-bold">
               <span className="mt-4 bg-emerald-400 p-2 font-bold text-white">
@@ -136,7 +136,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               </span>
             </div>
             <div
-              className={`group-hover:z-100 group absolute bottom-8 left-8 z-0 flex w-64 cursor-default flex-col items-center gap-2 rounded-xl border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
+              className={`group-hover:z-100 rounded-1 md:rounded-2 group absolute bottom-8 left-8 z-0 flex w-64 cursor-default flex-col items-center gap-2 border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
             >
               <span className={`font-sans text-lg font-semibold`}>
                 No UX research
@@ -146,7 +146,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               </span>
             </div>
             <div
-              className={`group-hover:z-100 group absolute right-8 top-8 z-0 flex w-64 cursor-default flex-col items-center gap-2 rounded-xl border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
+              className={`group-hover:z-100 rounded-1 md:rounded-2 group absolute right-8 top-8 z-0 flex w-64 cursor-default flex-col items-center gap-2 border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
             >
               <span className={`font-sans text-lg font-semibold`}>
                 In-product A/B testing
@@ -156,7 +156,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               </span>
             </div>
             <div
-              className={`group-hover:z-100 group absolute left-[50%] top-[50%] z-0 flex w-64 -translate-x-1/2 -translate-y-1/2 cursor-default flex-col items-center gap-2 rounded-xl border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
+              className={`group-hover:z-100 rounded-1 md:rounded-2 group absolute left-[50%] top-[50%] z-0 flex w-64 -translate-x-1/2 -translate-y-1/2 cursor-default flex-col items-center gap-2 border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
             >
               <span className={`font-sans text-lg font-semibold`}>
                 Qualitative UX research
@@ -170,7 +170,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               className={`group absolute left-1/2 top-[28%] flex w-3/4 -translate-x-1/2 -translate-y-1/2 items-center gap-2`}
             >
               <div
-                className={`bg-fluxBackground flex w-64 cursor-default flex-col items-center gap-2 rounded-xl border border-flux/40 bg-opacity-10 p-4 text-center text-flux shadow-xl backdrop-blur-sm group-hover:shadow-2xl dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
+                className={`bg-fluxBackground rounded-1 md:rounded-2 flex w-64 cursor-default flex-col items-center gap-2 border border-flux/40 bg-opacity-10 p-4 text-center text-flux shadow-xl backdrop-blur-sm group-hover:shadow-2xl dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
               >
                 <span className={`font-sans text-lg font-semibold`}>
                   Quantitative UX research
@@ -203,7 +203,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 />
               </div>
               <div
-                className={`bg-fluxBackground flex w-64 cursor-default flex-col items-center gap-2 rounded-xl border border-dashed border-flux/40 bg-opacity-10 p-4 text-center text-flux opacity-40 shadow backdrop-blur-sm dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
+                className={`bg-fluxBackground rounded-1 md:rounded-2 flex w-64 cursor-default flex-col items-center gap-2 border border-dashed border-flux/40 bg-opacity-10 p-4 text-center text-flux opacity-40 shadow backdrop-blur-sm dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground`}
               >
                 <span className={`font-sans text-lg font-semibold`}>
                   Quantitative UX research

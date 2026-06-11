@@ -2,9 +2,9 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import projects from "@/data/projects";
-import { useActiveProject } from "@/app/context/ActiveProjectContext";
-import { useProjectTheme } from "@/hooks/useProjectTheme";
+// import projects from "@/data/projects";
+// import { useActiveProject } from "@/app/context/ActiveProjectContext";
+// import { useProjectTheme } from "@/hooks/useProjectTheme";
 import LazyVideo from "../LazyVideo";
 import SectionContainer from "../SectionContainer";
 import { ScrollIcon } from "@phosphor-icons/react";
@@ -17,8 +17,8 @@ interface CaseStudyFourProps {
 
 export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
   const { resolvedTheme } = useTheme();
-  const { activeIndex } = useActiveProject();
-  const theme = useProjectTheme(projects[activeIndex].id);
+  // const { activeIndex } = useActiveProject();
+  // const theme = useProjectTheme(projects[activeIndex].id);
 
   const borderOpacity = useTransform(
     scrollY,
@@ -40,7 +40,6 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
   return (
     <article>
       <section id="section-1" className="scroll-mt-24">
-        {" "}
         <SectionContainer
           title="Quick Take"
           icon={ScrollIcon}
@@ -49,15 +48,12 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           borderColor={borderColor}
           revealOnScroll={false}
         >
-          <h2 className={`text-3xl ${theme.textColorClass} leading-loose`}>
-            My Resume
-          </h2>{" "}
           <LazyVideo
             src="https://assets.haichaowang.com/promo-export-01.mp4"
             poster="/images/promo-export-01-poster.jpg"
             controls
             playsInline
-            className="mx-auto max-w-4xl rounded-lg"
+            className="rounded-1 md:rounded-2"
           />
           <p>
             NASA challenged student teams to imagine how AR could augment

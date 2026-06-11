@@ -91,7 +91,7 @@ export default function CaseStudyContent({
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="h-[calc(70svh+1rem)]" />
+      <div className="h-[max(40lvh,300px)]" />
     </div>
   );
 }

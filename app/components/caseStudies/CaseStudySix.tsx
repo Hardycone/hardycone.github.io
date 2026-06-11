@@ -54,7 +54,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
             hesitate?
           </p>
           <div
-            className={`relative aspect-[16/9] w-full overflow-hidden rounded-xl`}
+            className={`rounded-1 md:rounded-2 relative aspect-[16/9] w-full overflow-hidden`}
           ></div>
         </SectionContainer>
       </section>

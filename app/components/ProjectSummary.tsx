@@ -94,6 +94,7 @@ function isEditableKeyboardTarget(target: EventTarget | null) {
 interface ProjectSummaryProps {
   variant: "preview" | "header" | "bottom";
   scrollY: MotionValue<number>;
+  bottomRevealProgress: MotionValue<number>;
   isTransitionLocked?: boolean;
   onLayoutAnimationComplete?: () => void;
   onBottomNavigationStart?: (slug: string) => void;
@@ -107,6 +108,7 @@ type MainFloatingStyle = MotionStyle & {
 export default function ProjectSummary({
   variant,
   scrollY,
+  bottomRevealProgress,
   isTransitionLocked = false,
   onLayoutAnimationComplete,
   onBottomNavigationStart,
@@ -134,14 +136,7 @@ export default function ProjectSummary({
     [1, 1, 0],
   );
 
-  const bottomOpacity = useTransform(
-    scrollY,
-    [
-      document.body.scrollHeight - window.innerHeight * 1.5,
-      document.body.scrollHeight - window.innerHeight,
-    ],
-    [0, 1],
-  );
+  const bottomOpacity = useTransform(bottomRevealProgress, [0, 1], [0, 1]);
 
   const headerScale = useTransform(
     scrollY,
@@ -156,22 +151,12 @@ export default function ProjectSummary({
   );
 
   const bottomBlur = useTransform(
-    scrollY,
-    [
-      document.body.scrollHeight - window.innerHeight * 1.5,
-      document.body.scrollHeight - window.innerHeight,
-    ],
+    bottomRevealProgress,
+    [0, 1],
     ["blur(10px)", "blur(0px)"],
   );
 
-  const bottomScale = useTransform(
-    scrollY,
-    [
-      document.body.scrollHeight - window.innerHeight * 1.5,
-      document.body.scrollHeight - window.innerHeight,
-    ],
-    [1.1, 1],
-  );
+  const bottomScale = useTransform(bottomRevealProgress, [0, 1], [1.1, 1]);
 
   const {
     cardLightShadow,
@@ -431,14 +416,14 @@ export default function ProjectSummary({
       ? "fixed inset-0 w-full h-[100svh] items-center justify-center "
       : variant === "preview"
         ? "relative h-[100svh] w-full max-w-5xl justify-center [container-type:inline-size]"
-        : "fixed items-center justify-end w-full h-[100svh] max-w-5xl p-2 mt-[6.5rem]";
+        : "fixed items-center justify-end w-full h-[max(40lvh,300px)] bottom-0 max-w-5xl p-2 ";
 
   const cardClasses =
     variant === "header"
       ? "cursor-default h-full max-w-[2650px] gap-12 items-center p-10 pt-[15svh] pb-[4.5rem] md:wide:pb-[6.5rem]"
       : variant === "preview"
         ? "supertall:top-[3rem] top-[2rem] superwide:top-0 cursor-pointer p-3 md:p-6 h-[max(70cqw,50svh)] md:h-[max(80cqw,50svh)] superwide:h-[90svh] wide:h-[min(60cqw,70svh)] lg:superwide:h-[min(60cqw,70svh)] lg:h-[max(60cqw,50svh)] supertall:h-[clamp(36cqw,70svh,150cqw)] "
-        : "cursor-pointer p-3 md:p-6 h-[70svh]";
+        : "cursor-pointer p-3 md:p-6 h-full";
 
   const backgroundImageClasses =
     variant === "header"
@@ -468,7 +453,9 @@ export default function ProjectSummary({
     >
       {/* Bottom variant title bar */}
       {variant === "bottom" && (
-        <h6 className="relative mb-6 items-start text-lg font-bold">Next Up</h6>
+        <h6 className="relative mb-6 items-start font-serif text-lg font-bold">
+          Next Up
+        </h6>
       )}
       {/* Card */}
       <motion.div
@@ -617,7 +604,7 @@ export default function ProjectSummary({
 
         {/* Button container */}
         <AnimatePresence>
-          {variant === "preview" && (
+          {variant !== "header" && (
             <motion.div
               key="preview-button"
               className={`absolute bottom-3 left-3 md:bottom-6 md:left-6 wide:hidden lg:wide:block lg:superwide:hidden`}

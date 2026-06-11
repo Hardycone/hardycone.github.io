@@ -29,10 +29,10 @@
 html {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
-  overscroll-behavior: none;
+  /* overscroll-behavior: none; */
 }
 body {
-  overscroll-behavior: none;
+  /* overscroll-behavior: none; */
 }
 
 @layer components {
@@ -88,15 +88,14 @@ body {
     @apply font-sans text-base font-semibold leading-tight sm:text-xl;
   }
 
-  p {
-    @apply font-sans text-sm sm:text-lg;
-  }
-
   h3 {
     @apply font-sans text-2xl font-bold md:text-4xl;
   }
 
   h4 {
     @apply font-sans text-xl font-semibold;
+  }
+  p {
+    @apply font-sans text-sm sm:text-lg;
   }
 }

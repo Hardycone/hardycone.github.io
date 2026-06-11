@@ -21,6 +21,9 @@ import {
   MagnifyingGlassIcon,
   LightbulbFilamentIcon,
   RocketLaunchIcon,
+  PathIcon,
+  CertificateIcon,
+  CameraIcon,
 } from "@phosphor-icons/react";
 
 import Home from "../icons/Home";
@@ -252,6 +255,28 @@ export default function TopBar() {
       }
 
       const key = event.key.toLowerCase();
+
+      if (key === "8") {
+        event.preventDefault();
+        flashShortcutHint("about");
+        handleAboutClick();
+        return;
+      }
+
+      if (key === "9") {
+        event.preventDefault();
+        flashShortcutHint("linkedin");
+        handleLinkedInClick();
+        return;
+      }
+
+      if (key === "0") {
+        event.preventDefault();
+        flashShortcutHint("theme");
+        themeToggleButtonRef.current?.click();
+        return;
+      }
+
       const sectionShortcut = Number.parseInt(key, 10);
 
       if (
@@ -274,26 +299,6 @@ export default function TopBar() {
         }
         return;
       }
-
-      if (key === "a") {
-        event.preventDefault();
-        flashShortcutHint("about");
-        handleAboutClick();
-        return;
-      }
-
-      if (key === "l") {
-        event.preventDefault();
-        flashShortcutHint("linkedin");
-        handleLinkedInClick();
-        return;
-      }
-
-      if (key === "t") {
-        event.preventDefault();
-        flashShortcutHint("theme");
-        themeToggleButtonRef.current?.click();
-      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -313,7 +318,7 @@ export default function TopBar() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Tab") {
+      if (event.key === "Tab" || event.key === "Shift") {
         setShowKeyboardHints(false);
         return;
       }
@@ -495,6 +500,9 @@ export default function TopBar() {
                       MagnifyingGlassIcon,
                       LightbulbFilamentIcon,
                       RocketLaunchIcon,
+                      PathIcon,
+                      CertificateIcon,
+                      CameraIcon,
                     };
                     type IconName = keyof typeof Icons;
                     const Icon = Icons[section.icon as IconName];
@@ -571,7 +579,7 @@ export default function TopBar() {
           </motion.span>
           {showKeyboardHints && (
             <KeyboardHint isPressed={pressedShortcut === "about"}>
-              A
+              8
             </KeyboardHint>
           )}
         </motion.button>
@@ -591,7 +599,7 @@ export default function TopBar() {
           <LinkedIn />
           {showKeyboardHints && (
             <KeyboardHint isPressed={pressedShortcut === "linkedin"}>
-              L
+              9
             </KeyboardHint>
           )}
         </motion.button>
@@ -606,7 +614,7 @@ export default function TopBar() {
           <ThemeToggle buttonRef={themeToggleButtonRef} />
           {showKeyboardHints && (
             <KeyboardHint isPressed={pressedShortcut === "theme"}>
-              T
+              0
             </KeyboardHint>
           )}
         </motion.div>

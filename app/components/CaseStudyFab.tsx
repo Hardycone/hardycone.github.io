@@ -1,7 +1,7 @@
 "use client";
 import { motion, AnimatePresence, MotionValue } from "framer-motion";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useTheme } from "next-themes";
 import { useViewMode } from "../context/ViewModeContext";
 import { useActiveProject } from "../context/ActiveProjectContext";
@@ -28,6 +28,45 @@ const linkIconRegistry: Record<string, React.ElementType> = {
   ArticleIcon,
 };
 
+const linkShortcuts = ["x", "c", "v", "b", "n"];
+
+function isEditableKeyboardTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) return false;
+
+  const tagName = target.tagName.toLowerCase();
+  return (
+    target.isContentEditable ||
+    tagName === "input" ||
+    tagName === "textarea" ||
+    tagName === "select"
+  );
+}
+
+function KeyboardHint({
+  children,
+  isPressed = false,
+  anchorX,
+}: {
+  children: string;
+  isPressed?: boolean;
+  anchorX: number;
+}) {
+  return (
+    <span
+      className="pointer-events-none absolute bottom-[calc(100%-0.25rem)] z-10 -translate-x-1/2 whitespace-nowrap"
+      style={{ left: anchorX }}
+    >
+      <motion.span
+        animate={{ scale: isPressed ? 0.9 : 1 }}
+        transition={{ duration: 0.08, ease: "easeOut" }}
+        className="flex h-6 w-6 items-center justify-center rounded-md bg-sky-600 font-sans text-xs font-semibold text-background dark:bg-sky-400 dark:text-dark-background"
+      >
+        {children}
+      </motion.span>
+    </span>
+  );
+}
+
 type LinkItemProps = {
   icon: string;
   label: string;
@@ -35,6 +74,9 @@ type LinkItemProps = {
   index: number;
   barShadow: MotionValue<string>;
   onFollow: () => void;
+  shortcut: string;
+  showKeyboardHints: boolean;
+  isShortcutPressed: boolean;
 };
 
 function SplitStaggerText({
@@ -71,9 +113,12 @@ function LinkItem({
   index,
   barShadow,
   onFollow,
+  shortcut,
+  showKeyboardHints,
+  isShortcutPressed,
 }: LinkItemProps) {
   const IconComponent = linkIconRegistry[icon];
-  const offset = (index + 1) * 52 + 4;
+  const offset = (index + 1) * 60 + 4;
   return (
     <motion.a
       href={url}
@@ -91,7 +136,7 @@ function LinkItem({
       }}
       whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
       onClick={onFollow}
-      className="group flex items-center gap-1 rounded-lg bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground"
+      className="group relative flex items-center gap-1 rounded-lg bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground"
       title={label}
     >
       {IconComponent ? (
@@ -100,6 +145,11 @@ function LinkItem({
         <GlobeIcon size={20} className="shrink-0" />
       )}
       <span className="text-sm">{label}</span>
+      {showKeyboardHints && (
+        <KeyboardHint anchorX={18} isPressed={isShortcutPressed}>
+          {shortcut.toUpperCase()}
+        </KeyboardHint>
+      )}
     </motion.a>
   );
 }
@@ -113,12 +163,15 @@ export default function CaseStudyFab() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isToggleHovered, setIsToggleHovered] = useState(false);
+  const [showKeyboardHints, setShowKeyboardHints] = useState(false);
+  const [pressedShortcut, setPressedShortcut] = useState<string | null>(null);
   const fabRef = useRef<HTMLDivElement>(null);
+  const pressedShortcutTimeout = useRef<number | null>(null);
 
   const project = projects[activeIndex];
-  const links = project?.externalLinks ?? [];
+  const links = useMemo(() => project?.externalLinks ?? [], [project]);
 
-  const isVisible = viewMode === "case-study";
+  const isVisible = viewMode === "case-study" && links.length > 0;
 
   const showLabel = isOpen || isToggleHovered;
 
@@ -129,6 +182,17 @@ export default function CaseStudyFab() {
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
+  }, []);
+
+  const flashShortcutHint = useCallback((shortcut: string) => {
+    setPressedShortcut(shortcut);
+    if (pressedShortcutTimeout.current) {
+      window.clearTimeout(pressedShortcutTimeout.current);
+    }
+    pressedShortcutTimeout.current = window.setTimeout(() => {
+      setPressedShortcut(null);
+      pressedShortcutTimeout.current = null;
+    }, 120);
   }, []);
 
   useEffect(() => {
@@ -152,6 +216,71 @@ export default function CaseStudyFab() {
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.repeat ||
+        event.defaultPrevented ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        isEditableKeyboardTarget(event.target)
+      ) {
+        return;
+      }
+
+      const key = event.key.toLowerCase();
+
+      if (key === "z") {
+        event.preventDefault();
+        flashShortcutHint("z");
+        handleToggle();
+        return;
+      }
+
+      const shortcutIndex = linkShortcuts.indexOf(key);
+      const link = links[shortcutIndex];
+      if (!isOpen || shortcutIndex === -1 || !link) return;
+
+      event.preventDefault();
+      flashShortcutHint(key);
+      window.open(link.url, "_blank", "noopener,noreferrer");
+      handleClose();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [flashShortcutHint, handleClose, handleToggle, isOpen, isVisible, links]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Tab" || event.key === "Shift") {
+        setShowKeyboardHints(false);
+        return;
+      }
+
+      if (event.repeat || isEditableKeyboardTarget(event.target)) return;
+      setShowKeyboardHints(true);
+    };
+
+    const hideKeyboardHints = () => setShowKeyboardHints(false);
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("mousemove", hideKeyboardHints);
+    window.addEventListener("pointermove", hideKeyboardHints);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousemove", hideKeyboardHints);
+      window.removeEventListener("pointermove", hideKeyboardHints);
+      if (pressedShortcutTimeout.current) {
+        window.clearTimeout(pressedShortcutTimeout.current);
+      }
+    };
+  }, []);
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -165,7 +294,7 @@ export default function CaseStudyFab() {
         >
           <div ref={fabRef} className="pointer-events-auto relative">
             {/* Link buttons — vertical stack above FAB */}
-            <div className="absolute bottom-full mb-4 ml-0 flex flex-col-reverse items-start gap-4 font-serif md:ml-1">
+            <div className="absolute bottom-full mb-6 ml-0 flex flex-col-reverse items-start gap-6 font-serif md:ml-1">
               <AnimatePresence>
                 {isOpen &&
                   links.map((link, index) => (
@@ -177,6 +306,11 @@ export default function CaseStudyFab() {
                       index={index}
                       barShadow={barShadow}
                       onFollow={handleClose}
+                      shortcut={linkShortcuts[index]}
+                      showKeyboardHints={showKeyboardHints}
+                      isShortcutPressed={
+                        pressedShortcut === linkShortcuts[index]
+                      }
                     />
                   ))}
               </AnimatePresence>
@@ -189,9 +323,9 @@ export default function CaseStudyFab() {
               onHoverEnd={() => setIsToggleHovered(false)}
               onClick={handleToggle}
               className={`relative flex h-9 items-center rounded-full bg-background pl-2 text-foreground transition-all dark:bg-dark-background dark:text-dark-foreground md:h-11 ${
-                showLabel ? "w-20 gap-1 md:w-24" : "w-9 md:w-11"
+                showLabel ? "w-20 gap-2 md:w-24" : "w-9 md:w-11"
               }`}
-              title={isOpen ? "Close links" : "Open links"}
+              title={isOpen ? "Hide relevant links" : "Show relevant links"}
             >
               <div className="h-5 w-5 shrink-0 md:h-7 md:w-7">
                 <FabToggle isOpen={isOpen} isHovered={isToggleHovered} />
@@ -209,6 +343,11 @@ export default function CaseStudyFab() {
                   </motion.div>
                 )}
               </AnimatePresence>
+              {showKeyboardHints && (
+                <KeyboardHint anchorX={22} isPressed={pressedShortcut === "z"}>
+                  Z
+                </KeyboardHint>
+              )}
             </motion.button>
           </div>
         </motion.div>

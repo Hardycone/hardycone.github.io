@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 // import projects from "@/data/projects";
 // import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useTransform, MotionValue } from "framer-motion";
-import { PathIcon, CameraIcon } from "@phosphor-icons/react";
+import { CertificateIcon, PathIcon, CameraIcon } from "@phosphor-icons/react";
 import { hexToRgba } from "@/lib/palette";
 // import { useProjectTheme } from "@/hooks/useProjectTheme";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
@@ -80,18 +80,17 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           revealOnScroll={false}
         >
           <p>
-            A throughline of my career – empowerment. I enjoy building things
-            that enable people to do more and be more. This passion hasn’t
-            changed through my transition from landscape architecture into tech.
-            It may seem like a big jump, but in reality I’ve always been the
-            same designer speaking the same language, who looks for problems
-            that prevent people from realizing their potential and solves them.
+            A throughline of my career has been empowerment. I enjoy building
+            things that enable people to do more. This passion hasn’t changed
+            through my transition from a design director in the nonprofit sector
+            into tech. It may seem like a big jump, but in reality I’ve always
+            been the same designer speaking the same language.
           </p>
           <p className="mt-8">
             I’m currently working on{" "}
             <FlourishName
               name="Flux"
-              bgColor={hexToRgba(fluxTheme.hex.primary, 0.1)}
+              bgColor={hexToRgba(fluxTheme.hex.primary, 0.05)}
               gradientCenterColor={hexToRgba(fluxTheme.hex.soft, 1)}
               gradientMiddleColor={hexToRgba(fluxTheme.hex.soft, 1)}
               isActive={isFluxOpen}
@@ -109,8 +108,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             approachable, guided, and genuinely useful.
           </p>
           <NarrativeAccordion isOpen={isFluxOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-xl bg-flux/10 p-8 dark:bg-dark-flux/10">
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl">
+            <div className="rounded-1 md:rounded-2 mb-4 mt-4 flex gap-4 bg-flux/5 p-8 dark:bg-dark-flux/5">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-flux.png"
                   alt="Flux logo"
@@ -170,8 +169,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               isActive={isFantailOpen}
               onToggle={() => setIsFantailOpen((prev) => !prev)}
               onFlourish={() => setIsFantailOpen(true)}
-              logoSrc="                /images/logo-fantail.png
-"
+              logoSrc="/images/logo-fantail.png"
             />
             . Our vision – which we still believe to this day – is that AI
             should serve the creative mind, not replace it. Fantail brought AI
@@ -188,7 +186,14 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             that and turned us down.
           </p>
           <NarrativeAccordion isOpen={isFantailOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-xl bg-fantail/5 p-8 dark:bg-dark-fantail/5">
+            <div className="rounded-1 md:rounded-2 mb-4 mt-4 flex gap-4 bg-fantail/5 p-8 dark:bg-dark-fantail/5">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
+                <img
+                  src="/images/logo-fantail.png"
+                  alt="Fantail logo"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
               <div className="flex w-full flex-col">
                 <div className="flex justify-between font-sans text-xl">
                   <div className="flex flex-col">
@@ -243,8 +248,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             built.
           </p>
           <NarrativeAccordion isOpen={isAslfOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-xl bg-wolcott/5 p-8 dark:bg-dark-wolcott/5">
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+            <div className="rounded-1 md:rounded-2 mb-4 mt-4 flex gap-4 bg-wolcott/5 p-8 dark:bg-dark-wolcott/5">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-aslf.png"
                   alt="ASLF logo"
@@ -297,7 +302,20 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               </div>
             </div>
           </NarrativeAccordion>
-          <p className="mt-8">
+
+          {/*Subsection 1: Experience*/}
+        </SectionContainer>
+      </section>
+
+      <section id="section-2" className="mb-16 w-full min-w-0 scroll-mt-24">
+        <SectionContainer
+          title="My Qualifications"
+          icon={CertificateIcon}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          borderColor={borderColor}
+        >
+          <p>
             I went back to school for my{" "}
             <FlourishName
               name="Master's in HCI at UW"
@@ -320,8 +338,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             spacesuit interfaces to quantitative UX testing tools.
           </p>
           <NarrativeAccordion isOpen={isUwOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-xl bg-suits/5 p-8 dark:bg-dark-suits/5">
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+            <div className="rounded-1 md:rounded-2 mb-4 mt-4 flex gap-4 bg-suits/5 p-8 dark:bg-dark-suits/5">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-uw.png"
                   alt="UW logo"
@@ -387,8 +405,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             medium is a park or a prototype.
           </p>
           <NarrativeAccordion isOpen={isSyracuseOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-xl bg-chinatown/5 p-8 dark:bg-dark-chinatown/5">
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+            <div className="rounded-1 md:rounded-2 mb-4 mt-4 flex gap-4 bg-chinatown/5 p-8 dark:bg-dark-chinatown/5">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-esf.png"
                   alt="SUNY-ESF logo"
@@ -435,7 +453,6 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             breath the same air. They have less access to recreational green
             spaces. As a
           </p>
-          {/*Subsection 1: Experience*/}
           <div className="mb-8">
             {/*Subheader*/}
             <h3 className="mb-4 font-sans text-2xl font-semibold">
@@ -445,7 +462,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             {/*Entry 3*/}
             <div className="mb-4 flex gap-4">
               {/*Left: Image*/}
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-nps.png"
                   alt="logo"
@@ -490,7 +507,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             {/*Entry 1*/}
             <div className="mb-4 flex gap-4">
               {/*Left: Image*/}
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-uw.png"
                   alt="logo"
@@ -521,7 +538,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             {/*Entry 2*/}
             <div className="mb-4 flex gap-4">
               {/*Left: Image*/}
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-esf.png"
                   alt="logo"
@@ -552,7 +569,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             {/*Entry 3*/}
             <div className="mb-4 flex gap-4">
               {/*Left: Image*/}
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-bnu.png"
                   alt="logo"
@@ -589,7 +606,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 {/*Left: Description*/}
                 <div className="flex gap-2">
                   {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
                       src="/images/logo-nasa.png"
                       alt="logo"
@@ -613,7 +630,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 {/*Left: Description*/}
                 <div className="flex gap-2">
                   {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
                       src="/images/logo-epa.png"
                       alt="logo"
@@ -634,7 +651,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 {/*Left: Description*/}
                 <div className="flex gap-2">
                   {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
                       src="/images/logo-wep.png"
                       alt="logo"
@@ -655,7 +672,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 {/*Left: Description*/}
                 <div className="flex gap-2">
                   {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
                       src="/images/logo-usda.png"
                       alt="logo"
@@ -676,7 +693,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 {/*Left: Description*/}
                 <div className="flex gap-2">
                   {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
                       src="/images/logo-noaa.png"
                       alt="logo"
@@ -697,7 +714,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 {/*Left: Description*/}
                 <div className="flex gap-2">
                   {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
                       src="/images/logo-nys.png"
                       alt="logo"
@@ -718,7 +735,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 {/*Left: Description*/}
                 <div className="flex gap-2">
                   {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded">
+                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
                       src="/images/logo-usda.png"
                       alt="logo"
@@ -812,7 +829,6 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             pictures with a mirrorless camera. I also enjoy making physical
             things.
           </p>
-          {/*Image Grid Container*/}
 
           <p>
             Whether I’m prototyping UX flows in Figma, guiding product direction
@@ -857,7 +873,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             urbanism. Thanks for exploring.
           </p>
         </SectionContainer>
-        <div className="relative left-1/2 mx-auto w-[calc(100svw-2rem)] max-w-[1440px] -translate-x-1/2">
+        <div className="relative left-1/2 mx-auto mb-8 w-[calc(100svw-2rem)] max-w-[1440px] -translate-x-1/2">
           {/*Image Grid*/}
           <div className="grid grid-cols-4 grid-rows-4 gap-2">
             {/* Image 1 - 4 cells horizontally */}
@@ -865,7 +881,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 1"
-                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover"
               />
             </div>
             {/* Image 2 - 2x2 square */}
@@ -873,7 +889,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 2"
-                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover"
               />
             </div>
             {/* Image 3 - 2 cells vertically adjacent */}
@@ -881,7 +897,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 3"
-                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover"
               />
             </div>
             {/* Remaining cells */}
@@ -889,33 +905,38 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 4"
-                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover"
               />
             </div>
             <div className="relative">
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 5"
-                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover"
               />
             </div>
             <div className="relative">
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 7"
-                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover"
               />
             </div>
             <div className="relative col-span-3 row-span-1">
               <img
                 src="/images/20240704-HWP03580-Edit.jpg"
                 alt="Dummy Image 6"
-                className="absolute inset-0 h-full w-full rounded-[20px] object-cover object-top"
+                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover object-top"
               />
             </div>
           </div>
         </div>
-        <SectionContainer showHeading={false} borderColor={borderColor}>
+        <SectionContainer
+          showHeading={false}
+          borderColor={borderColor}
+          revealOnScroll={false}
+          cardClass="mb-0"
+        >
           <p>
             Whether I’m prototyping UX flows in Figma, guiding product direction
             with founders, or co-designing with local communities, I bring a

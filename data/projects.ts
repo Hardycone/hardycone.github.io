@@ -67,12 +67,9 @@ const projects: Project[] = [
     bgColor: "introBackground",
     glyphAnimation: glyphOneAnimation as GlyphAnimationData,
     sections: [
-      { id: "section-1", label: "My Resume", icon: "ScrollIcon" },
-      { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
-      { id: "section-3", label: "Goal", icon: "TargetIcon" },
-      { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
-      { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
-      { id: "section-6", label: "Reflection", icon: "BrainIcon" },
+      { id: "section-1", label: "My Journey", icon: "PathIcon" },
+      { id: "section-2", label: "My Qualifications", icon: "CertificateIcon" },
+      { id: "section-3", label: "My Interests", icon: "CameraIcon" },
     ],
     externalLinks: [
       {
@@ -129,8 +126,6 @@ const projects: Project[] = [
         url: "https://github.com/Hardycone",
         icon: "GithubLogoIcon",
       },
-      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
-      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
       { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
       { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
       { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },

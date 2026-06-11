@@ -5,6 +5,7 @@ import {
   useScroll,
   AnimatePresence,
   useMotionValueEvent,
+  useMotionValue,
 } from "framer-motion";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -25,11 +26,13 @@ import CaseStudyContent from "./CaseStudyContent";
 import MyName from "./MyName";
 import HomeSymbolBackdrop from "./HomeSymbolBackdrop";
 import CaseStudyFab from "./CaseStudyFab";
-
+import DebugViewport from "./DebugViewport";
 type BottomNavigationState = {
   slug: string;
   phase: "exit" | "morph" | "route";
 };
+
+const BOTTOM_REVEAL_COMPLETION_BUFFER = 100;
 
 export default function MainContent({ children }: { children: ReactNode }) {
   const { activeIndex, transitioningToNext, setTransitioningToNext } =
@@ -47,6 +50,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
     useState<BottomNavigationState | null>(null);
 
   const { scrollY } = useScroll();
+  const bottomRevealProgress = useMotionValue(0);
+  const bottomRevealAnchorRef = useRef<HTMLDivElement>(null);
   const caseStudyExitDirection = transitioningToNext ? "up" : "down";
   const isCaseStudyScrollLocked =
     viewMode === "case-study" &&
@@ -62,46 +67,80 @@ export default function MainContent({ children }: { children: ReactNode }) {
       !caseStudyContentReady &&
       !transitioningToNext);
 
-  // State for document dimensions
-  const [docDimensions, setDocDimensions] = useState({
-    height: 0,
-    winHeight: 0,
-  });
-
   // Single state for current variant
   const [summaryVariant, setSummaryVariant] = useState<
     "preview" | "header" | "bottom" | null
   >("preview");
 
-  // Update document dimensions
-  // 🔁 Reactive document height tracking
-  useEffect(() => {
-    if (typeof window === "undefined" || typeof document === "undefined")
-      return;
+  const updateBottomRevealProgress = useCallback(() => {
+    const anchor = bottomRevealAnchorRef.current;
+    if (!anchor || viewMode !== "case-study") {
+      bottomRevealProgress.set(0);
+      return 0;
+    }
 
-    const update = () => {
-      setDocDimensions({
-        height: document.body.scrollHeight,
-        winHeight: window.innerHeight,
-      });
+    const visualViewport = window.visualViewport;
+    const viewportHeight = visualViewport?.height ?? window.innerHeight;
+    const viewportBottom = (visualViewport?.offsetTop ?? 0) + viewportHeight;
+    const distanceFromBottom =
+      anchor.getBoundingClientRect().top - viewportBottom;
+    const revealDistance = viewportHeight * 0.5;
+    const animationDistance = Math.max(
+      1,
+      revealDistance - BOTTOM_REVEAL_COMPLETION_BUFFER,
+    );
+    const progress = Math.min(
+      1,
+      Math.max(0, (revealDistance - distanceFromBottom) / animationDistance),
+    );
+
+    bottomRevealProgress.set(progress);
+    return progress;
+  }, [bottomRevealProgress, viewMode]);
+
+  useEffect(() => {
+    const handleGeometryChange = () => {
+      const progress = updateBottomRevealProgress();
+
+      if (
+        bottomNavigation ||
+        viewMode !== "case-study" ||
+        scrollY.get() < window.innerHeight / 2
+      ) {
+        return;
+      }
+
+      setSummaryVariant(progress > 0 ? "bottom" : null);
     };
 
-    // Run once on mount
-    update();
+    handleGeometryChange();
 
-    // Watch for any layout changes that affect document height
-    const observer = new ResizeObserver(update);
+    const observer = new ResizeObserver(handleGeometryChange);
     observer.observe(document.body);
 
-    // Also handle viewport resizes
-    window.addEventListener("resize", update);
+    window.addEventListener("resize", handleGeometryChange);
+    window.visualViewport?.addEventListener("resize", handleGeometryChange);
+    window.visualViewport?.addEventListener("scroll", handleGeometryChange);
 
-    // Clean up on unmount
     return () => {
       observer.disconnect();
-      window.removeEventListener("resize", update);
+      window.removeEventListener("resize", handleGeometryChange);
+      window.visualViewport?.removeEventListener(
+        "resize",
+        handleGeometryChange,
+      );
+      window.visualViewport?.removeEventListener(
+        "scroll",
+        handleGeometryChange,
+      );
     };
-  }, [viewMode, activeIndex]);
+  }, [
+    activeIndex,
+    bottomNavigation,
+    scrollY,
+    updateBottomRevealProgress,
+    viewMode,
+  ]);
 
   // Set initial variant based on viewMode
   useEffect(() => {
@@ -120,18 +159,17 @@ export default function MainContent({ children }: { children: ReactNode }) {
     }
 
     const y = scrollY.get();
-    const { height: docHeight, winHeight } = docDimensions;
+    const winHeight = window.innerHeight;
+    const bottomProgress = updateBottomRevealProgress();
 
-    if (docHeight > 0 && winHeight > 0) {
-      if (y < winHeight / 2) {
-        setSummaryVariant("header");
-      } else if (y > docHeight - winHeight * 1.5) {
-        setSummaryVariant("bottom");
-      } else {
-        setSummaryVariant(null);
-      }
+    if (y < winHeight / 2) {
+      setSummaryVariant("header");
+    } else if (bottomProgress > 0) {
+      setSummaryVariant("bottom");
+    } else {
+      setSummaryVariant(null);
     }
-  }, [bottomNavigation, viewMode, docDimensions, scrollY]);
+  }, [bottomNavigation, viewMode, scrollY, updateBottomRevealProgress]);
 
   // Use useMotionValueEvent for efficient scroll handling
   useMotionValueEvent(scrollY, "change", (y) => {
@@ -142,13 +180,12 @@ export default function MainContent({ children }: { children: ReactNode }) {
       return;
     }
 
-    // ALWAYS use fresh values
-    const docHeight = document.body.scrollHeight;
     const winHeight = window.innerHeight;
+    const bottomProgress = updateBottomRevealProgress();
 
     if (y < winHeight / 2) {
       setSummaryVariant("header");
-    } else if (y > docHeight - winHeight * 1.5) {
+    } else if (bottomProgress > 0) {
       setSummaryVariant("bottom");
     } else {
       setSummaryVariant(null);
@@ -405,7 +442,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       {viewMode === "home" && <HomeSymbolBackdrop activeIndex={activeIndex} />}
       <TopBar />
 
-      {/* <DebugViewport /> */}
+      <DebugViewport />
       <div
         className={`relative z-10 flex flex-1 flex-col overflow-hidden ${
           shouldReserveGlyphRail ? "min-w-max" : ""
@@ -461,12 +498,22 @@ export default function MainContent({ children }: { children: ReactNode }) {
               onExitComplete={handleCaseStudyExitComplete}
             />
           )}
+        {viewMode === "case-study" &&
+          (caseStudyContentReady || transitioningToNext) && (
+            <div
+              ref={bottomRevealAnchorRef}
+              data-bottom-reveal-anchor
+              aria-hidden="true"
+              className="h-0 w-full"
+            />
+          )}
         <AnimatePresence mode="wait">
           {summaryVariant && (
             <ProjectSummary
               key="project-summary"
               variant={summaryVariant}
               scrollY={scrollY}
+              bottomRevealProgress={bottomRevealProgress}
               isTransitionLocked={isBottomNavigationActive}
               onLayoutAnimationComplete={handleSummaryLayoutComplete}
               onBottomNavigationStart={handleBottomNavigationStart}
