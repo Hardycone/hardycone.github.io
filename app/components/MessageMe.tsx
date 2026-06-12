@@ -1,7 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion, type MotionValue } from "framer-motion";
-import { SmileyWinkIcon } from "@phosphor-icons/react";
+import {
+  CheckCircleIcon,
+  CopyIcon,
+  SmileyWinkIcon,
+} from "@phosphor-icons/react";
 import {
   type FormEvent,
   type RefObject,
@@ -15,6 +19,7 @@ import { useMouseShadow } from "@/hooks/useMouseShadow";
 import MessageToggleIcon from "./MessageToggleIcon";
 
 const FORM_ENDPOINT = "https://formsubmit.co/ajax/haichwng@gmail.com";
+const CONTACT_EMAIL = "haichwng@gmail.com";
 const SUCCESS_MESSAGE = "Got your message! I will get back to you shortly.";
 
 type FormFields = {
@@ -81,23 +86,27 @@ function KeyboardHint({ isPressed }: { isPressed: boolean }) {
 function ContactPanel({
   fields,
   fieldErrors,
+  hasCopiedEmail,
   error,
   isSubmitting,
   panelShadow,
   nameInputRef,
   emailInputRef,
   messageInputRef,
+  onCopyEmail,
   onChange,
   onSubmit,
 }: {
   fields: FormFields;
   fieldErrors: FieldErrors;
+  hasCopiedEmail: boolean;
   error: string | null;
   isSubmitting: boolean;
   panelShadow: MotionValue<string>;
   nameInputRef: RefObject<HTMLInputElement | null>;
   emailInputRef: RefObject<HTMLInputElement | null>;
   messageInputRef: RefObject<HTMLTextAreaElement | null>;
+  onCopyEmail: () => void;
   onChange: (field: keyof FormFields, value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
@@ -118,12 +127,31 @@ function ContactPanel({
       animate={{ y: 0, opacity: 1, scale: 1 }}
       exit={{ y: 36, opacity: 0, scale: 0 }}
       transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-4.5 md:rounded-5.5 pointer-events-auto absolute bottom-full right-2.5 mb-6 flex max-h-[calc(100dvh-6rem)] w-[calc(100vw-2rem)] max-w-sm origin-bottom-right flex-col gap-3 overflow-y-auto bg-background/95 p-3 text-foreground backdrop-blur-xl dark:bg-dark-background/95 dark:text-dark-foreground md:right-0 md:p-4"
+      className="pointer-events-auto absolute bottom-full right-2.5 mb-6 flex max-h-[calc(100dvh-6rem)] w-[calc(100vw-2rem)] max-w-sm origin-bottom-right flex-col gap-3 overflow-y-auto rounded-4.5 bg-background/95 p-3 text-foreground backdrop-blur-xl dark:bg-dark-background/95 dark:text-dark-foreground md:right-0 md:rounded-5.5 md:p-4"
     >
       <div>
-        <h5 className="font-sans text-xl font-bold sm:text-xl">Let's Chat!</h5>
+        <h5 className="font-sans text-xl font-bold sm:text-xl">
+          Let&apos;s chat!
+        </h5>
         <p className="mt-1 text-sm opacity-60">
-          I would love to hear from you.
+          Send me a message here, or{" "}
+          <button
+            type="button"
+            onClick={onCopyEmail}
+            className="inline-flex items-baseline gap-1 rounded-sm font-bold transition-[color,opacity,text-decoration-color] hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/40"
+            aria-live="polite"
+          >
+            {hasCopiedEmail ? (
+              <CheckCircleIcon
+                size="1em"
+                weight="fill"
+                className="translate-y-0.5"
+              />
+            ) : (
+              <CopyIcon size="1em" className="translate-y-0.5" />
+            )}
+            {hasCopiedEmail ? "Copied!" : "copy my email"}
+          </button>
         </p>
       </div>
 
@@ -226,7 +254,7 @@ function ContactPanel({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded-1.5 mt-1 h-11 bg-foreground px-5 font-sans text-sm font-semibold text-background transition-[transform,opacity] hover:scale-[1.02] active:scale-[0.98] disabled:cursor-wait disabled:opacity-50 dark:bg-dark-foreground dark:text-dark-background"
+        className="mt-1 h-11 rounded-1.5 bg-foreground px-5 font-sans text-sm font-semibold text-background transition-[transform,opacity] hover:scale-[0.97] active:scale-[0.98] disabled:cursor-wait disabled:opacity-50 dark:bg-dark-foreground dark:text-dark-background"
       >
         {isSubmitting ? "Sending..." : "Send"}
       </button>
@@ -246,6 +274,7 @@ export default function MessageMe() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [hasCopiedEmail, setHasCopiedEmail] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [fields, setFields] = useState<FormFields>({
     name: "",
@@ -259,6 +288,7 @@ export default function MessageMe() {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
   const shortcutTimeout = useRef<number | null>(null);
+  const copyTimeout = useRef<number | null>(null);
   const toastTimeout = useRef<number | null>(null);
 
   const flashShortcutHint = useCallback(() => {
@@ -270,6 +300,34 @@ export default function MessageMe() {
       setIsShortcutPressed(false);
       shortcutTimeout.current = null;
     }, 120);
+  }, []);
+
+  const handleCopyEmail = useCallback(async () => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(CONTACT_EMAIL);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = CONTACT_EMAIL;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        textArea.remove();
+      }
+
+      setHasCopiedEmail(true);
+      if (copyTimeout.current) {
+        window.clearTimeout(copyTimeout.current);
+      }
+      copyTimeout.current = window.setTimeout(() => {
+        setHasCopiedEmail(false);
+        copyTimeout.current = null;
+      }, 3000);
+    } catch {
+      setHasCopiedEmail(false);
+    }
   }, []);
 
   const handleToggle = useCallback(() => {
@@ -480,6 +538,9 @@ export default function MessageMe() {
       if (shortcutTimeout.current) {
         window.clearTimeout(shortcutTimeout.current);
       }
+      if (copyTimeout.current) {
+        window.clearTimeout(copyTimeout.current);
+      }
       if (toastTimeout.current) {
         window.clearTimeout(toastTimeout.current);
       }
@@ -503,12 +564,14 @@ export default function MessageMe() {
               key="contact-panel"
               fields={fields}
               fieldErrors={fieldErrors}
+              hasCopiedEmail={hasCopiedEmail}
               error={error}
               isSubmitting={isSubmitting}
               panelShadow={barShadow}
               nameInputRef={nameInputRef}
               emailInputRef={emailInputRef}
               messageInputRef={messageInputRef}
+              onCopyEmail={handleCopyEmail}
               onChange={handleFieldChange}
               onSubmit={handleSubmit}
             />
@@ -524,7 +587,7 @@ export default function MessageMe() {
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 8, opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="rounded-2 pointer-events-none absolute bottom-full right-2.5 z-50 mb-6 flex w-[calc(100vw-2rem)] max-w-sm items-start gap-2 border border-green-600/20 bg-foreground p-4 font-sans text-sm text-background shadow-md dark:border-green-400/20 dark:bg-dark-foreground dark:text-dark-background md:right-0"
+              className="pointer-events-none absolute bottom-full right-2.5 z-50 mb-6 flex w-[calc(100vw-2rem)] max-w-sm items-start gap-2 rounded-2 border border-green-600/20 bg-foreground p-4 font-sans text-sm text-background shadow-md dark:border-green-400/20 dark:bg-dark-foreground dark:text-dark-background md:right-0"
             >
               <SmileyWinkIcon
                 size={20}

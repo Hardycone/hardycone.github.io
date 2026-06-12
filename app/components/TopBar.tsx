@@ -202,7 +202,11 @@ export default function TopBar() {
   }, [pathname, router, setActiveIndex, setViewMode]);
 
   const handleLinkedInClick = useCallback(() => {
-    window.open("https://www.google.com", "_blank", "noopener,noreferrer");
+    window.open(
+      "https://www.linkedin.com/in/haichao-wang-984a914a",
+      "_blank",
+      "noopener,noreferrer",
+    );
   }, []);
 
   const handleScrollToSummary = useCallback(() => {
@@ -431,7 +435,7 @@ export default function TopBar() {
   }, []);
 
   return (
-    <div className="fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[1440px] p-1.5 md:p-4">
+    <div className="fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[2650px] p-3.5 md:p-[1.625rem]">
       <AnimatePresence>
         <motion.div
           key="topbar"

@@ -416,13 +416,13 @@ export default function ProjectSummary({
       ? "fixed inset-0 w-full h-[100svh] items-center justify-center "
       : variant === "preview"
         ? "relative h-[100svh] w-full max-w-5xl justify-center [container-type:inline-size]"
-        : "fixed items-center justify-end w-full h-[max(40lvh,300px)] bottom-0 max-w-5xl p-2 ";
+        : "fixed items-center justify-end w-full h-[max(60lvh,300px)] bottom-0 max-w-5xl p-2 ";
 
   const cardClasses =
     variant === "header"
-      ? "cursor-default h-full max-w-[2650px] gap-12 items-center p-10 pt-[15svh] pb-[4.5rem] md:wide:pb-[6.5rem]"
+      ? "cursor-default h-full max-w-[2650px] items-center p-10 pt-[15svh] pb-18 md:wide:pb-28"
       : variant === "preview"
-        ? "supertall:top-[3rem] top-[2rem] superwide:top-0 cursor-pointer p-3 md:p-6 h-[max(70cqw,50svh)] md:h-[max(80cqw,50svh)] superwide:h-[90svh] wide:h-[min(60cqw,70svh)] lg:superwide:h-[min(60cqw,70svh)] lg:h-[max(60cqw,50svh)] supertall:h-[clamp(36cqw,70svh,150cqw)] "
+        ? "supertall:top-12 top-8 superwide:top-0 cursor-pointer p-3 md:p-6 h-[max(70cqw,50svh)] md:h-[max(80cqw,50svh)] superwide:h-[90svh] wide:h-[min(60cqw,70svh)] lg:superwide:h-[min(60cqw,70svh)] lg:h-[max(60cqw,50svh)] supertall:h-[clamp(36cqw,70svh,150cqw)] "
         : "cursor-pointer p-3 md:p-6 h-full";
 
   const backgroundImageClasses =
@@ -436,7 +436,7 @@ export default function ProjectSummary({
     variant === "header"
       ? "max-w-[28rem] wide:max-w-[30rem] md:max-w-2xl md:wide:max-w-full xl:max-w-5xl xl:wide:max-w-4xl md:p-12 p-6"
       : variant === "preview"
-        ? "max-w-[30rem] sm:wide:max-w-full md:max-w-full p-3 mb-[3rem] md:mb-[3.5rem] wide:mb-0 lg:wide:mb-[3.25rem] lg:superwide:mb-0 lg:w-[60%] md:p-6 xl:superwide:w-full "
+        ? "max-w-[30rem] sm:wide:max-w-full md:max-w-full p-3 mb-12 md:mb-14 wide:mb-0 lg:wide:mb-[3.25rem] lg:superwide:mb-0 lg:w-[60%] md:p-6 xl:superwide:w-full "
         : "p-3 md:p-6 max-w-[30rem]";
 
   return (
@@ -480,12 +480,12 @@ export default function ProjectSummary({
             setdisplayedProject(targetProject);
           }
         }}
-        className={`group relative flex w-full flex-col rounded-[1.5rem] bg-background dark:bg-dark-background md:rounded-[3rem] ${cardClasses}`}
+        className={`md:rounded-12 group relative flex w-full flex-col rounded-6 bg-background dark:bg-dark-background ${cardClasses}`}
       >
         {/* Image as background */}
         {displayedProject.image && (
           <div
-            className={`pointer-events-none absolute overflow-hidden rounded-[1rem] md:rounded-[2rem] ${backgroundImageClasses}`}
+            className={`pointer-events-none absolute overflow-hidden rounded-6 md:rounded-8 ${backgroundImageClasses}`}
           >
             <img
               src={displayedProject.image}
@@ -499,7 +499,7 @@ export default function ProjectSummary({
         {variant !== "header" && (
           <motion.div
             style={{ boxShadow: cardHoverShadow }}
-            className="pointer-events-none absolute inset-0 rounded-[1.5rem] opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:rounded-[3rem]"
+            className="md:rounded-12 pointer-events-none absolute inset-0 rounded-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           />
         )}
 
@@ -508,7 +508,7 @@ export default function ProjectSummary({
           style={{ boxShadow: cardShadow }}
           animate={{ opacity: variant === "header" ? 0 : 1 }}
           transition={{ duration: 0.3, delay: 0.2 }}
-          className="pointer-events-none absolute inset-0 rounded-[1.5rem] md:rounded-[3rem]"
+          className="md:rounded-12 pointer-events-none absolute inset-0 rounded-6"
         />
 
         {/* Floating pane portion */}
@@ -516,7 +516,7 @@ export default function ProjectSummary({
         <motion.div
           layout
           layoutDependency={layoutDependency}
-          className={`project-summary-scrollbar z-10 flex h-fit ${floatingPaneClasses} flex-col ${floatingPaneOverflowY} overflow-x-hidden rounded-[0.75rem] md:rounded-[1.5rem] ${theme.bgSoftColorClass} bg-opacity-90 ${variant !== "header" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
+          className={`project-summary-scrollbar z-10 flex h-fit ${floatingPaneClasses} flex-col ${floatingPaneOverflowY} overflow-x-hidden rounded-4 md:rounded-6 ${theme.bgSoftColorClass} bg-opacity-90 ${variant !== "header" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
           style={mainFloatingStyle}
         >
           {/* Title text */}
@@ -615,7 +615,7 @@ export default function ProjectSummary({
               {/* Button */}
               <SpinButton
                 isLoading={isNavigating}
-                className={`relative flex h-[2.5rem] items-center gap-2 rounded-[0.75rem] bg-background pl-2 pr-4 font-sans text-base font-semibold text-foreground dark:bg-dark-background dark:text-dark-foreground md:h-[3rem] md:rounded-[1.5rem] md:pl-3 md:pr-5`}
+                className={`relative flex h-10 items-center gap-2 rounded-3 bg-background pl-2 pr-4 font-sans text-base font-semibold text-foreground dark:bg-dark-background dark:text-dark-foreground md:h-12 md:rounded-6 md:pl-3 md:pr-5`}
                 style={{ boxShadow: buttonShadow }}
               >
                 {displayedProject.button}
