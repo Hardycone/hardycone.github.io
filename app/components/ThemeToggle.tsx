@@ -143,6 +143,7 @@ export default function ThemeToggle({ buttonRef }: ThemeToggleProps) {
     <button
       ref={buttonRef}
       type="button"
+      tabIndex={0}
       onClick={toggleTheme}
       onPointerUp={(event) => event.currentTarget.blur()}
       title={`Switch to ${isDark ? "Light" : "Dark"} Mode`}

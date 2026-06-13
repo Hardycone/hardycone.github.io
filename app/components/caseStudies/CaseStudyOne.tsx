@@ -98,17 +98,17 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               onFlourish={() => setIsFluxOpen(true)}
               logoSrc="/images/logo-flux.png"
             />
-            , a platform that makes quantitative UX research accessible to
-            designers, researchers, and product managers. As AI makes it easier
-            for teams to prototype and iterate quickly, research is often
-            compressed, skipped, or reduced to directional feedback. Flux helps
-            teams test prototypes with statistical rigor in hours, without
-            needing a background in statistics. My work focuses on turning a
-            traditionally intimidating research process into something
-            approachable, guided, and genuinely useful.
+            , a platform that makes quantitative UX research accessible to all
+            product teams. As AI makes it easier for teams to prototype and
+            iterate quickly, research is often compressed, skipped, or reduced
+            to directional feedback. Flux helps teams test prototypes with
+            statistical rigor in hours, without needing a background in
+            statistics. My work focuses on turning a traditionally intimidating
+            research process into something approachable, guided, and genuinely
+            useful.
           </p>
           <NarrativeAccordion isOpen={isFluxOpen}>
-            <div className="rounded-1 md:rounded-2 mb-4 mt-4 flex gap-4 bg-flux/5 p-8 dark:bg-dark-flux/5">
+            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-flux/5 p-8 font-serif dark:bg-dark-flux/5 md:rounded-2">
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-flux.png"
@@ -117,14 +117,14 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 />
               </div>
               <div className="flex w-full flex-col">
-                <div className="flex justify-between font-sans text-xl">
+                <div className="flex justify-between text-xl">
                   <div className="flex flex-col">
                     <p className="font-semibold">Co-founder</p>
                     <p>Flux</p>
                   </div>
                   <p>2023 - 2025</p>
                 </div>
-                <div className="mt-2 flex flex-col">
+                <div className="mt-2 flex flex-col font-serif">
                   <p>
                     Flux is a quantitative UX research platform with a mission
                     to democratize data-driven product design. Flux is a
@@ -160,7 +160,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             </div>
           </NarrativeAccordion>
           <p className="mt-8">
-            Before that, I started and failed launching another idea —{" "}
+            In 2023, I launched{" "}
             <FlourishName
               name="Fantail"
               bgColor={hexToRgba(fantailTheme.hex.primary, 0.05)}
@@ -170,23 +170,25 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               onToggle={() => setIsFantailOpen((prev) => !prev)}
               onFlourish={() => setIsFantailOpen(true)}
               logoSrc="/images/logo-fantail.png"
-            />
-            . Our vision – which we still believe to this day – is that AI
-            should serve the creative mind, not replace it. Fantail brought AI
-            into the early stages of filmmaking. It’s not “prompt the AI to make
-            your film”, it’s “let AI help you bring what’s in your mind onto the
-            paper”. In Fantail, filmmakers could write, gather reference
-            materials, create storyboards, hear dialogues. I worked on this with
-            another 2 cofounders for 6 months. Together we built a prototype and
-            pursued funding, but we were ultimately unable to continue. Lesson
-            learned: founder-market fit matters. We were naïve going into this
-            with nothing but a burning passion. We did textbook discovery and
-            design research, identified a real problem, and delivered a
-            solution. But we didn’t have to the industry knowhow. Investors saw
-            that and turned us down.
+            />{" "}
+            with two other co-founders. Fantail was our answer to the hotly
+            debated question: What is AI's role in the creative process? vision
+            – which we still believe to this day – is that AI should serve the
+            creative mind, not replace it. Fantail brought AI into the early
+            stages of filmmaking. It’s not “prompt the AI to make your film”,
+            it’s “let AI help you bring what’s in your mind onto the paper”. In
+            Fantail, filmmakers could write, gather reference materials, create
+            storyboards, hear dialogues. I worked on this with another 2
+            cofounders for 6 months. Together we built a prototype and pursued
+            funding, but we were ultimately unable to continue. Lesson learned:
+            founder-market fit matters. We were naïve going into this with
+            nothing but a burning passion. We did textbook discovery and design
+            research, identified a real problem, and delivered a solution. But
+            we didn’t have to the industry knowhow. Investors saw that and
+            turned us down.
           </p>
           <NarrativeAccordion isOpen={isFantailOpen}>
-            <div className="rounded-1 md:rounded-2 mb-4 mt-4 flex gap-4 bg-fantail/5 p-8 dark:bg-dark-fantail/5">
+            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-fantail/5 p-8 dark:bg-dark-fantail/5 md:rounded-2">
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-fantail.png"
@@ -248,7 +250,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             built.
           </p>
           <NarrativeAccordion isOpen={isAslfOpen}>
-            <div className="rounded-1 md:rounded-2 mb-4 mt-4 flex gap-4 bg-wolcott/5 p-8 dark:bg-dark-wolcott/5">
+            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-wolcott/5 p-8 dark:bg-dark-wolcott/5 md:rounded-2">
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-aslf.png"
@@ -316,9 +318,10 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           borderColor={borderColor}
         >
           <p>
-            I went back to school for my{" "}
+            In 2023, I received a Master's degree in Human-Computer Interaction
+            and Design from{" "}
             <FlourishName
-              name="Master's in HCI at UW"
+              name="University of Washington"
               bgColor={hexToRgba(suitsTheme.hex.primary, 0.05)}
               gradientCenterColor={hexToRgba(suitsTheme.hex.soft, 1)}
               gradientMiddleColor={hexToRgba(suitsTheme.hex.soft, 1)}
@@ -338,7 +341,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             spacesuit interfaces to quantitative UX testing tools.
           </p>
           <NarrativeAccordion isOpen={isUwOpen}>
-            <div className="rounded-1 md:rounded-2 mb-4 mt-4 flex gap-4 bg-suits/5 p-8 dark:bg-dark-suits/5">
+            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-suits/5 p-8 dark:bg-dark-suits/5 md:rounded-2">
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-uw.png"
@@ -405,7 +408,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             medium is a park or a prototype.
           </p>
           <NarrativeAccordion isOpen={isSyracuseOpen}>
-            <div className="rounded-1 md:rounded-2 mb-4 mt-4 flex gap-4 bg-chinatown/5 p-8 dark:bg-dark-chinatown/5">
+            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-chinatown/5 p-8 dark:bg-dark-chinatown/5 md:rounded-2">
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
                   src="/images/logo-esf.png"
@@ -881,7 +884,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 1"
-                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
               />
             </div>
             {/* Image 2 - 2x2 square */}
@@ -889,7 +892,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 2"
-                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
               />
             </div>
             {/* Image 3 - 2 cells vertically adjacent */}
@@ -897,7 +900,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 3"
-                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
               />
             </div>
             {/* Remaining cells */}
@@ -905,28 +908,28 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 4"
-                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
               />
             </div>
             <div className="relative">
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 5"
-                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
               />
             </div>
             <div className="relative">
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 7"
-                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
               />
             </div>
             <div className="relative col-span-3 row-span-1">
               <img
                 src="/images/20240704-HWP03580-Edit.jpg"
                 alt="Dummy Image 6"
-                className="rounded-1 md:rounded-2 absolute inset-0 h-full w-full object-cover object-top"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover object-top md:rounded-2"
               />
             </div>
           </div>

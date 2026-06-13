@@ -49,7 +49,7 @@ export function ActiveProjectProvider({ children }: { children: ReactNode }) {
   const [activeIndex, setActiveIndex] = useState(() => {
     if (typeof window === "undefined") return 0; // SSR guard
 
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = sessionStorage.getItem(STORAGE_KEY);
     if (stored !== null) {
       const parsed = parseInt(stored, 10);
       if (!isNaN(parsed) && parsed >= 0 && parsed < projects.length) {
@@ -77,10 +77,11 @@ export function ActiveProjectProvider({ children }: { children: ReactNode }) {
     }
   }, [pathname, activeIndex]);
 
-  // Persist activeIndex changes to localStorage
+  // Persist activeIndex for the lifetime of the current browser session.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    localStorage.setItem(STORAGE_KEY, activeIndex.toString());
+    localStorage.removeItem(STORAGE_KEY);
+    sessionStorage.setItem(STORAGE_KEY, activeIndex.toString());
   }, [activeIndex]);
 
   // Derive activeColor from current project

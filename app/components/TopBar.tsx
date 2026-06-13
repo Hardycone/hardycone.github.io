@@ -30,41 +30,11 @@ import Home from "../icons/Home";
 import Greetings from "../icons/Greetings";
 import LinkedIn from "../icons/LinkedIn";
 import ThemeToggle from "./ThemeToggle";
+import KeyboardHint from "./KeyboardHint";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-
-function isEditableKeyboardTarget(target: EventTarget | null) {
-  if (!(target instanceof HTMLElement)) return false;
-
-  const tagName = target.tagName.toLowerCase();
-
-  return (
-    target.isContentEditable ||
-    tagName === "input" ||
-    tagName === "textarea" ||
-    tagName === "select"
-  );
-}
-
-function KeyboardHint({
-  children,
-  isPressed = false,
-}: {
-  children: string;
-  isPressed?: boolean;
-}) {
-  return (
-    <span className="pointer-events-none absolute left-1/2 top-[calc(100%-0.25rem)] -translate-x-1/2 whitespace-nowrap">
-      <motion.span
-        animate={{ scale: isPressed ? 0.9 : 1 }}
-        transition={{ duration: 0.08, ease: "easeOut" }}
-        className="flex h-6 w-6 items-center justify-center rounded-md bg-sky-600 font-sans text-xs font-semibold text-background dark:bg-sky-400 dark:text-dark-background"
-      >
-        {children}
-      </motion.span>
-    </span>
-  );
-}
+import { useKeyboardHints } from "../context/KeyboardHintsContext";
+import { isTextEntryKeyboardTarget } from "@/lib/keyboard";
 
 export default function TopBar() {
   const { viewMode, setViewMode } = useViewMode();
@@ -73,8 +43,7 @@ export default function TopBar() {
   const pathname = usePathname();
   const [showTitle, setShowTitle] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const [showKeyboardHints, setShowKeyboardHints] = useState(false);
-  const [pressedShortcut, setPressedShortcut] = useState<string | null>(null);
+  const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
   const { resolvedTheme } = useTheme();
 
   const theme = useProjectTheme(projects[activeIndex].id);
@@ -93,18 +62,7 @@ export default function TopBar() {
   const [isNavigatingHome, setIsNavigatingHome] = useState(false);
   const [isGreetingHovered, setIsGreetingHovered] = useState(false);
   const scrollTimeout = useRef<number | null>(null);
-  const pressedShortcutTimeout = useRef<number | null>(null);
   const themeToggleButtonRef = useRef<HTMLButtonElement>(null);
-  const flashShortcutHint = useCallback((shortcut: string) => {
-    setPressedShortcut(shortcut);
-    if (pressedShortcutTimeout.current) {
-      window.clearTimeout(pressedShortcutTimeout.current);
-    }
-    pressedShortcutTimeout.current = window.setTimeout(() => {
-      setPressedShortcut(null);
-      pressedShortcutTimeout.current = null;
-    }, 120);
-  }, []);
 
   const handleHomeClick = useCallback(() => {
     if (isNavigatingHome) return; // prevent double triggers
@@ -232,7 +190,7 @@ export default function TopBar() {
       if (
         event.repeat ||
         event.defaultPrevented ||
-        isEditableKeyboardTarget(event.target) ||
+        isTextEntryKeyboardTarget(event.target) ||
         (event.key !== "Backspace" && event.key !== "Escape")
       ) {
         return;
@@ -260,7 +218,7 @@ export default function TopBar() {
         event.altKey ||
         event.ctrlKey ||
         event.metaKey ||
-        isEditableKeyboardTarget(event.target)
+        isTextEntryKeyboardTarget(event.target)
       ) {
         return;
       }
@@ -328,42 +286,9 @@ export default function TopBar() {
   ]);
 
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Tab" || event.key === "Shift") {
-        setShowKeyboardHints(false);
-        return;
-      }
-
-      if (event.repeat || isEditableKeyboardTarget(event.target)) return;
-      setShowKeyboardHints(true);
-    };
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (event.pointerType === "mouse") setShowKeyboardHints(false);
-    };
-
-    const handleMouseMove = () => {
-      setShowKeyboardHints(false);
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
-
-  useEffect(() => {
     return () => {
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);
-      }
-      if (pressedShortcutTimeout.current) {
-        window.clearTimeout(pressedShortcutTimeout.current);
       }
     };
   }, []);
@@ -448,6 +373,9 @@ export default function TopBar() {
           className="z-50 flex w-full justify-between"
         >
           <motion.button
+            type="button"
+            tabIndex={viewMode === "home" ? -1 : 0}
+            aria-hidden={viewMode === "home"}
             title="Home"
             style={{ boxShadow: barShadow }}
             transition={{ duration: 0.1 }}
@@ -460,7 +388,10 @@ export default function TopBar() {
           >
             <Home />
             {showKeyboardHints && (
-              <KeyboardHint isPressed={pressedShortcut === "home"}>
+              <KeyboardHint
+                shortcut="home"
+                className="absolute left-1/2 top-[calc(100%-0.25rem)] -translate-x-1/2"
+              >
                 Esc
               </KeyboardHint>
             )}
@@ -484,6 +415,8 @@ export default function TopBar() {
                 className="absolute left-1/2 hidden select-none justify-center gap-2 rounded-full bg-background px-4 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground sm:flex lg:gap-4"
               >
                 <button
+                  type="button"
+                  tabIndex={0}
                   title="Summary"
                   onClick={() => {
                     flashShortcutHint("1");
@@ -493,7 +426,10 @@ export default function TopBar() {
                 >
                   {activeProject.title}
                   {showKeyboardHints && (
-                    <KeyboardHint isPressed={pressedShortcut === "1"}>
+                    <KeyboardHint
+                      shortcut="1"
+                      className="absolute left-1/2 top-[calc(100%-0.25rem)] -translate-x-1/2"
+                    >
                       1
                     </KeyboardHint>
                   )}
@@ -519,6 +455,8 @@ export default function TopBar() {
                     const Icon = Icons[section.icon as IconName];
                     return (
                       <button
+                        type="button"
+                        tabIndex={0}
                         key={section.id}
                         title={section.label}
                         onClick={(e) => {
@@ -538,7 +476,8 @@ export default function TopBar() {
                         />
                         {showKeyboardHints && (
                           <KeyboardHint
-                            isPressed={pressedShortcut === String(index + 2)}
+                            shortcut={String(index + 2)}
+                            className="absolute left-1/2 top-[calc(100%-0.25rem)] -translate-x-1/2"
                           >
                             {String(index + 2)}
                           </KeyboardHint>
@@ -561,6 +500,8 @@ export default function TopBar() {
       >
         {/*Resume button*/}
         <motion.button
+          type="button"
+          tabIndex={0}
           title="About Me"
           style={{ boxShadow: barShadow }}
           transition={{ duration: 0.1 }}
@@ -589,7 +530,10 @@ export default function TopBar() {
             <Greetings />
           </motion.span>
           {showKeyboardHints && (
-            <KeyboardHint isPressed={pressedShortcut === "about"}>
+            <KeyboardHint
+              shortcut="about"
+              className="absolute left-1/2 top-[calc(100%-0.25rem)] -translate-x-1/2"
+            >
               8
             </KeyboardHint>
           )}
@@ -597,6 +541,8 @@ export default function TopBar() {
 
         {/* LinkedIn */}
         <motion.button
+          type="button"
+          tabIndex={0}
           title="Find Me on LinkedIn"
           style={{ boxShadow: barShadow }}
           transition={{ duration: 0.1 }}
@@ -609,7 +555,10 @@ export default function TopBar() {
         >
           <LinkedIn />
           {showKeyboardHints && (
-            <KeyboardHint isPressed={pressedShortcut === "linkedin"}>
+            <KeyboardHint
+              shortcut="linkedin"
+              className="absolute left-1/2 top-[calc(100%-0.25rem)] -translate-x-1/2"
+            >
               9
             </KeyboardHint>
           )}
@@ -624,7 +573,10 @@ export default function TopBar() {
         >
           <ThemeToggle buttonRef={themeToggleButtonRef} />
           {showKeyboardHints && (
-            <KeyboardHint isPressed={pressedShortcut === "theme"}>
+            <KeyboardHint
+              shortcut="theme"
+              className="absolute left-1/2 top-[calc(100%-0.25rem)] -translate-x-1/2"
+            >
               0
             </KeyboardHint>
           )}

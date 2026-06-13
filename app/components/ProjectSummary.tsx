@@ -15,11 +15,14 @@ import {
 // import { useSpring } from "framer-motion";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SpinButton from "./SpinButton";
+import KeyboardHint from "./KeyboardHint";
 // import { PALETTE } from "@/lib/palette";
 
 // import Kbd from "./Kbd";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
+import { useKeyboardHints } from "../context/KeyboardHintsContext";
+import { isInteractiveKeyboardTarget } from "@/lib/keyboard";
 import projects from "../../data/projects";
 import type { Project } from "../../data/projects";
 import {
@@ -76,21 +79,6 @@ function hexToRgbChannels(hex: string) {
   return `${(value >> 16) & 255} ${(value >> 8) & 255} ${value & 255}`;
 }
 
-function isEditableKeyboardTarget(target: EventTarget | null) {
-  if (!(target instanceof HTMLElement)) return false;
-
-  const tagName = target.tagName.toLowerCase();
-
-  return (
-    target.isContentEditable ||
-    tagName === "input" ||
-    tagName === "textarea" ||
-    tagName === "select" ||
-    tagName === "button" ||
-    tagName === "a"
-  );
-}
-
 interface ProjectSummaryProps {
   variant: "preview" | "header" | "bottom";
   scrollY: MotionValue<number>;
@@ -123,6 +111,7 @@ export default function ProjectSummary({
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
+  const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
 
   // const smoothScrollY = useSpring(scrollY, {
   //   stiffness: 120,
@@ -198,29 +187,12 @@ export default function ProjectSummary({
   const morphTargetRef = useRef<Project | null>(null);
 
   const [isNavigating, setIsNavigating] = useState(false);
-  const [showKeyboardHints, setShowKeyboardHints] = useState(false);
-  const [pressedShortcut, setPressedShortcut] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const pressedShortcutTimeout = useRef<number | null>(null);
-
-  const flashShortcutHint = useCallback((shortcut: string) => {
-    setPressedShortcut(shortcut);
-    if (pressedShortcutTimeout.current) {
-      window.clearTimeout(pressedShortcutTimeout.current);
-    }
-    pressedShortcutTimeout.current = window.setTimeout(() => {
-      setPressedShortcut(null);
-      pressedShortcutTimeout.current = null;
-    }, 120);
-  }, []);
 
   useEffect(() => {
     // Cleanup timer on unmount
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
-      if (pressedShortcutTimeout.current) {
-        window.clearTimeout(pressedShortcutTimeout.current);
-      }
     };
   }, []);
 
@@ -259,7 +231,7 @@ export default function ProjectSummary({
         event.key !== "Enter" ||
         event.repeat ||
         event.defaultPrevented ||
-        isEditableKeyboardTarget(event.target)
+        isInteractiveKeyboardTarget(event.target)
       ) {
         return;
       }
@@ -275,36 +247,6 @@ export default function ProjectSummary({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [flashShortcutHint, handleClick, variant]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Tab") {
-        setShowKeyboardHints(false);
-        return;
-      }
-
-      if (event.repeat || isEditableKeyboardTarget(event.target)) return;
-      setShowKeyboardHints(true);
-    };
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (event.pointerType === "mouse") setShowKeyboardHints(false);
-    };
-
-    const handleMouseMove = () => {
-      setShowKeyboardHints(false);
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
 
   useEffect(() => {
     setIsNavigating(false);
@@ -480,7 +422,7 @@ export default function ProjectSummary({
             setdisplayedProject(targetProject);
           }
         }}
-        className={`md:rounded-12 group relative flex w-full flex-col rounded-6 bg-background dark:bg-dark-background ${cardClasses}`}
+        className={`group relative flex w-full flex-col rounded-6 bg-background dark:bg-dark-background md:rounded-12 ${cardClasses}`}
       >
         {/* Image as background */}
         {displayedProject.image && (
@@ -499,7 +441,7 @@ export default function ProjectSummary({
         {variant !== "header" && (
           <motion.div
             style={{ boxShadow: cardHoverShadow }}
-            className="md:rounded-12 pointer-events-none absolute inset-0 rounded-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            className="pointer-events-none absolute inset-0 rounded-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:rounded-12"
           />
         )}
 
@@ -508,7 +450,7 @@ export default function ProjectSummary({
           style={{ boxShadow: cardShadow }}
           animate={{ opacity: variant === "header" ? 0 : 1 }}
           transition={{ duration: 0.3, delay: 0.2 }}
-          className="md:rounded-12 pointer-events-none absolute inset-0 rounded-6"
+          className="pointer-events-none absolute inset-0 rounded-6 md:rounded-12"
         />
 
         {/* Floating pane portion */}
@@ -516,7 +458,7 @@ export default function ProjectSummary({
         <motion.div
           layout
           layoutDependency={layoutDependency}
-          className={`project-summary-scrollbar z-10 flex h-fit ${floatingPaneClasses} flex-col ${floatingPaneOverflowY} overflow-x-hidden rounded-4 md:rounded-6 ${theme.bgSoftColorClass} bg-opacity-90 ${variant !== "header" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
+          className={`project-summary-scrollbar z-10 flex h-fit ${floatingPaneClasses} flex-col ${floatingPaneOverflowY} overflow-x-hidden rounded-4 md:rounded-6 ${theme.bgSoftColorClass} bg-opacity-90 ${variant === "preview" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
           style={mainFloatingStyle}
         >
           {/* Title text */}
@@ -615,23 +557,20 @@ export default function ProjectSummary({
               {/* Button */}
               <SpinButton
                 isLoading={isNavigating}
+                tabIndex={0}
                 className={`relative flex h-10 items-center gap-2 rounded-3 bg-background pl-2 pr-4 font-sans text-base font-semibold text-foreground dark:bg-dark-background dark:text-dark-foreground md:h-12 md:rounded-6 md:pl-3 md:pr-5`}
                 style={{ boxShadow: buttonShadow }}
               >
                 {displayedProject.button}
               </SpinButton>
               {showKeyboardHints && (
-                <div className="pointer-events-none absolute left-[calc(100%-0.75rem)] top-1/2 -translate-y-1/2 whitespace-nowrap">
-                  <motion.div
-                    animate={{ scale: pressedShortcut === "enter" ? 0.9 : 1 }}
-                    transition={{ duration: 0.08, ease: "easeOut" }}
-                    className="block rounded-md bg-sky-700"
-                  >
-                    <div className="flex h-6 w-11 items-center justify-center rounded-md bg-sky-600 font-sans text-xs font-semibold text-background dark:bg-sky-400 dark:text-dark-background">
-                      Enter
-                    </div>
-                  </motion.div>
-                </div>
+                <KeyboardHint
+                  shortcut="enter"
+                  className="absolute left-[calc(100%-0.75rem)] top-1/2 -translate-y-1/2 rounded-md bg-sky-700"
+                  keycapClassName="!w-11"
+                >
+                  Enter
+                </KeyboardHint>
               )}
             </motion.div>
           )}

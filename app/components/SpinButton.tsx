@@ -9,6 +9,7 @@ interface SpinButtonProps {
   children: ReactNode;
   className?: string;
   style?: MotionStyle;
+  tabIndex?: number;
 }
 
 export default function SpinButton({
@@ -16,10 +17,12 @@ export default function SpinButton({
   children,
   className = "",
   style,
+  tabIndex,
 }: SpinButtonProps) {
   return (
     <motion.button
       type="button"
+      tabIndex={tabIndex}
       className={`transition-scale hover:scale-[0.97] active:scale-95 active:text-opacity-20 ${className}`}
       style={style}
     >

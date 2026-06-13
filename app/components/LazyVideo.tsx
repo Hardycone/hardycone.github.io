@@ -142,6 +142,7 @@ export default function LazyVideo({
       </video>
       {!hasStarted && (
         <button
+          tabIndex={0}
           type="button"
           aria-label={playButtonLabel}
           onClick={handlePlay}

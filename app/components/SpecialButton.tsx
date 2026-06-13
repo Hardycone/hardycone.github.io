@@ -5,6 +5,7 @@ export default function SpecialButton() {
 
   return (
     <button
+      tabIndex={0}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="h-[12rem] w-[24rem] cursor-pointer"

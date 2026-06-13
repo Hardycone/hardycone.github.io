@@ -469,17 +469,17 @@ export default function MainContent({ children }: { children: ReactNode }) {
             },
           }}
           exit={{ x: "-50%", y: -100, opacity: 0 }}
-          className="rounded-2 pointer-events-none fixed bottom-6 left-1/2 z-50 flex items-center space-x-2 bg-foreground px-4 py-2 font-sans text-sm text-background shadow-md dark:bg-dark-foreground dark:text-dark-background md:text-lg"
+          className="pointer-events-none fixed bottom-6 left-1/2 z-50 flex items-center space-x-2 rounded-2 bg-sky-600 px-4 py-2 font-sans text-sm text-background shadow-md dark:bg-sky-400 dark:text-dark-background md:text-lg"
         >
           <span className="whitespace-nowrap">Use scroll</span>
-          <span className="flex h-6 w-4 items-center justify-center rounded-full bg-sky-600 dark:bg-sky-400">
+          <span className="flex h-6 w-4 items-center justify-center rounded-full bg-background text-sky-600 dark:bg-dark-background dark:text-sky-400">
             <ArrowsVerticalIcon size={16} />
           </span>
           <span className="whitespace-nowrap"> or arrow keys</span>
-          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-sky-600 dark:bg-sky-400">
+          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-background text-sky-600 dark:bg-dark-background dark:text-sky-400">
             <ArrowUpIcon size={12} weight="bold" />
           </span>
-          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-sky-600 dark:bg-sky-400">
+          <span className="dark:text-sky-40 flex h-6 w-6 items-center justify-center rounded-md bg-background text-sky-600 dark:bg-dark-background dark:text-sky-400">
             <ArrowDownIcon size={12} weight="bold" />
           </span>
           <span className="whitespace-nowrap">to explore</span>

@@ -150,10 +150,12 @@ export default function FlourishName({
   }, [onFlourish, gradientCenterColor, gradientMiddleColor]);
 
   useEffect(() => {
-    return () => {
-      unregisterCandidate(flourishOwner.current);
+    const owner = flourishOwner.current;
 
-      if (activeFlourishOwner === flourishOwner.current) {
+    return () => {
+      unregisterCandidate(owner);
+
+      if (activeFlourishOwner === owner) {
         activeFlourishOwner = null;
         allowHandoffOnRelease = false;
         flourishCandidates.clear();
@@ -246,6 +248,7 @@ export default function FlourishName({
 
   return (
     <button
+      tabIndex={0}
       ref={scope}
       onClick={onToggle}
       type="button"

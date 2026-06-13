@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { ViewModeProvider } from "./context/ViewModeContext";
 import { ActiveProjectProvider } from "./context/ActiveProjectContext";
+import { KeyboardHintsProvider } from "./context/KeyboardHintsContext";
 import { ThemeProvider } from "next-themes";
 
 import MainContent from "./components/MainContent";
@@ -61,11 +62,13 @@ export default function RootLayout({
           <rect width="100%" height="100%" filter="url(#noiseFilter)" />
         </svg> */}
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ActiveProjectProvider>
-            <ViewModeProvider>
-              <MainContent>{children}</MainContent>
-            </ViewModeProvider>
-          </ActiveProjectProvider>
+          <KeyboardHintsProvider>
+            <ActiveProjectProvider>
+              <ViewModeProvider>
+                <MainContent>{children}</MainContent>
+              </ViewModeProvider>
+            </ActiveProjectProvider>
+          </KeyboardHintsProvider>
         </ThemeProvider>
       </body>
     </html>

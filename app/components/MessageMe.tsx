@@ -17,6 +17,9 @@ import {
 import { useTheme } from "next-themes";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
 import MessageToggleIcon from "./MessageToggleIcon";
+import KeyboardHint from "./KeyboardHint";
+import { useKeyboardHints } from "../context/KeyboardHintsContext";
+import { isTextEntryKeyboardTarget } from "@/lib/keyboard";
 
 const FORM_ENDPOINT = "https://formsubmit.co/ajax/haichwng@gmail.com";
 const CONTACT_EMAIL = "haichwng@gmail.com";
@@ -52,35 +55,6 @@ function validateFields(fields: FormFields): FieldErrors {
   }
 
   return errors;
-}
-
-function isEditableKeyboardTarget(target: EventTarget | null) {
-  if (!(target instanceof HTMLElement)) return false;
-
-  const tagName = target.tagName.toLowerCase();
-  return (
-    target.isContentEditable ||
-    tagName === "input" ||
-    tagName === "textarea" ||
-    tagName === "select"
-  );
-}
-
-function KeyboardHint({ isPressed }: { isPressed: boolean }) {
-  return (
-    <span
-      className="pointer-events-none absolute bottom-[calc(100%-0.25rem)] z-10 translate-x-1/2 whitespace-nowrap"
-      style={{ right: 22 }}
-    >
-      <motion.span
-        animate={{ scale: isPressed ? 0.9 : 1 }}
-        transition={{ duration: 0.08, ease: "easeOut" }}
-        className="flex h-6 w-6 items-center justify-center rounded-md bg-sky-600 font-sans text-xs font-semibold text-background dark:bg-sky-400 dark:text-dark-background"
-      >
-        M
-      </motion.span>
-    </span>
-  );
 }
 
 function ContactPanel({
@@ -137,8 +111,9 @@ function ContactPanel({
           Send me a message here, or{" "}
           <button
             type="button"
+            tabIndex={0}
             onClick={onCopyEmail}
-            className="inline-flex items-baseline gap-1 rounded-sm font-bold transition-[color,opacity,text-decoration-color] hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/40"
+            className="inline-flex items-baseline gap-1 rounded-full bg-foreground py-1 pl-2 pr-3 text-background transition-[color,opacity,text-decoration-color] hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/40"
             aria-live="polite"
           >
             {hasCopiedEmail ? (
@@ -150,7 +125,7 @@ function ContactPanel({
             ) : (
               <CopyIcon size="1em" className="translate-y-0.5" />
             )}
-            {hasCopiedEmail ? "Copied!" : "copy my email"}
+            {hasCopiedEmail ? "copied!" : "copy my email"}
           </button>
         </p>
       </div>
@@ -159,6 +134,7 @@ function ContactPanel({
         Name
         <input
           ref={nameInputRef}
+          tabIndex={0}
           required
           type="text"
           name="name"
@@ -183,6 +159,7 @@ function ContactPanel({
         Email
         <input
           ref={emailInputRef}
+          tabIndex={0}
           required
           type="email"
           name="email"
@@ -209,6 +186,7 @@ function ContactPanel({
         Message
         <textarea
           ref={messageInputRef}
+          tabIndex={0}
           required
           name="message"
           rows={5}
@@ -253,6 +231,7 @@ function ContactPanel({
 
       <button
         type="submit"
+        tabIndex={0}
         disabled={isSubmitting}
         className="mt-1 h-11 rounded-1.5 bg-foreground px-5 font-sans text-sm font-semibold text-background transition-[transform,opacity] hover:scale-[0.97] active:scale-[0.98] disabled:cursor-wait disabled:opacity-50 dark:bg-dark-foreground dark:text-dark-background"
       >
@@ -264,13 +243,13 @@ function ContactPanel({
 
 export default function MessageMe() {
   const { resolvedTheme } = useTheme();
+  const { showKeyboardHints, isTextEntryFocused, flashShortcutHint } =
+    useKeyboardHints();
   const { barLightShadow, barDarkShadow } = useMouseShadow();
   const barShadow = resolvedTheme === "dark" ? barDarkShadow : barLightShadow;
 
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [showKeyboardHints, setShowKeyboardHints] = useState(false);
-  const [isShortcutPressed, setIsShortcutPressed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
@@ -287,20 +266,8 @@ export default function MessageMe() {
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
-  const shortcutTimeout = useRef<number | null>(null);
   const copyTimeout = useRef<number | null>(null);
   const toastTimeout = useRef<number | null>(null);
-
-  const flashShortcutHint = useCallback(() => {
-    setIsShortcutPressed(true);
-    if (shortcutTimeout.current) {
-      window.clearTimeout(shortcutTimeout.current);
-    }
-    shortcutTimeout.current = window.setTimeout(() => {
-      setIsShortcutPressed(false);
-      shortcutTimeout.current = null;
-    }, 120);
-  }, []);
 
   const handleCopyEmail = useCallback(async () => {
     try {
@@ -498,13 +465,13 @@ export default function MessageMe() {
         event.altKey ||
         event.ctrlKey ||
         event.metaKey ||
-        isEditableKeyboardTarget(event.target)
+        isTextEntryKeyboardTarget(event.target)
       ) {
         return;
       }
 
       event.preventDefault();
-      flashShortcutHint();
+      flashShortcutHint("message");
       handleToggle();
     };
 
@@ -513,31 +480,7 @@ export default function MessageMe() {
   }, [flashShortcutHint, handleToggle]);
 
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Tab" || event.key === "Shift") {
-        setShowKeyboardHints(false);
-        return;
-      }
-
-      if (event.repeat || isEditableKeyboardTarget(event.target)) return;
-      setShowKeyboardHints(true);
-    };
-    const hideKeyboardHints = () => setShowKeyboardHints(false);
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("mousemove", hideKeyboardHints);
-
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("mousemove", hideKeyboardHints);
-    };
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (shortcutTimeout.current) {
-        window.clearTimeout(shortcutTimeout.current);
-      }
       if (copyTimeout.current) {
         window.clearTimeout(copyTimeout.current);
       }
@@ -600,6 +543,7 @@ export default function MessageMe() {
 
         <motion.button
           type="button"
+          tabIndex={0}
           style={{ boxShadow: barShadow }}
           onHoverStart={() => setIsHovered(true)}
           onHoverEnd={() => setIsHovered(false)}
@@ -616,7 +560,16 @@ export default function MessageMe() {
             </span>
           </span>
 
-          {showKeyboardHints && <KeyboardHint isPressed={isShortcutPressed} />}
+          {(showKeyboardHints || (isOpen && isTextEntryFocused)) && (
+            <KeyboardHint
+              shortcut="message"
+              className="absolute bottom-[calc(100%-0.25rem)] z-10 translate-x-1/2"
+              keycapClassName={isOpen && isTextEntryFocused ? "w-8" : undefined}
+              style={{ right: 22 }}
+            >
+              {isOpen && isTextEntryFocused ? "Esc" : "M"}
+            </KeyboardHint>
+          )}
         </motion.button>
       </div>
     </motion.div>

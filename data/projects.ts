@@ -77,7 +77,11 @@ const projects: Project[] = [
         url: "https://github.com/Hardycone",
         icon: "GithubLogoIcon",
       },
-      { label: "Resume", url: "https://google.com", icon: "FileTextIcon" },
+      {
+        label: "Finalists in NASA SUITS 2023",
+        url: "https://www.linkedin.com/posts/university-of-washington-master-of-human-computer-interaction-design_finalists-in-the-nasa-suits-challenge-activity-7102818439043452928-cooL",
+        icon: "FileTextIcon",
+      },
     ],
   },
   {
