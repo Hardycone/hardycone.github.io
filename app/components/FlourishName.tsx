@@ -262,19 +262,19 @@ export default function FlourishName({
           <img
             src={logoSrc}
             alt=""
-            className="inline-block h-[1.5em] w-[1.5em] shrink-0 object-cover"
+            className="inline-block h-[1.25em] w-[1.25em] shrink-0 object-cover"
           />
         ) : (
           <>
             <img
               src={logoSrc.light}
               alt=""
-              className="block h-[1.5em] w-[1.5em] shrink-0 object-cover dark:hidden"
+              className="block h-[1.25em] w-[1.25em] shrink-0 object-cover dark:hidden"
             />
             <img
               src={logoSrc.dark}
               alt=""
-              className="hidden h-[1.5em] w-[1.5em] shrink-0 object-cover dark:block"
+              className="hidden h-[1.25em] w-[1.25em] shrink-0 object-cover dark:block"
             />
           </>
         ))}

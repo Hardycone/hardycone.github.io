@@ -262,6 +262,9 @@ export default function ProjectSummary({
 
   if (!hasMounted) return null;
 
+  // Use this to style Intro separately
+  // const isIntroPreview = variant === "preview" && displayedProject.id === "intro";
+
   const layoutDependency = `${variant}-${displayedProject.id}`;
   const mainFloatingStyle = {
     boxShadow: frameShadow,
@@ -427,7 +430,7 @@ export default function ProjectSummary({
         {/* Image as background */}
         {displayedProject.image && (
           <div
-            className={`pointer-events-none absolute overflow-hidden rounded-6 md:rounded-8 ${backgroundImageClasses}`}
+            className={`pointer-events-none absolute overflow-hidden rounded-4 md:rounded-8 ${backgroundImageClasses}`}
           >
             <img
               src={displayedProject.image}
@@ -458,7 +461,7 @@ export default function ProjectSummary({
         <motion.div
           layout
           layoutDependency={layoutDependency}
-          className={`project-summary-scrollbar z-10 flex h-fit ${floatingPaneClasses} flex-col ${floatingPaneOverflowY} overflow-x-hidden rounded-4 md:rounded-6 ${theme.bgSoftColorClass} bg-opacity-90 ${variant === "preview" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
+          className={`project-summary-scrollbar z-10 flex h-fit ${floatingPaneClasses} flex-col ${floatingPaneOverflowY} overflow-x-hidden rounded-3 md:rounded-6 ${theme.bgSoftColorClass} bg-opacity-90 ${variant === "preview" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
           style={mainFloatingStyle}
         >
           {/* Title text */}

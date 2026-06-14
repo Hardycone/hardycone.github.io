@@ -107,13 +107,13 @@ function ContactPanel({
         <h5 className="font-sans text-xl font-bold sm:text-xl">
           Let&apos;s chat!
         </h5>
-        <p className="mt-1 text-sm opacity-60">
+        <p className="mt-1 text-sm">
           Send me a message here, or{" "}
           <button
             type="button"
             tabIndex={0}
             onClick={onCopyEmail}
-            className="inline-flex items-baseline gap-1 rounded-full bg-foreground py-1 pl-2 pr-3 text-background transition-[color,opacity,text-decoration-color] hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/40"
+            className="inline-flex items-baseline gap-1 rounded-full bg-foreground py-1 pl-2 pr-3 text-background opacity-75 transition-[color,opacity,text-decoration-color] hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/40 dark:bg-dark-foreground dark:text-dark-background"
             aria-live="polite"
           >
             {hasCopiedEmail ? (

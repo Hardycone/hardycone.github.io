@@ -52,17 +52,17 @@ export default function SectionContainer({
 
   return (
     <motion.div
-      className={`rounded-4 md:rounded-8 flex flex-col border bg-background/90 p-3 text-foreground dark:bg-dark-background/90 dark:text-dark-foreground md:p-6 ${cardClass}`}
+      className={`flex flex-col rounded-4 border bg-background/90 p-3 text-foreground dark:bg-dark-background/90 dark:text-dark-foreground md:rounded-8 md:p-6 ${cardClass}`}
       style={{ borderColor }}
       initial={
-        shouldRevealOnScroll ? { opacity: 0, y: 56, scale: 0.98 } : false
+        shouldRevealOnScroll ? { opacity: 0, y: 24, scale: 0.98 } : false
       }
       whileInView={
         shouldRevealOnScroll ? { opacity: 1, y: 0, scale: 1 } : undefined
       }
       viewport={
         shouldRevealOnScroll
-          ? { once: true, amount: "some", margin: "0px 0px -25% 0px" }
+          ? { once: true, amount: "some", margin: "0px 0px -15% 0px" }
           : undefined
       }
       transition={
