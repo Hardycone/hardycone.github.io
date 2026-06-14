@@ -64,9 +64,13 @@ function ContactPanel({
   error,
   isSubmitting,
   panelShadow,
+  formRef,
   nameInputRef,
   emailInputRef,
   messageInputRef,
+  showSendShortcut,
+  sendShortcutLabel,
+  onTextEntryFocusChange,
   onCopyEmail,
   onChange,
   onSubmit,
@@ -77,9 +81,13 @@ function ContactPanel({
   error: string | null;
   isSubmitting: boolean;
   panelShadow: MotionValue<string>;
+  formRef: RefObject<HTMLFormElement | null>;
   nameInputRef: RefObject<HTMLInputElement | null>;
   emailInputRef: RefObject<HTMLInputElement | null>;
   messageInputRef: RefObject<HTMLTextAreaElement | null>;
+  showSendShortcut: boolean;
+  sendShortcutLabel: string;
+  onTextEntryFocusChange: (isFocused: boolean) => void;
   onCopyEmail: () => void;
   onChange: (field: keyof FormFields, value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -93,10 +101,25 @@ function ContactPanel({
 
   return (
     <motion.form
+      ref={formRef}
       id="message-me-form"
       noValidate
       style={{ boxShadow: panelShadow }}
       onSubmit={onSubmit}
+      onFocusCapture={(event) => {
+        if (isTextEntryKeyboardTarget(event.target)) {
+          onTextEntryFocusChange(true);
+        }
+      }}
+      onBlurCapture={(event) => {
+        const form = event.currentTarget;
+        window.requestAnimationFrame(() => {
+          onTextEntryFocusChange(
+            form.contains(document.activeElement) &&
+              isTextEntryKeyboardTarget(document.activeElement),
+          );
+        });
+      }}
       initial={{ y: 36, opacity: 0, scale: 0 }}
       animate={{ y: 0, opacity: 1, scale: 1 }}
       exit={{ y: 36, opacity: 0, scale: 0 }}
@@ -235,7 +258,21 @@ function ContactPanel({
         disabled={isSubmitting}
         className="mt-1 h-11 rounded-1.5 bg-foreground px-5 font-sans text-sm font-semibold text-background transition-[transform,opacity] hover:scale-[0.97] active:scale-[0.98] disabled:cursor-wait disabled:opacity-50 dark:bg-dark-foreground dark:text-dark-background"
       >
-        {isSubmitting ? "Sending..." : "Send"}
+        {isSubmitting ? (
+          "Sending..."
+        ) : (
+          <span className="flex items-center justify-center gap-2">
+            <span>Send</span>
+            {showSendShortcut && (
+              <KeyboardHint
+                shortcut="send-message"
+                keycapClassName="!w-fit px-2"
+              >
+                {sendShortcutLabel}
+              </KeyboardHint>
+            )}
+          </span>
+        )}
       </button>
     </motion.form>
   );
@@ -243,8 +280,7 @@ function ContactPanel({
 
 export default function MessageMe() {
   const { resolvedTheme } = useTheme();
-  const { showKeyboardHints, isTextEntryFocused, flashShortcutHint } =
-    useKeyboardHints();
+  const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
   const { barLightShadow, barDarkShadow } = useMouseShadow();
   const barShadow = resolvedTheme === "dark" ? barDarkShadow : barLightShadow;
 
@@ -255,6 +291,9 @@ export default function MessageMe() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [hasCopiedEmail, setHasCopiedEmail] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [isApplePlatform, setIsApplePlatform] = useState(false);
+  const [isFormTextEntryFocused, setIsFormTextEntryFocused] = useState(false);
+  const [showFormKeyboardHints, setShowFormKeyboardHints] = useState(false);
   const [fields, setFields] = useState<FormFields>({
     name: "",
     email: "",
@@ -263,6 +302,7 @@ export default function MessageMe() {
   });
 
   const messageRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
@@ -408,6 +448,58 @@ export default function MessageMe() {
   );
 
   useEffect(() => {
+    setIsApplePlatform(
+      /Mac|iPhone|iPad|iPod/.test(navigator.platform),
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const supportsKeyboardHints = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
+
+    const handleFormKeyboardInput = (event: KeyboardEvent) => {
+      if (
+        !supportsKeyboardHints ||
+        !messageRef.current?.contains(event.target as Node) ||
+        !isTextEntryKeyboardTarget(event.target) ||
+        event.repeat ||
+        event.key === "Tab" ||
+        event.key === "Shift" ||
+        event.key === "Meta" ||
+        event.key === "Control" ||
+        event.key === "Alt"
+      ) {
+        return;
+      }
+
+      setShowFormKeyboardHints(true);
+    };
+
+    const handlePointerInput = () => {
+      setShowFormKeyboardHints(false);
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType === "mouse") {
+        setShowFormKeyboardHints(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleFormKeyboardInput);
+    window.addEventListener("pointerdown", handlePointerInput);
+    window.addEventListener("pointermove", handlePointerMove);
+
+    return () => {
+      window.removeEventListener("keydown", handleFormKeyboardInput);
+      window.removeEventListener("pointerdown", handlePointerInput);
+      window.removeEventListener("pointermove", handlePointerMove);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     if (!isOpen) return;
 
     const handleEscape = (event: KeyboardEvent) => {
@@ -440,9 +532,39 @@ export default function MessageMe() {
   }, [isOpen]);
 
   useEffect(() => {
+    if (!isOpen) return;
+
+    const handleSendShortcut = (event: KeyboardEvent) => {
+      const usesPlatformModifier = isApplePlatform
+        ? event.metaKey && !event.ctrlKey
+        : event.ctrlKey && !event.metaKey;
+
+      if (
+        event.key !== "Enter" ||
+        !usesPlatformModifier ||
+        event.altKey ||
+        event.shiftKey ||
+        event.repeat ||
+        event.isComposing ||
+        isSubmitting
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      flashShortcutHint("send-message");
+      formRef.current?.requestSubmit();
+    };
+
+    window.addEventListener("keydown", handleSendShortcut);
+    return () => window.removeEventListener("keydown", handleSendShortcut);
+  }, [flashShortcutHint, isApplePlatform, isOpen, isSubmitting]);
+
+  useEffect(() => {
     if (isOpen) {
       const frame = window.requestAnimationFrame(() => {
         nameInputRef.current?.focus({ preventScroll: true });
+        setIsFormTextEntryFocused(true);
       });
 
       return () => window.cancelAnimationFrame(frame);
@@ -454,6 +576,8 @@ export default function MessageMe() {
     ) {
       document.activeElement.blur();
     }
+    setIsFormTextEntryFocused(false);
+    setShowFormKeyboardHints(false);
   }, [isOpen]);
 
   useEffect(() => {
@@ -472,12 +596,15 @@ export default function MessageMe() {
 
       event.preventDefault();
       flashShortcutHint("message");
+      if (!isOpen) {
+        setShowFormKeyboardHints(true);
+      }
       handleToggle();
     };
 
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
-  }, [flashShortcutHint, handleToggle]);
+  }, [flashShortcutHint, handleToggle, isOpen]);
 
   useEffect(() => {
     return () => {
@@ -511,9 +638,17 @@ export default function MessageMe() {
               error={error}
               isSubmitting={isSubmitting}
               panelShadow={barShadow}
+              formRef={formRef}
               nameInputRef={nameInputRef}
               emailInputRef={emailInputRef}
               messageInputRef={messageInputRef}
+              showSendShortcut={
+                isFormTextEntryFocused && showFormKeyboardHints
+              }
+              sendShortcutLabel={
+                isApplePlatform ? "⌘ + Enter" : "Ctrl + Enter"
+              }
+              onTextEntryFocusChange={setIsFormTextEntryFocused}
               onCopyEmail={handleCopyEmail}
               onChange={handleFieldChange}
               onSubmit={handleSubmit}
@@ -547,7 +682,10 @@ export default function MessageMe() {
           style={{ boxShadow: barShadow }}
           onHoverStart={() => setIsHovered(true)}
           onHoverEnd={() => setIsHovered(false)}
-          onClick={handleToggle}
+          onClick={() => {
+            setShowFormKeyboardHints(false);
+            handleToggle();
+          }}
           aria-expanded={isOpen}
           aria-controls="message-me-form"
           aria-label={isOpen ? "Close message form" : "Message me"}
@@ -560,14 +698,19 @@ export default function MessageMe() {
             </span>
           </span>
 
-          {(showKeyboardHints || (isOpen && isTextEntryFocused)) && (
+          {((isOpen &&
+            isFormTextEntryFocused &&
+            showFormKeyboardHints) ||
+            (!isFormTextEntryFocused && showKeyboardHints)) && (
             <KeyboardHint
               shortcut="message"
               className="absolute bottom-[calc(100%-0.25rem)] z-10 translate-x-1/2"
-              keycapClassName={isOpen && isTextEntryFocused ? "w-8" : undefined}
+              keycapClassName={
+                isOpen && isFormTextEntryFocused ? "w-8" : undefined
+              }
               style={{ right: 22 }}
             >
-              {isOpen && isTextEntryFocused ? "Esc" : "M"}
+              {isOpen && isFormTextEntryFocused ? "Esc" : "M"}
             </KeyboardHint>
           )}
         </motion.button>

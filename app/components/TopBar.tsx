@@ -5,10 +5,16 @@ import { useViewMode } from "../context/ViewModeContext";
 import { useActiveProject } from "../context/ActiveProjectContext";
 import { useRouter } from "next/navigation";
 import { flushSync } from "react-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  MotionValue,
+  useMotionValueEvent,
+} from "framer-motion";
 import projects from "@/data/projects";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
+import { HEADER_IMAGE_FADE_START_PROGRESS } from "@/lib/headerIntro";
 
 import {
   ScrollIcon,
@@ -36,7 +42,11 @@ import { useTheme } from "next-themes";
 import { useKeyboardHints } from "../context/KeyboardHintsContext";
 import { isTextEntryKeyboardTarget } from "@/lib/keyboard";
 
-export default function TopBar() {
+interface TopBarProps {
+  headerIntroProgress: MotionValue<number>;
+}
+
+export default function TopBar({ headerIntroProgress }: TopBarProps) {
   const { viewMode, setViewMode } = useViewMode();
   const { activeIndex, setActiveIndex } = useActiveProject();
   const router = useRouter();
@@ -351,13 +361,9 @@ export default function TopBar() {
     };
   }, [sections, pathname]);
 
-  useEffect(() => {
-    function onScroll() {
-      setShowTitle(window.scrollY > window.innerHeight / 2);
-    }
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  useMotionValueEvent(headerIntroProgress, "change", (progress) => {
+    setShowTitle(progress >= HEADER_IMAGE_FADE_START_PROGRESS);
+  });
 
   return (
     <div className="fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[2650px] p-3.5 md:p-[1.625rem]">

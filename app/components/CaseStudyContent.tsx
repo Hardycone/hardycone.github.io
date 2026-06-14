@@ -1,9 +1,20 @@
 "use client";
 
 import { useActiveProject } from "../context/ActiveProjectContext";
-import { motion, AnimatePresence, MotionValue } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  MotionValue,
+  useTransform,
+} from "framer-motion";
 import projects from "@/data/projects";
-import { useEffect } from "react";
+import { type CSSProperties, useEffect } from "react";
+import { useTheme } from "next-themes";
+import { PathIcon, ScrollIcon } from "@phosphor-icons/react";
+import {
+  HEADER_CONTENT_START_SVH,
+  HEADER_IMAGE_FADE_START_PROGRESS,
+} from "@/lib/headerIntro";
 
 import CaseStudyOne from "./caseStudies/CaseStudyOne";
 import CaseStudyTwo from "./caseStudies/CaseStudyTwo";
@@ -13,10 +24,13 @@ import CaseStudyFive from "./caseStudies/CaseStudyFive";
 import CaseStudySix from "./caseStudies/CaseStudySix";
 interface CaseStudyContentProps {
   scrollY: MotionValue<number>;
+  headerIntroProgress: MotionValue<number>;
   isVisible?: boolean;
   exitDirection?: "up" | "down";
   onExitComplete?: () => void;
 }
+
+type CaseStudyComponentProps = Pick<CaseStudyContentProps, "scrollY">;
 
 type ProjectSlug =
   | "case-study-one"
@@ -28,7 +42,7 @@ type ProjectSlug =
 
 const caseStudyComponents: Record<
   ProjectSlug,
-  React.FC<CaseStudyContentProps>
+  React.FC<CaseStudyComponentProps>
 > = {
   "case-study-one": CaseStudyOne,
   "case-study-two": CaseStudyTwo,
@@ -50,15 +64,41 @@ const contentVariants = {
 
 export default function CaseStudyContent({
   scrollY,
+  headerIntroProgress,
   isVisible = true,
   exitDirection = "down",
   onExitComplete,
 }: CaseStudyContentProps) {
   const { activeIndex } = useActiveProject();
+  const { resolvedTheme } = useTheme();
 
   const project = projects[activeIndex];
   const slug = project.slug as ProjectSlug;
   const CaseStudyComponent = caseStudyComponents[slug];
+  const peekOpacity = useTransform(headerIntroProgress, (progress) =>
+    progress < HEADER_IMAGE_FADE_START_PROGRESS ? 1 : 0,
+  );
+  const contentOpacity = useTransform(headerIntroProgress, (progress) =>
+    progress < HEADER_IMAGE_FADE_START_PROGRESS ? 0 : 1,
+  );
+  const peekBorderOpacity = useTransform(
+    scrollY,
+    [
+      0,
+      window.innerHeight * 2,
+      document.body.scrollHeight - window.innerHeight * 2,
+      document.body.scrollHeight - window.innerHeight * 1.2,
+      document.body.scrollHeight - window.innerHeight,
+    ],
+    resolvedTheme === "dark" ? [0.25, 0, 0, 0.25, 0] : [1, 0, 0, 1, 0],
+  );
+  const peekBorderColor = useTransform(
+    peekBorderOpacity,
+    (opacity) => `rgba(255,255,255,${opacity})`,
+  );
+  const isBio = slug === "case-study-one";
+  const PeekIcon = isBio ? PathIcon : ScrollIcon;
+  const peekTitle = isBio ? "My Journey" : "Quick Take";
 
   // Dispatch event after animation completes
   useEffect(() => {
@@ -70,27 +110,65 @@ export default function CaseStudyContent({
   }, [project.id]);
 
   return (
-    <div className="flex flex-col">
-      <div className="h-[calc(100svh-4rem)] sm:h-[calc(100svh-4rem)] md:h-[calc(100svh-6rem)] xl:h-[calc(100svh-6rem)] tall:h-[max(70svh,26rem)]" />
-      <AnimatePresence
-        mode="wait"
-        custom={exitDirection}
-        onExitComplete={onExitComplete}
-      >
-        {isVisible && (
+    <div className="flex w-full min-w-0 flex-col">
+      {isVisible && (
+        <motion.div
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-x-0 top-[calc(100svh-4rem)] z-40 mx-auto h-16 w-full max-w-5xl px-2 md:top-[calc(100svh-6rem)] md:h-24"
+          style={{ opacity: peekOpacity }}
+        >
           <motion.div
-            key={project.id}
-            custom={exitDirection}
+            key={`peek-${project.id}`}
             variants={contentVariants}
             initial="initial"
             animate="animate"
-            exit="exit"
-            className="z-40 flex w-full flex-col"
+            className="flex min-h-40 w-full flex-col rounded-4 border bg-background/90 p-3 text-foreground dark:bg-dark-background/90 dark:text-dark-foreground md:min-h-48 md:rounded-8 md:p-6"
+            style={{ borderColor: peekBorderColor }}
           >
-            <CaseStudyComponent scrollY={scrollY} />
+            <div className="mb-2 flex items-center gap-4">
+              <PeekIcon
+                size={40}
+                weight="duotone"
+                className="h-[30px] w-[30px] md:h-10 md:w-10"
+              />
+              <h3>{peekTitle}</h3>
+            </div>
+            <div className="mb-16 h-0.5 w-full rounded-full bg-foreground dark:bg-dark-foreground" />
           </motion.div>
-        )}
-      </AnimatePresence>
+        </motion.div>
+      )}
+      <div
+        className="h-[calc(var(--header-content-start)-4rem)] md:h-[calc(var(--header-content-start)-6rem)]"
+        style={
+          {
+            "--header-content-start": `${HEADER_CONTENT_START_SVH}svh`,
+          } as CSSProperties
+        }
+      />
+      <motion.div
+        className="relative w-full min-w-0"
+        style={{ opacity: contentOpacity }}
+      >
+        <AnimatePresence
+          mode="wait"
+          custom={exitDirection}
+          onExitComplete={onExitComplete}
+        >
+          {isVisible && (
+            <motion.div
+              key={project.id}
+              custom={exitDirection}
+              variants={contentVariants}
+              initial={false}
+              animate="animate"
+              exit="exit"
+              className="relative z-40 flex w-full min-w-0 flex-col"
+            >
+              <CaseStudyComponent scrollY={scrollY} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
       <div className="h-[max(60lvh,300px)]" />
     </div>
   );

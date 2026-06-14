@@ -6,6 +6,7 @@ import {
   AnimatePresence,
   useMotionValueEvent,
   useMotionValue,
+  useSpring,
 } from "framer-motion";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -25,6 +26,7 @@ import ProjectSummary from "./ProjectSummary";
 import CaseStudyContent from "./CaseStudyContent";
 import MyName from "./MyName";
 import HomeSymbolBackdrop from "./HomeSymbolBackdrop";
+import { HEADER_INTRO_DISTANCE_SVH } from "@/lib/headerIntro";
 // import DebugViewport from "./DebugViewport";
 import BottomBar from "./BottomBar";
 type BottomNavigationState = {
@@ -50,7 +52,23 @@ export default function MainContent({ children }: { children: ReactNode }) {
     useState<BottomNavigationState | null>(null);
 
   const { scrollY } = useScroll();
+  const headerIntroProgress = useMotionValue(0);
+  const smoothHeaderIntroProgress = useSpring(headerIntroProgress, {
+    stiffness: 300,
+    damping: 30,
+    mass: 0.5,
+    restDelta: 0.001,
+    restSpeed: 0.01,
+  });
+  const headerIntroEndRef = useRef<HTMLDivElement>(null);
   const bottomRevealProgress = useMotionValue(0);
+  const smoothBottomRevealProgress = useSpring(bottomRevealProgress, {
+    stiffness: 300,
+    damping: 30,
+    mass: 0.5,
+    restDelta: 0.001,
+    restSpeed: 0.01,
+  });
   const bottomRevealAnchorRef = useRef<HTMLDivElement>(null);
   const caseStudyExitDirection = transitioningToNext ? "up" : "down";
   const isCaseStudyScrollLocked =
@@ -71,6 +89,27 @@ export default function MainContent({ children }: { children: ReactNode }) {
   const [summaryVariant, setSummaryVariant] = useState<
     "preview" | "header" | "bottom" | null
   >("preview");
+
+  const updateHeaderIntroProgress = useCallback(
+    (scrollPosition = scrollY.get()) => {
+      const anchor = headerIntroEndRef.current;
+      if (!anchor || viewMode !== "case-study") {
+        headerIntroProgress.set(0);
+        return 0;
+      }
+
+      const anchorRect = anchor.getBoundingClientRect();
+      const introDistance = scrollPosition + anchorRect.top;
+      const progress =
+        introDistance > 0
+          ? Math.min(1, Math.max(0, scrollPosition / introDistance))
+          : 1;
+
+      headerIntroProgress.set(progress);
+      return progress;
+    },
+    [headerIntroProgress, scrollY, viewMode],
+  );
 
   const updateBottomRevealProgress = useCallback(() => {
     const anchor = bottomRevealAnchorRef.current;
@@ -100,12 +139,14 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const handleGeometryChange = () => {
+      const headerProgress = updateHeaderIntroProgress();
       const progress = updateBottomRevealProgress();
 
       if (
         bottomNavigation ||
         viewMode !== "case-study" ||
-        scrollY.get() < window.innerHeight / 2
+        headerProgress < 1 ||
+        smoothHeaderIntroProgress.get() < 0.999
       ) {
         return;
       }
@@ -138,7 +179,9 @@ export default function MainContent({ children }: { children: ReactNode }) {
     activeIndex,
     bottomNavigation,
     scrollY,
+    smoothHeaderIntroProgress,
     updateBottomRevealProgress,
+    updateHeaderIntroProgress,
     viewMode,
   ]);
 
@@ -158,18 +201,24 @@ export default function MainContent({ children }: { children: ReactNode }) {
       return;
     }
 
-    const y = scrollY.get();
-    const winHeight = window.innerHeight;
+    const headerProgress = updateHeaderIntroProgress();
     const bottomProgress = updateBottomRevealProgress();
 
-    if (y < winHeight / 2) {
+    if (headerProgress < 1 || smoothHeaderIntroProgress.get() < 0.999) {
       setSummaryVariant("header");
     } else if (bottomProgress > 0) {
       setSummaryVariant("bottom");
     } else {
       setSummaryVariant(null);
     }
-  }, [bottomNavigation, viewMode, scrollY, updateBottomRevealProgress]);
+  }, [
+    bottomNavigation,
+    viewMode,
+    scrollY,
+    smoothHeaderIntroProgress,
+    updateBottomRevealProgress,
+    updateHeaderIntroProgress,
+  ]);
 
   // Use useMotionValueEvent for efficient scroll handling
   useMotionValueEvent(scrollY, "change", (y) => {
@@ -180,16 +229,33 @@ export default function MainContent({ children }: { children: ReactNode }) {
       return;
     }
 
-    const winHeight = window.innerHeight;
+    const headerProgress = updateHeaderIntroProgress(y);
     const bottomProgress = updateBottomRevealProgress();
 
-    if (y < winHeight / 2) {
+    if (headerProgress < 1 || smoothHeaderIntroProgress.get() < 0.999) {
       setSummaryVariant("header");
     } else if (bottomProgress > 0) {
       setSummaryVariant("bottom");
     } else {
       setSummaryVariant(null);
     }
+  });
+
+  useMotionValueEvent(smoothHeaderIntroProgress, "change", (progress) => {
+    if (
+      bottomNavigation ||
+      viewMode !== "case-study" ||
+      headerIntroProgress.get() < 1
+    ) {
+      return;
+    }
+
+    if (progress < 0.999) {
+      setSummaryVariant("header");
+      return;
+    }
+
+    setSummaryVariant(bottomRevealProgress.get() > 0 ? "bottom" : null);
   });
 
   useEffect(() => {
@@ -440,7 +506,15 @@ export default function MainContent({ children }: { children: ReactNode }) {
       }`}
     >
       {viewMode === "home" && <HomeSymbolBackdrop activeIndex={activeIndex} />}
-      <TopBar />
+      <TopBar headerIntroProgress={headerIntroProgress} />
+      {viewMode === "case-study" && (
+        <div
+          ref={headerIntroEndRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute left-0 h-px w-px"
+          style={{ top: `${HEADER_INTRO_DISTANCE_SVH}svh` }}
+        />
+      )}
 
       {/* <DebugViewport /> */}
       <div
@@ -493,6 +567,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
           (caseStudyContentReady || transitioningToNext) && (
             <CaseStudyContent
               scrollY={scrollY}
+              headerIntroProgress={headerIntroProgress}
               isVisible={caseStudyContentReady && !transitioningToNext}
               exitDirection={caseStudyExitDirection}
               onExitComplete={handleCaseStudyExitComplete}
@@ -512,8 +587,10 @@ export default function MainContent({ children }: { children: ReactNode }) {
             <ProjectSummary
               key="project-summary"
               variant={summaryVariant}
-              scrollY={scrollY}
+              headerIntroProgress={headerIntroProgress}
+              headerVisualProgress={smoothHeaderIntroProgress}
               bottomRevealProgress={bottomRevealProgress}
+              bottomVisualProgress={smoothBottomRevealProgress}
               isTransitionLocked={isBottomNavigationActive}
               onLayoutAnimationComplete={handleSummaryLayoutComplete}
               onBottomNavigationStart={handleBottomNavigationStart}

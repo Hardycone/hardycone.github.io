@@ -23,6 +23,10 @@ import KeyboardHint from "./KeyboardHint";
 import { useActiveProject } from "../context/ActiveProjectContext";
 import { useKeyboardHints } from "../context/KeyboardHintsContext";
 import { isInteractiveKeyboardTarget } from "@/lib/keyboard";
+import {
+  HEADER_IMAGE_FADE_START_PROGRESS,
+  HEADER_PANE_END_PROGRESS,
+} from "@/lib/headerIntro";
 import projects from "../../data/projects";
 import type { Project } from "../../data/projects";
 import {
@@ -81,8 +85,10 @@ function hexToRgbChannels(hex: string) {
 
 interface ProjectSummaryProps {
   variant: "preview" | "header" | "bottom";
-  scrollY: MotionValue<number>;
+  headerIntroProgress: MotionValue<number>;
+  headerVisualProgress: MotionValue<number>;
   bottomRevealProgress: MotionValue<number>;
+  bottomVisualProgress: MotionValue<number>;
   isTransitionLocked?: boolean;
   onLayoutAnimationComplete?: () => void;
   onBottomNavigationStart?: (slug: string) => void;
@@ -95,8 +101,10 @@ type MainFloatingStyle = MotionStyle & {
 
 export default function ProjectSummary({
   variant,
-  scrollY,
+  headerIntroProgress,
+  headerVisualProgress,
   bottomRevealProgress,
+  bottomVisualProgress,
   isTransitionLocked = false,
   onLayoutAnimationComplete,
   onBottomNavigationStart,
@@ -113,34 +121,46 @@ export default function ProjectSummary({
   const { resolvedTheme } = useTheme();
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
 
-  // const smoothScrollY = useSpring(scrollY, {
-  //   stiffness: 120,
-  //   damping: 20,
-  //   mass: 0.2,
-  // });
-
   const headerOpacity = useTransform(
-    scrollY,
-    [0, 50, window.innerHeight / 2],
+    headerVisualProgress,
+    [0, HEADER_IMAGE_FADE_START_PROGRESS, 1],
     [1, 1, 0],
   );
 
-  const bottomOpacity = useTransform(bottomRevealProgress, [0, 1], [0, 1]);
+  const bottomOpacity = useTransform(bottomVisualProgress, [0, 1], [0, 1]);
 
   const headerScale = useTransform(
-    scrollY,
-    [0, 50, window.innerHeight / 2],
+    headerIntroProgress,
+    [0, HEADER_IMAGE_FADE_START_PROGRESS, 1],
     [1, 1, 0.95],
   );
 
   const headerBlur = useTransform(
-    scrollY,
-    [0, 50, window.innerHeight / 2],
+    headerVisualProgress,
+    [0, HEADER_IMAGE_FADE_START_PROGRESS, 1],
     ["blur(0px)", "blur(0px)", "blur(10px)"],
   );
 
+  const headerPaneScale = useTransform(
+    headerIntroProgress,
+    [0, HEADER_PANE_END_PROGRESS],
+    [1, 0.95],
+  );
+
+  const headerPaneBlur = useTransform(
+    headerVisualProgress,
+    [0, HEADER_PANE_END_PROGRESS],
+    ["blur(0px)", "blur(10px)"],
+  );
+
+  const headerPaneOpacity = useTransform(
+    headerVisualProgress,
+    [0, HEADER_PANE_END_PROGRESS * 0.625, HEADER_PANE_END_PROGRESS],
+    [1, 1, 0],
+  );
+
   const bottomBlur = useTransform(
-    bottomRevealProgress,
+    bottomVisualProgress,
     [0, 1],
     ["blur(10px)", "blur(0px)"],
   );
@@ -377,12 +397,19 @@ export default function ProjectSummary({
         ? "inset-2 md:inset-4 "
         : "inset-2 md:inset-4";
 
-  const floatingPaneClasses =
+  const floatingPaneLayoutClasses =
     variant === "header"
-      ? "max-w-[28rem] wide:max-w-[30rem] md:max-w-2xl md:wide:max-w-full xl:max-w-5xl xl:wide:max-w-4xl md:p-12 p-6"
+      ? "max-w-[28rem] wide:max-w-[30rem] md:max-w-2xl md:wide:max-w-full xl:max-w-5xl xl:wide:max-w-4xl"
       : variant === "preview"
-        ? "max-w-[30rem] sm:wide:max-w-full md:max-w-full p-3 mb-12 md:mb-14 wide:mb-0 lg:wide:mb-[3.25rem] lg:superwide:mb-0 lg:w-[60%] md:p-6 xl:superwide:w-full "
-        : "p-3 md:p-6 max-w-[30rem]";
+        ? "mb-12 max-w-[30rem] sm:wide:max-w-full md:mb-14 md:max-w-full wide:mb-0 lg:w-[60%] lg:wide:mb-[3.25rem] lg:superwide:mb-0 xl:superwide:w-full"
+        : "max-w-[30rem]";
+
+  const floatingPaneContentClasses =
+    variant === "header"
+      ? "p-6 md:p-12"
+      : variant === "preview"
+        ? "p-3 md:p-6"
+        : "p-3 md:p-6";
 
   return (
     // Container
@@ -461,90 +488,117 @@ export default function ProjectSummary({
         <motion.div
           layout
           layoutDependency={layoutDependency}
-          className={`project-summary-scrollbar z-10 flex h-fit ${floatingPaneClasses} flex-col ${floatingPaneOverflowY} overflow-x-hidden rounded-3 md:rounded-6 ${theme.bgSoftColorClass} bg-opacity-90 ${variant === "preview" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
-          style={mainFloatingStyle}
+          className={`z-10 flex h-fit ${floatingPaneLayoutClasses}`}
         >
-          {/* Title text */}
-          <motion.h1
-            layout="position"
-            layoutDependency={layoutDependency}
-            className={`flex ${theme.textColorClass} ${variant === "header" ? "" : ""}`}
+          <motion.div
+            className={`project-summary-scrollbar flex h-fit w-full flex-col ${floatingPaneContentClasses} ${floatingPaneOverflowY} overflow-x-hidden rounded-3 md:rounded-6 ${theme.bgSoftColorClass} bg-opacity-90 ${variant === "preview" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
+            style={{
+              ...mainFloatingStyle,
+              scale:
+                variant === "header" &&
+                !isTransitionLocked &&
+                !transitioningToNext
+                  ? headerPaneScale
+                  : 1,
+              opacity:
+                variant === "header" &&
+                !isTransitionLocked &&
+                !transitioningToNext
+                  ? headerPaneOpacity
+                  : 1,
+              filter:
+                variant === "header" &&
+                !isTransitionLocked &&
+                !transitioningToNext
+                  ? headerPaneBlur
+                  : "blur(0px)",
+              transformOrigin: "top center",
+              willChange:
+                variant === "header" ? "transform, filter, opacity" : undefined,
+            }}
           >
-            {displayedProject.title}
-          </motion.h1>
-
-          {/* Tags */}
-          {displayedProject.tags && (
-            <motion.div
+            {/* Title text */}
+            <motion.h1
               layout="position"
               layoutDependency={layoutDependency}
-              className={`mb-2 flex flex-wrap gap-1 md:mb-4 lg:mb-5 xl:mb-6 2xl:mb-7`}
+              className={`flex ${theme.textColorClass} ${variant === "header" ? "" : ""}`}
             >
-              {displayedProject.tags.map((tag) => {
-                const IconComponent = tagIconRegistry[tag.icon];
-                return (
-                  <span
-                    key={tag.label}
-                    className={`inline-flex items-center gap-1 rounded-full px-2 font-sans text-xs font-semibold md:px-2 md:py-1 ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
-                  >
-                    {IconComponent && (
-                      <IconComponent
-                        size={16}
-                        weight="bold"
-                        className="shrink-0"
-                      />
-                    )}
-                    {tag.label}
-                  </span>
-                );
-              })}
-            </motion.div>
-          )}
-          {/* Tagline */}
-          <motion.h2
-            layout="position"
-            layoutDependency={layoutDependency}
-            className={`extremelywide:hidden } mb-2 text-foreground opacity-70 dark:text-dark-foreground md:mb-4 lg:mb-5 xl:mb-6 2xl:mb-7`}
-          >
-            {displayedProject.tagline}
-          </motion.h2>
+              {displayedProject.title}
+            </motion.h1>
 
-          {/* Description */}
-
-          <motion.p
-            layout
-            layoutDependency={layoutDependency}
-            className={`text-xs leading-tight text-foreground dark:text-dark-foreground sm:text-sm xl:text-base ${
-              variant === "header"
-                ? "mb-2 md:mb-4 md:border-l-4 md:border-foreground md:py-2 md:pl-4 md:dark:border-dark-foreground lg:mb-5 xl:mb-6 xl:w-[70%] 2xl:mb-7"
-                : variant === "preview"
-                  ? ""
-                  : "hidden"
-            }`}
-          >
-            {displayedProject.description}
-          </motion.p>
-
-          {/* Bullet points */}
-          {variant === "header" && displayedProject.bullets && (
-            <div className="overflow-clip">
-              <motion.ul
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.2, ease: "easeOut" }}
-                className="flex flex-row gap-12 tall:flex-col tall:gap-0"
+            {/* Tags */}
+            {displayedProject.tags && (
+              <motion.div
+                layout="position"
+                layoutDependency={layoutDependency}
+                className={`mb-2 flex flex-wrap gap-1 md:mb-4 lg:mb-5 xl:mb-6 2xl:mb-7`}
               >
-                {displayedProject.bullets.map((bullet) => (
-                  <li
-                    key={bullet}
-                    className={`font-sans text-base font-semibold text-foreground dark:text-dark-foreground md:py-1 md:text-xl`}
-                  >
-                    {bullet}
-                  </li>
-                ))}
-              </motion.ul>
-            </div>
-          )}
+                {displayedProject.tags.map((tag) => {
+                  const IconComponent = tagIconRegistry[tag.icon];
+                  return (
+                    <span
+                      key={tag.label}
+                      className={`inline-flex items-center gap-1 rounded-full px-2 font-sans text-xs font-semibold md:px-2 md:py-1 ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
+                    >
+                      {IconComponent && (
+                        <IconComponent
+                          size={16}
+                          weight="bold"
+                          className="shrink-0"
+                        />
+                      )}
+                      {tag.label}
+                    </span>
+                  );
+                })}
+              </motion.div>
+            )}
+            {/* Tagline */}
+            <motion.h2
+              layout="position"
+              layoutDependency={layoutDependency}
+              className={`extremelywide:hidden } mb-2 text-foreground opacity-70 dark:text-dark-foreground md:mb-4 lg:mb-5 xl:mb-6 2xl:mb-7`}
+            >
+              {displayedProject.tagline}
+            </motion.h2>
+
+            {/* Description */}
+
+            <motion.p
+              layout
+              layoutDependency={layoutDependency}
+              className={`text-xs leading-tight text-foreground dark:text-dark-foreground sm:text-sm xl:text-base ${
+                variant === "header"
+                  ? "mb-2 md:mb-4 md:border-l-4 md:border-foreground md:py-2 md:pl-4 md:dark:border-dark-foreground lg:mb-5 xl:mb-6 xl:w-[70%] 2xl:mb-7"
+                  : variant === "preview"
+                    ? ""
+                    : "hidden"
+              }`}
+            >
+              {displayedProject.description}
+            </motion.p>
+
+            {/* Bullet points */}
+            {variant === "header" && displayedProject.bullets && (
+              <div className="overflow-clip">
+                <motion.ul
+                  initial={{ y: 100, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2, duration: 0.2, ease: "easeOut" }}
+                  className="flex flex-row gap-12 tall:flex-col tall:gap-0"
+                >
+                  {displayedProject.bullets.map((bullet) => (
+                    <li
+                      key={bullet}
+                      className={`font-sans text-base font-semibold text-foreground dark:text-dark-foreground md:py-1 md:text-xl`}
+                    >
+                      {bullet}
+                    </li>
+                  ))}
+                </motion.ul>
+              </div>
+            )}
+          </motion.div>
         </motion.div>
 
         {/* Button container */}
