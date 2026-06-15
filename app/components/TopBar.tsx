@@ -1,20 +1,25 @@
 "use client";
 
-import { useMemo, useCallback, useEffect, useState, useRef } from "react";
+import {
+  useMemo,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  type RefObject,
+} from "react";
 import { useViewMode } from "../context/ViewModeContext";
 import { useActiveProject } from "../context/ActiveProjectContext";
 import { useRouter } from "next/navigation";
 import { flushSync } from "react-dom";
-import {
-  AnimatePresence,
-  motion,
-  MotionValue,
-  useMotionValueEvent,
-} from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import projects from "@/data/projects";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
-import { HEADER_IMAGE_FADE_START_PROGRESS } from "@/lib/headerIntro";
+import {
+  HEADER_PANE_NAV_CONTENT_FADE_MS,
+  HEADER_PANE_NAV_DESTINATION_FADE_MS,
+} from "@/lib/headerIntro";
 
 import {
   ScrollIcon,
@@ -43,15 +48,22 @@ import { useKeyboardHints } from "../context/KeyboardHintsContext";
 import { isTextEntryKeyboardTarget } from "@/lib/keyboard";
 
 interface TopBarProps {
-  headerIntroProgress: MotionValue<number>;
+  centerNavRef: RefObject<HTMLDivElement | null>;
+  showCenterNav: boolean;
+  retractCenterNav: boolean;
+  onInstantHomeNavigationStart?: () => void;
 }
 
-export default function TopBar({ headerIntroProgress }: TopBarProps) {
+export default function TopBar({
+  centerNavRef,
+  showCenterNav,
+  retractCenterNav,
+  onInstantHomeNavigationStart,
+}: TopBarProps) {
   const { viewMode, setViewMode } = useViewMode();
   const { activeIndex, setActiveIndex } = useActiveProject();
   const router = useRouter();
   const pathname = usePathname();
-  const [showTitle, setShowTitle] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
   const { resolvedTheme } = useTheme();
@@ -73,6 +85,7 @@ export default function TopBar({ headerIntroProgress }: TopBarProps) {
   const [isGreetingHovered, setIsGreetingHovered] = useState(false);
   const scrollTimeout = useRef<number | null>(null);
   const themeToggleButtonRef = useRef<HTMLButtonElement>(null);
+  const isCenterNavVisible = showCenterNav;
 
   const handleHomeClick = useCallback(() => {
     if (isNavigatingHome) return; // prevent double triggers
@@ -88,6 +101,7 @@ export default function TopBar({ headerIntroProgress }: TopBarProps) {
 
     if (isMobileDevice) {
       // 🚀 MOBILE: Instant navigation (skip scroll animation)
+      onInstantHomeNavigationStart?.();
       router.push("/");
       setIsNavigatingHome(false);
       return;
@@ -146,7 +160,7 @@ export default function TopBar({ headerIntroProgress }: TopBarProps) {
       router.push("/");
       setIsNavigatingHome(false);
     }
-  }, [isNavigatingHome, router]);
+  }, [isNavigatingHome, onInstantHomeNavigationStart, router]);
 
   const handleAboutClick = useCallback(() => {
     if (pathname === "/case-study-one") {
@@ -361,10 +375,6 @@ export default function TopBar({ headerIntroProgress }: TopBarProps) {
     };
   }, [sections, pathname]);
 
-  useMotionValueEvent(headerIntroProgress, "change", (progress) => {
-    setShowTitle(progress >= HEADER_IMAGE_FADE_START_PROGRESS);
-  });
-
   return (
     <div className="fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[2650px] p-3.5 md:p-[1.625rem]">
       <AnimatePresence>
@@ -404,33 +414,44 @@ export default function TopBar({ headerIntroProgress }: TopBarProps) {
           </motion.button>
 
           {/* Center: page navigation */}
-          <AnimatePresence mode="wait">
-            {viewMode === "case-study" && showTitle && activeProject && (
+          {viewMode === "case-study" && activeProject && (
+            <div className="absolute left-[3.625rem] sm:left-1/2 sm:-translate-x-1/2">
               <motion.div
+                ref={centerNavRef}
                 key={`title-${activeIndex}`}
-                initial={{ x: "-50%", y: -60, opacity: 0 }}
+                initial={false}
+                aria-hidden={!isCenterNavVisible}
                 style={{ boxShadow: barShadow }}
                 animate={{
-                  x: "-50%",
-                  y: 0,
-                  opacity: 1,
+                  y: retractCenterNav ? -60 : 0,
+                  opacity: isCenterNavVisible ? 1 : 0,
                 }}
-                transition={{ duration: 0.1 }}
-                exit={{ x: "-50%", y: -60, opacity: 0 }}
+                transition={{
+                  duration: retractCenterNav
+                    ? 0.14
+                    : isCenterNavVisible
+                      ? HEADER_PANE_NAV_DESTINATION_FADE_MS / 1000
+                      : HEADER_PANE_NAV_CONTENT_FADE_MS / 1000,
+                  ease: retractCenterNav ? "easeIn" : "easeOut",
+                }}
                 whileHover={{ scale: 1.05 }}
-                className="absolute left-1/2 hidden select-none justify-center gap-2 rounded-full bg-background px-4 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground sm:flex lg:gap-4"
+                className={`flex max-w-[calc(100vw-12.75rem)] select-none justify-center gap-2 rounded-full bg-background px-3 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground sm:max-w-none sm:px-4 lg:gap-4 ${
+                  isCenterNavVisible
+                    ? "pointer-events-auto"
+                    : "pointer-events-none"
+                }`}
               >
                 <button
                   type="button"
-                  tabIndex={0}
+                  tabIndex={isCenterNavVisible ? 0 : -1}
                   title="Summary"
                   onClick={() => {
                     flashShortcutHint("1");
                     handleScrollToSummary();
                   }}
-                  className={`relative hidden items-center whitespace-nowrap rounded-full px-4 font-sans text-lg font-semibold opacity-60 transition-transform hover:opacity-100 lg:flex ${theme.textColorClass}`}
+                  className={`relative flex h-9 min-w-0 max-w-full items-center rounded-full font-sans text-sm font-semibold opacity-60 transition-transform hover:opacity-100 sm:hidden lg:flex lg:h-auto lg:px-4 lg:text-lg ${theme.textColorClass}`}
                 >
-                  {activeProject.title}
+                  <span className="truncate">{activeProject.title}</span>
                   {showKeyboardHints && (
                     <KeyboardHint
                       shortcut="1"
@@ -440,7 +461,7 @@ export default function TopBar({ headerIntroProgress }: TopBarProps) {
                     </KeyboardHint>
                   )}
                 </button>
-                <div className="flex gap-2 lg:gap-4">
+                <div className="hidden gap-2 sm:flex lg:gap-4">
                   {sections.map((section, index) => {
                     const Icons = {
                       ScrollIcon,
@@ -462,7 +483,7 @@ export default function TopBar({ headerIntroProgress }: TopBarProps) {
                     return (
                       <button
                         type="button"
-                        tabIndex={0}
+                        tabIndex={isCenterNavVisible ? 0 : -1}
                         key={section.id}
                         title={section.label}
                         onClick={(e) => {
@@ -493,8 +514,8 @@ export default function TopBar({ headerIntroProgress }: TopBarProps) {
                   })}
                 </div>
               </motion.div>
-            )}
-          </AnimatePresence>
+            </div>
+          )}
         </motion.div>
       </AnimatePresence>
 

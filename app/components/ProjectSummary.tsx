@@ -25,7 +25,8 @@ import { useKeyboardHints } from "../context/KeyboardHintsContext";
 import { isInteractiveKeyboardTarget } from "@/lib/keyboard";
 import {
   HEADER_IMAGE_FADE_START_PROGRESS,
-  HEADER_PANE_END_PROGRESS,
+  HEADER_PANE_NAV_CONTENT_FADE_MS,
+  HEADER_PANE_NAV_DESTINATION_FADE_MS,
 } from "@/lib/headerIntro";
 import projects from "../../data/projects";
 import type { Project } from "../../data/projects";
@@ -89,6 +90,8 @@ interface ProjectSummaryProps {
   headerVisualProgress: MotionValue<number>;
   bottomRevealProgress: MotionValue<number>;
   bottomVisualProgress: MotionValue<number>;
+  floatingPaneRef?: React.RefObject<HTMLDivElement | null>;
+  isFloatingPaneVisible?: boolean;
   isTransitionLocked?: boolean;
   onLayoutAnimationComplete?: () => void;
   onBottomNavigationStart?: (slug: string) => void;
@@ -105,16 +108,14 @@ export default function ProjectSummary({
   headerVisualProgress,
   bottomRevealProgress,
   bottomVisualProgress,
+  floatingPaneRef,
+  isFloatingPaneVisible = true,
   isTransitionLocked = false,
   onLayoutAnimationComplete,
   onBottomNavigationStart,
 }: ProjectSummaryProps) {
-  const {
-    setTransitioningToNext,
-    transitioningToNext,
-    activeIndex,
-    previousIndex,
-  } = useActiveProject();
+  const { transitioningToNext, activeIndex, previousIndex } =
+    useActiveProject();
   const hasMounted = useHasMounted();
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
@@ -139,24 +140,6 @@ export default function ProjectSummary({
     headerVisualProgress,
     [0, HEADER_IMAGE_FADE_START_PROGRESS, 1],
     ["blur(0px)", "blur(0px)", "blur(10px)"],
-  );
-
-  const headerPaneScale = useTransform(
-    headerIntroProgress,
-    [0, HEADER_PANE_END_PROGRESS],
-    [1, 0.95],
-  );
-
-  const headerPaneBlur = useTransform(
-    headerVisualProgress,
-    [0, HEADER_PANE_END_PROGRESS],
-    ["blur(0px)", "blur(10px)"],
-  );
-
-  const headerPaneOpacity = useTransform(
-    headerVisualProgress,
-    [0, HEADER_PANE_END_PROGRESS * 0.625, HEADER_PANE_END_PROGRESS],
-    [1, 1, 0],
   );
 
   const bottomBlur = useTransform(
@@ -219,11 +202,10 @@ export default function ProjectSummary({
   const handleClick = useCallback(() => {
     if (variant === "header") return;
     setIsNavigating(true);
-    if (variant === "bottom" && setTransitioningToNext) {
+    if (variant === "bottom") {
       // mark that a click-initiated morph started
       isMorphingRef.current = true;
       morphTargetRef.current = project;
-      setTransitioningToNext(true);
       setKey(`project-${project.id}`);
       setdisplayedProject(project);
       onBottomNavigationStart?.(project.slug);
@@ -235,13 +217,7 @@ export default function ProjectSummary({
       // No need to set isNavigating(false) here,
       // the useEffect above will handle it when the page/props change.
     }, navigationDelay);
-  }, [
-    onBottomNavigationStart,
-    project,
-    router,
-    setTransitioningToNext,
-    variant,
-  ]);
+  }, [onBottomNavigationStart, project, router, variant]);
 
   useEffect(() => {
     if (variant === "header") return;
@@ -320,6 +296,12 @@ export default function ProjectSummary({
     isTransitionLocked || transitioningToNext
       ? "overflow-y-hidden"
       : "overflow-y-auto";
+  const floatingPaneOpacity =
+    variant === "header" && !isTransitionLocked && !transitioningToNext
+      ? isFloatingPaneVisible
+        ? 1
+        : 0
+      : 1;
 
   // --- Framer Motion variants
   const motionVariants = {
@@ -488,33 +470,33 @@ export default function ProjectSummary({
         <motion.div
           layout
           layoutDependency={layoutDependency}
-          className={`z-10 flex h-fit ${floatingPaneLayoutClasses}`}
+          className={`z-50 flex h-fit max-h-full min-h-0 flex-col ${floatingPaneLayoutClasses}`}
         >
           <motion.div
-            className={`project-summary-scrollbar flex h-fit w-full flex-col ${floatingPaneContentClasses} ${floatingPaneOverflowY} overflow-x-hidden rounded-3 md:rounded-6 ${theme.bgSoftColorClass} bg-opacity-90 ${variant === "preview" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
+            ref={floatingPaneRef}
+            initial={false}
+            animate={{ opacity: floatingPaneOpacity }}
+            transition={{
+              opacity: {
+                duration:
+                  (isFloatingPaneVisible
+                    ? HEADER_PANE_NAV_DESTINATION_FADE_MS
+                    : HEADER_PANE_NAV_CONTENT_FADE_MS) / 1000,
+                ease: "easeOut",
+              },
+            }}
+            aria-hidden={variant === "header" && !isFloatingPaneVisible}
+            className={`project-summary-scrollbar flex h-fit max-h-full min-h-0 w-full flex-col ${floatingPaneContentClasses} ${floatingPaneOverflowY} overflow-x-hidden rounded-3 md:rounded-6 ${theme.bgSoftColorClass} bg-opacity-90 ${variant === "preview" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
             style={{
               ...mainFloatingStyle,
-              scale:
+              pointerEvents:
                 variant === "header" &&
                 !isTransitionLocked &&
                 !transitioningToNext
-                  ? headerPaneScale
-                  : 1,
-              opacity:
-                variant === "header" &&
-                !isTransitionLocked &&
-                !transitioningToNext
-                  ? headerPaneOpacity
-                  : 1,
-              filter:
-                variant === "header" &&
-                !isTransitionLocked &&
-                !transitioningToNext
-                  ? headerPaneBlur
-                  : "blur(0px)",
-              transformOrigin: "top center",
-              willChange:
-                variant === "header" ? "transform, filter, opacity" : undefined,
+                  ? isFloatingPaneVisible
+                    ? "auto"
+                    : "none"
+                  : "auto",
             }}
           >
             {/* Title text */}
