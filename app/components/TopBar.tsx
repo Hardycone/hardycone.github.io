@@ -415,7 +415,7 @@ export default function TopBar({
 
           {/* Center: page navigation */}
           {viewMode === "case-study" && activeProject && (
-            <div className="absolute left-[3.625rem] sm:left-1/2 sm:-translate-x-1/2">
+            <div className="absolute left-[3.625rem] md:left-[5.375rem] lg:left-1/2 lg:-translate-x-1/2">
               <motion.div
                 ref={centerNavRef}
                 key={`title-${activeIndex}`}
@@ -434,7 +434,7 @@ export default function TopBar({
                       : HEADER_PANE_NAV_CONTENT_FADE_MS / 1000,
                   ease: retractCenterNav ? "easeIn" : "easeOut",
                 }}
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.02 }}
                 className={`flex max-w-[calc(100vw-12.75rem)] select-none justify-center gap-2 rounded-full bg-background px-3 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground sm:max-w-none sm:px-4 lg:gap-4 ${
                   isCenterNavVisible
                     ? "pointer-events-auto"
@@ -449,7 +449,7 @@ export default function TopBar({
                     flashShortcutHint("1");
                     handleScrollToSummary();
                   }}
-                  className={`relative flex h-9 min-w-0 max-w-full items-center rounded-full font-sans text-sm font-semibold opacity-60 transition-transform hover:opacity-100 sm:hidden lg:flex lg:h-auto lg:px-4 lg:text-lg ${theme.textColorClass}`}
+                  className={`relative flex h-9 min-w-0 max-w-full items-center rounded-full font-sans text-sm font-semibold opacity-60 transition-transform hover:opacity-100 sm:h-auto md:text-lg lg:px-4 ${theme.textColorClass}`}
                 >
                   <span className="truncate">{activeProject.title}</span>
                   {showKeyboardHints && (

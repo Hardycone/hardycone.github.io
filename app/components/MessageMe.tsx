@@ -124,7 +124,7 @@ function ContactPanel({
       animate={{ y: 0, opacity: 1, scale: 1 }}
       exit={{ y: 36, opacity: 0, scale: 0 }}
       transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-      className="pointer-events-auto absolute bottom-full right-2.5 mb-6 flex max-h-[calc(100dvh-6rem)] w-[calc(100vw-2rem)] max-w-sm origin-bottom-right flex-col gap-3 overflow-y-auto rounded-4.5 bg-background/95 p-3 text-foreground backdrop-blur-xl dark:bg-dark-background/95 dark:text-dark-foreground md:right-0 md:rounded-5.5 md:p-4"
+      className="pointer-events-auto absolute bottom-full right-0 mb-6 flex max-h-[calc(100dvh-5.5rem)] w-[calc(100vw-1.75rem)] max-w-sm origin-bottom-right flex-col gap-3 overflow-y-auto rounded-4.5 bg-background/95 p-3 text-foreground backdrop-blur-xl dark:bg-dark-background/95 dark:text-dark-foreground md:rounded-5.5 md:p-4"
     >
       <div>
         <h5 className="font-sans text-xl font-bold sm:text-xl">
@@ -256,7 +256,7 @@ function ContactPanel({
         type="submit"
         tabIndex={0}
         disabled={isSubmitting}
-        className="mt-1 h-11 rounded-1.5 bg-foreground px-5 font-sans text-sm font-semibold text-background transition-[transform,opacity] hover:scale-[0.97] active:scale-[0.98] disabled:cursor-wait disabled:opacity-50 dark:bg-dark-foreground dark:text-dark-background"
+        className="mt-1 min-h-11 rounded-1.5 bg-foreground px-5 font-sans text-sm font-semibold text-background transition-[transform,opacity] hover:scale-[0.97] active:scale-[0.98] disabled:cursor-wait disabled:opacity-50 dark:bg-dark-foreground dark:text-dark-background"
       >
         {isSubmitting ? (
           "Sending..."
@@ -448,9 +448,7 @@ export default function MessageMe() {
   );
 
   useEffect(() => {
-    setIsApplePlatform(
-      /Mac|iPhone|iPad|iPod/.test(navigator.platform),
-    );
+    setIsApplePlatform(/Mac|iPhone|iPad|iPod/.test(navigator.platform));
   }, []);
 
   useEffect(() => {
@@ -642,12 +640,8 @@ export default function MessageMe() {
               nameInputRef={nameInputRef}
               emailInputRef={emailInputRef}
               messageInputRef={messageInputRef}
-              showSendShortcut={
-                isFormTextEntryFocused && showFormKeyboardHints
-              }
-              sendShortcutLabel={
-                isApplePlatform ? "⌘ + Enter" : "Ctrl + Enter"
-              }
+              showSendShortcut={isFormTextEntryFocused && showFormKeyboardHints}
+              sendShortcutLabel={isApplePlatform ? "⌘ + Enter" : "Ctrl + Enter"}
               onTextEntryFocusChange={setIsFormTextEntryFocused}
               onCopyEmail={handleCopyEmail}
               onChange={handleFieldChange}
@@ -698,9 +692,7 @@ export default function MessageMe() {
             </span>
           </span>
 
-          {((isOpen &&
-            isFormTextEntryFocused &&
-            showFormKeyboardHints) ||
+          {((isOpen && isFormTextEntryFocused && showFormKeyboardHints) ||
             (!isFormTextEntryFocused && showKeyboardHints)) && (
             <KeyboardHint
               shortcut="message"

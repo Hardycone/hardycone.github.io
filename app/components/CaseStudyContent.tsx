@@ -12,7 +12,7 @@ import { type CSSProperties, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { PathIcon, ScrollIcon } from "@phosphor-icons/react";
 import {
-  HEADER_CONTENT_START_SVH,
+  HEADER_CONTENT_START_LVH,
   HEADER_IMAGE_FADE_START_PROGRESS,
 } from "@/lib/headerIntro";
 
@@ -114,7 +114,7 @@ export default function CaseStudyContent({
       {isVisible && (
         <motion.div
           aria-hidden="true"
-          className="pointer-events-none fixed inset-x-0 top-[calc(100svh-4rem)] z-40 mx-auto h-16 w-full max-w-5xl px-2 md:top-[calc(100svh-6rem)] md:h-24"
+          className="pointer-events-none fixed inset-x-0 top-[calc(100lvh-3.5rem)] z-40 mx-auto h-16 w-full max-w-5xl px-2 md:top-[calc(100lvh-5rem)] md:h-24 md:px-4"
           style={{ opacity: peekOpacity }}
         >
           <motion.div
@@ -122,7 +122,7 @@ export default function CaseStudyContent({
             variants={contentVariants}
             initial="initial"
             animate="animate"
-            className="flex min-h-40 w-full flex-col rounded-4 border bg-background/90 p-3 text-foreground dark:bg-dark-background/90 dark:text-dark-foreground md:min-h-48 md:rounded-8 md:p-6"
+            className="flex min-h-40 w-full flex-col rounded-6 border bg-background/90 p-3 text-foreground dark:bg-dark-background/90 dark:text-dark-foreground md:min-h-48 md:rounded-8 md:p-6"
             style={{ borderColor: peekBorderColor }}
           >
             <div className="mb-2 flex items-center gap-4">
@@ -138,10 +138,10 @@ export default function CaseStudyContent({
         </motion.div>
       )}
       <div
-        className="h-[calc(var(--header-content-start)-4rem)] md:h-[calc(var(--header-content-start)-6rem)]"
+        className="h-[calc(var(--header-content-start)-3.5rem)] md:h-[calc(var(--header-content-start)-5rem)]"
         style={
           {
-            "--header-content-start": `${HEADER_CONTENT_START_SVH}svh`,
+            "--header-content-start": `${HEADER_CONTENT_START_LVH}lvh`,
           } as CSSProperties
         }
       />

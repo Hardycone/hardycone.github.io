@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
+import { useIsMdUp } from "@/hooks/useIsMdUp";
 import {
   AnimatePresence,
   motion,
@@ -25,6 +26,7 @@ import { useKeyboardHints } from "../context/KeyboardHintsContext";
 import { isInteractiveKeyboardTarget } from "@/lib/keyboard";
 import {
   HEADER_IMAGE_FADE_START_PROGRESS,
+  HEADER_PANE_NAV_MORPH_PROGRESS,
   HEADER_PANE_NAV_CONTENT_FADE_MS,
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
 } from "@/lib/headerIntro";
@@ -121,6 +123,61 @@ export default function ProjectSummary({
   const ref = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
+  const isMdUp = useIsMdUp();
+
+  const headerImageBaseInset = isMdUp ? 16 : 8;
+  const headerImageTargetXInset = isMdUp ? 26 : 14;
+  const headerImageTargetTopInset = isMdUp ? 86 : 58;
+  const headerImageTargetBottomInset = isMdUp ? 96 : 64;
+  const headerImageBaseRadius = isMdUp ? 32 : 24;
+  const headerImageTargetRadius = isMdUp ? 22 : 18;
+  const headerImageProgressStops = [
+    0,
+    HEADER_PANE_NAV_MORPH_PROGRESS,
+    HEADER_IMAGE_FADE_START_PROGRESS,
+    1,
+  ];
+  const headerImageXInset = useTransform(
+    headerIntroProgress,
+    headerImageProgressStops,
+    [
+      headerImageBaseInset,
+      headerImageTargetXInset,
+      headerImageTargetXInset,
+      headerImageTargetXInset,
+    ],
+  );
+  const headerImageTopInset = useTransform(
+    headerIntroProgress,
+    headerImageProgressStops,
+    [
+      headerImageBaseInset,
+      headerImageTargetTopInset,
+      headerImageTargetTopInset,
+      headerImageTargetTopInset,
+    ],
+  );
+  const headerImageBottomInset = useTransform(
+    headerIntroProgress,
+    headerImageProgressStops,
+    [
+      headerImageBaseInset,
+      headerImageTargetBottomInset,
+      headerImageTargetBottomInset,
+      headerImageTargetBottomInset,
+    ],
+  );
+  const headerImageRadius = useTransform(
+    headerIntroProgress,
+    headerImageProgressStops,
+    [
+      headerImageBaseRadius,
+      headerImageTargetRadius,
+      headerImageTargetRadius,
+      headerImageTargetRadius,
+    ],
+  );
+  const holdExpandedHeaderImage = isTransitionLocked || transitioningToNext;
 
   const headerOpacity = useTransform(
     headerVisualProgress,
@@ -360,7 +417,7 @@ export default function ProjectSummary({
 
   const containerClasses =
     variant === "header"
-      ? "fixed inset-0 w-full h-[100svh] items-center justify-center "
+      ? "fixed inset-0 w-full h-[100lvh] items-center justify-center "
       : variant === "preview"
         ? "relative h-[100svh] w-full max-w-5xl justify-center [container-type:inline-size]"
         : "fixed items-center justify-end w-full h-[max(60lvh,300px)] bottom-0 max-w-5xl p-2 ";
@@ -434,26 +491,47 @@ export default function ProjectSummary({
             setdisplayedProject(targetProject);
           }
         }}
-        className={`group relative flex w-full flex-col rounded-6 bg-background dark:bg-dark-background md:rounded-12 ${cardClasses}`}
+        className={`group relative flex w-full flex-col rounded-8 bg-background dark:bg-dark-background md:rounded-12 ${cardClasses}`}
       >
         {/* Image as background */}
         {displayedProject.image && (
-          <div
-            className={`pointer-events-none absolute overflow-hidden rounded-4 md:rounded-8 ${backgroundImageClasses}`}
+          <motion.div
+            className={`pointer-events-none absolute overflow-hidden rounded-6 md:rounded-8 ${backgroundImageClasses}`}
+            style={
+              variant === "header"
+                ? {
+                    left: holdExpandedHeaderImage
+                      ? headerImageBaseInset
+                      : headerImageXInset,
+                    right: holdExpandedHeaderImage
+                      ? headerImageBaseInset
+                      : headerImageXInset,
+                    top: holdExpandedHeaderImage
+                      ? headerImageBaseInset
+                      : headerImageTopInset,
+                    bottom: holdExpandedHeaderImage
+                      ? headerImageBaseInset
+                      : headerImageBottomInset,
+                    borderRadius: holdExpandedHeaderImage
+                      ? headerImageBaseRadius
+                      : headerImageRadius,
+                  }
+                : undefined
+            }
           >
             <img
               src={displayedProject.image}
               alt=""
               className="absolute inset-0 h-full w-full object-cover"
             />
-          </div>
+          </motion.div>
         )}
 
         {/* Ghost div to display hover shadow in non-header variants */}
         {variant !== "header" && (
           <motion.div
             style={{ boxShadow: cardHoverShadow }}
-            className="pointer-events-none absolute inset-0 rounded-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:rounded-12"
+            className="pointer-events-none absolute inset-0 rounded-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:rounded-12"
           />
         )}
 
@@ -462,7 +540,7 @@ export default function ProjectSummary({
           style={{ boxShadow: cardShadow }}
           animate={{ opacity: variant === "header" ? 0 : 1 }}
           transition={{ duration: 0.3, delay: 0.2 }}
-          className="pointer-events-none absolute inset-0 rounded-6 md:rounded-12"
+          className="pointer-events-none absolute inset-0 rounded-8 md:rounded-12"
         />
 
         {/* Floating pane portion */}
@@ -486,7 +564,7 @@ export default function ProjectSummary({
               },
             }}
             aria-hidden={variant === "header" && !isFloatingPaneVisible}
-            className={`project-summary-scrollbar flex h-fit max-h-full min-h-0 w-full flex-col ${floatingPaneContentClasses} ${floatingPaneOverflowY} overflow-x-hidden rounded-3 md:rounded-6 ${theme.bgSoftColorClass} bg-opacity-90 ${variant === "preview" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
+            className={`project-summary-scrollbar flex h-fit max-h-full min-h-0 w-full flex-col ${floatingPaneContentClasses} ${floatingPaneOverflowY} overflow-x-hidden rounded-5 md:rounded-6 ${theme.bgSoftColorClass} bg-opacity-90 ${variant === "preview" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
             style={{
               ...mainFloatingStyle,
               pointerEvents:
@@ -597,7 +675,7 @@ export default function ProjectSummary({
               <SpinButton
                 isLoading={isNavigating}
                 tabIndex={0}
-                className={`relative flex h-10 items-center gap-2 rounded-3 bg-background pl-2 pr-4 font-sans text-base font-semibold text-foreground dark:bg-dark-background dark:text-dark-foreground md:h-12 md:rounded-6 md:pl-3 md:pr-5`}
+                className={`relative flex h-10 items-center gap-2 rounded-5 bg-background pl-2 pr-4 font-sans text-base font-semibold text-foreground dark:bg-dark-background dark:text-dark-foreground md:h-12 md:rounded-6 md:pl-3 md:pr-5`}
                 style={{ boxShadow: buttonShadow }}
               >
                 {displayedProject.button}

@@ -52,7 +52,7 @@ export default function SectionContainer({
 
   return (
     <motion.div
-      className={`flex flex-col rounded-4 border bg-background/90 p-3 text-foreground dark:bg-dark-background/90 dark:text-dark-foreground md:rounded-8 md:p-6 ${cardClass}`}
+      className={`flex flex-col rounded-6 border bg-background/90 p-3 text-foreground dark:bg-dark-background/90 dark:text-dark-foreground md:rounded-8 md:p-6 ${cardClass}`}
       style={{ borderColor }}
       initial={
         shouldRevealOnScroll ? { opacity: 0, y: 24, scale: 0.98 } : false

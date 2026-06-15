@@ -28,7 +28,7 @@ import CaseStudyContent from "./CaseStudyContent";
 import MyName from "./MyName";
 import HomeSymbolBackdrop from "./HomeSymbolBackdrop";
 import {
-  HEADER_INTRO_DISTANCE_SVH,
+  HEADER_INTRO_DISTANCE_LVH,
   HEADER_PANE_NAV_CONTENT_FADE_MS,
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
   HEADER_PANE_NAV_MORPH_MS,
@@ -824,7 +824,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     <main
       className={`relative isolate flex w-full bg-background transition-colors dark:bg-dark-background ${
         isHomeScrollLocked
-          ? "h-[100dvh] touch-none overflow-y-hidden"
+          ? "h-[100svh] touch-none overflow-y-hidden"
           : isCaseStudyScrollLocked
             ? "touch-none"
             : "touch-auto"
@@ -846,7 +846,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
           ref={headerIntroEndRef}
           aria-hidden="true"
           className="pointer-events-none absolute left-0 h-px w-px"
-          style={{ top: `${HEADER_INTRO_DISTANCE_SVH}svh` }}
+          style={{ top: `${HEADER_INTRO_DISTANCE_LVH}lvh` }}
         />
       )}
 
@@ -894,7 +894,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
         </motion.div>
       )}
       <motion.div
-        className={`relative z-10 flex w-full max-w-5xl flex-col items-center gap-6 px-2`}
+        className={`relative z-10 flex w-full max-w-5xl flex-col items-center gap-6 px-2 md:px-4`}
       >
         <MyName />
         {viewMode === "case-study" &&

@@ -252,7 +252,7 @@ export default function FlourishName({
       ref={scope}
       onClick={onToggle}
       type="button"
-      className="inline-flex translate-y-[0.4em] cursor-pointer items-center gap-[0.15em] rounded-[0.25em] px-[0.15em] py-[0.15em] font-bold transition-colors duration-150"
+      className="inline-flex translate-y-1 cursor-pointer items-center gap-[0.15em] rounded-[0.25em] px-[0.15em] py-[0.15em] font-bold transition-colors duration-150"
       style={{ backgroundColor: isHovered ? hoverBg : bgColor }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
