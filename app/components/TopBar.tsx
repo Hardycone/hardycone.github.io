@@ -19,7 +19,7 @@ import { useMouseShadow } from "@/hooks/useMouseShadow";
 import {
   HEADER_PANE_NAV_CONTENT_FADE_MS,
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
-} from "@/lib/headerIntro";
+} from "@/lib/caseStudyTransitions";
 
 import {
   ScrollIcon,

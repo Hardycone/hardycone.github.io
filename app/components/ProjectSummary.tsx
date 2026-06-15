@@ -29,7 +29,7 @@ import {
   HEADER_PANE_NAV_MORPH_PROGRESS,
   HEADER_PANE_NAV_CONTENT_FADE_MS,
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
-} from "@/lib/headerIntro";
+} from "@/lib/caseStudyTransitions";
 import projects from "../../data/projects";
 import type { Project } from "../../data/projects";
 import {

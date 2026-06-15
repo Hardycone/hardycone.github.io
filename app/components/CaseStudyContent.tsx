@@ -14,7 +14,7 @@ import { PathIcon, ScrollIcon } from "@phosphor-icons/react";
 import {
   HEADER_CONTENT_START_LVH,
   HEADER_IMAGE_FADE_START_PROGRESS,
-} from "@/lib/headerIntro";
+} from "@/lib/caseStudyTransitions";
 
 import CaseStudyOne from "./caseStudies/CaseStudyOne";
 import CaseStudyTwo from "./caseStudies/CaseStudyTwo";

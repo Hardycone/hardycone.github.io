@@ -51,7 +51,7 @@ const projects: Project[] = [
     id: "intro",
     slug: "case-study-one",
     role: "to empower.",
-    title: "Haichao Wang",
+    title: "About Me",
     tagline: "Human-Centered Designer with 10 Years of Experience",
     tags: [
       { label: "Designer", icon: "PenNibIcon" },

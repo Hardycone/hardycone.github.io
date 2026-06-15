@@ -33,7 +33,9 @@ import {
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
   HEADER_PANE_NAV_MORPH_MS,
   HEADER_PANE_NAV_MORPH_PROGRESS,
-} from "@/lib/headerIntro";
+  BOTTOM_CARD_REVEAL_END_DISTANCE_PX,
+  BOTTOM_CARD_REVEAL_START_DISTANCE_VH,
+} from "@/lib/caseStudyTransitions";
 // import DebugViewport from "./DebugViewport";
 import BottomBar from "./BottomBar";
 type BottomNavigationState = {
@@ -43,9 +45,8 @@ type BottomNavigationState = {
 
 type PaneNavSurface = "pane" | "nav";
 
-const BOTTOM_REVEAL_COMPLETION_BUFFER = 100;
 const CENTER_NAV_EXIT_DURATION = 180;
-const PANE_NAV_TRAVELER_BACKGROUND_OPACITY = 0.4;
+const PANE_NAV_TRAVELER_BACKGROUND_OPACITY = 0.6;
 
 function withAlpha(color: string, alpha: number) {
   const channels = color.match(
@@ -174,10 +175,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
     const viewportBottom = (visualViewport?.offsetTop ?? 0) + viewportHeight;
     const distanceFromBottom =
       anchor.getBoundingClientRect().top - viewportBottom;
-    const revealDistance = viewportHeight * 0.5;
+    const revealDistance =
+      viewportHeight * (BOTTOM_CARD_REVEAL_START_DISTANCE_VH / 100);
     const animationDistance = Math.max(
       1,
-      revealDistance - BOTTOM_REVEAL_COMPLETION_BUFFER,
+      revealDistance - BOTTOM_CARD_REVEAL_END_DISTANCE_PX,
     );
     const progress = Math.min(
       1,
