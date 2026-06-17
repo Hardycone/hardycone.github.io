@@ -33,6 +33,7 @@ import {
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
   HEADER_PANE_NAV_MORPH_MS,
   HEADER_PANE_NAV_MORPH_PROGRESS,
+  HEADER_IMAGE_FADE_START_PROGRESS,
   BOTTOM_CARD_REVEAL_END_DISTANCE_PX,
   BOTTOM_CARD_REVEAL_START_DISTANCE_VH,
 } from "@/lib/caseStudyTransitions";
@@ -117,6 +118,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
   const headerFadeTailPendingRef = useRef(false);
   const [paneNavSurface, setPaneNavSurface] = useState<PaneNavSurface>("pane");
   const [isPaneNavMorphing, setIsPaneNavMorphing] = useState(false);
+  const [sectionHighlightEnabled, setSectionHighlightEnabled] = useState(false);
+  const sectionHighlightEnabledRef = useRef(false);
   const caseStudyExitDirection = transitioningToNext ? "up" : "down";
   const isCaseStudyScrollLocked =
     viewMode === "case-study" &&
@@ -137,12 +140,22 @@ export default function MainContent({ children }: { children: ReactNode }) {
     "preview" | "header" | "bottom" | null
   >("preview");
 
+  const updateSectionHighlightEnabled = useCallback((enabled: boolean) => {
+    if (sectionHighlightEnabledRef.current === enabled) {
+      return;
+    }
+
+    sectionHighlightEnabledRef.current = enabled;
+    setSectionHighlightEnabled(enabled);
+  }, []);
+
   const updateHeaderIntroProgress = useCallback(
     (scrollPosition = scrollY.get()) => {
       const anchor = headerIntroEndRef.current;
       if (!anchor || viewMode !== "case-study") {
         headerFadeTailPendingRef.current = false;
         headerIntroProgress.set(0);
+        updateSectionHighlightEnabled(false);
         return 0;
       }
 
@@ -162,9 +175,16 @@ export default function MainContent({ children }: { children: ReactNode }) {
       }
 
       headerIntroProgress.set(progress);
+      updateSectionHighlightEnabled(progress >= HEADER_IMAGE_FADE_START_PROGRESS);
       return progress;
     },
-    [headerIntroProgress, scrollY, smoothHeaderIntroProgress, viewMode],
+    [
+      headerIntroProgress,
+      scrollY,
+      smoothHeaderIntroProgress,
+      updateSectionHighlightEnabled,
+      viewMode,
+    ],
   );
 
   const updateBottomRevealProgress = useCallback(() => {
@@ -876,6 +896,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
           !isBottomNavigationActive
         }
         retractCenterNav={isBottomNavigationActive}
+        sectionHighlightEnabled={sectionHighlightEnabled}
         onInstantHomeNavigationStart={handleInstantHomeNavigationStart}
       />
       {viewMode === "case-study" && (

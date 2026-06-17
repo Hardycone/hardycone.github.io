@@ -51,6 +51,7 @@ interface TopBarProps {
   centerNavRef: RefObject<HTMLDivElement | null>;
   showCenterNav: boolean;
   retractCenterNav: boolean;
+  sectionHighlightEnabled: boolean;
   onInstantHomeNavigationStart?: () => void;
 }
 
@@ -58,6 +59,7 @@ export default function TopBar({
   centerNavRef,
   showCenterNav,
   retractCenterNav,
+  sectionHighlightEnabled,
   onInstantHomeNavigationStart,
 }: TopBarProps) {
   const { viewMode, setViewMode } = useViewMode();
@@ -321,6 +323,11 @@ export default function TopBar({
     let observer: IntersectionObserver;
     const sectionElements: HTMLElement[] = [];
 
+    if (!sectionHighlightEnabled) {
+      setActiveSection(null);
+      return;
+    }
+
     const handleRefresh = () => {
       if (observer) {
         sectionElements.forEach((el) => observer.unobserve(el));
@@ -373,7 +380,7 @@ export default function TopBar({
       observer?.disconnect();
       window.removeEventListener("case-study-loaded", handleRefresh);
     };
-  }, [sections, pathname]);
+  }, [sectionHighlightEnabled, sections, pathname]);
 
   return (
     <div className="fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[2650px] p-3.5 md:p-[1.625rem]">

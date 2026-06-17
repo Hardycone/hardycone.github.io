@@ -45,9 +45,19 @@ function usePreviousIndex<T>(value: T): T | undefined {
 
 const STORAGE_KEY = "activeProjectIndex";
 
+function getProjectIndexFromPathname(pathname: string) {
+  const slug = pathname.split("/")[1];
+  return projects.findIndex((project) => project.slug === slug);
+}
+
 export function ActiveProjectProvider({ children }: { children: ReactNode }) {
   const [activeIndex, setActiveIndex] = useState(() => {
     if (typeof window === "undefined") return 0; // SSR guard
+
+    const pathIndex = getProjectIndexFromPathname(window.location.pathname);
+    if (pathIndex !== -1) {
+      return pathIndex;
+    }
 
     const stored = sessionStorage.getItem(STORAGE_KEY);
     if (stored !== null) {
@@ -68,9 +78,7 @@ export function ActiveProjectProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!pathname) return;
 
-    const slug = pathname.split("/")[1]; // because it's /[slug]
-
-    const newIndex = projects.findIndex((project) => project.slug === slug);
+    const newIndex = getProjectIndexFromPathname(pathname);
 
     if (newIndex !== -1 && newIndex !== activeIndex) {
       setActiveIndex(newIndex);
