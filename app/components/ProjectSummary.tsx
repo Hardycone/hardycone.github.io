@@ -185,9 +185,18 @@ export default function ProjectSummary({
   const holdExpandedHeaderImage = isTransitionLocked || transitioningToNext;
 
   const headerOpacity = useTransform(
-    headerVisualProgress,
-    [0, HEADER_IMAGE_FADE_START_PROGRESS, 1],
-    [1, 1, 0],
+    [headerIntroProgress, headerVisualProgress],
+    (latest) => {
+      const [rawProgress, visualProgress] = latest as number[];
+
+      return rawProgress < HEADER_IMAGE_FADE_START_PROGRESS
+        ? 1
+        : visualProgress < HEADER_IMAGE_FADE_START_PROGRESS
+          ? 1
+          : 1 -
+            (visualProgress - HEADER_IMAGE_FADE_START_PROGRESS) /
+              (1 - HEADER_IMAGE_FADE_START_PROGRESS);
+    },
   );
 
   const bottomOpacity = useTransform(bottomVisualProgress, [0, 1], [0, 1]);
@@ -199,9 +208,23 @@ export default function ProjectSummary({
   );
 
   const headerBlur = useTransform(
-    headerVisualProgress,
-    [0, HEADER_IMAGE_FADE_START_PROGRESS, 1],
-    ["blur(0px)", "blur(0px)", "blur(10px)"],
+    [headerIntroProgress, headerVisualProgress],
+    (latest) => {
+      const [rawProgress, visualProgress] = latest as number[];
+
+      if (
+        rawProgress < HEADER_IMAGE_FADE_START_PROGRESS ||
+        visualProgress < HEADER_IMAGE_FADE_START_PROGRESS
+      ) {
+        return "blur(0px)";
+      }
+
+      const blurProgress =
+        (visualProgress - HEADER_IMAGE_FADE_START_PROGRESS) /
+        (1 - HEADER_IMAGE_FADE_START_PROGRESS);
+
+      return `blur(${Math.min(10, Math.max(0, blurProgress * 10))}px)`;
+    },
   );
 
   const bottomBlur = useTransform(

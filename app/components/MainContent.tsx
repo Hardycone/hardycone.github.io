@@ -139,6 +139,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
   const [summaryVariant, setSummaryVariant] = useState<
     "preview" | "header" | "bottom" | null
   >("preview");
+  const summaryVariantRef = useRef<typeof summaryVariant>("preview");
+
+  useEffect(() => {
+    summaryVariantRef.current = summaryVariant;
+  }, [summaryVariant]);
 
   const updateSectionHighlightEnabled = useCallback((enabled: boolean) => {
     if (sectionHighlightEnabledRef.current === enabled) {
@@ -213,6 +218,33 @@ export default function MainContent({ children }: { children: ReactNode }) {
     bottomRevealProgress.set(progress);
     return progress;
   }, [bottomRevealProgress, viewMode]);
+
+  const showBottomSummary = useCallback(() => {
+    if (summaryVariantRef.current !== "header") {
+      setSummaryVariant("bottom");
+      return;
+    }
+
+    setSummaryVariant(null);
+
+    requestAnimationFrame(() => {
+      if (
+        viewMode !== "case-study" ||
+        bottomNavigation ||
+        updateHeaderIntroProgress() < 1 ||
+        updateBottomRevealProgress() <= 0
+      ) {
+        return;
+      }
+
+      setSummaryVariant("bottom");
+    });
+  }, [
+    bottomNavigation,
+    updateBottomRevealProgress,
+    updateHeaderIntroProgress,
+    viewMode,
+  ]);
 
   const cleanupPaneNavMorph = useCallback(() => {
     paneNavAnimationRef.current?.cancel();
@@ -514,7 +546,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
         return;
       }
 
-      setSummaryVariant(progress > 0 ? "bottom" : null);
+      if (progress > 0) {
+        showBottomSummary();
+      } else {
+        setSummaryVariant(null);
+      }
     };
 
     handleGeometryChange();
@@ -544,6 +580,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     scrollY,
     smoothHeaderIntroProgress,
     updateBottomRevealProgress,
+    showBottomSummary,
     updateHeaderIntroProgress,
     viewMode,
   ]);
@@ -570,7 +607,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     if (headerProgress < 1 || headerFadeTailPendingRef.current) {
       setSummaryVariant("header");
     } else if (bottomProgress > 0) {
-      setSummaryVariant("bottom");
+      showBottomSummary();
     } else {
       setSummaryVariant(null);
     }
@@ -578,6 +615,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     bottomNavigation,
     viewMode,
     scrollY,
+    showBottomSummary,
     updateBottomRevealProgress,
     updateHeaderIntroProgress,
   ]);
@@ -598,7 +636,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     if (headerProgress < 1 || headerFadeTailPendingRef.current) {
       setSummaryVariant("header");
     } else if (bottomProgress > 0) {
-      setSummaryVariant("bottom");
+      showBottomSummary();
     } else {
       setSummaryVariant(null);
     }
@@ -620,7 +658,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
     }
 
     headerFadeTailPendingRef.current = false;
-    setSummaryVariant(bottomRevealProgress.get() > 0 ? "bottom" : null);
+    if (bottomRevealProgress.get() > 0) {
+      showBottomSummary();
+    } else {
+      setSummaryVariant(null);
+    }
   });
 
   useEffect(() => {
