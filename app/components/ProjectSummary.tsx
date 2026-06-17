@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
 import { useIsMdUp } from "@/hooks/useIsMdUp";
+import { useSupportsSquircle } from "@/hooks/useSupportsSquircle";
 import {
   AnimatePresence,
   motion,
@@ -124,13 +125,17 @@ export default function ProjectSummary({
   const { resolvedTheme } = useTheme();
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
   const isMdUp = useIsMdUp();
+  const supportsSquircle = useSupportsSquircle();
+  const headerImageRadiusMultiplier = supportsSquircle ? 2 : 1;
 
   const headerImageBaseInset = isMdUp ? 16 : 8;
   const headerImageTargetXInset = isMdUp ? 26 : 14;
   const headerImageTargetTopInset = isMdUp ? 86 : 58;
   const headerImageTargetBottomInset = isMdUp ? 96 : 64;
-  const headerImageBaseRadius = isMdUp ? 32 : 24;
-  const headerImageTargetRadius = isMdUp ? 22 : 18;
+  const headerImageBaseRadius =
+    (isMdUp ? 32 : 24) * headerImageRadiusMultiplier;
+  const headerImageTargetRadius =
+    (isMdUp ? 22 : 18) * headerImageRadiusMultiplier;
   const headerImageProgressStops = [
     0,
     HEADER_PANE_NAV_MORPH_PROGRESS,
@@ -431,7 +436,7 @@ export default function ProjectSummary({
 
   const backgroundImageClasses =
     variant === "header"
-      ? "inset-2 md:inset-4"
+      ? ""
       : variant === "preview"
         ? "inset-2 md:inset-4 "
         : "inset-2 md:inset-4";
@@ -491,12 +496,12 @@ export default function ProjectSummary({
             setdisplayedProject(targetProject);
           }
         }}
-        className={`group relative flex w-full flex-col rounded-8 bg-background dark:bg-dark-background md:rounded-12 ${cardClasses}`}
+        className={`group relative flex w-full flex-col rounded-8 bg-background supports-[corner-shape:squircle]:rounded-16 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-background md:rounded-12 supports-[corner-shape:squircle]:md:rounded-24 ${cardClasses}`}
       >
         {/* Image as background */}
         {displayedProject.image && (
           <motion.div
-            className={`pointer-events-none absolute overflow-hidden rounded-6 md:rounded-8 ${backgroundImageClasses}`}
+            className={`pointer-events-none absolute overflow-hidden rounded-6 supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16 ${backgroundImageClasses}`}
             style={
               variant === "header"
                 ? {
@@ -531,7 +536,7 @@ export default function ProjectSummary({
         {variant !== "header" && (
           <motion.div
             style={{ boxShadow: cardHoverShadow }}
-            className="pointer-events-none absolute inset-0 rounded-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:rounded-12"
+            className="pointer-events-none absolute inset-0 rounded-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100 supports-[corner-shape:squircle]:rounded-16 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-12 supports-[corner-shape:squircle]:md:rounded-24"
           />
         )}
 
@@ -540,7 +545,7 @@ export default function ProjectSummary({
           style={{ boxShadow: cardShadow }}
           animate={{ opacity: variant === "header" ? 0 : 1 }}
           transition={{ duration: 0.3, delay: 0.2 }}
-          className="pointer-events-none absolute inset-0 rounded-8 md:rounded-12"
+          className="pointer-events-none absolute inset-0 rounded-8 supports-[corner-shape:squircle]:rounded-16 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-12 supports-[corner-shape:squircle]:md:rounded-24"
         />
 
         {/* Floating pane portion */}
@@ -564,7 +569,7 @@ export default function ProjectSummary({
               },
             }}
             aria-hidden={variant === "header" && !isFloatingPaneVisible}
-            className={`project-summary-scrollbar flex h-fit max-h-full min-h-0 w-full flex-col ${floatingPaneContentClasses} ${floatingPaneOverflowY} overflow-x-hidden rounded-5 md:rounded-6 ${theme.bgSoftColorClass} bg-opacity-90 ${variant === "preview" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
+            className={`project-summary-scrollbar flex h-fit max-h-full min-h-0 w-full flex-col ${floatingPaneContentClasses} ${floatingPaneOverflowY} overflow-x-hidden rounded-5 supports-[corner-shape:squircle]:rounded-10 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-6 supports-[corner-shape:squircle]:md:rounded-12 ${theme.bgSoftColorClass} bg-opacity-90 ${variant === "preview" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
             style={{
               ...mainFloatingStyle,
               pointerEvents:
@@ -683,8 +688,7 @@ export default function ProjectSummary({
               {showKeyboardHints && (
                 <KeyboardHint
                   shortcut="enter"
-                  className="absolute left-[calc(100%-0.75rem)] top-1/2 -translate-y-1/2 rounded-md bg-sky-700"
-                  keycapClassName="!w-11"
+                  className="absolute left-[calc(100%-0.75rem)] top-1/2 -translate-y-1/2"
                 >
                   Enter
                 </KeyboardHint>

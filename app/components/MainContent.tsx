@@ -66,6 +66,10 @@ function visibleBorderRadius(style: CSSStyleDeclaration, rect: DOMRect) {
   return `${Math.min(radius, rect.width / 2, rect.height / 2)}px`;
 }
 
+function visibleCornerShape(style: CSSStyleDeclaration) {
+  return style.getPropertyValue("corner-shape").trim();
+}
+
 export default function MainContent({ children }: { children: ReactNode }) {
   const { activeIndex, transitioningToNext, setTransitioningToNext } =
     useActiveProject();
@@ -249,6 +253,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
       const targetStyle = window.getComputedStyle(target);
       const sourceBorderRadius = visibleBorderRadius(sourceStyle, sourceRect);
       const targetBorderRadius = visibleBorderRadius(targetStyle, targetRect);
+      const sourceCornerShape = visibleCornerShape(sourceStyle);
+      const targetCornerShape = visibleCornerShape(targetStyle);
       const travelerSourceBackground = withAlpha(
         sourceStyle.backgroundColor,
         PANE_NAV_TRAVELER_BACKGROUND_OPACITY,
@@ -288,6 +294,9 @@ export default function MainContent({ children }: { children: ReactNode }) {
         willChange:
           "left, top, width, height, padding, border-radius, background-color, box-shadow",
       });
+      if (sourceCornerShape) {
+        clone.style.setProperty("corner-shape", sourceCornerShape);
+      }
 
       document.body.appendChild(clone);
       paneNavCloneRef.current = clone;
@@ -322,9 +331,27 @@ export default function MainContent({ children }: { children: ReactNode }) {
         },
       );
 
+      const cornerShapeSwitchOffset = 0.5;
+      const cornerShapeSwitchTimeout = window.setTimeout(
+        () => {
+          if (paneNavCloneRef.current !== clone) {
+            return;
+          }
+
+          if (targetCornerShape) {
+            clone.style.setProperty("corner-shape", targetCornerShape);
+          } else {
+            clone.style.removeProperty("corner-shape");
+          }
+        },
+        HEADER_PANE_NAV_CONTENT_FADE_MS +
+          HEADER_PANE_NAV_MORPH_MS * cornerShapeSwitchOffset,
+      );
+
       const animation = clone.animate(
         [
           {
+            offset: 0,
             left: `${sourceRect.left}px`,
             top: `${sourceRect.top}px`,
             width: `${sourceRect.width}px`,
@@ -338,6 +365,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
             paddingLeft: sourceStyle.paddingLeft,
           },
           {
+            offset: 1,
             left: `${targetRect.left}px`,
             top: `${targetRect.top}px`,
             width: `${targetRect.width}px`,
@@ -361,7 +389,9 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
       paneNavAnimationRef.current = animation;
       animation.onfinish = () => {
+        window.clearTimeout(cornerShapeSwitchTimeout);
         animation.onfinish = null;
+        animation.oncancel = null;
         paneNavAnimationRef.current = null;
 
         clone.style.backgroundColor = travelerTargetBackground;
@@ -401,6 +431,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
             paneNavMorphStarterRef.current?.(desiredSurface);
           }
         };
+      };
+      animation.oncancel = () => {
+        window.clearTimeout(cornerShapeSwitchTimeout);
+        animation.onfinish = null;
+        animation.oncancel = null;
       };
     },
     [headerIntroProgress, setPaneNavSurfaceImmediately],
@@ -879,17 +914,21 @@ export default function MainContent({ children }: { children: ReactNode }) {
             },
           }}
           exit={{ x: "-50%", y: -100, opacity: 0 }}
-          className="pointer-events-none fixed bottom-6 left-1/2 z-50 flex items-center space-x-2 rounded-2 bg-sky-600 px-4 py-2 font-sans text-sm text-background shadow-md dark:bg-sky-400 dark:text-dark-background md:text-lg"
+          className="pointer-events-none fixed bottom-6 left-1/2 z-50 flex items-center gap-2 rounded-2 bg-sky-600 px-4 py-2 font-sans text-sm text-background shadow-md supports-[corner-shape:squircle]:rounded-4 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-sky-400 dark:text-dark-background md:text-lg"
         >
-          <span className="whitespace-nowrap">Use scroll</span>
-          <span className="flex h-6 w-4 items-center justify-center rounded-full bg-background text-sky-600 dark:bg-dark-background dark:text-sky-400">
+          <span className="hidden whitespace-nowrap md:inline">Use scroll</span>
+          <span className="inline md:hidden">Scroll</span>
+          <span className="inline-flex h-6 w-4 items-center justify-center rounded-full bg-background text-sky-600 dark:bg-dark-background dark:text-sky-400">
             <ArrowsVerticalIcon size={16} />
           </span>
-          <span className="whitespace-nowrap"> or arrow keys</span>
-          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-background text-sky-600 dark:bg-dark-background dark:text-sky-400">
+          <span className="hidden whitespace-nowrap md:inline">
+            {" "}
+            or arrow keys
+          </span>
+          <span className="hidden h-6 w-6 items-center justify-center rounded-md bg-background text-sky-600 dark:bg-dark-background dark:text-sky-400 md:inline-flex">
             <ArrowUpIcon size={12} weight="bold" />
           </span>
-          <span className="dark:text-sky-40 flex h-6 w-6 items-center justify-center rounded-md bg-background text-sky-600 dark:bg-dark-background dark:text-sky-400">
+          <span className="dark:text-sky-40 hidden h-6 w-6 items-center justify-center rounded-md bg-background text-sky-600 dark:bg-dark-background dark:text-sky-400 md:inline-flex">
             <ArrowDownIcon size={12} weight="bold" />
           </span>
           <span className="whitespace-nowrap">to explore</span>

@@ -93,7 +93,7 @@ function ContactPanel({
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
   const fieldClasses = (hasError: boolean) =>
-    `w-full rounded-1.5 border bg-background/80 px-3 py-2 font-sans text-base text-foreground outline-none transition-[border-color,box-shadow] placeholder:text-foreground/40 focus:ring-2 dark:bg-dark-background/80 dark:text-dark-foreground dark:placeholder:text-dark-foreground/40 ${
+    `w-full rounded-1.5 supports-[corner-shape:squircle]:rounded-3 supports-[corner-shape:squircle]:[corner-shape:squircle] border bg-background/80 px-3 py-2 font-sans text-base text-foreground outline-none transition-[border-color,box-shadow] placeholder:text-foreground/40 focus:ring-2 dark:bg-dark-background/80 dark:text-dark-foreground dark:placeholder:text-dark-foreground/40 ${
       hasError
         ? "border-red-600 focus:border-red-600 focus:ring-red-500/20 dark:border-red-400 dark:focus:border-red-400"
         : "border-foreground/15 focus:border-foreground/50 focus:ring-sky-500/30 dark:border-dark-foreground/15 dark:focus:border-dark-foreground/50"
@@ -124,7 +124,7 @@ function ContactPanel({
       animate={{ y: 0, opacity: 1, scale: 1 }}
       exit={{ y: 36, opacity: 0, scale: 0 }}
       transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-      className="pointer-events-auto absolute bottom-full right-0 mb-6 flex max-h-[calc(100dvh-5.5rem)] w-[calc(100vw-1.75rem)] max-w-sm origin-bottom-right flex-col gap-3 overflow-y-auto rounded-4.5 bg-background/95 p-3 text-foreground backdrop-blur-xl dark:bg-dark-background/95 dark:text-dark-foreground md:rounded-5.5 md:p-4"
+      className="pointer-events-auto absolute bottom-full right-0 mb-6 flex max-h-[calc(100dvh-5.5rem)] w-[calc(100vw-1.75rem)] max-w-sm origin-bottom-right flex-col gap-3 overflow-y-auto rounded-4.5 bg-background/95 p-3 text-foreground backdrop-blur-xl supports-[corner-shape:squircle]:rounded-9 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-background/95 dark:text-dark-foreground md:rounded-5.5 md:p-4 supports-[corner-shape:squircle]:md:rounded-11"
     >
       <div>
         <h5 className="font-sans text-xl font-bold sm:text-xl">
@@ -256,7 +256,7 @@ function ContactPanel({
         type="submit"
         tabIndex={0}
         disabled={isSubmitting}
-        className="mt-1 min-h-11 rounded-1.5 bg-foreground px-5 font-sans text-sm font-semibold text-background transition-[transform,opacity] hover:scale-[0.97] active:scale-[0.98] disabled:cursor-wait disabled:opacity-50 dark:bg-dark-foreground dark:text-dark-background"
+        className="mt-1 min-h-11 rounded-1.5 bg-foreground px-5 font-sans text-sm font-semibold text-background transition-[transform,opacity] hover:scale-[0.97] active:scale-[0.98] disabled:cursor-wait disabled:opacity-50 supports-[corner-shape:squircle]:rounded-3 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-foreground dark:text-dark-background"
       >
         {isSubmitting ? (
           "Sending..."
@@ -264,10 +264,7 @@ function ContactPanel({
           <span className="flex items-center justify-center gap-2">
             <span>Send</span>
             {showSendShortcut && (
-              <KeyboardHint
-                shortcut="send-message"
-                keycapClassName="!w-fit px-2"
-              >
+              <KeyboardHint shortcut="send-message">
                 {sendShortcutLabel}
               </KeyboardHint>
             )}
@@ -659,11 +656,11 @@ export default function MessageMe() {
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 8, opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="pointer-events-none absolute bottom-full right-2.5 z-50 mb-6 flex w-[calc(100vw-2rem)] max-w-sm items-start gap-2 rounded-2 border border-green-600/20 bg-foreground p-4 font-sans text-sm text-background shadow-md dark:border-green-400/20 dark:bg-dark-foreground dark:text-dark-background md:right-0"
+              className="pointer-events-none absolute bottom-full right-0 z-50 mb-6 flex w-[calc(100vw-2rem)] max-w-sm items-start gap-2 rounded-2 border border-green-600/20 bg-emerald-800 p-4 font-sans text-sm text-background shadow-md dark:border-green-400/20 dark:bg-emerald-100 dark:text-dark-background"
             >
               <SmileyWinkIcon
                 size={20}
-                className="shrink-0 text-green-400 dark:text-green-600"
+                className="shrink-0 text-emerald-400 dark:text-emerald-600"
               />
               <span>{SUCCESS_MESSAGE}</span>
             </motion.div>
@@ -697,9 +694,6 @@ export default function MessageMe() {
             <KeyboardHint
               shortcut="message"
               className="absolute bottom-[calc(100%-0.25rem)] z-10 translate-x-1/2"
-              keycapClassName={
-                isOpen && isFormTextEntryFocused ? "w-8" : undefined
-              }
               style={{ right: 22 }}
             >
               {isOpen && isFormTextEntryFocused ? "Esc" : "M"}

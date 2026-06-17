@@ -8,7 +8,6 @@ interface KeyboardHintProps {
   children: ReactNode;
   shortcut: string;
   className?: string;
-  keycapClassName?: string;
   style?: CSSProperties;
 }
 
@@ -16,7 +15,6 @@ export default function KeyboardHint({
   children,
   shortcut,
   className = "",
-  keycapClassName = "",
   style,
 }: KeyboardHintProps) {
   const { pressedShortcut } = useKeyboardHints();
@@ -29,7 +27,7 @@ export default function KeyboardHint({
       <motion.span
         animate={{ scale: pressedShortcut === shortcut ? 0.9 : 1 }}
         transition={{ duration: 0.08, ease: "easeOut" }}
-        className={`flex h-6 w-6 items-center justify-center rounded-md bg-sky-600 font-sans text-xs font-semibold text-background dark:bg-sky-400 dark:text-dark-background ${keycapClassName}`}
+        className="flex h-6 w-auto min-w-6 items-center justify-center rounded-1.5 bg-sky-600 px-1.5 font-sans text-xs font-semibold text-background supports-[corner-shape:squircle]:rounded-3 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-sky-400 dark:text-dark-background"
       >
         {children}
       </motion.span>
