@@ -3,23 +3,26 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import type { GlyphAnimationData } from "@/data/projects";
-import { useTheme } from "next-themes";
 import { applyGlyphThreePalette } from "@/lib/glyphThreePalette";
+import { applyGlyphSixPalette } from "@/lib/glyphSixPalette";
 
 interface AnimatedGlyphProps {
   animationData: GlyphAnimationData;
   isActive: boolean;
   shouldAnimate?: boolean;
-  colorPalette?: "glyph-three";
+  colorPalette?: "glyph-three" | "glyph-six";
 }
 
-export default function AnimatedGlyph({
+interface GlyphPlayerProps extends Omit<AnimatedGlyphProps, "colorPalette"> {
+  className?: string;
+}
+
+function GlyphPlayer({
   animationData,
   isActive,
   shouldAnimate = true,
-  colorPalette,
-}: AnimatedGlyphProps) {
-  const { resolvedTheme } = useTheme();
+  className = "",
+}: GlyphPlayerProps) {
   const lottieRef = useRef<LottieRefCurrentProps | null>(null);
   const wasActive = useRef(isActive);
   const isActiveRef = useRef(isActive);
@@ -27,21 +30,6 @@ export default function AnimatedGlyph({
   const isPlaying = useRef(false);
   const pendingReplay = useRef(false);
   const [isReady, setIsReady] = useState(false);
-
-  const animationDataClone = useMemo(() => {
-    const clone = JSON.parse(
-      JSON.stringify(animationData),
-    ) as GlyphAnimationData;
-
-    if (colorPalette === "glyph-three") {
-      applyGlyphThreePalette(
-        clone,
-        resolvedTheme === "dark" ? "dark" : "light",
-      );
-    }
-
-    return clone;
-  }, [animationData, colorPalette, resolvedTheme]);
 
   const getLastPlayableFrame = useCallback(() => {
     const duration = lottieRef.current?.getDuration(true);
@@ -99,12 +87,18 @@ export default function AnimatedGlyph({
     }
 
     wasActive.current = isActive;
-  }, [isActive, isReady, playFromStart, resetToStatic, shouldAnimate]);
+  }, [
+    isActive,
+    isReady,
+    playFromStart,
+    resetToStatic,
+    shouldAnimate,
+  ]);
 
   return (
     <Lottie
       lottieRef={lottieRef}
-      animationData={animationDataClone}
+      animationData={animationData}
       loop={false}
       autoplay={false}
       onDOMLoaded={() => {
@@ -124,7 +118,65 @@ export default function AnimatedGlyph({
         pendingReplay.current = false;
       }}
       rendererSettings={{ preserveAspectRatio: "xMidYMid meet" }}
-      className="glyph-lottie h-full w-full"
+      className={`glyph-lottie h-full w-full ${className}`}
+    />
+  );
+}
+
+function cloneAnimationData(animationData: GlyphAnimationData) {
+  return JSON.parse(JSON.stringify(animationData)) as GlyphAnimationData;
+}
+
+export default function AnimatedGlyph({
+  animationData,
+  isActive,
+  shouldAnimate = true,
+  colorPalette,
+}: AnimatedGlyphProps) {
+  const lightAnimationData = useMemo(() => {
+    const clone = cloneAnimationData(animationData);
+
+    if (colorPalette === "glyph-three") {
+      applyGlyphThreePalette(clone, "light");
+    } else if (colorPalette === "glyph-six") {
+      applyGlyphSixPalette(clone, "light");
+    }
+
+    return clone;
+  }, [animationData, colorPalette]);
+
+  const darkAnimationData = useMemo(() => {
+    if (colorPalette !== "glyph-six") return null;
+
+    const clone = cloneAnimationData(animationData);
+    applyGlyphSixPalette(clone, "dark");
+    return clone;
+  }, [animationData, colorPalette]);
+
+  if (darkAnimationData) {
+    return (
+      <div className="relative h-full w-full">
+        <GlyphPlayer
+          animationData={lightAnimationData}
+          isActive={isActive}
+          shouldAnimate={shouldAnimate}
+          className="dark:hidden"
+        />
+        <GlyphPlayer
+          animationData={darkAnimationData}
+          isActive={isActive}
+          shouldAnimate={shouldAnimate}
+          className="absolute inset-0 hidden dark:block"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <GlyphPlayer
+      animationData={lightAnimationData}
+      isActive={isActive}
+      shouldAnimate={shouldAnimate}
     />
   );
 }

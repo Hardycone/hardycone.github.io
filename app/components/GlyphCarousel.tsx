@@ -182,14 +182,20 @@ export default function GlyphCarousel() {
               tabIndex={isInteractive && isNearby ? 0 : -1}
               disabled={!isInteractive}
               aria-hidden={!isInteractive}
-              className={`relative h-full w-full cursor-pointer touch-manipulation select-none overflow-hidden rounded-full bg-background p-0.5 [clip-path:circle(50%)] dark:bg-dark-background md:p-0 ${index === 0 ? "glyph-one" : ""}`}
+              className={`relative h-full w-full cursor-pointer touch-manipulation select-none overflow-hidden rounded-full bg-background p-0.5 dark:bg-dark-background md:p-0 ${index === 0 ? "glyph-one" : index === 2 ? "glyph-three" : ""}`}
               onClick={() => isInteractive && setActiveIndex(index)}
             >
               <AnimatedGlyph
                 animationData={project.glyphAnimation}
                 isActive={isActive}
                 shouldAnimate={isMdUp}
-                colorPalette={index === 2 ? "glyph-three" : undefined}
+                colorPalette={
+                  index === 2
+                    ? "glyph-three"
+                    : index === 5
+                      ? "glyph-six"
+                      : undefined
+                }
               />
             </motion.button>
             <AnimatePresence>

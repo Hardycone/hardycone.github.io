@@ -75,19 +75,12 @@ body {
   }
 
   .glyph-lottie {
-    contain: paint;
-    overflow: clip;
-    border-radius: 9999px;
-    clip-path: circle(50%);
     -webkit-mask-image: radial-gradient(circle, #000 99%, transparent 100%);
     mask-image: radial-gradient(circle, #000 99%, transparent 100%);
   }
 
   .glyph-lottie > svg {
     transform: none !important;
-    overflow: hidden;
-    border-radius: 9999px;
-    clip-path: circle(50%);
   }
 
   .glyph-one .glyph-lottie g[aria-label="H"],
@@ -100,6 +93,14 @@ body {
   .dark .glyph-one .glyph-lottie g[aria-label="i"],
   .dark .glyph-one .glyph-lottie g[aria-label="!"] {
     fill: #f4f4f5;
+  }
+
+  .glyph-three .glyph-lottie path[stroke] {
+    stroke: #f4f4f5;
+  }
+
+  .dark .glyph-three .glyph-lottie path[stroke] {
+    stroke: #27272a;
   }
 }
 
