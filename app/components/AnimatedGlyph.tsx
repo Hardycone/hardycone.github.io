@@ -31,10 +31,10 @@ function GlyphPlayer({
   const pendingReplay = useRef(false);
   const [isReady, setIsReady] = useState(false);
 
-  const getLastPlayableFrame = useCallback(() => {
+  const getSegmentEndFrame = useCallback(() => {
     const duration = lottieRef.current?.getDuration(true);
     const outPoint = Math.floor(duration ?? animationData.op);
-    return Math.max(0, outPoint - 1);
+    return Math.max(1, outPoint);
   }, [animationData.op]);
 
   const resetToStatic = useCallback(() => {
@@ -48,8 +48,8 @@ function GlyphPlayer({
     isPlaying.current = true;
     lottieRef.current.setSpeed(1);
     lottieRef.current.goToAndStop(0, true);
-    lottieRef.current.playSegments([0, getLastPlayableFrame()], true);
-  }, [getLastPlayableFrame]);
+    lottieRef.current.playSegments([0, getSegmentEndFrame()], true);
+  }, [getSegmentEndFrame]);
 
   useEffect(() => {
     isActiveRef.current = isActive;
@@ -107,7 +107,6 @@ function GlyphPlayer({
       }}
       onComplete={() => {
         isPlaying.current = false;
-        resetToStatic();
 
         if (pendingReplay.current && isActiveRef.current) {
           pendingReplay.current = false;
