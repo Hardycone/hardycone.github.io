@@ -168,25 +168,30 @@ export default function GlyphCarousel() {
         const isNearby = Math.abs(index - activeIndex) <= 1;
 
         return (
-          <motion.button
-            type="button"
-            tabIndex={isInteractive && isNearby ? 0 : -1}
-            disabled={!isInteractive}
-            aria-hidden={!isInteractive}
+          <motion.div
             key={project.id}
             animate={{
               scale,
             }}
             style={{ boxShadow: isActive ? glyphShadow : "none" }}
             transition={{ type: "tween", stiffness: 500, damping: 20 }}
-            className="relative h-12 w-12 cursor-pointer touch-manipulation select-none rounded-full bg-background p-0.5 dark:bg-dark-background md:h-40 md:w-40 md:p-0"
-            onClick={() => isInteractive && setActiveIndex(index)}
+            className="relative h-12 w-12 rounded-full md:h-40 md:w-40"
           >
-            <AnimatedGlyph
-              animationData={project.glyphAnimation}
-              isActive={isActive}
-              shouldAnimate={isMdUp}
-            />
+            <motion.button
+              type="button"
+              tabIndex={isInteractive && isNearby ? 0 : -1}
+              disabled={!isInteractive}
+              aria-hidden={!isInteractive}
+              className={`relative h-full w-full cursor-pointer touch-manipulation select-none overflow-hidden rounded-full bg-background p-0.5 [clip-path:circle(50%)] dark:bg-dark-background md:p-0 ${index === 0 ? "glyph-one" : ""}`}
+              onClick={() => isInteractive && setActiveIndex(index)}
+            >
+              <AnimatedGlyph
+                animationData={project.glyphAnimation}
+                isActive={isActive}
+                shouldAnimate={isMdUp}
+                colorPalette={index === 2 ? "glyph-three" : undefined}
+              />
+            </motion.button>
             <AnimatePresence>
               {isInteractive && isActive && showKeyboardHints && (
                 <motion.div
@@ -206,7 +211,7 @@ export default function GlyphCarousel() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.button>
+          </motion.div>
         );
       })}
     </motion.div>

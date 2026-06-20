@@ -93,7 +93,7 @@ export default function VerticalScrollCards({
             className={`h-auto max-h-none scroll-mt-[6rem] pb-6 text-lg md:h-[calc(100dvh_-_6rem)] md:max-h-[800px] md:pb-8 ${cardFrameClassName}`}
           >
             <div
-              className={`overflow-clip rounded-[20px] border border-white shadow dark:border-white/25 ${cardClassName} ${card.className ?? ""}`}
+              className={`overflow-clip rounded-1 border border-white shadow supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:border-white/25 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4 ${cardClassName} ${card.className ?? ""}`}
             >
               {card.content}
             </div>

@@ -3,18 +3,23 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import type { GlyphAnimationData } from "@/data/projects";
+import { useTheme } from "next-themes";
+import { applyGlyphThreePalette } from "@/lib/glyphThreePalette";
 
 interface AnimatedGlyphProps {
   animationData: GlyphAnimationData;
   isActive: boolean;
   shouldAnimate?: boolean;
+  colorPalette?: "glyph-three";
 }
 
 export default function AnimatedGlyph({
   animationData,
   isActive,
   shouldAnimate = true,
+  colorPalette,
 }: AnimatedGlyphProps) {
+  const { resolvedTheme } = useTheme();
   const lottieRef = useRef<LottieRefCurrentProps | null>(null);
   const wasActive = useRef(isActive);
   const isActiveRef = useRef(isActive);
@@ -23,10 +28,20 @@ export default function AnimatedGlyph({
   const pendingReplay = useRef(false);
   const [isReady, setIsReady] = useState(false);
 
-  const animationDataClone = useMemo(
-    () => JSON.parse(JSON.stringify(animationData)) as GlyphAnimationData,
-    [animationData],
-  );
+  const animationDataClone = useMemo(() => {
+    const clone = JSON.parse(
+      JSON.stringify(animationData),
+    ) as GlyphAnimationData;
+
+    if (colorPalette === "glyph-three") {
+      applyGlyphThreePalette(
+        clone,
+        resolvedTheme === "dark" ? "dark" : "light",
+      );
+    }
+
+    return clone;
+  }, [animationData, colorPalette, resolvedTheme]);
 
   const getLastPlayableFrame = useCallback(() => {
     const duration = lottieRef.current?.getDuration(true);

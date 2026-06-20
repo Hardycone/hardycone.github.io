@@ -139,7 +139,7 @@ export default function FlourishName({
   });
 
   const rgb = parseRgb(bgColor);
-  const hoverBg = rgb ? `rgba(${rgb.r},${rgb.g},${rgb.b},0.30)` : bgColor;
+  const hoverBg = rgb ? `rgba(${rgb.r},${rgb.g},${rgb.b},0.1)` : bgColor;
 
   useEffect(() => {
     flourishConfig.current = {
@@ -262,19 +262,19 @@ export default function FlourishName({
           <img
             src={logoSrc}
             alt=""
-            className="inline-block h-[1.25em] w-[1.25em] shrink-0 object-cover"
+            className="inline-block h-[1.5em] w-fit shrink-0 object-cover"
           />
         ) : (
           <>
             <img
               src={logoSrc.light}
               alt=""
-              className="block h-[1.25em] w-[1.25em] shrink-0 object-cover dark:hidden"
+              className="block h-[1.5em] w-fit shrink-0 object-cover dark:hidden"
             />
             <img
               src={logoSrc.dark}
               alt=""
-              className="hidden h-[1.25em] w-[1.25em] shrink-0 object-cover dark:block"
+              className="hidden h-[1.5em] w-fit shrink-0 object-cover dark:block"
             />
           </>
         ))}

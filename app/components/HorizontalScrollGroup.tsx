@@ -104,7 +104,7 @@ export default function HorizontalFilmstrip({
                   {cards.map((card, index) => (
                     <div
                       key={card.id ?? index}
-                      className={`flex min-h-80 w-full shrink-0 flex-col rounded-[20px] border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800 md:h-full md:min-h-0 md:w-[min(42vw,30rem)] ${cardClassName} ${card.className ?? ""}`}
+                      className={`flex min-h-80 w-full shrink-0 flex-col rounded-1 border border-white bg-zinc-50 p-8 shadow supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:border-white/25 dark:bg-zinc-800 md:h-full md:min-h-0 md:w-[min(42vw,30rem)] md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4 ${cardClassName} ${card.className ?? ""}`}
                     >
                       {card.content}
                     </div>

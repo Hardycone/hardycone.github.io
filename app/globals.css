@@ -74,8 +74,32 @@ body {
     background-clip: content-box;
   }
 
+  .glyph-lottie {
+    contain: paint;
+    overflow: clip;
+    border-radius: 9999px;
+    clip-path: circle(50%);
+    -webkit-mask-image: radial-gradient(circle, #000 99%, transparent 100%);
+    mask-image: radial-gradient(circle, #000 99%, transparent 100%);
+  }
+
   .glyph-lottie > svg {
     transform: none !important;
+    overflow: hidden;
+    border-radius: 9999px;
+    clip-path: circle(50%);
+  }
+
+  .glyph-one .glyph-lottie g[aria-label="H"],
+  .glyph-one .glyph-lottie g[aria-label="i"],
+  .glyph-one .glyph-lottie g[aria-label="!"] {
+    fill: #27272a;
+  }
+
+  .dark .glyph-one .glyph-lottie g[aria-label="H"],
+  .dark .glyph-one .glyph-lottie g[aria-label="i"],
+  .dark .glyph-one .glyph-lottie g[aria-label="!"] {
+    fill: #f4f4f5;
   }
 }
 

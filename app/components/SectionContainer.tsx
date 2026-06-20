@@ -52,7 +52,7 @@ export default function SectionContainer({
 
   return (
     <motion.div
-      className={`supports-[corner-shape:squircle]:md:rounded-16 flex flex-col rounded-6 border bg-background/90 p-3 text-foreground supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-background/90 dark:text-dark-foreground md:rounded-8 md:p-6 ${cardClass}`}
+      className={`flex flex-col rounded-6 border bg-background/90 p-3 text-foreground supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-background/90 dark:text-dark-foreground md:rounded-8 md:p-6 supports-[corner-shape:squircle]:md:rounded-16 ${cardClass}`}
       style={{ borderColor }}
       initial={
         shouldRevealOnScroll ? { opacity: 0, y: 24, scale: 0.98 } : false
@@ -84,7 +84,9 @@ export default function SectionContainer({
             />
             <h3 className={` ${textColorClass}`}>{title}</h3>
           </div>
-          <div className={`mb-16 h-0.5 w-full rounded-full ${bgColorClass}`} />
+          <div
+            className={`mb-8 h-0.5 w-full rounded-full md:mb-16 ${bgColorClass}`}
+          />
         </>
       ) : null}
       {children}

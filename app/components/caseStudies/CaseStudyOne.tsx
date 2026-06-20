@@ -90,30 +90,29 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             I’m currently working on{" "}
             <FlourishName
               name="Flux"
-              bgColor={hexToRgba(fluxTheme.hex.primary, 0.05)}
+              bgColor={hexToRgba(fluxTheme.hex.primary, 0.03)}
               gradientCenterColor={hexToRgba(fluxTheme.hex.soft, 1)}
               gradientMiddleColor={hexToRgba(fluxTheme.hex.soft, 1)}
               isActive={isFluxOpen}
               onToggle={() => setIsFluxOpen((prev) => !prev)}
               onFlourish={() => setIsFluxOpen(true)}
-              logoSrc="/images/logo-flux.png"
+              logoSrc="/logos/logo-flux.png"
             />
-            , a platform that makes quantitative UX research accessible to all
-            product teams. As AI makes it easier for teams to prototype and
-            iterate quickly, research is often compressed, skipped, or reduced
-            to directional feedback. Flux helps teams test prototypes with
-            statistical rigor in hours, without needing a background in
-            statistics. My work focuses on turning a traditionally intimidating
-            research process into something approachable, guided, and genuinely
-            useful.
+            , a platform that makes quantitative UX research easy to do for all
+            product teams. As AI drastically accelerates iterative prototyping,
+            there is a strong demand for faster insight cycles. Flux helps teams
+            test prototypes with statistical rigor in hours, without needing a
+            background in statistics. My work focuses on turning a traditionally
+            intimidating research process into something approachable, guided,
+            and genuinely useful.
           </p>
           <NarrativeAccordion isOpen={isFluxOpen}>
             <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-flux/5 p-8 font-serif dark:bg-dark-flux/5 md:rounded-2">
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
+              <div className="w-14 flex-shrink-0">
                 <img
-                  src="/images/logo-flux.png"
+                  src="/logos/logo-flux.png"
                   alt="Flux logo"
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="block h-auto w-full"
                 />
               </div>
               <div className="flex w-full flex-col">
@@ -163,13 +162,13 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             In 2023, I launched{" "}
             <FlourishName
               name="Fantail"
-              bgColor={hexToRgba(fantailTheme.hex.primary, 0.05)}
+              bgColor={hexToRgba(fantailTheme.hex.primary, 0.03)}
               gradientCenterColor={hexToRgba(fantailTheme.hex.soft, 1)}
               gradientMiddleColor={hexToRgba(fantailTheme.hex.soft, 1)}
               isActive={isFantailOpen}
               onToggle={() => setIsFantailOpen((prev) => !prev)}
               onFlourish={() => setIsFantailOpen(true)}
-              logoSrc="/images/logo-fantail.png"
+              logoSrc="/logos/logo-fantail.svg"
             />{" "}
             with two other co-founders. Fantail was our answer to the hotly
             debated question: What is AI's role in the creative process? vision
@@ -188,12 +187,12 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             turned us down.
           </p>
           <NarrativeAccordion isOpen={isFantailOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-fantail/5 p-8 dark:bg-dark-fantail/5 md:rounded-2">
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
+            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-fantail bg-opacity-[3%] p-8 dark:bg-dark-fantail/5 md:rounded-2">
+              <div className="w-14 flex-shrink-0">
                 <img
-                  src="/images/logo-fantail.png"
+                  src="/logos/logo-fantail.svg"
                   alt="Fantail logo"
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="block h-auto w-full"
                 />
               </div>
               <div className="flex w-full flex-col">
@@ -236,8 +235,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               onToggle={() => setIsAslfOpen((prev) => !prev)}
               onFlourish={() => setIsAslfOpen(true)}
               logoSrc={{
-                light: "/images/logo-aslf.png",
-                dark: "/images/logo-aslf-inverted.png",
+                light: "/logos/logo-aslf.png",
+                dark: "/logos/logo-aslf-inverted.png",
               }}
             />{" "}
             is where I spent seven years as a landscape designer and later
@@ -251,11 +250,11 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           </p>
           <NarrativeAccordion isOpen={isAslfOpen}>
             <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-wolcott/5 p-8 dark:bg-dark-wolcott/5 md:rounded-2">
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
+              <div className="w-14 flex-shrink-0">
                 <img
-                  src="/images/logo-aslf.png"
+                  src="/logos/logo-aslf.png"
                   alt="ASLF logo"
-                  className="absolute inset-0 h-full w-full object-cover dark:invert"
+                  className="block h-auto w-full dark:invert"
                 />
               </div>
               <div className="flex w-full flex-col">
@@ -329,8 +328,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               onToggle={() => setIsUwOpen((prev) => !prev)}
               onFlourish={() => setIsUwOpen(true)}
               logoSrc={{
-                light: "/images/logo-uw.png",
-                dark: "/images/logo-uw-gold.png",
+                light: "/logos/logo-uw.png",
+                dark: "/logos/logo-uw-gold.png",
               }}
             />
             , where I dove headfirst into human-computer interaction research.
@@ -342,16 +341,16 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           </p>
           <NarrativeAccordion isOpen={isUwOpen}>
             <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-suits/5 p-8 dark:bg-dark-suits/5 md:rounded-2">
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
+              <div className="w-14 flex-shrink-0">
                 <img
-                  src="/images/logo-uw.png"
+                  src="/logos/logo-uw.png"
                   alt="UW logo"
-                  className="absolute inset-0 h-full w-full object-cover dark:hidden"
+                  className="block h-auto w-full dark:hidden"
                 />
                 <img
-                  src="/images/logo-uw-gold.png"
+                  src="/logos/logo-uw-gold.png"
                   alt="UW logo"
-                  className="absolute inset-0 hidden h-full w-full object-cover dark:block"
+                  className="hidden h-auto w-full dark:block"
                 />
               </div>
               <div className="flex w-full flex-col">
@@ -394,8 +393,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               onToggle={() => setIsSyracuseOpen((prev) => !prev)}
               onFlourish={() => setIsSyracuseOpen(true)}
               logoSrc={{
-                light: "/images/logo-esf.png",
-                dark: "/images/logo-esf-light.png",
+                light: "/logos/logo-esf.png",
+                dark: "/logos/logo-esf-light.png",
               }}
             />
             , in Syracuse. This is where I first encountered environmental
@@ -409,16 +408,16 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           </p>
           <NarrativeAccordion isOpen={isSyracuseOpen}>
             <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-chinatown/5 p-8 dark:bg-dark-chinatown/5 md:rounded-2">
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
+              <div className="w-14 flex-shrink-0">
                 <img
-                  src="/images/logo-esf.png"
+                  src="/logos/logo-esf.png"
                   alt="SUNY-ESF logo"
-                  className="absolute inset-0 h-full w-full object-cover dark:hidden"
+                  className="block h-auto w-full dark:hidden"
                 />
                 <img
-                  src="/images/logo-esf-light.png"
+                  src="/logos/logo-esf-light.png"
                   alt="SUNY-ESF logo"
-                  className="absolute inset-0 hidden h-full w-full object-cover dark:block"
+                  className="hidden h-auto w-full dark:block"
                 />
               </div>
               <div className="flex w-full flex-col">
@@ -467,7 +466,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               {/*Left: Image*/}
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
-                  src="/images/logo-nps.png"
+                  src="/logos/logo-nps.png"
                   alt="logo"
                   className="absolute inset-0 h-full w-full object-cover"
                 />
@@ -512,12 +511,12 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               {/*Left: Image*/}
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
-                  src="/images/logo-uw.png"
+                  src="/logos/logo-uw.png"
                   alt="logo"
                   className="absolute inset-0 h-full w-full object-cover dark:hidden"
                 />
                 <img
-                  src="/images/logo-uw-gold.png"
+                  src="/logos/logo-uw-gold.png"
                   alt="logo"
                   className="absolute inset-0 hidden h-full w-full object-cover dark:block"
                 />
@@ -543,12 +542,12 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               {/*Left: Image*/}
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
-                  src="/images/logo-esf.png"
+                  src="/logos/logo-esf.png"
                   alt="logo"
                   className="absolute inset-0 h-full w-full object-cover dark:hidden"
                 />{" "}
                 <img
-                  src="/images/logo-esf-light.png"
+                  src="/logos/logo-esf-light.png"
                   alt="logo"
                   className="absolute inset-0 hidden h-full w-full object-cover dark:block"
                 />
@@ -574,7 +573,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               {/*Left: Image*/}
               <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
                 <img
-                  src="/images/logo-bnu.png"
+                  src="/logos/logo-bnu.png"
                   alt="logo"
                   className="absolute inset-0 h-full w-full object-cover dark:brightness-[50] dark:saturate-0"
                 />
@@ -611,7 +610,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
-                      src="/images/logo-nasa.png"
+                      src="/logos/logo-nasa.png"
                       alt="logo"
                       className="absolute inset-0 h-full w-full object-cover"
                     />
@@ -635,7 +634,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
-                      src="/images/logo-epa.png"
+                      src="/logos/logo-epa.png"
                       alt="logo"
                       className="absolute inset-0 h-full w-full object-cover dark:brightness-[10]"
                     />
@@ -656,7 +655,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
-                      src="/images/logo-wep.png"
+                      src="/logos/logo-wep.png"
                       alt="logo"
                       className="absolute inset-0 h-full w-full object-cover"
                     />
@@ -677,7 +676,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
-                      src="/images/logo-usda.png"
+                      src="/logos/logo-usda.png"
                       alt="logo"
                       className="absolute inset-0 h-full w-full object-cover dark:brightness-200"
                     />
@@ -698,7 +697,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
-                      src="/images/logo-noaa.png"
+                      src="/logos/logo-noaa.svg"
                       alt="logo"
                       className="absolute inset-0 h-full w-full object-cover"
                     />
@@ -719,7 +718,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
-                      src="/images/logo-nys.png"
+                      src="/logos/logo-nys.png"
                       alt="logo"
                       className="absolute inset-0 h-full w-full object-cover dark:brightness-200 dark:saturate-0"
                     />
@@ -740,7 +739,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   {/*Image*/}
                   <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
                     <img
-                      src="/images/logo-usda.png"
+                      src="/logos/logo-usda.png"
                       alt="logo"
                       className="absolute inset-0 h-full w-full object-cover dark:brightness-200"
                     />
@@ -890,7 +889,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             {/* Image 2 - 2x2 square */}
             <div className="relative col-span-2 row-span-2 aspect-[1/1]">
               <img
-                src="/images/20230624-HWP00734-Edit.jpg"
+                src="/images/IMG_0031.jpeg"
                 alt="Dummy Image 2"
                 className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
               />
@@ -898,7 +897,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             {/* Image 3 - 2 cells vertically adjacent */}
             <div className="relative col-span-1 row-span-2">
               <img
-                src="/images/20230624-HWP00734-Edit.jpg"
+                src="/images/20200701-DSC00551_01.jpg"
                 alt="Dummy Image 3"
                 className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
               />
@@ -906,21 +905,21 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             {/* Remaining cells */}
             <div className="relative">
               <img
-                src="/images/20230624-HWP00734-Edit.jpg"
+                src="/images/IMG_2354.jpg"
                 alt="Dummy Image 4"
                 className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
               />
             </div>
             <div className="relative">
               <img
-                src="/images/20230624-HWP00734-Edit.jpg"
+                src="/images/IMG_0711.jpeg"
                 alt="Dummy Image 5"
                 className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
               />
             </div>
             <div className="relative">
               <img
-                src="/images/20230624-HWP00734-Edit.jpg"
+                src="/images/69995629887__EAA7B009-840C-4172-AA52-AF7B5C9AA700.jpeg"
                 alt="Dummy Image 7"
                 className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
               />

@@ -131,7 +131,7 @@ function ContactPanel({
           Let&apos;s chat!
         </h5>
         <p className="mt-1 text-sm">
-          Send me a message here, or{" "}
+          Send me a message, or{" "}
           <button
             type="button"
             tabIndex={0}

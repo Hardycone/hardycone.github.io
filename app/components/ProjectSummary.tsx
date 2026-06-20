@@ -492,7 +492,7 @@ export default function ProjectSummary({
     >
       {/* Bottom variant title bar */}
       {variant === "bottom" && (
-        <h6 className="relative mb-6 items-start font-serif text-lg font-bold">
+        <h6 className="relative mb-6 items-start font-sans text-lg font-bold">
           Next Up
         </h6>
       )}
@@ -626,7 +626,7 @@ export default function ProjectSummary({
                   return (
                     <span
                       key={tag.label}
-                      className={`inline-flex items-center gap-1 rounded-full px-2 font-sans text-xs font-semibold md:px-2 md:py-1 ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
+                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-sans text-xs font-semibold md:px-2 md:py-1 ${theme.bgColorClass} text-dark-foreground dark:text-foreground`}
                     >
                       {IconComponent && (
                         <IconComponent
