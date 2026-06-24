@@ -252,7 +252,7 @@ export default function FlourishName({
       ref={scope}
       onClick={onToggle}
       type="button"
-      className="inline-flex translate-y-1 cursor-pointer items-center gap-[0.15em] rounded-[0.25em] px-[0.15em] py-[0.15em] font-bold transition-colors duration-150"
+      className="-mt-[0.5rem] inline-flex translate-y-[0.375em] cursor-pointer items-center gap-[0.15em] rounded-[0.125em] px-[0.125em] py-[0.25em] font-bold transition-colors duration-150"
       style={{ backgroundColor: isHovered ? hoverBg : bgColor }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -262,19 +262,19 @@ export default function FlourishName({
           <img
             src={logoSrc}
             alt=""
-            className="inline-block h-[1.5em] w-fit shrink-0 object-cover"
+            className="inline-block h-[1.5em] w-[1.5em] max-w-none flex-none object-contain"
           />
         ) : (
           <>
             <img
               src={logoSrc.light}
               alt=""
-              className="block h-[1.5em] w-fit shrink-0 object-cover dark:hidden"
+              className="block h-[1.5em] w-[1.5em] max-w-none flex-none object-contain dark:hidden"
             />
             <img
               src={logoSrc.dark}
               alt=""
-              className="hidden h-[1.5em] w-fit shrink-0 object-cover dark:block"
+              className="hidden h-[1.5em] w-[1.5em] max-w-none flex-none object-contain dark:block"
             />
           </>
         ))}

@@ -457,12 +457,32 @@ export default function ProjectSummary({
         ? "supertall:top-12 top-8 superwide:top-0 cursor-pointer p-3 md:p-6 h-[max(70cqw,50svh)] md:h-[max(80cqw,50svh)] superwide:h-[90svh] wide:h-[min(60cqw,70svh)] lg:superwide:h-[min(60cqw,70svh)] lg:h-[max(60cqw,50svh)] supertall:h-[clamp(36cqw,70svh,150cqw)] "
         : "cursor-pointer p-3 md:p-6 h-full";
 
-  const backgroundImageClasses =
+  const backgroundImageStyle: MotionStyle =
     variant === "header"
-      ? ""
-      : variant === "preview"
-        ? "inset-2 md:inset-4 "
-        : "inset-2 md:inset-4";
+      ? {
+          left: holdExpandedHeaderImage
+            ? headerImageBaseInset
+            : headerImageXInset,
+          right: holdExpandedHeaderImage
+            ? headerImageBaseInset
+            : headerImageXInset,
+          top: holdExpandedHeaderImage
+            ? headerImageBaseInset
+            : headerImageTopInset,
+          bottom: holdExpandedHeaderImage
+            ? headerImageBaseInset
+            : headerImageBottomInset,
+          borderRadius: holdExpandedHeaderImage
+            ? headerImageBaseRadius
+            : headerImageRadius,
+        }
+      : {
+          left: headerImageBaseInset,
+          right: headerImageBaseInset,
+          top: headerImageBaseInset,
+          bottom: headerImageBaseInset,
+          borderRadius: headerImageBaseRadius,
+        };
 
   const floatingPaneLayoutClasses =
     variant === "header"
@@ -524,28 +544,8 @@ export default function ProjectSummary({
         {/* Image as background */}
         {displayedProject.image && (
           <motion.div
-            className={`pointer-events-none absolute overflow-hidden rounded-6 supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16 ${backgroundImageClasses}`}
-            style={
-              variant === "header"
-                ? {
-                    left: holdExpandedHeaderImage
-                      ? headerImageBaseInset
-                      : headerImageXInset,
-                    right: holdExpandedHeaderImage
-                      ? headerImageBaseInset
-                      : headerImageXInset,
-                    top: holdExpandedHeaderImage
-                      ? headerImageBaseInset
-                      : headerImageTopInset,
-                    bottom: holdExpandedHeaderImage
-                      ? headerImageBaseInset
-                      : headerImageBottomInset,
-                    borderRadius: holdExpandedHeaderImage
-                      ? headerImageBaseRadius
-                      : headerImageRadius,
-                  }
-                : undefined
-            }
+            className="pointer-events-none absolute overflow-hidden supports-[corner-shape:squircle]:[corner-shape:squircle]"
+            style={backgroundImageStyle}
           >
             <img
               src={displayedProject.image}

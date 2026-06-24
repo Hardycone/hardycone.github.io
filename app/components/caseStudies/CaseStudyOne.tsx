@@ -318,7 +318,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
         >
           <p>
             In 2023, I received a Master's degree in Human-Computer Interaction
-            and Design from{" "}
+            from{" "}
             <FlourishName
               name="University of Washington"
               bgColor={hexToRgba(suitsTheme.hex.primary, 0.05)}
@@ -385,7 +385,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           <p className="mt-8">
             Before UW, I earned my{" "}
             <FlourishName
-              name="Master's in Landscape Architecture at SUNY-ESF"
+              name="SUNY ESF"
               bgColor={hexToRgba(chinatownTheme.hex.primary, 0.05)}
               gradientCenterColor={hexToRgba(chinatownTheme.hex.soft, 1)}
               gradientMiddleColor={hexToRgba(chinatownTheme.hex.soft, 1)}
