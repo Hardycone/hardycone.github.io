@@ -7,7 +7,14 @@ import { useTheme } from "next-themes";
 // import { useProjectTheme } from "@/hooks/useProjectTheme";
 import LazyVideo from "../LazyVideo";
 import SectionContainer from "../SectionContainer";
-import { ScrollIcon } from "@phosphor-icons/react";
+import {
+  ScrollIcon,
+  TargetIcon,
+  MagnifyingGlassIcon,
+  PersonSimpleCircleIcon,
+  PresentationChartIcon,
+  BrainIcon,
+} from "@phosphor-icons/react";
 
 import { MotionValue, useTransform } from "framer-motion";
 
@@ -100,10 +107,9 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
         </SectionContainer>
       </section>
       <section id="section-2" className="scroll-mt-24">
-        {" "}
         <SectionContainer
-          title="Quick Take"
-          icon={ScrollIcon}
+          title="Mission"
+          icon={TargetIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
@@ -166,10 +172,9 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
         </SectionContainer>
       </section>
       <section id="section-3" className="scroll-mt-24">
-        {" "}
         <SectionContainer
-          title="Quick Take"
-          icon={ScrollIcon}
+          title="Research"
+          icon={MagnifyingGlassIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
@@ -238,10 +243,9 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
         </SectionContainer>
       </section>
       <section id="section-4" className="scroll-mt-24">
-        {" "}
         <SectionContainer
-          title="Quick Take"
-          icon={ScrollIcon}
+          title="Human-In-The-Loop Testing"
+          icon={PersonSimpleCircleIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
@@ -353,12 +357,11 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
             environments.
           </p>
         </SectionContainer>
-      </section>{" "}
+      </section>
       <section id="section-5" className="scroll-mt-24">
-        {" "}
         <SectionContainer
-          title="Quick Take"
-          icon={ScrollIcon}
+          title="Outcome & Impact"
+          icon={PresentationChartIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
@@ -471,6 +474,122 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           </p>
         </SectionContainer>
       </section>{" "}
+      <section id="section-6" className="scroll-mt-24">
+        <SectionContainer
+          title="Reflection"
+          icon={BrainIcon}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          borderColor={borderColor}
+        >
+          <h2>Outcome</h2>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+          <p>
+            Our concept placed in the top 5 nationally. NASA judges commended
+            our integration of technical realism and UX detail. Our demo video
+            and interface design were featured at a space tech symposium.
+            Several elements informed ongoing HCI research in extreme
+            environments.
+          </p>
+        </SectionContainer>
+      </section>
     </article>
   );
 }

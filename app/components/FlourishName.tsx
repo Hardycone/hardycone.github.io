@@ -106,6 +106,7 @@ interface FlourishNameProps {
   onToggle: () => void;
   onFlourish?: () => void;
   logoSrc?: string | { light: string; dark: string };
+  logoClassName?: string;
   gradientCenterColor?: string;
   gradientMiddleColor?: string;
 }
@@ -121,6 +122,7 @@ export default function FlourishName({
   onToggle,
   onFlourish,
   logoSrc,
+  logoClassName = "",
   gradientCenterColor = "#ef4444",
   gradientMiddleColor = "#a855f7",
 }: FlourishNameProps) {
@@ -252,7 +254,7 @@ export default function FlourishName({
       ref={scope}
       onClick={onToggle}
       type="button"
-      className="-mt-[0.5rem] inline-flex translate-y-[0.375em] cursor-pointer items-center gap-[0.15em] rounded-[0.125em] px-[0.125em] py-[0.25em] font-bold transition-colors duration-150"
+      className="-my-[0.5rem] inline-flex translate-y-[0.275em] cursor-pointer items-center gap-[0.125em] rounded-[0.125em] p-[0.125em] font-bold transition-colors duration-150"
       style={{ backgroundColor: isHovered ? hoverBg : bgColor }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -262,31 +264,31 @@ export default function FlourishName({
           <img
             src={logoSrc}
             alt=""
-            className="inline-block h-[1.5em] w-[1.5em] max-w-none flex-none object-contain"
+            className={`inline-block h-[1.25em] w-[1.25em] max-w-none flex-none object-contain ${logoClassName}`}
           />
         ) : (
           <>
             <img
               src={logoSrc.light}
               alt=""
-              className="block h-[1.5em] w-[1.5em] max-w-none flex-none object-contain dark:hidden"
+              className={`block h-[1.25em] w-[1.25em] max-w-none flex-none object-contain dark:hidden ${logoClassName}`}
             />
             <img
               src={logoSrc.dark}
               alt=""
-              className="hidden h-[1.5em] w-[1.5em] max-w-none flex-none object-contain dark:block"
+              className={`hidden h-[1.25em] w-[1.25em] max-w-none flex-none object-contain dark:block ${logoClassName}`}
             />
           </>
         ))}
       {name}
       <span
-        className="flex h-[1.5em] w-[1.5em] items-center justify-center"
+        className="flex h-[1.25em] w-[1.25em] items-center justify-center"
         style={{
           transition: "transform 0.2s",
           transform: `rotate(${isActive ? 180 : 0}deg)`,
         }}
       >
-        <CaretDownIcon size="0.8em" weight="fill" />
+        <CaretDownIcon size="0.75em" weight="fill" />
       </span>
     </button>
   );

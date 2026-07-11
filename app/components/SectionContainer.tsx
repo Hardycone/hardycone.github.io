@@ -15,6 +15,7 @@ interface SectionContainerBaseProps {
   borderColor?: MotionValue<string> | string;
   cardClass?: string;
   revealOnScroll?: boolean;
+  showDivider?: boolean;
   children: ReactNode;
 }
 
@@ -43,6 +44,7 @@ export default function SectionContainer({
   borderColor,
   cardClass = "mb-12",
   revealOnScroll = true,
+  showDivider = true,
   children,
 }: SectionContainerProps) {
   const shouldReduceMotion = useReducedMotion();
@@ -85,7 +87,9 @@ export default function SectionContainer({
             <h3 className={` ${textColorClass}`}>{title}</h3>
           </div>
           <div
-            className={`mb-8 h-0.5 w-full rounded-full md:mb-16 ${bgColorClass}`}
+            className={`mb-8 h-0.5 w-full rounded-full md:mb-12 ${
+              showDivider ? bgColorClass : "invisible"
+            }`}
           />
         </>
       ) : null}

@@ -26,11 +26,13 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   const [isAslfOpen, setIsAslfOpen] = useState(false);
   const [isUwOpen, setIsUwOpen] = useState(false);
   const [isSyracuseOpen, setIsSyracuseOpen] = useState(false);
+  const [isAwardsOpen, setIsAwardsOpen] = useState(false);
+  const [isBnuOpen, setIsBnuOpen] = useState(false);
+
+  const introTheme = useProjectTheme("intro");
   const fluxTheme = useProjectTheme("flux");
   const fantailTheme = useProjectTheme("fantail");
   const wolcottTheme = useProjectTheme("wolcott");
-  const suitsTheme = useProjectTheme("suits");
-  const chinatownTheme = useProjectTheme("chinatown");
 
   // const theme = useProjectTheme(projects[activeIndex].id);
   // const targetRef = useRef<HTMLDivElement>(null);
@@ -72,21 +74,15 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       <section id="section-1" className="mb-16 w-full min-w-0 scroll-mt-24">
         {/*Section Header Block*/}
         <SectionContainer
-          title="My Journey"
+          title="My Work"
           icon={PathIcon}
+          showDivider={false}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
           revealOnScroll={false}
         >
           <p>
-            A throughline of my career has been empowerment. I enjoy building
-            things that enable people to do more. This passion hasn’t changed
-            through my transition from a design director in the nonprofit sector
-            into tech. It may seem like a big jump, but in reality I’ve always
-            been the same designer speaking the same language.
-          </p>
-          <p className="mt-8">
             I’m currently working on{" "}
             <FlourishName
               name="Flux"
@@ -98,21 +94,23 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               onFlourish={() => setIsFluxOpen(true)}
               logoSrc="/logos/logo-flux.png"
             />
-            , a platform that makes quantitative UX research easy to do for all
-            product teams. As AI drastically accelerates iterative prototyping,
-            there is a strong demand for faster insight cycles. Flux helps teams
-            test prototypes with statistical rigor in hours, without needing a
-            background in statistics. My work focuses on turning a traditionally
-            intimidating research process into something approachable, guided,
-            and genuinely useful.
+            , a quantitative UX research tool that helps teams test designs and
+            prototypes with real users quickly and rigorously. The idea came
+            from a simple observation my co-founder and I had: AI is making it
+            much easier to explore product directions through design and
+            prototyping, but teams still need a reliable way to decide which one
+            works best. My work focuses on turning a traditionally intimidating
+            research process into something approachable, guided, and
+            decision-ready. Flux launched publicly in April 2026, and my role
+            has since expanded into sales, marketing, and customer development.
           </p>
           <NarrativeAccordion isOpen={isFluxOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-flux/5 p-8 font-serif dark:bg-dark-flux/5 md:rounded-2">
-              <div className="w-14 flex-shrink-0">
+            <div className="my-4 flex gap-2 rounded-1 bg-flux/5 p-8 font-serif supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-flux/5 md:gap-4 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4">
+              <div className="w-12 flex-shrink-0">
                 <img
                   src="/logos/logo-flux.png"
                   alt="Flux logo"
-                  className="block h-auto w-full"
+                  className="block size-12 object-cover"
                 />
               </div>
               <div className="flex w-full flex-col">
@@ -121,37 +119,29 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                     <p className="font-semibold">Co-founder</p>
                     <p>Flux</p>
                   </div>
-                  <p>2023 - 2025</p>
+                  <p>2023 - Present</p>
                 </div>
-                <div className="mt-2 flex flex-col font-serif">
-                  <p>
-                    Flux is a quantitative UX research platform with a mission
-                    to democratize data-driven product design. Flux is a
-                    quantitative UX research platform with a mission to
-                    democratize data-driven product design. Design. Zero to One.
-                    Complex work flows .Design. Zero to One. Complex work flows
-                  </p>
-                  <ul className="mt-2 list-inside list-disc">
+                <div className="mt-2">
+                  <ul className="ml-4 mt-2 list-disc text-pretty font-sans">
                     <li>
-                      Led product design from concept to launch, defining the UX
-                      strategy, interaction patterns, and visual language
+                      Led Flux from concept to public launch, shaping the
+                      product strategy, core workflows, interaction patterns,
+                      visual system, and brand identity
                     </li>
                     <li>
-                      Built and managed a design system spanning web
-                      application, marketing site, and data visualization
-                      components
+                      Translated statistical research methods into guided study
+                      setup flows that are approachable without compromising
+                      rigor
                     </li>
                     <li>
-                      Conducted user research with designers, PMs, and
-                      researchers to validate product direction
+                      Designed data-heavy reporting experiences that turned
+                      prototype behavior, confidence intervals, and user
+                      feedback into decision-ready insights
                     </li>
                     <li>
-                      Designed and implemented quantitative UX testing workflows
-                      including statistical result visualizations
-                    </li>
-                    <li>
-                      Collaborated with engineers to ship a working MVP that
-                      users described as "intuitive" and "surprisingly powerful"
+                      Led discovery interviews and live demos with designers,
+                      PMs, and researchers, using feedback to refine product
+                      decisions, positioning, and go-to-market direction
                     </li>
                   </ul>
                 </div>
@@ -170,29 +160,27 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               onFlourish={() => setIsFantailOpen(true)}
               logoSrc="/logos/logo-fantail.svg"
             />{" "}
-            with two other co-founders. Fantail was our answer to the hotly
-            debated question: What is AI's role in the creative process? vision
-            – which we still believe to this day – is that AI should serve the
-            creative mind, not replace it. Fantail brought AI into the early
-            stages of filmmaking. It’s not “prompt the AI to make your film”,
-            it’s “let AI help you bring what’s in your mind onto the paper”. In
-            Fantail, filmmakers could write, gather reference materials, create
-            storyboards, hear dialogues. I worked on this with another 2
-            cofounders for 6 months. Together we built a prototype and pursued
-            funding, but we were ultimately unable to continue. Lesson learned:
-            founder-market fit matters. We were naïve going into this with
-            nothing but a burning passion. We did textbook discovery and design
-            research, identified a real problem, and delivered a solution. But
-            we didn’t have to the industry knowhow. Investors saw that and
-            turned us down.
+            with two co-founders. Fantail brought AI into the early stages of
+            filmmaking, from writing and referencing to storyboarding and
+            dialogue exploration. We grounded the product direction in discovery
+            research with dozens of working filmmakers, which revealed a clear
+            tension: they saw AI’s creative potential, but existing tools gave
+            them too little control over the process. Over six months, we turned
+            that insight into an MVP and pursued funding. I led much of the
+            product and design work, translating filmmaker needs into an
+            end-to-end creative workflow. Ultimately, we shut the company down.
+            The biggest lesson was founder-market fit: we had identified a real
+            problem and designed a thoughtful solution, but lacked the industry
+            access, funding network, and insider knowledge needed to build
+            credibility.
           </p>
           <NarrativeAccordion isOpen={isFantailOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-fantail bg-opacity-[3%] p-8 dark:bg-dark-fantail/5 md:rounded-2">
-              <div className="w-14 flex-shrink-0">
+            <div className="mb-4 mt-4 flex gap-2 rounded-1 bg-fantail bg-opacity-[3%] p-8 dark:bg-dark-fantail/5 md:gap-4 md:rounded-2">
+              <div className="w-12 flex-shrink-0">
                 <img
                   src="/logos/logo-fantail.svg"
                   alt="Fantail logo"
-                  className="block h-auto w-full"
+                  className="block size-12"
                 />
               </div>
               <div className="flex w-full flex-col">
@@ -204,30 +192,32 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   <p>2023</p>
                 </div>
                 <div className="mt-2 flex flex-col">
-                  <p>
-                    Fantail was an AI-powered pre-production tool for
-                    filmmakers. The idea was to help creatives bring their
-                    vision to paper — storyboarding, reference gathering, script
-                    development — without replacing the human creative process.
-                  </p>
-                  <ul className="mt-2 list-inside list-disc">
+                  <ul className="ml-4 mt-2 list-disc text-pretty font-sans">
                     <li>
-                      Led product design and user research from concept to
-                      prototype
+                      Co-founded Fantail and led much of the product design,
+                      taking an AI-assisted filmmaking concept through
+                      discovery, product definition, and an early MVP
                     </li>
                     <li>
-                      Built and tested workflows for storyboarding and script
-                      visualization
+                      Conducted and synthesized research with dozens of working
+                      filmmakers, identifying lack of creative control as a key
+                      barrier to adopting existing AI tools
                     </li>
-                    <li>Pitched to investors alongside 2 cofounders</li>
+                    <li>
+                      Translated that insight into a scene-by-scene product
+                      architecture where scripts connected moodboards, visual
+                      references, editable storyboards, generated imagery,
+                      dialogue, and animatics
+                    </li>
                   </ul>
                 </div>
               </div>
             </div>
           </NarrativeAccordion>
           <p className="mt-8">
+            From 2016 to 2021, I worked at{" "}
             <FlourishName
-              name="ASLF, Inc."
+              name="ASLF"
               bgColor={hexToRgba(wolcottTheme.hex.primary, 0.05)}
               gradientCenterColor={hexToRgba(wolcottTheme.hex.soft, 1)}
               gradientMiddleColor={hexToRgba(wolcottTheme.hex.soft, 1)}
@@ -238,23 +228,25 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 light: "/logos/logo-aslf.png",
                 dark: "/logos/logo-aslf-inverted.png",
               }}
-            />{" "}
-            is where I spent seven years as a landscape designer and later
-            Design Director. The work sat at the intersection of environmental
-            justice, community engagement, and physical design. I led over a
-            dozen green infrastructure projects — community gardens, rain
-            gardens, park redesigns — in underserved neighborhoods across the
-            country. Each project was a lesson in listening: to the community,
-            to the land, and to the policy constraints that shape what gets
-            built.
+            />
+            , a leading nonprofit with a long history of shaping US
+            environmental policy through strategic litigation and
+            community-driven projects. I progressed from staff landscape
+            designer to Design Director, leading work at the intersection of
+            environmental justice, community engagement, and the built
+            environment. I led dozens of projects across the country, from
+            community gardens and parks to green infrastructure and urban public
+            spaces, often in historically underserved communities. Each project
+            was a lesson in listening: to the community, to the land, and to the
+            policy constraints that shape what gets built.
           </p>
           <NarrativeAccordion isOpen={isAslfOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-wolcott/5 p-8 dark:bg-dark-wolcott/5 md:rounded-2">
-              <div className="w-14 flex-shrink-0">
+            <div className="mb-4 mt-4 flex gap-2 rounded-1 bg-wolcott/5 p-8 dark:bg-dark-wolcott/5 md:gap-4 md:rounded-2">
+              <div className="w-12 flex-shrink-0">
                 <img
                   src="/logos/logo-aslf.png"
                   alt="ASLF logo"
-                  className="block h-auto w-full dark:invert"
+                  className="block size-12 dark:invert"
                 />
               </div>
               <div className="flex w-full flex-col">
@@ -266,39 +258,66 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   <p>2015 - 2022</p>
                 </div>
                 <div className="mt-2 flex flex-col">
-                  <p>
-                    ASLF is a nonprofit that shapes US environmental policy
-                    through strategic litigation and community-based projects.
-                    ASLF is a leading nonprofit with a decades-long track record
-                    of shaping US environmental policy through strategic
-                    litigation. I joined as a landscape designer as the
-                    organizatoin refocused its efforts to implementing impactful
-                    green projects in local communities. Design and
-                    Implementation: I designed and oversaw the implementation of
-                    over a dozen green projects. Project Management: I managed
-                    several federal and local grants amassing a total budget of
-                    over $3 million. Program Development: I built partnerships
-                    and secured grants. Stakeholder Management: I heavily
-                    involved the local community in all my projects in the form
-                    of interviews and workshops.
-                  </p>
-                  <ul className="mt-2 list-inside list-disc">
+                  <ul className="ml-4 mt-2 list-outside list-disc font-sans">
                     <li>
-                      Designed and oversaw implementation of over a dozen green
-                      infrastructure projects
+                      Led dozens of public-space, green-infrastructure, and
+                      community-revitalization projects across the U.S.,
+                      coordinating work across communities, public agencies,
+                      technical partners, and funders
                     </li>
                     <li>
-                      Managed federal and local grants totaling over $3 million
+                      Led research and participatory design with residents and
+                      local organizations, translating community priorities and
+                      environmental constraints into actionable plans
                     </li>
                     <li>
-                      Built partnerships and secured funding through grant
-                      writing
+                      Directed projects from early research and planning through
+                      funding, design, technical coordination, and
+                      implementation
                     </li>
                     <li>
-                      Led community workshops and interviews to co-design public
-                      spaces
+                      Co-wrote successful grant proposals that secured $3.6M+ in
+                      public funding, including awards from EPA, NOAA, USDA, New
+                      York State, and local governments
+                    </li>
+                    <li>Designer</li>
+                    <li>
+                      Designed public-space and green-infrastructure projects
+                      from site and systems analysis through concept
+                      development, documentation, and implementation support
                     </li>
                   </ul>
+                </div>
+                <div className="mt-4 flex items-center justify-end gap-4">
+                  <span className="font-sans text-base">Funding partners:</span>
+                  <div className="relative size-8 flex-shrink-0 overflow-hidden">
+                    <img
+                      src="/logos/logo-epa.png"
+                      alt="logo"
+                      className="absolute inset-0 h-full w-full object-cover dark:brightness-[10]"
+                    />
+                  </div>
+                  <div className="relative size-8 flex-shrink-0 overflow-hidden">
+                    <img
+                      src="/logos/logo-noaa.svg"
+                      alt="logo"
+                      className="absolute inset-0 h-full w-full object-cover dark:brightness-[10]"
+                    />
+                  </div>
+                  <div className="relative size-8 flex-shrink-0 overflow-hidden">
+                    <img
+                      src="/logos/logo-usda.png"
+                      alt="logo"
+                      className="absolute inset-0 h-full w-full object-cover dark:brightness-[10]"
+                    />
+                  </div>
+                  <div className="relative size-8 flex-shrink-0 overflow-hidden">
+                    <img
+                      src="/logos/logo-nys.png"
+                      alt="logo"
+                      className="absolute inset-0 h-full w-full object-cover dark:brightness-[10]"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -312,18 +331,76 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
         <SectionContainer
           title="My Qualifications"
           icon={CertificateIcon}
+          showDivider={false}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
         >
           <p>
-            In 2023, I received a Master's degree in Human-Computer Interaction
-            from{" "}
+            I’ve work on projects{" "}
+            <FlourishName
+              name="recognized and supported"
+              bgColor={hexToRgba(introTheme.hex.primary, 0.05)}
+              gradientCenterColor={hexToRgba(introTheme.hex.soft, 1)}
+              gradientMiddleColor={hexToRgba(introTheme.hex.soft, 1)}
+              isActive={isAwardsOpen}
+              onToggle={() => setIsAwardsOpen((prev) => !prev)}
+              onFlourish={() => setIsAwardsOpen(true)}
+              logoSrc="/logos/logo-awards.png"
+            />{" "}
+            by organizations like NASA, EPA, NOAA, USDA, NPS (National Park
+            Service), New York State, and local governments. That work has
+            included a NASA SUITS finalist project, a published cultural
+            landscape report for Muir Woods, and successful public funding for
+            environmental and community projects across the country.
+          </p>
+          <NarrativeAccordion isOpen={isAwardsOpen}>
+            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-suits/5 md:rounded-2">
+              <div className="flex w-full flex-col gap-4">
+                <div className="flex justify-between font-sans text-xl">
+                  <div className="flex flex-col">
+                    <p>
+                      <span className="font-semibold">Finalist · </span>NASA
+                      SUITS Competition{" "}
+                    </p>
+                  </div>
+                  <p className="ml-4 text-nowrap">2023</p>
+                </div>
+                <div className="flex justify-between font-sans text-xl">
+                  <div className="flex flex-col">
+                    <p>
+                      <span className="font-semibold">Publication · </span>
+                      Auwaerter, John Eric., Wang, Haichao.{" "}
+                      <span className="italic">
+                        Cultural Landscape Report for Muir Woods National
+                        Monument.
+                      </span>{" "}
+                      National Park Service, 2021.
+                    </p>
+                  </div>
+                  <p className="ml-4 text-nowrap">2021</p>
+                </div>
+                <div className="flex justify-between font-sans text-xl">
+                  <div className="flex flex-col">
+                    <p>
+                      <span className="font-semibold">Grants · </span>EPA
+                      Environmental Justice ($65K) | NOAA Sea Grant ($25K) |
+                      USDA GLRI ($287K) | New York State GIGP ($1.1M) | Onondaga
+                      County ($2.15M)
+                    </p>
+                  </div>
+                  <p className="ml-4 text-nowrap">2016 - 2021</p>
+                </div>
+              </div>
+            </div>
+          </NarrativeAccordion>
+          <p className="mt-8">
+            In 2023, I graduated from{" "}
             <FlourishName
               name="University of Washington"
-              bgColor={hexToRgba(suitsTheme.hex.primary, 0.05)}
-              gradientCenterColor={hexToRgba(suitsTheme.hex.soft, 1)}
-              gradientMiddleColor={hexToRgba(suitsTheme.hex.soft, 1)}
+              bgColor={hexToRgba(introTheme.hex.primary, 0.05)}
+              gradientCenterColor={hexToRgba(introTheme.hex.soft, 1)}
+              gradientMiddleColor={hexToRgba(introTheme.hex.soft, 1)}
               isActive={isUwOpen}
               onToggle={() => setIsUwOpen((prev) => !prev)}
               onFlourish={() => setIsUwOpen(true)}
@@ -331,64 +408,48 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 light: "/logos/logo-uw.png",
                 dark: "/logos/logo-uw-gold.png",
               }}
-            />
-            , where I dove headfirst into human-computer interaction research.
-            My focus was on making data-driven design tools accessible to
+            />{" "}
+            with a Master's degree in Human-Computer Interaction and Design. ,
+            where I dove headfirst into human-computer interaction research. My
+            focus was on making data-driven design tools accessible to
             non-statisticians — a thread that eventually led me to co-found
             Flux. At UW, I studied research methods, statistical analysis, and
             prototyping, and applied them to projects ranging from NASA
             spacesuit interfaces to quantitative UX testing tools.
           </p>
           <NarrativeAccordion isOpen={isUwOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-suits/5 p-8 dark:bg-dark-suits/5 md:rounded-2">
-              <div className="w-14 flex-shrink-0">
+            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-suits/5 md:rounded-2">
+              <div className="w-12 flex-shrink-0">
                 <img
                   src="/logos/logo-uw.png"
                   alt="UW logo"
-                  className="block h-auto w-full dark:hidden"
+                  className="block size-12 dark:hidden"
                 />
                 <img
                   src="/logos/logo-uw-gold.png"
                   alt="UW logo"
-                  className="hidden h-auto w-full dark:block"
+                  className="hidden size-12 dark:block"
                 />
               </div>
               <div className="flex w-full flex-col">
                 <div className="flex justify-between font-sans text-xl">
                   <div className="flex flex-col">
                     <p className="font-semibold">
-                      Master's in Human-Computer Interaction
+                      Master of Human-Computer Interaction and Design
                     </p>
-                    <p>University of Washington - Seattle</p>
+                    <p>University of Washington, Seattle, WA</p>
                   </div>
-                  <p>2023</p>
-                </div>
-                <div className="mt-2 flex flex-col">
-                  <ul className="list-inside list-disc">
-                    <li>
-                      Researched quantitative UX methods and statistical
-                      workflows for designers
-                    </li>
-                    <li>
-                      Finalist in NASA SUITS — designed and tested AR interfaces
-                      at Johnson Space Center
-                    </li>
-                    <li>
-                      Built prototypes exploring AI-assisted research
-                      interpretation
-                    </li>
-                  </ul>
                 </div>
               </div>
             </div>
           </NarrativeAccordion>
           <p className="mt-8">
-            Before UW, I earned my{" "}
+            I also hold a Master of Landscape Architecture from{" "}
             <FlourishName
               name="SUNY ESF"
-              bgColor={hexToRgba(chinatownTheme.hex.primary, 0.05)}
-              gradientCenterColor={hexToRgba(chinatownTheme.hex.soft, 1)}
-              gradientMiddleColor={hexToRgba(chinatownTheme.hex.soft, 1)}
+              bgColor={hexToRgba(introTheme.hex.primary, 0.05)}
+              gradientCenterColor={hexToRgba(introTheme.hex.soft, 1)}
+              gradientMiddleColor={hexToRgba(introTheme.hex.soft, 1)}
               isActive={isSyracuseOpen}
               onToggle={() => setIsSyracuseOpen((prev) => !prev)}
               onFlourish={() => setIsSyracuseOpen(true)}
@@ -397,9 +458,9 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 dark: "/logos/logo-esf-light.png",
               }}
             />
-            , in Syracuse. This is where I first encountered environmental
-            justice as a design practice. I studied how landscape architecture
-            could repair — not just decorate — communities that had been
+            in Syracuse. This is where I first encountered environmental justice
+            as a design practice. I studied how landscape architecture could
+            repair — not just decorate — communities that had been
             systematically underserved. My work included community-based design
             studios, ecological restoration planning, and a thesis on equitable
             access to green space. The throughline from Syracuse to Flux is
@@ -407,354 +468,74 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             medium is a park or a prototype.
           </p>
           <NarrativeAccordion isOpen={isSyracuseOpen}>
-            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-chinatown/5 p-8 dark:bg-dark-chinatown/5 md:rounded-2">
-              <div className="w-14 flex-shrink-0">
+            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-chinatown/5 md:rounded-2">
+              <div className="w-12 flex-shrink-0">
                 <img
                   src="/logos/logo-esf.png"
                   alt="SUNY-ESF logo"
-                  className="block h-auto w-full dark:hidden"
+                  className="block size-12 dark:hidden"
                 />
                 <img
                   src="/logos/logo-esf-light.png"
                   alt="SUNY-ESF logo"
-                  className="hidden h-auto w-full dark:block"
+                  className="hidden size-12 dark:block"
                 />
               </div>
               <div className="flex w-full flex-col">
                 <div className="flex justify-between font-sans text-xl">
                   <div className="flex flex-col">
                     <p className="font-semibold">
-                      Master's in Landscape Architecture
+                      Master of Landscape Architecture
                     </p>
-                    <p>State University of New York - Syracuse</p>
+                    <p>State University of New York, Syracuse, NY</p>
                   </div>
-                  <p>2015</p>
                 </div>
-                <div className="mt-2 flex flex-col">
-                  <ul className="list-inside list-disc">
-                    <li>
-                      Focused on environmental justice and community-based
-                      design
-                    </li>
-                    <li>
-                      Ecological restoration and green infrastructure planning
-                    </li>
-                    <li>
-                      Thesis on equitable access to recreational green space
-                    </li>
-                  </ul>
+              </div>
+            </div>
+          </NarrativeAccordion>{" "}
+          <p className="mt-8">
+            I also hold a bachelor of Science from{" "}
+            <FlourishName
+              name="Beijing Normal University"
+              bgColor={hexToRgba(introTheme.hex.primary, 0.05)}
+              gradientCenterColor={hexToRgba(introTheme.hex.soft, 1)}
+              gradientMiddleColor={hexToRgba(introTheme.hex.soft, 1)}
+              isActive={isBnuOpen}
+              onToggle={() => setIsBnuOpen((prev) => !prev)}
+              onFlourish={() => setIsBnuOpen(true)}
+              logoSrc="/logos/logo-bnu.png"
+              logoClassName="dark:brightness-[50] dark:saturate-0"
+            />
+            in Syracuse. This is where I first encountered environmental justice
+            as a design practice. I studied how landscape architecture could
+            repair — not just decorate — communities that had been
+            systematically underserved. My work included community-based design
+            studios, ecological restoration planning, and a thesis on equitable
+            access to green space. The throughline from Syracuse to Flux is
+            surprisingly direct: design is a tool for empowerment, whether the
+            medium is a park or a prototype.
+          </p>
+          <NarrativeAccordion isOpen={isBnuOpen}>
+            <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-chinatown/5 md:rounded-2">
+              <div className="w-12 flex-shrink-0">
+                <img
+                  src="/logos/logo-bnu.png"
+                  alt="Beijing Normal University logo"
+                  className="block size-12 dark:brightness-[50] dark:saturate-0"
+                />
+              </div>
+              <div className="flex w-full flex-col">
+                <div className="flex justify-between font-sans text-xl">
+                  <div className="flex flex-col">
+                    <p className="font-semibold">
+                      Bachelor of Science in Environmental Science
+                    </p>
+                    <p>Beijing Normal University, Beijing, China</p>
+                  </div>
                 </div>
               </div>
             </div>
           </NarrativeAccordion>
-          <p className="mt-8">
-            In another life, I was a landscape architecture. I was in a very
-            specific niche – environmental justice. It’s social justice
-            manifested in the landscape. Socioeconomically disadvantaged
-            communities are setup to fail. They quite literally don’t even
-            breath the same air. They have less access to recreational green
-            spaces. As a
-          </p>
-          <div className="mb-8">
-            {/*Subheader*/}
-            <h3 className="mb-4 font-sans text-2xl font-semibold">
-              Experience
-            </h3>
-
-            {/*Entry 3*/}
-            <div className="mb-4 flex gap-4">
-              {/*Left: Image*/}
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
-                <img
-                  src="/logos/logo-nps.png"
-                  alt="logo"
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-              </div>
-              {/*Right: Description*/}
-              <div className="flex w-full flex-col">
-                {/*Header*/}
-                <div className="flex justify-between font-sans text-xl">
-                  {/*Title Block*/}
-                  <div className="flex flex-col">
-                    <p className="font-semibold">Researcher</p>
-                    <p>National Park Service</p>
-                  </div>
-                  {/*Years*/}
-                  <p>2014 - 2015</p>
-                </div>
-                {/*Description*/}
-                <div className="mt-2 flex flex-col">
-                  <p>Olmsted Center for Cultural Landscape Preservation </p>
-                  <ul className="mt-2 list-disc pl-8">
-                    <li>Design</li>
-                    <li>Zero to One</li>
-                    <li>
-                      My work was published as a technical report:{" "}
-                      <span className="italic">
-                        Auwaerter, John E., Haichao Wang, and George W. Curry.
-                        Cultural Landscape Report for Muir Woods National
-                        Monument. National Park Service, 2021.
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/*Subsection 2: Education*/}
-          <div className="mb-8">
-            {/*Subheader*/}
-            <h3 className="mb-4 font-sans text-2xl font-semibold">Education</h3>
-            {/*Entry 1*/}
-            <div className="mb-4 flex gap-4">
-              {/*Left: Image*/}
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
-                <img
-                  src="/logos/logo-uw.png"
-                  alt="logo"
-                  className="absolute inset-0 h-full w-full object-cover dark:hidden"
-                />
-                <img
-                  src="/logos/logo-uw-gold.png"
-                  alt="logo"
-                  className="absolute inset-0 hidden h-full w-full object-cover dark:block"
-                />
-              </div>
-              {/*Right: Description*/}
-              <div className="flex w-full flex-col">
-                {/*Header*/}
-                <div className="flex justify-between font-sans text-xl">
-                  {/*Title Block*/}
-                  <div className="flex flex-col">
-                    <p className="font-semibold">
-                      Master's in Human-Computer Interaction
-                    </p>
-                    <p>University of Washington - Seattle</p>
-                  </div>
-                  {/*Years*/}
-                  <p>2023</p>
-                </div>
-              </div>
-            </div>
-            {/*Entry 2*/}
-            <div className="mb-4 flex gap-4">
-              {/*Left: Image*/}
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
-                <img
-                  src="/logos/logo-esf.png"
-                  alt="logo"
-                  className="absolute inset-0 h-full w-full object-cover dark:hidden"
-                />{" "}
-                <img
-                  src="/logos/logo-esf-light.png"
-                  alt="logo"
-                  className="absolute inset-0 hidden h-full w-full object-cover dark:block"
-                />
-              </div>
-              {/*Right: Description*/}
-              <div className="flex w-full flex-col">
-                {/*Header*/}
-                <div className="flex justify-between font-sans text-xl">
-                  {/*Title Block*/}
-                  <div className="flex flex-col">
-                    <p className="font-semibold">
-                      Master's in Landscape Architecture
-                    </p>
-                    <p>State University of New York - Syracuse</p>
-                  </div>
-                  {/*Years*/}
-                  <p>2015</p>
-                </div>
-              </div>
-            </div>
-            {/*Entry 3*/}
-            <div className="mb-4 flex gap-4">
-              {/*Left: Image*/}
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden">
-                <img
-                  src="/logos/logo-bnu.png"
-                  alt="logo"
-                  className="absolute inset-0 h-full w-full object-cover dark:brightness-[50] dark:saturate-0"
-                />
-              </div>
-              {/*Right: Description*/}
-              <div className="flex w-full flex-col">
-                {/*Header*/}
-                <div className="flex justify-between font-sans text-xl">
-                  {/*Title Block*/}
-                  <div className="flex flex-col">
-                    <p className="font-semibold">
-                      Bachelor's in Environmental Science
-                    </p>
-                    <p>Beijing Normal University</p>
-                  </div>
-                  {/*Years*/}
-                  <p>2011</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/*Subsection 3: Grants and Awards*/}
-          <div className="mb-8">
-            {/*Subheader*/}
-            <h3 className="mb-4 font-sans text-2xl font-semibold">
-              Awards, Grants, and Funded Projects
-            </h3>
-            {/*List*/}
-            <ul>
-              {/*Entry 1*/}
-              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-                {/*Left: Description*/}
-                <div className="flex gap-2">
-                  {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
-                    <img
-                      src="/logos/logo-nasa.png"
-                      alt="logo"
-                      className="absolute inset-0 h-full w-full object-cover"
-                    />
-                  </div>
-                  {/*Description*/}
-                  <p>
-                    NASA SUITS,{" "}
-                    <span className="text-lg italic">
-                      Finalist (Selected for testing and presentation at Johnson
-                      Space Center with 9 other teams)
-                    </span>
-                  </p>
-                </div>
-                {/*Right: Years*/}
-                <p>2023</p>
-              </li>
-              {/*Entry 2*/}
-              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-                {/*Left: Description*/}
-                <div className="flex gap-2">
-                  {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
-                    <img
-                      src="/logos/logo-epa.png"
-                      alt="logo"
-                      className="absolute inset-0 h-full w-full object-cover dark:brightness-[10]"
-                    />
-                  </div>
-                  {/*Description*/}
-                  <p>
-                    EPA Environmental Justice Small Grant Award,{" "}
-                    <span className="text-lg italic">$65,094</span>
-                  </p>
-                </div>
-                {/*Right: Years*/}
-                <p>2021</p>
-              </li>
-              {/*Entry 3*/}
-              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-                {/*Left: Description*/}
-                <div className="flex gap-2">
-                  {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
-                    <img
-                      src="/logos/logo-wep.png"
-                      alt="logo"
-                      className="absolute inset-0 h-full w-full object-cover"
-                    />
-                  </div>
-                  {/*Description*/}
-                  <p>
-                    Onondaga County Department of Water Environment Protection
-                    Contract, <span className="text-lg italic">$2,150,000</span>
-                  </p>
-                </div>
-                {/*Right: Years*/}
-                <p>2020</p>
-              </li>
-              {/*Entry 4*/}
-              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-                {/*Left: Description*/}
-                <div className="flex gap-2">
-                  {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
-                    <img
-                      src="/logos/logo-usda.png"
-                      alt="logo"
-                      className="absolute inset-0 h-full w-full object-cover dark:brightness-200"
-                    />
-                  </div>
-                  {/*Description*/}
-                  <p>
-                    USDA Great Lakes Restoration Initiative Grant Award,{" "}
-                    <span className="text-lg italic">$99,983</span>
-                  </p>
-                </div>
-                {/*Right: Years*/}
-                <p>2019</p>
-              </li>
-              {/*Entry 5*/}
-              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-                {/*Left: Description*/}
-                <div className="flex gap-2">
-                  {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
-                    <img
-                      src="/logos/logo-noaa.svg"
-                      alt="logo"
-                      className="absolute inset-0 h-full w-full object-cover"
-                    />
-                  </div>
-                  {/*Description*/}
-                  <p>
-                    NOAA Sea Grant Award,{" "}
-                    <span className="text-lg italic">$24,964</span>
-                  </p>
-                </div>
-                {/*Right: Years*/}
-                <p>2018</p>
-              </li>
-              {/*Entry 6*/}
-              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-                {/*Left: Description*/}
-                <div className="flex gap-2">
-                  {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
-                    <img
-                      src="/logos/logo-nys.png"
-                      alt="logo"
-                      className="absolute inset-0 h-full w-full object-cover dark:brightness-200 dark:saturate-0"
-                    />
-                  </div>
-                  {/*Description*/}
-                  <p>
-                    New York State Green Innovation Grant,{" "}
-                    <span className="text-lg italic">$1,100,000</span>
-                  </p>
-                </div>
-                {/*Right: Years*/}
-                <p>2017</p>
-              </li>
-              {/*Entry 7*/}
-              <li className="mb-4 flex justify-between gap-2 font-sans text-xl">
-                {/*Left: Description*/}
-                <div className="flex gap-2">
-                  {/*Image*/}
-                  <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden">
-                    <img
-                      src="/logos/logo-usda.png"
-                      alt="logo"
-                      className="absolute inset-0 h-full w-full object-cover dark:brightness-200"
-                    />
-                  </div>
-                  {/*Description*/}
-                  <p>
-                    USDA Great Lakes Restoration Initiative Grant Award,{" "}
-                    <span className="text-lg italic">$186,950</span>
-                  </p>
-                </div>
-                {/*Right: Years*/}
-                <p>2016</p>
-              </li>
-            </ul>
-          </div>
           {/*Subsection 4: Skills*/}
           <div className="mb-8">
             <h3 className="mb-4 font-sans text-2xl font-semibold">Skills</h3>
@@ -816,6 +597,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       <section id="section-3" className="w-full min-w-0 scroll-mt-24">
         <SectionContainer
           title="My Interests"
+          showDivider={false}
           icon={CameraIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
@@ -883,7 +665,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <img
                 src="/images/20230624-HWP00734-Edit.jpg"
                 alt="Dummy Image 1"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
               />
             </div>
             {/* Image 2 - 2x2 square */}
@@ -891,7 +673,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <img
                 src="/images/IMG_0031.jpeg"
                 alt="Dummy Image 2"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
               />
             </div>
             {/* Image 3 - 2 cells vertically adjacent */}
@@ -899,7 +681,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <img
                 src="/images/20200701-DSC00551_01.jpg"
                 alt="Dummy Image 3"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
               />
             </div>
             {/* Remaining cells */}
@@ -907,28 +689,28 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               <img
                 src="/images/IMG_2354.jpg"
                 alt="Dummy Image 4"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
               />
             </div>
             <div className="relative">
               <img
-                src="/images/IMG_0711.jpeg"
+                src="/images/20230314-HWP09323.jpg"
                 alt="Dummy Image 5"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
               />
             </div>
             <div className="relative">
               <img
                 src="/images/69995629887__EAA7B009-840C-4172-AA52-AF7B5C9AA700.jpeg"
                 alt="Dummy Image 7"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover md:rounded-2"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
               />
             </div>
             <div className="relative col-span-3 row-span-1">
               <img
                 src="/images/20240704-HWP03580-Edit.jpg"
                 alt="Dummy Image 6"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover object-top md:rounded-2"
+                className="absolute inset-0 h-full w-full rounded-1 object-cover object-top supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
               />
             </div>
           </div>

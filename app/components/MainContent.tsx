@@ -753,10 +753,18 @@ export default function MainContent({ children }: { children: ReactNode }) {
     const firstFrame = requestAnimationFrame(() => {
       window.scrollTo({ top: 0, behavior: "auto" });
       scrollY.set(0);
+      headerIntroProgress.set(0);
+      smoothHeaderIntroProgress.jump(0);
+      bottomRevealProgress.set(0);
+      smoothBottomRevealProgress.jump(0);
 
       secondFrame = requestAnimationFrame(() => {
         window.scrollTo({ top: 0, behavior: "auto" });
         scrollY.set(0);
+        headerIntroProgress.set(0);
+        smoothHeaderIntroProgress.jump(0);
+        bottomRevealProgress.set(0);
+        smoothBottomRevealProgress.jump(0);
         setCaseStudyContentReady(true);
         setTransitioningToNext(false);
         setBottomNavigation(null);
@@ -769,7 +777,16 @@ export default function MainContent({ children }: { children: ReactNode }) {
         cancelAnimationFrame(secondFrame);
       }
     };
-  }, [activeIndex, bottomNavigation, scrollY, setTransitioningToNext]);
+  }, [
+    activeIndex,
+    bottomNavigation,
+    bottomRevealProgress,
+    headerIntroProgress,
+    scrollY,
+    setTransitioningToNext,
+    smoothBottomRevealProgress,
+    smoothHeaderIntroProgress,
+  ]);
 
   useEffect(() => {
     if (!bottomNavigation || bottomNavigation.phase === "route") {
@@ -779,13 +796,25 @@ export default function MainContent({ children }: { children: ReactNode }) {
     const timeout = setTimeout(() => {
       window.scrollTo({ top: 0, behavior: "auto" });
       scrollY.set(0);
+      headerIntroProgress.set(0);
+      smoothHeaderIntroProgress.jump(0);
+      bottomRevealProgress.set(0);
+      smoothBottomRevealProgress.jump(0);
       setSummaryVariant("header");
       setBottomNavigation({ slug: bottomNavigation.slug, phase: "route" });
       router.push(`/${bottomNavigation.slug}`);
     }, 1800);
 
     return () => clearTimeout(timeout);
-  }, [bottomNavigation, router, scrollY]);
+  }, [
+    bottomNavigation,
+    bottomRevealProgress,
+    headerIntroProgress,
+    router,
+    scrollY,
+    smoothBottomRevealProgress,
+    smoothHeaderIntroProgress,
+  ]);
 
   const handleSummaryLayoutComplete = useCallback(() => {
     if (viewMode !== "case-study" || summaryVariant !== "header") {

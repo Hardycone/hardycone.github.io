@@ -110,7 +110,7 @@ body {
   }
 
   h2 {
-    @apply font-sans text-base font-semibold leading-tight sm:text-xl;
+    @apply text-pretty font-sans text-base font-semibold leading-tight sm:text-xl;
   }
 
   h3 {
@@ -121,6 +121,6 @@ body {
     @apply font-sans text-xl font-semibold;
   }
   p {
-    @apply font-sans text-base sm:text-xl;
+    @apply font-sans text-base;
   }
 }

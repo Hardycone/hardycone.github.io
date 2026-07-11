@@ -133,7 +133,7 @@ export default function CaseStudyContent({
               />
               <h3>{peekTitle}</h3>
             </div>
-            <div className="mb-16 h-0.5 w-full rounded-full bg-foreground dark:bg-dark-foreground" />
+            <div className="invisible mb-16 h-0.5 w-full rounded-full dark:bg-dark-foreground" />
           </motion.div>
         </motion.div>
       )}

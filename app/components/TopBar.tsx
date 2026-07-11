@@ -35,6 +35,9 @@ import {
   PathIcon,
   CertificateIcon,
   CameraIcon,
+  GraphIcon,
+  CompassRoseIcon,
+  PersonSimpleCircleIcon,
 } from "@phosphor-icons/react";
 
 import Home from "../icons/Home";
@@ -484,6 +487,9 @@ export default function TopBar({
                       PathIcon,
                       CertificateIcon,
                       CameraIcon,
+                      GraphIcon,
+                      CompassRoseIcon,
+                      PersonSimpleCircleIcon,
                     };
                     type IconName = keyof typeof Icons;
                     const Icon = Icons[section.icon as IconName];

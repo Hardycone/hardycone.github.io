@@ -7,11 +7,11 @@ import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import {
   ScrollIcon,
-  MagnifyingGlassIcon,
+  PuzzlePieceIcon,
   RocketLaunchIcon,
   PresentationChartIcon,
   SealQuestionIcon,
-  LightbulbFilamentIcon,
+  BrainIcon,
 } from "@phosphor-icons/react";
 import { MotionValue, useTransform, motion } from "framer-motion";
 import HorizontalFilmstrip from "../HorizontalScrollGroup";
@@ -86,7 +86,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
       {/*Section 2*/}
       <section id="section-2" className="scroll-mt-24">
         <SectionContainer
-          title={`The "Zero"`}
+          title={`The "0"`}
           icon={SealQuestionIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
@@ -318,8 +318,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
       {/*Section 3*/}
       <section id="section-3" className="scroll-mt-24">
         <SectionContainer
-          title="Research & Discovery"
-          icon={MagnifyingGlassIcon}
+          title="The Messy Middle"
+          icon={PuzzlePieceIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={"rgba(0,0,0,0)"}
@@ -391,8 +391,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
       {/*Section 4*/}
       <section id="section-4" className="scroll-mt-24">
         <SectionContainer
-          title="Ideation & Exploration"
-          icon={LightbulbFilamentIcon}
+          title={`The "1"`}
+          icon={RocketLaunchIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={"rgba(0,0,0,0)"}
@@ -409,8 +409,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
       {/*Section 5*/}
       <section id="section-5" className="scroll-mt-24">
         <SectionContainer
-          title={`The "One"`}
-          icon={RocketLaunchIcon}
+          title={`Outcome and Impact`}
+          icon={PresentationChartIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={"rgba(0,0,0,0)"}
@@ -435,8 +435,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
       {/*Section 6*/}
       <section id="section-6" className="scroll-mt-24">
         <SectionContainer
-          title={`Impact & Reflection`}
-          icon={PresentationChartIcon}
+          title={`Reflection`}
+          icon={BrainIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}

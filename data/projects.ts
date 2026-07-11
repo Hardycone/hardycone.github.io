@@ -52,14 +52,14 @@ const projects: Project[] = [
     slug: "case-study-one",
     role: "to empower.",
     title: "About Me",
-    tagline: "Human-Centered Designer with 10 Years of Experience",
+    tagline: "Human-Centered Product Designer with 10 Years of Experience",
     tags: [
       { label: "Designer", icon: "PenNibIcon" },
       { label: "Builder", icon: "WrenchIcon" },
       { label: "Researcher", icon: "MagnifyingGlassIcon" },
     ],
     description:
-      "My expertise ranges across design, research, and project management. I have worked on everything from public initiatives deeply rooted in stakeholder engagement, to enterprise software aiding complex workflows. The throughline of all my work is a commitment to solving real problems for real people.",
+      " I turn complex problems into usable systems. Across shipped B2B software, mixed reality interfaces, and public-sector design, I’ve led work from research and problem framing through stakeholder alignment, product strategy, and execution.",
     bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     image: "/images/project-1.jpg",
     button: "More About Me",
@@ -67,7 +67,7 @@ const projects: Project[] = [
     bgColor: "introBackground",
     glyphAnimation: glyphOneAnimation as GlyphAnimationData,
     sections: [
-      { id: "section-1", label: "My Journey", icon: "PathIcon" },
+      { id: "section-1", label: "My Work", icon: "PathIcon" },
       { id: "section-2", label: "My Qualifications", icon: "CertificateIcon" },
       { id: "section-3", label: "My Interests", icon: "CameraIcon" },
     ],
@@ -80,6 +80,11 @@ const projects: Project[] = [
       {
         label: "Finalists in NASA SUITS 2023",
         url: "https://www.linkedin.com/posts/university-of-washington-master-of-human-computer-interaction-design_finalists-in-the-nasa-suits-challenge-activity-7102818439043452928-cooL",
+        icon: "FileTextIcon",
+      },
+      {
+        label: "Cultural Landscape Report for Muir Woods National Monument",
+        url: "https://www.google.ca/books/edition/Cultural_Landscape_Report_for_Muir_Woods/quMVwkWT9McC?hl=en&gbpv=0",
         icon: "FileTextIcon",
       },
     ],
@@ -106,22 +111,26 @@ const projects: Project[] = [
     glyphAnimation: glyphTwoAnimation as GlyphAnimationData,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
-      { id: "section-2", label: 'The "Zero"', icon: "SealQuestionIcon" },
+      { id: "section-2", label: 'The "0"', icon: "SealQuestionIcon" },
       {
         id: "section-3",
-        label: "Research & Discovery",
-        icon: "MagnifyingGlassIcon",
+        label: "The Messy Middle",
+        icon: "PuzzlePieceIcon",
       },
       {
         id: "section-4",
-        label: "Ideation & Exploration",
-        icon: "LightbulbFilamentIcon",
+        label: 'The "1"',
+        icon: "RocketLaunchIcon",
       },
-      { id: "section-5", label: 'The "One"', icon: "RocketLaunchIcon" },
+      {
+        id: "section-5",
+        label: "Outcome & Impact",
+        icon: "PresentationChartIcon",
+      },
       {
         id: "section-6",
-        label: "Impact & Reflection",
-        icon: "PresentationChartIcon",
+        label: "Reflection",
+        icon: "BrainIcon",
       },
     ],
     externalLinks: [
@@ -157,10 +166,22 @@ const projects: Project[] = [
     glyphAnimation: glyphThreeAnimation as GlyphAnimationData,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
-      { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
-      { id: "section-3", label: "Goal", icon: "TargetIcon" },
-      { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
-      { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
+      {
+        id: "section-2",
+        label: 'The "0": Where We Started',
+        icon: "SealQuestionIcon",
+      },
+      { id: "section-3", label: "The Messy Middle", icon: "PuzzlePieceIcon" },
+      {
+        id: "section-4",
+        label: 'The "1": What We Shipped',
+        icon: "RocketLaunchIcon",
+      },
+      {
+        id: "section-5",
+        label: "Outcome and Impact",
+        icon: "PresentationChartIcon",
+      },
       { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
     externalLinks: [
@@ -188,10 +209,18 @@ const projects: Project[] = [
     glyphAnimation: glyphFourAnimation as GlyphAnimationData,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
-      { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
-      { id: "section-3", label: "Goal", icon: "TargetIcon" },
-      { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
-      { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
+      { id: "section-2", label: "Mission", icon: "TargetIcon" },
+      { id: "section-3", label: "Research", icon: "MagnifyingGlassIcon" },
+      {
+        id: "section-4",
+        label: "Human-In-The-Loop",
+        icon: "PersonSimpleCircleIcon",
+      },
+      {
+        id: "section-5",
+        label: "Outcome and Impact",
+        icon: "PresentationChartIcon",
+      },
       { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
     externalLinks: [
@@ -204,7 +233,7 @@ const projects: Project[] = [
     slug: "case-study-five",
     role: "alongside communities.",
     title: "Wolcott Falls",
-    tagline: "Co-designing a community space for a small rural New York town",
+    tagline: "Co-designing a community space for a rural New York town",
     tags: [
       { label: "Co-Design", icon: "UsersThreeIcon" },
       { label: "Stakeholders", icon: "HandshakeIcon" },
@@ -220,10 +249,14 @@ const projects: Project[] = [
     glyphAnimation: glyphFiveAnimation as GlyphAnimationData,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
-      { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
-      { id: "section-3", label: "Goal", icon: "TargetIcon" },
-      { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
-      { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
+      { id: "section-2", label: "Problem", icon: "SealQuestionIcon" },
+      { id: "section-3", label: "Research", icon: "MagnifyingGlassIcon" },
+      { id: "section-4", label: "Exploration", icon: "CompassRoseIcon" },
+      {
+        id: "section-5",
+        label: "Outcome & Impact",
+        icon: "PresentationChartIcon",
+      },
       { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
     externalLinks: [

@@ -143,7 +143,7 @@ export default function ProjectSummary({
     1,
   ];
   const headerImageXInset = useTransform(
-    headerIntroProgress,
+    headerVisualProgress,
     headerImageProgressStops,
     [
       headerImageBaseInset,
@@ -153,7 +153,7 @@ export default function ProjectSummary({
     ],
   );
   const headerImageTopInset = useTransform(
-    headerIntroProgress,
+    headerVisualProgress,
     headerImageProgressStops,
     [
       headerImageBaseInset,
@@ -163,7 +163,7 @@ export default function ProjectSummary({
     ],
   );
   const headerImageBottomInset = useTransform(
-    headerIntroProgress,
+    headerVisualProgress,
     headerImageProgressStops,
     [
       headerImageBaseInset,
@@ -173,7 +173,7 @@ export default function ProjectSummary({
     ],
   );
   const headerImageRadius = useTransform(
-    headerIntroProgress,
+    headerVisualProgress,
     headerImageProgressStops,
     [
       headerImageBaseRadius,
@@ -202,7 +202,7 @@ export default function ProjectSummary({
   const bottomOpacity = useTransform(bottomVisualProgress, [0, 1], [0, 1]);
 
   const headerScale = useTransform(
-    headerIntroProgress,
+    headerVisualProgress,
     [0, HEADER_IMAGE_FADE_START_PROGRESS, 1],
     [1, 1, 0.95],
   );
@@ -233,7 +233,7 @@ export default function ProjectSummary({
     ["blur(10px)", "blur(0px)"],
   );
 
-  const bottomScale = useTransform(bottomRevealProgress, [0, 1], [1.1, 1]);
+  const bottomScale = useTransform(bottomVisualProgress, [0, 1], [1.1, 1]);
 
   const {
     cardLightShadow,

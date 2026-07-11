@@ -4,7 +4,14 @@ import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
-import { ScrollIcon } from "@phosphor-icons/react";
+import {
+  ScrollIcon,
+  SealQuestionIcon,
+  MagnifyingGlassIcon,
+  CompassRoseIcon,
+  PresentationChartIcon,
+  BrainIcon,
+} from "@phosphor-icons/react";
 
 import { MotionValue, useTransform } from "framer-motion";
 
@@ -129,8 +136,8 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
       </section>
       <section id="section-2" className="scroll-mt-24">
         <SectionContainer
-          title="Quick Take"
-          icon={ScrollIcon}
+          title="Problem"
+          icon={SealQuestionIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
@@ -212,8 +219,8 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
       </section>
       <section id="section-3" className="scroll-mt-24">
         <SectionContainer
-          title="Quick Take"
-          icon={ScrollIcon}
+          title="Research"
+          icon={MagnifyingGlassIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
@@ -292,11 +299,11 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
             and approved through community review.
           </p>
         </SectionContainer>
-      </section>{" "}
+      </section>
       <section id="section-4" className="scroll-mt-24">
         <SectionContainer
-          title="Quick Take"
-          icon={ScrollIcon}
+          title="Exploration"
+          icon={CompassRoseIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
@@ -439,8 +446,152 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
       </section>
       <section id="section-5" className="scroll-mt-24">
         <SectionContainer
-          title="Quick Take"
-          icon={ScrollIcon}
+          title="Outcome & Impact"
+          icon={PresentationChartIcon}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          borderColor={borderColor}
+        >
+          <h2>Outcome</h2>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+          <p>
+            The space reopened with a village celebration. Foot traffic
+            increased, and a nearby cafe reopened to serve visitors. The project
+            was highlighted in a regional planning journal as a model for
+            participatory design. Most importantly, locals described the space
+            as “ours”—a small but powerful shift.
+          </p>
+        </SectionContainer>
+      </section>
+      <section id="section-6" className="scroll-mt-24">
+        <SectionContainer
+          title="Reflection"
+          icon={BrainIcon}
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
