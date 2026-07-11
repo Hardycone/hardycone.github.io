@@ -494,7 +494,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             </div>
           </NarrativeAccordion>{" "}
           <p className="mt-8">
-            I also hold a bachelor of Science from{" "}
+            My undergraduate training in Environmental Science at{" "}
             <FlourishName
               name="Beijing Normal University"
               bgColor={hexToRgba(introTheme.hex.primary, 0.05)}
@@ -506,16 +506,17 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               logoSrc="/logos/logo-bnu.png"
               logoClassName="dark:brightness-[50] dark:saturate-0"
             />
-            in Syracuse. This is where I first encountered environmental justice
-            as a design practice. I studied how landscape architecture could
-            repair — not just decorate — communities that had been
-            systematically underserved. My work included community-based design
-            studios, ecological restoration planning, and a thesis on equitable
-            access to green space. The throughline from Syracuse to Flux is
-            surprisingly direct: design is a tool for empowerment, whether the
-            medium is a park or a prototype.
+            Beijing Normal University gave me a foundation in ecological systems
+            and the relationship between environmental conditions and human
+            communities. That perspective eventually led me toward landscape
+            architecture, environmental justice, and human-centered technology.
+            Across each transition, I’ve remained interested in the same
+            underlying question: how can complex systems become more
+            understandable, participatory, and responsive to the people they
+            affect? I also hold a bachelor of Science from
           </p>
           <NarrativeAccordion isOpen={isBnuOpen}>
+            {" "}
             <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-chinatown/5 md:rounded-2">
               <div className="w-12 flex-shrink-0">
                 <img
@@ -604,57 +605,15 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           borderColor={borderColor}
         >
           <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring. In my spare time, I enjoy hiking,
-            running, practicing barre chords on my acoustic guitar, and taking
-            pictures with a mirrorless camera. I also enjoy making physical
-            things.
-          </p>
-
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
-          </p>
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
-          </p>
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
-          </p>
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
-          </p>
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
-          </p>
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
+            Outside of work, I enjoy hiking in the mountains, taking pictures
+            with my faithful Sony a7iii, practicing barre chords on my acoustic
+            guitar, and tinkering with gadgets and digital prototypes. I’ve
+            always been drawn to making things—whether it’s capturing a
+            landscape through a camera lens, learning a new song one chord at a
+            time, or taking apart and rebuilding technology just to understand
+            how it works. When I’m not designing, you’ll probably find me
+            exploring new trails, experimenting with a small hardware project,
+            or chasing a new creative rabbit hole.
           </p>
         </SectionContainer>
         <div className="relative left-1/2 mx-auto mb-8 w-[calc(100svw-2rem)] max-w-[1440px] -translate-x-1/2">
@@ -671,7 +630,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             {/* Image 2 - 2x2 square */}
             <div className="relative col-span-2 row-span-2 aspect-[1/1]">
               <img
-                src="/images/IMG_0031.jpeg"
+                src="/images/20230828-HWP01792.jpg"
                 alt="Dummy Image 2"
                 className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
               />
@@ -687,7 +646,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             {/* Remaining cells */}
             <div className="relative">
               <img
-                src="/images/IMG_2354.jpg"
+                src="/images/20230314-HWP09309.jpg"
                 alt="Dummy Image 4"
                 className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
               />
@@ -701,7 +660,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             </div>
             <div className="relative">
               <img
-                src="/images/69995629887__EAA7B009-840C-4172-AA52-AF7B5C9AA700.jpeg"
+                src="/images/IMG_2354.jpg"
                 alt="Dummy Image 7"
                 className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
               />
@@ -732,49 +691,6 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             things.
           </p>
           {/*Image Grid Container*/}
-
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
-          </p>
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
-          </p>
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
-          </p>
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
-          </p>
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
-          </p>
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring.
-          </p>
         </SectionContainer>
       </section>
     </article>
