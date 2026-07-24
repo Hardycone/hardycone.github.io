@@ -38,6 +38,7 @@ import {
   GraphIcon,
   CompassRoseIcon,
   PersonSimpleCircleIcon,
+  PaperPlaneTiltIcon,
 } from "@phosphor-icons/react";
 
 import Home from "../icons/Home";
@@ -490,6 +491,7 @@ export default function TopBar({
                       GraphIcon,
                       CompassRoseIcon,
                       PersonSimpleCircleIcon,
+                      PaperPlaneTiltIcon,
                     };
                     type IconName = keyof typeof Icons;
                     const Icon = Icons[section.icon as IconName];

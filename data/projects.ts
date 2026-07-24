@@ -70,6 +70,11 @@ const projects: Project[] = [
       { id: "section-1", label: "My Work", icon: "PathIcon" },
       { id: "section-2", label: "My Qualifications", icon: "CertificateIcon" },
       { id: "section-3", label: "My Interests", icon: "CameraIcon" },
+      {
+        id: "section-4",
+        label: "Let's Chat!",
+        icon: "PaperPlaneTiltIcon",
+      },
     ],
     externalLinks: [
       {

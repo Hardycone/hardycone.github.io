@@ -98,7 +98,7 @@ export default function CaseStudyContent({
   );
   const isBio = slug === "case-study-one";
   const PeekIcon = isBio ? PathIcon : ScrollIcon;
-  const peekTitle = isBio ? "My Journey" : "Quick Take";
+  const peekTitle = isBio ? "My Work" : "Quick Take";
 
   // Dispatch event after animation completes
   useEffect(() => {

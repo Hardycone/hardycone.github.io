@@ -7,13 +7,19 @@ import { useTheme } from "next-themes";
 // import projects from "@/data/projects";
 // import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useTransform, MotionValue } from "framer-motion";
-import { CertificateIcon, PathIcon, CameraIcon } from "@phosphor-icons/react";
+import {
+  CertificateIcon,
+  PathIcon,
+  CameraIcon,
+  PaperPlaneTiltIcon,
+} from "@phosphor-icons/react";
 import { hexToRgba } from "@/lib/palette";
 // import { useProjectTheme } from "@/hooks/useProjectTheme";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
 import FlourishName from "../FlourishName";
 import NarrativeAccordion from "../NarrativeAccordion";
+import CaseStudyContactForm from "../CaseStudyContactForm";
 
 interface CaseStudyOneProps {
   scrollY: MotionValue<number>;
@@ -327,6 +333,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
         </SectionContainer>
       </section>
 
+      {/*Section 2: Qualifications*/}
       <section id="section-2" className="mb-16 w-full min-w-0 scroll-mt-24">
         <SectionContainer
           title="My Qualifications"
@@ -674,23 +681,19 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             </div>
           </div>
         </div>
+      </section>
+
+      {/*Section 4: Let's Chat!*/}
+      <section id="section-4" className="w-full min-w-0 scroll-mt-24">
         <SectionContainer
-          showHeading={false}
+          title="Let's Chat!"
+          showDivider={false}
+          icon={PaperPlaneTiltIcon}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
-          revealOnScroll={false}
-          cardClass="mb-0"
         >
-          <p>
-            Whether I’m prototyping UX flows in Figma, guiding product direction
-            with founders, or co-designing with local communities, I bring a
-            principled but curious approach. This portfolio shares six
-            representative projects—from startups to NASA to grassroots
-            urbanism. Thanks for exploring. In my spare time, I enjoy hiking,
-            running, practicing barre chords on my acoustic guitar, and taking
-            pictures with a mirrorless camera. I also enjoy making physical
-            things.
-          </p>
-          {/*Image Grid Container*/}
+          <CaseStudyContactForm />
         </SectionContainer>
       </section>
     </article>
