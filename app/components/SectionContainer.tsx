@@ -42,9 +42,9 @@ export default function SectionContainer({
   // bgOpacityClass = "bg-opacity-20 dark:bg-opacity-20",
 
   borderColor,
-  cardClass = "mb-12",
+  cardClass = "",
   revealOnScroll = true,
-  showDivider = true,
+  showDivider = false,
   children,
 }: SectionContainerProps) {
   const shouldReduceMotion = useReducedMotion();
@@ -87,13 +87,13 @@ export default function SectionContainer({
             <h3 className={` ${textColorClass}`}>{title}</h3>
           </div>
           <div
-            className={`mb-8 h-0.5 w-full rounded-full md:mb-12 ${
+            className={`h-0.5 w-full rounded-full ${
               showDivider ? bgColorClass : "invisible"
             }`}
           />
         </>
       ) : null}
-      {children}
+      <div className="flex flex-col p-8 md:p-12">{children}</div>
     </motion.div>
   );
 }

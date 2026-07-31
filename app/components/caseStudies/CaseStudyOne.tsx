@@ -19,7 +19,7 @@ import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
 import FlourishName from "../FlourishName";
 import NarrativeAccordion from "../NarrativeAccordion";
-import CaseStudyContactForm from "../CaseStudyContactForm";
+import BioContactForm from "../BioContactForm";
 
 interface CaseStudyOneProps {
   scrollY: MotionValue<number>;
@@ -77,7 +77,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   return (
     <article className="mx-auto w-full min-w-0 max-w-5xl">
       {/*Section 1: Resume*/}
-      <section id="section-1" className="mb-16 w-full min-w-0 scroll-mt-24">
+      <section id="section-1" className="mb-8 w-full min-w-0 scroll-mt-24">
         {/*Section Header Block*/}
         <SectionContainer
           title="My Work"
@@ -334,7 +334,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       </section>
 
       {/*Section 2: Qualifications*/}
-      <section id="section-2" className="mb-16 w-full min-w-0 scroll-mt-24">
+      <section id="section-2" className="mb-8 w-full min-w-0 scroll-mt-24">
         <SectionContainer
           title="My Qualifications"
           icon={CertificateIcon}
@@ -512,15 +512,15 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               onFlourish={() => setIsBnuOpen(true)}
               logoSrc="/logos/logo-bnu.png"
               logoClassName="dark:brightness-[50] dark:saturate-0"
-            />
-            Beijing Normal University gave me a foundation in ecological systems
-            and the relationship between environmental conditions and human
-            communities. That perspective eventually led me toward landscape
-            architecture, environmental justice, and human-centered technology.
-            Across each transition, I’ve remained interested in the same
-            underlying question: how can complex systems become more
-            understandable, participatory, and responsive to the people they
-            affect? I also hold a bachelor of Science from
+            />{" "}
+            gave me a foundation in ecological systems and the relationship
+            between environmental conditions and human communities. That
+            perspective eventually led me toward landscape architecture,
+            environmental justice, and human-centered technology. Across each
+            transition, I’ve remained interested in the same underlying
+            question: how can complex systems become more understandable,
+            participatory, and responsive to the people they affect? This has
+            been the driving force of my career ever since.
           </p>
           <NarrativeAccordion isOpen={isBnuOpen}>
             {" "}
@@ -545,8 +545,21 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             </div>
           </NarrativeAccordion>
           {/*Subsection 4: Skills*/}
+        </SectionContainer>
+      </section>
+
+      {/*Section 3: My Skills*/}
+      <section id="section-3" className="w-full min-w-0 scroll-mt-24">
+        <SectionContainer
+          title="My Skills"
+          showDivider={false}
+          icon={PaperPlaneTiltIcon}
+          textColorClass={"text-foreground dark:text-dark-foreground"}
+          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          borderColor={borderColor}
+        >
           <div className="mb-8">
-            <h3 className="mb-4 font-sans text-2xl font-semibold">Skills</h3>
+            <p>I am a generalist.</p>
             {/*Skills List*/}
             <ul className="text-xl">
               {/*1*/}
@@ -601,8 +614,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
         </SectionContainer>
       </section>
 
-      {/*Section 3: Interests*/}
-      <section id="section-3" className="w-full min-w-0 scroll-mt-24">
+      {/*Section 4: Interests*/}
+      <section id="section-4" className="w-full min-w-0 scroll-mt-24">
         <SectionContainer
           title="My Interests"
           showDivider={false}
@@ -683,8 +696,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
         </div>
       </section>
 
-      {/*Section 4: Let's Chat!*/}
-      <section id="section-4" className="w-full min-w-0 scroll-mt-24">
+      {/*Section 5: Let's Chat!*/}
+      <section id="section-5" className="w-full min-w-0 scroll-mt-24">
         <SectionContainer
           title="Let's Chat!"
           showDivider={false}
@@ -693,7 +706,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
         >
-          <CaseStudyContactForm />
+          <BioContactForm />
         </SectionContainer>
       </section>
     </article>

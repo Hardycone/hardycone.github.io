@@ -1056,7 +1056,6 @@ export default function MainContent({ children }: { children: ReactNode }) {
               variant={summaryVariant}
               headerIntroProgress={headerIntroProgress}
               headerVisualProgress={smoothHeaderIntroProgress}
-              bottomRevealProgress={bottomRevealProgress}
               bottomVisualProgress={smoothBottomRevealProgress}
               floatingPaneRef={floatingPaneRef}
               isFloatingPaneVisible={

@@ -21,7 +21,6 @@ import CaseStudyTwo from "./caseStudies/CaseStudyTwo";
 import CaseStudyThree from "./caseStudies/CaseStudyThree";
 import CaseStudyFour from "./caseStudies/CaseStudyFour";
 import CaseStudyFive from "./caseStudies/CaseStudyFive";
-import CaseStudySix from "./caseStudies/CaseStudySix";
 interface CaseStudyContentProps {
   scrollY: MotionValue<number>;
   headerIntroProgress: MotionValue<number>;
@@ -32,24 +31,17 @@ interface CaseStudyContentProps {
 
 type CaseStudyComponentProps = Pick<CaseStudyContentProps, "scrollY">;
 
-type ProjectSlug =
-  | "case-study-one"
-  | "case-study-two"
-  | "case-study-three"
-  | "case-study-four"
-  | "case-study-five"
-  | "case-study-six";
+type ProjectSlug = "about-me" | "flux" | "fantail" | "nasa-suits" | "wolcott";
 
 const caseStudyComponents: Record<
   ProjectSlug,
   React.FC<CaseStudyComponentProps>
 > = {
-  "case-study-one": CaseStudyOne,
-  "case-study-two": CaseStudyTwo,
-  "case-study-three": CaseStudyThree,
-  "case-study-four": CaseStudyFour,
-  "case-study-five": CaseStudyFive,
-  "case-study-six": CaseStudySix,
+  "about-me": CaseStudyOne,
+  flux: CaseStudyTwo,
+  fantail: CaseStudyThree,
+  "nasa-suits": CaseStudyFour,
+  wolcott: CaseStudyFive,
 };
 
 const contentVariants = {
@@ -96,7 +88,7 @@ export default function CaseStudyContent({
     peekBorderOpacity,
     (opacity) => `rgba(255,255,255,${opacity})`,
   );
-  const isBio = slug === "case-study-one";
+  const isBio = slug === "about-me";
   const PeekIcon = isBio ? PathIcon : ScrollIcon;
   const peekTitle = isBio ? "My Work" : "Quick Take";
 

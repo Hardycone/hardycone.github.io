@@ -53,7 +53,7 @@ function validateFields(fields: FormFields): FieldErrors {
   return errors;
 }
 
-export default function CaseStudyContactForm() {
+export default function BioContactForm() {
   const { flashShortcutHint } = useKeyboardHints();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -305,7 +305,7 @@ export default function CaseStudyContactForm() {
   const sendShortcutLabel = isApplePlatform ? "⌘ + Enter" : "Ctrl + Enter";
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
+    <div className="w-full">
       <AnimatePresence>
         {showSuccess && (
           <motion.div
@@ -328,7 +328,7 @@ export default function CaseStudyContactForm() {
 
       <form
         ref={formRef}
-        id="case-study-one-contact-form"
+        id="about-me-contact-form"
         noValidate
         onSubmit={handleSubmit}
         onFocusCapture={(event) => {

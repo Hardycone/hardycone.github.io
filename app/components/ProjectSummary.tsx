@@ -91,7 +91,6 @@ interface ProjectSummaryProps {
   variant: "preview" | "header" | "bottom";
   headerIntroProgress: MotionValue<number>;
   headerVisualProgress: MotionValue<number>;
-  bottomRevealProgress: MotionValue<number>;
   bottomVisualProgress: MotionValue<number>;
   floatingPaneRef?: React.RefObject<HTMLDivElement | null>;
   isFloatingPaneVisible?: boolean;
@@ -109,7 +108,6 @@ export default function ProjectSummary({
   variant,
   headerIntroProgress,
   headerVisualProgress,
-  bottomRevealProgress,
   bottomVisualProgress,
   floatingPaneRef,
   isFloatingPaneVisible = true,

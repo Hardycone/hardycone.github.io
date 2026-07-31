@@ -169,7 +169,7 @@ export default function TopBar({
   }, [isNavigatingHome, onInstantHomeNavigationStart, router]);
 
   const handleAboutClick = useCallback(() => {
-    if (pathname === "/case-study-one") {
+    if (pathname === "/about-me") {
       if (window.scrollY > 30) {
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
@@ -184,7 +184,7 @@ export default function TopBar({
         setViewMode("home");
       });
       requestAnimationFrame(() => {
-        router.push("/case-study-one");
+        router.push("/about-me");
       });
     }
   }, [pathname, router, setActiveIndex, setViewMode]);

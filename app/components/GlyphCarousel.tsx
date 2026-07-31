@@ -189,13 +189,7 @@ export default function GlyphCarousel() {
                 animationData={project.glyphAnimation}
                 isActive={isActive}
                 shouldAnimate={isMdUp}
-                colorPalette={
-                  index === 2
-                    ? "glyph-three"
-                    : index === 5
-                      ? "glyph-six"
-                      : undefined
-                }
+                colorPalette={index === 2 ? "glyph-three" : undefined}
               />
             </motion.button>
             <AnimatePresence>

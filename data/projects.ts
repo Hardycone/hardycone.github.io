@@ -4,7 +4,6 @@ import glyphTwoAnimation from "../public/animations/glyph-two.json";
 import glyphThreeAnimation from "../public/animations/glyph-three.json";
 import glyphFourAnimation from "../public/animations/glyph-four.json";
 import glyphFiveAnimation from "../public/animations/glyph-five.json";
-import glyphSixAnimation from "../public/animations/glyph-six.json";
 
 export type GlyphAnimationData = {
   op: number;
@@ -49,7 +48,7 @@ export interface Project {
 const projects: Project[] = [
   {
     id: "intro",
-    slug: "case-study-one",
+    slug: "about-me",
     role: "to empower.",
     title: "About Me",
     tagline: "Human-Centered Product Designer with 10 Years of Experience",
@@ -96,7 +95,7 @@ const projects: Project[] = [
   },
   {
     id: "flux",
-    slug: "case-study-two",
+    slug: "flux",
     title: "Flux",
     role: "from 0 to 1.",
     tagline: "Democratizing quantitative UX research",
@@ -152,7 +151,7 @@ const projects: Project[] = [
   },
   {
     id: "fantail",
-    slug: "case-study-three",
+    slug: "fantail",
     role: "human-centered AI.",
     title: "Fantail",
     tagline: "Empowering filmmakers to bring their stories to life",
@@ -196,7 +195,7 @@ const projects: Project[] = [
   },
   {
     id: "suits",
-    slug: "case-study-four",
+    slug: "nasa-suits",
     role: "next-gen interfaces.",
     title: "Astrohuskies",
     tagline: "Building AR interfaces for next gen NASA missions",
@@ -235,7 +234,7 @@ const projects: Project[] = [
   },
   {
     id: "wolcott",
-    slug: "case-study-five",
+    slug: "wolcott",
     role: "alongside communities.",
     title: "Wolcott Falls",
     tagline: "Co-designing a community space for a rural New York town",
@@ -262,38 +261,6 @@ const projects: Project[] = [
         label: "Outcome & Impact",
         icon: "PresentationChartIcon",
       },
-      { id: "section-6", label: "Reflection", icon: "BrainIcon" },
-    ],
-    externalLinks: [
-      { label: "GitHub", url: "https://google.com", icon: "GithubLogoIcon" },
-      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
-    ],
-  },
-  {
-    id: "chinatown",
-    slug: "case-study-six",
-    role: "with deep research.",
-    title: "The Ribbon",
-    tagline:
-      "Telling the story of an ethnic enclave through narrative landscape architecture",
-    tags: [
-      { label: "Architecture", icon: "BuildingsIcon" },
-      { label: "Stakeholders", icon: "HandshakeIcon" },
-    ],
-    description:
-      "I studied Boston's Chinatown and delievered a suite of design recommendations to key stakeholders that aimed at promoting the neighorhood's cultural identity. Several of my proposals were later partially implemented.",
-    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
-    button: "Look Inside",
-    image: "/images/hero-ribbon.png",
-    textColor: "chinatown",
-    bgColor: "chinatownBackground",
-    glyphAnimation: glyphSixAnimation as GlyphAnimationData,
-    sections: [
-      { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
-      { id: "section-2", label: "Problem", icon: "PuzzlePieceIcon" },
-      { id: "section-3", label: "Goal", icon: "TargetIcon" },
-      { id: "section-4", label: "Action", icon: "PersonSimpleRunIcon" },
-      { id: "section-5", label: "Result", icon: "PresentationChartIcon" },
       { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
     externalLinks: [
