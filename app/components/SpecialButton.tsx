@@ -17,7 +17,7 @@ export default function SpecialButton() {
             : "h-[] w-[200px] rounded-[15px]"
         } `}
       >
-        <p className={`mr-4 text-xl transition-all duration-100`}>View</p>
+        <p className="mr-4 transition-all duration-100">View</p>
       </div>
     </button>
   );

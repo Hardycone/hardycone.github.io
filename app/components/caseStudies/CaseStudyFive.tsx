@@ -1,19 +1,29 @@
-/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @next/next/no-img-element */
+"use client";
+
 import { useTheme } from "next-themes";
+import { MotionValue, useTransform } from "framer-motion";
+import {
+  BrainIcon,
+  BuildingsIcon,
+  CheckCircleIcon,
+  CompassRoseIcon,
+  MagnifyingGlassIcon,
+  PathIcon,
+  PresentationChartIcon,
+  ScrollIcon,
+  SealQuestionIcon,
+  TreeIcon,
+  UsersThreeIcon,
+  WavesIcon,
+} from "@phosphor-icons/react";
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
+import CaseStudyFigure from "../CaseStudyFigure";
+import HorizontalFilmstrip from "../HorizontalScrollGroup";
 import SectionContainer from "../SectionContainer";
-import {
-  ScrollIcon,
-  SealQuestionIcon,
-  MagnifyingGlassIcon,
-  CompassRoseIcon,
-  PresentationChartIcon,
-  BrainIcon,
-} from "@phosphor-icons/react";
-
-import { MotionValue, useTransform } from "framer-motion";
+import SubSectionHeading from "../SubSectionHeading";
 
 interface CaseStudyFiveProps {
   scrollY: MotionValue<number>;
@@ -38,7 +48,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
 
   const borderColor = useTransform(
     borderOpacity,
-    (o) => `rgba(255,255,255,${o})`,
+    (opacity) => `rgba(255,255,255,${opacity})`,
   );
 
   return (
@@ -47,689 +57,304 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
         <SectionContainer
           title="Quick Take"
           icon={ScrollIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
           revealOnScroll={false}
         >
-          <h2 className={`text-3xl${theme.textColorClass} leading-loose`}>
-            My Resume
-          </h2>
-          <p>
-            In a rural village facing economic decline, residents rallied around
-            a local natural site—a small but beautiful waterfall—as a symbol of
-            renewal. We partnered with community leaders to redesign the
-            surrounding public space, making it accessible, inviting, and deeply
-            local. I'm
-          </p>{" "}
-          <p>
-            In a rural village facing economic decline, residents rallied around
-            a local natural site—a small but beautiful waterfall—as a symbol of
-            renewal. We partnered with community leaders to redesign the
-            surrounding public space, making it accessible, inviting, and deeply
-            local.
-          </p>{" "}
-          <p>
-            In a rural village facing economic decline, residents rallied around
-            a local natural site—a small but beautiful waterfall—as a symbol of
-            renewal. We partnered with community leaders to redesign the
-            surrounding public space, making it accessible, inviting, and deeply
-            local.
-          </p>{" "}
-          <p>
-            In a rural village facing economic decline, residents rallied around
-            a local natural site—a small but beautiful waterfall—as a symbol of
-            renewal. We partnered with community leaders to redesign the
-            surrounding public space, making it accessible, inviting, and deeply
-            local.
-          </p>{" "}
-          <p>
-            In a rural village facing economic decline, residents rallied around
-            a local natural site—a small but beautiful waterfall—as a symbol of
-            renewal. We partnered with community leaders to redesign the
-            surrounding public space, making it accessible, inviting, and deeply
-            local.
-          </p>{" "}
-          <p>
-            In a rural village facing economic decline, residents rallied around
-            a local natural site—a small but beautiful waterfall—as a symbol of
-            renewal. We partnered with community leaders to redesign the
-            surrounding public space, making it accessible, inviting, and deeply
-            local.
-          </p>{" "}
-          <p>
-            In a rural village facing economic decline, residents rallied around
-            a local natural site—a small but beautiful waterfall—as a symbol of
-            renewal. We partnered with community leaders to redesign the
-            surrounding public space, making it accessible, inviting, and deeply
-            local.
-          </p>{" "}
-          <p>
-            In a rural village facing economic decline, residents rallied around
-            a local natural site—a small but beautiful waterfall—as a symbol of
-            renewal. We partnered with community leaders to redesign the
-            surrounding public space, making it accessible, inviting, and deeply
-            local.
-          </p>{" "}
-          <p>
-            In a rural village facing economic decline, residents rallied around
-            a local natural site—a small but beautiful waterfall—as a symbol of
-            renewal. We partnered with community leaders to redesign the
-            surrounding public space, making it accessible, inviting, and deeply
-            local.
-          </p>{" "}
-          <p>
-            In a rural village facing economic decline, residents rallied around
-            a local natural site—a small but beautiful waterfall—as a symbol of
-            renewal. We partnered with community leaders to redesign the
-            surrounding public space, making it accessible, inviting, and deeply
-            local.
-          </p>{" "}
-          <p>
-            In a rural village facing economic decline, residents rallied around
-            a local natural site—a small but beautiful waterfall—as a symbol of
-            renewal. We partnered with community leaders to redesign the
-            surrounding public space, making it accessible, inviting, and deeply
-            local.
+          <p className="mb-8 text-pretty px-2">
+            Wolcott Falls was a NOAA-funded effort to turn a valued but
+            underused natural landmark into a catalyst for the village center.
+            As project manager, I led a five-workshop co-design process from
+            community listening through an actionable design packet.
           </p>
+          <div className="mb-12 grid gap-px overflow-hidden rounded-1 bg-foreground/10 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-foreground/15 md:grid-cols-3 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4">
+            {[
+              ["Role", "Project manager · Community design lead"],
+              ["Process", "Five public co-design workshops"],
+              ["Legacy", "Continued funding · Groundbreaking in 2026"],
+            ].map(([label, value]) => (
+              <div
+                key={label}
+                className="bg-background p-5 dark:bg-dark-background"
+              >
+                <p className={`mb-1 font-semibold ${theme.textColorClass}`}>
+                  {label}
+                </p>
+                <p>{value}</p>
+              </div>
+            ))}
+          </div>
+          <CaseStudyFigure caption="Wolcott Falls became the organizing landmark for a broader village-center strategy.">
+            <img
+              src="/images/hero-wolcott.jpg"
+              alt="Wolcott Falls and the surrounding village landscape"
+              className="h-full max-h-[34rem] w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4"
+            />
+          </CaseStudyFigure>
         </SectionContainer>
       </section>
+
       <section id="section-2" className="scroll-mt-24">
         <SectionContainer
-          title="Problem"
+          title="Context"
           icon={SealQuestionIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
         >
-          <h2>Research</h2>
-          <p>
-            We conducted participatory workshops with residents, elders, and
-            students. Themes emerged: pride in the landscape, memories of
-            childhood visits, and a desire for public space to foster
-            intergenerational connection. We mapped informal paths, usage
-            patterns, and seasonal changes. Environmental concerns around
-            erosion and runoff were also key.
-          </p>{" "}
-          <p>
-            We conducted participatory workshops with residents, elders, and
-            students. Themes emerged: pride in the landscape, memories of
-            childhood visits, and a desire for public space to foster
-            intergenerational connection. We mapped informal paths, usage
-            patterns, and seasonal changes. Environmental concerns around
-            erosion and runoff were also key.
-          </p>{" "}
-          <p>
-            We conducted participatory workshops with residents, elders, and
-            students. Themes emerged: pride in the landscape, memories of
-            childhood visits, and a desire for public space to foster
-            intergenerational connection. We mapped informal paths, usage
-            patterns, and seasonal changes. Environmental concerns around
-            erosion and runoff were also key.
-          </p>{" "}
-          <p>
-            We conducted participatory workshops with residents, elders, and
-            students. Themes emerged: pride in the landscape, memories of
-            childhood visits, and a desire for public space to foster
-            intergenerational connection. We mapped informal paths, usage
-            patterns, and seasonal changes. Environmental concerns around
-            erosion and runoff were also key.
-          </p>{" "}
-          <p>
-            We conducted participatory workshops with residents, elders, and
-            students. Themes emerged: pride in the landscape, memories of
-            childhood visits, and a desire for public space to foster
-            intergenerational connection. We mapped informal paths, usage
-            patterns, and seasonal changes. Environmental concerns around
-            erosion and runoff were also key.
-          </p>{" "}
-          <p>
-            We conducted participatory workshops with residents, elders, and
-            students. Themes emerged: pride in the landscape, memories of
-            childhood visits, and a desire for public space to foster
-            intergenerational connection. We mapped informal paths, usage
-            patterns, and seasonal changes. Environmental concerns around
-            erosion and runoff were also key.
-          </p>{" "}
-          <p>
-            We conducted participatory workshops with residents, elders, and
-            students. Themes emerged: pride in the landscape, memories of
-            childhood visits, and a desire for public space to foster
-            intergenerational connection. We mapped informal paths, usage
-            patterns, and seasonal changes. Environmental concerns around
-            erosion and runoff were also key.
-          </p>{" "}
-          <p>
-            We conducted participatory workshops with residents, elders, and
-            students. Themes emerged: pride in the landscape, memories of
-            childhood visits, and a desire for public space to foster
-            intergenerational connection. We mapped informal paths, usage
-            patterns, and seasonal changes. Environmental concerns around
-            erosion and runoff were also key.
-          </p>{" "}
-          <p>
-            We conducted participatory workshops with residents, elders, and
-            students. Themes emerged: pride in the landscape, memories of
-            childhood visits, and a desire for public space to foster
-            intergenerational connection. We mapped informal paths, usage
-            patterns, and seasonal changes. Environmental concerns around
-            erosion and runoff were also key.
+          <SubSectionHeading
+            number="1"
+            heading="More than a beautification project"
+          />
+          <p className="mb-10 text-pretty px-2">
+            The falls sat close to Main Street but felt disconnected from daily
+            village life. Access, visibility, gathering space, and watershed
+            health were intertwined—and residents had seen plans arrive before
+            without a clear path to implementation.
+          </p>
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                title: "Place",
+                copy: "Reveal the falls and connect them to the village core.",
+                icon: BuildingsIcon,
+              },
+              {
+                title: "Community",
+                copy: "Create spaces residents would recognize as their own.",
+                icon: UsersThreeIcon,
+              },
+              {
+                title: "Watershed",
+                copy: "Pair public access with erosion and runoff improvements.",
+                icon: WavesIcon,
+              },
+            ].map(({ title, copy, icon: Icon }) => (
+              <div
+                key={title}
+                className="border-l-2 pl-4"
+                style={{ borderColor: theme.hex.primary }}
+              >
+                <Icon
+                  size={28}
+                  weight="duotone"
+                  className={theme.textColorClass}
+                />
+                <h4 className="mt-4">{title}</h4>
+                <p className="mt-2 text-pretty">{copy}</p>
+              </div>
+            ))}
+          </div>
+          <p
+            className="mt-12 rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
+            style={{ backgroundColor: theme.hex.soft }}
+          >
+            The real design question was how to turn local pride into a shared,
+            fundable sequence of projects.
           </p>
         </SectionContainer>
       </section>
+
       <section id="section-3" className="scroll-mt-24">
         <SectionContainer
-          title="Research"
+          title="Co-Design"
           icon={MagnifyingGlassIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
         >
-          <h2>Design</h2>
-          <p>
-            The final design included: A low-impact trail with storytelling
-            signs written by locals A small amphitheater for events and
-            gatherings Stone seating and wooden bridges made by local artisans
-            Plantings of native species co-designed with schoolchildren We
-            avoided imposing “outside” aesthetics. Every element was co-designed
-            and approved through community review.
-          </p>{" "}
-          <p>
-            The final design included: A low-impact trail with storytelling
-            signs written by locals A small amphitheater for events and
-            gatherings Stone seating and wooden bridges made by local artisans
-            Plantings of native species co-designed with schoolchildren We
-            avoided imposing “outside” aesthetics. Every element was co-designed
-            and approved through community review.
-          </p>{" "}
-          <p>
-            The final design included: A low-impact trail with storytelling
-            signs written by locals A small amphitheater for events and
-            gatherings Stone seating and wooden bridges made by local artisans
-            Plantings of native species co-designed with schoolchildren We
-            avoided imposing “outside” aesthetics. Every element was co-designed
-            and approved through community review.
-          </p>{" "}
-          <p>
-            The final design included: A low-impact trail with storytelling
-            signs written by locals A small amphitheater for events and
-            gatherings Stone seating and wooden bridges made by local artisans
-            Plantings of native species co-designed with schoolchildren We
-            avoided imposing “outside” aesthetics. Every element was co-designed
-            and approved through community review.
-          </p>{" "}
-          <p>
-            The final design included: A low-impact trail with storytelling
-            signs written by locals A small amphitheater for events and
-            gatherings Stone seating and wooden bridges made by local artisans
-            Plantings of native species co-designed with schoolchildren We
-            avoided imposing “outside” aesthetics. Every element was co-designed
-            and approved through community review.
-          </p>{" "}
-          <p>
-            The final design included: A low-impact trail with storytelling
-            signs written by locals A small amphitheater for events and
-            gatherings Stone seating and wooden bridges made by local artisans
-            Plantings of native species co-designed with schoolchildren We
-            avoided imposing “outside” aesthetics. Every element was co-designed
-            and approved through community review.
-          </p>{" "}
-          <p>
-            The final design included: A low-impact trail with storytelling
-            signs written by locals A small amphitheater for events and
-            gatherings Stone seating and wooden bridges made by local artisans
-            Plantings of native species co-designed with schoolchildren We
-            avoided imposing “outside” aesthetics. Every element was co-designed
-            and approved through community review.
-          </p>{" "}
-          <p>
-            The final design included: A low-impact trail with storytelling
-            signs written by locals A small amphitheater for events and
-            gatherings Stone seating and wooden bridges made by local artisans
-            Plantings of native species co-designed with schoolchildren We
-            avoided imposing “outside” aesthetics. Every element was co-designed
-            and approved through community review.
-          </p>{" "}
-          <p>
-            The final design included: A low-impact trail with storytelling
-            signs written by locals A small amphitheater for events and
-            gatherings Stone seating and wooden bridges made by local artisans
-            Plantings of native species co-designed with schoolchildren We
-            avoided imposing “outside” aesthetics. Every element was co-designed
-            and approved through community review.
+          <SubSectionHeading
+            number="1"
+            heading="Five workshops, one continuous conversation"
+          />
+          <p className="mb-10 text-pretty px-2">
+            Each workshop returned something tangible to residents. That made
+            participation cumulative: stories became priorities, priorities
+            became alternatives, and alternatives became commitments.
           </p>
+          <HorizontalFilmstrip
+            body={
+              <>
+                <SubSectionHeading
+                  number="2"
+                  heading="The co-design sequence"
+                />
+                <p className="text-pretty px-2">
+                  We used familiar language, maps, photographs, and trade-off
+                  exercises rather than asking residents to react to a finished
+                  plan.
+                </p>
+              </>
+            }
+            cards={[
+              [
+                "01",
+                "Listen",
+                "Collect memories, concerns, and definitions of success.",
+              ],
+              [
+                "02",
+                "Map",
+                "Locate valued places, barriers, and overlooked connections.",
+              ],
+              [
+                "03",
+                "Prioritize",
+                "Turn many ideas into shared design principles.",
+              ],
+              [
+                "04",
+                "Compare",
+                "Discuss alternatives and make trade-offs visible.",
+              ],
+              [
+                "05",
+                "Commit",
+                "Confirm the preferred direction, owners, and next steps.",
+              ],
+            ].map(([number, title, copy]) => ({
+              id: title.toLowerCase(),
+              content: (
+                <>
+                  <span className={`text-sm font-bold ${theme.textColorClass}`}>
+                    {number}
+                  </span>
+                  <h4 className="mt-auto pt-8">{title}</h4>
+                  <p className="mt-3">{copy}</p>
+                </>
+              ),
+            }))}
+          />
         </SectionContainer>
       </section>
+
       <section id="section-4" className="scroll-mt-24">
         <SectionContainer
-          title="Exploration"
+          title="Design Framework"
           icon={CompassRoseIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
         >
-          <h2>Outcome</h2>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
+          <SubSectionHeading
+            number="1"
+            heading="A framework that could be phased"
+          />
+          <p className="mb-10 text-pretty px-2">
+            The preferred concept was organized as a connected family of
+            projects rather than one expensive intervention. That let the
+            village pursue funding and construction in practical increments.
           </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
+          <CaseStudyFigure caption="The design packet connected public life, access, and watershed work into one phased framework.">
+            <div className="grid w-full max-w-4xl gap-3 md:grid-cols-4">
+              {[
+                { label: "Main Street", icon: BuildingsIcon },
+                { label: "Accessible route", icon: PathIcon },
+                { label: "Gathering spaces", icon: UsersThreeIcon },
+                { label: "Falls + watershed", icon: TreeIcon },
+              ].map(({ label, icon: Icon }, index) => (
+                <div
+                  key={label}
+                  className="relative flex min-h-32 flex-col items-center justify-center gap-3 rounded-1 bg-background p-4 text-center shadow-sm dark:bg-dark-background md:rounded-2"
+                >
+                  <span
+                    className={`absolute left-3 top-3 text-xs font-bold ${theme.textColorClass}`}
+                  >
+                    0{index + 1}
+                  </span>
+                  <Icon
+                    size={34}
+                    weight="duotone"
+                    className={theme.textColorClass}
+                  />
+                  <span className="font-sans text-sm font-semibold">
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CaseStudyFigure>
+          <SubSectionHeading
+            number="2"
+            heading="Design packet to action plan"
+          />
+          <p className="text-pretty px-2">
+            The final package paired spatial concepts with priorities,
+            responsibilities, funding logic, and concrete next steps—giving the
+            community something it could continue using after our engagement
+            ended.
           </p>
         </SectionContainer>
       </section>
+
       <section id="section-5" className="scroll-mt-24">
         <SectionContainer
-          title="Outcome & Impact"
+          title="Implementation"
           icon={PresentationChartIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
         >
-          <h2>Outcome</h2>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
+          <SubSectionHeading number="1" heading="A plan that kept moving" />
+          <p className="mb-10 text-pretty px-2">
+            The process produced a community-backed design packet and an
+            implementable set of next steps. The same grant source continued
+            funding the work, and construction broke ground in 2026 after I had
+            left the organization.
           </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              "Community direction documented",
+              "Continued funding secured",
+              "Construction underway",
+            ].map((item) => (
+              <div
+                key={item}
+                className="flex items-center gap-3 border-t pt-4 dark:border-dark-foreground/20"
+              >
+                <CheckCircleIcon
+                  size={24}
+                  weight="fill"
+                  className={theme.textColorClass}
+                />
+                <p className="font-semibold">{item}</p>
+              </div>
+            ))}
+          </div>
         </SectionContainer>
       </section>
+
       <section id="section-6" className="scroll-mt-24">
         <SectionContainer
           title="Reflection"
           icon={BrainIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
         >
-          <h2>Outcome</h2>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
-          <p>
-            The space reopened with a village celebration. Foot traffic
-            increased, and a nearby cafe reopened to serve visitors. The project
-            was highlighted in a regional planning journal as a model for
-            participatory design. Most importantly, locals described the space
-            as “ours”—a small but powerful shift.
-          </p>
+          <SubSectionHeading number="1" heading="Designing for ownership" />
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              [
+                "Participation needs consequence",
+                "People stay engaged when each session visibly changes the work.",
+              ],
+              [
+                "Plans need an operating model",
+                "A compelling vision matters less if nobody knows what happens next.",
+              ],
+              [
+                "Success can outlast the designer",
+                "The strongest result was a process the village could keep carrying forward.",
+              ],
+            ].map(([title, copy]) => (
+              <div key={title}>
+                <h4>{title}</h4>
+                <p className="mt-2 text-pretty">{copy}</p>
+              </div>
+            ))}
+          </div>
         </SectionContainer>
       </section>
     </article>

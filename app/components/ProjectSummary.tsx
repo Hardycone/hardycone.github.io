@@ -11,6 +11,8 @@ import {
   AnimatePresence,
   motion,
   MotionValue,
+  useMotionValue,
+  useMotionValueEvent,
   useTransform,
   type MotionStyle,
 } from "framer-motion";
@@ -124,6 +126,52 @@ export default function ProjectSummary({
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
   const isMdUp = useIsMdUp();
   const supportsSquircle = useSupportsSquircle();
+  const bottomCardHeight = useMotionValue(200);
+  const [hasBottomRevealCompleted, setHasBottomRevealCompleted] = useState(
+    () => bottomVisualProgress.get() >= 0.999,
+  );
+  useMotionValueEvent(bottomVisualProgress, "change", (progress) => {
+    const hasCompleted = progress >= 0.999;
+    setHasBottomRevealCompleted((previous) =>
+      previous === hasCompleted ? previous : hasCompleted,
+    );
+  });
+  const isSummaryInteractionEnabled =
+    variant !== "bottom" || hasBottomRevealCompleted;
+  const bottomCardResizeCleanupRef = useRef<(() => void) | null>(null);
+  const setBottomCardRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      bottomCardResizeCleanupRef.current?.();
+      bottomCardResizeCleanupRef.current = null;
+
+      if (!node || variant !== "bottom") return;
+
+      let measurementFrame: number | null = null;
+      const measure = () => {
+        const height = node.offsetHeight;
+        if (height > 0) bottomCardHeight.set(height);
+      };
+      const scheduleMeasurement = () => {
+        if (measurementFrame !== null) return;
+        measurementFrame = window.requestAnimationFrame(() => {
+          measurementFrame = null;
+          measure();
+        });
+      };
+
+      measure();
+      const resizeObserver = new ResizeObserver(scheduleMeasurement);
+      resizeObserver.observe(node);
+
+      bottomCardResizeCleanupRef.current = () => {
+        resizeObserver.disconnect();
+        if (measurementFrame !== null) {
+          window.cancelAnimationFrame(measurementFrame);
+        }
+      };
+    },
+    [bottomCardHeight, variant],
+  );
   const headerImageRadiusMultiplier = supportsSquircle ? 2 : 1;
 
   const headerImageBaseInset = isMdUp ? 16 : 8;
@@ -231,7 +279,15 @@ export default function ProjectSummary({
     ["blur(10px)", "blur(0px)"],
   );
 
-  const bottomScale = useTransform(bottomVisualProgress, [0, 1], [1.1, 1]);
+  const bottomScale = useTransform(bottomVisualProgress, [0, 1], [0.8, 1]);
+
+  const bottomY = useTransform(
+    [bottomVisualProgress, bottomCardHeight],
+    (latest) => {
+      const [progress, cardHeight] = latest as number[];
+      return cardHeight * (1 - progress);
+    },
+  );
 
   const {
     cardLightShadow,
@@ -283,7 +339,7 @@ export default function ProjectSummary({
   }, []);
 
   const handleClick = useCallback(() => {
-    if (variant === "header") return;
+    if (variant === "header" || !isSummaryInteractionEnabled) return;
     setIsNavigating(true);
     if (variant === "bottom") {
       // mark that a click-initiated morph started
@@ -300,7 +356,13 @@ export default function ProjectSummary({
       // No need to set isNavigating(false) here,
       // the useEffect above will handle it when the page/props change.
     }, navigationDelay);
-  }, [onBottomNavigationStart, project, router, variant]);
+  }, [
+    isSummaryInteractionEnabled,
+    onBottomNavigationStart,
+    project,
+    router,
+    variant,
+  ]);
 
   useEffect(() => {
     if (variant === "header") return;
@@ -375,6 +437,12 @@ export default function ProjectSummary({
         : variant === "bottom"
           ? bottomBlur
           : "blur(0px)";
+  const summaryY =
+    isTransitionLocked || transitioningToNext
+      ? 0
+      : variant === "bottom"
+        ? bottomY
+        : 0;
   const floatingPaneOverflowY =
     isTransitionLocked || transitioningToNext
       ? "overflow-y-hidden"
@@ -453,7 +521,7 @@ export default function ProjectSummary({
       ? "cursor-default h-full max-w-[2650px] items-center p-10 pt-[15svh] pb-18 md:wide:pb-28"
       : variant === "preview"
         ? "supertall:top-12 top-8 superwide:top-0 cursor-pointer p-3 md:p-6 h-[max(70cqw,50svh)] md:h-[max(80cqw,50svh)] superwide:h-[90svh] wide:h-[min(60cqw,70svh)] lg:superwide:h-[min(60cqw,70svh)] lg:h-[max(60cqw,50svh)] supertall:h-[clamp(36cqw,70svh,150cqw)] "
-        : "cursor-pointer p-3 md:p-6 h-full";
+        : `${isSummaryInteractionEnabled ? "cursor-pointer" : "pointer-events-none cursor-default"} p-3 md:p-6 h-full`;
 
   const backgroundImageStyle: MotionStyle =
     variant === "header"
@@ -503,6 +571,7 @@ export default function ProjectSummary({
       style={{
         opacity: summaryOpacity,
         scale: summaryScale,
+        y: summaryY,
         filter: summaryFilter,
         willChange: variant === "header" ? "filter, opacity" : undefined,
       }}
@@ -516,6 +585,7 @@ export default function ProjectSummary({
       )}
       {/* Card */}
       <motion.div
+        ref={setBottomCardRef}
         layout
         layoutDependency={layoutDependency}
         key={key}
@@ -524,7 +594,11 @@ export default function ProjectSummary({
         initial="initial"
         animate="animate"
         exit="exit"
-        onClick={variant === "header" ? undefined : handleClick}
+        onClick={
+          variant === "header" || !isSummaryInteractionEnabled
+            ? undefined
+            : handleClick
+        }
         onLayoutAnimationComplete={() => {
           onLayoutAnimationComplete?.();
 
@@ -653,7 +727,7 @@ export default function ProjectSummary({
             <motion.p
               layout
               layoutDependency={layoutDependency}
-              className={`text-xs leading-tight text-foreground dark:text-dark-foreground sm:text-sm xl:text-base ${
+              className={`text-foreground dark:text-dark-foreground ${
                 variant === "header"
                   ? "mb-2 md:mb-4 md:border-l-4 md:border-foreground md:py-2 md:pl-4 md:dark:border-dark-foreground lg:mb-5 xl:mb-6 xl:w-[70%] 2xl:mb-7"
                   : variant === "preview"
@@ -700,13 +774,13 @@ export default function ProjectSummary({
               {/* Button */}
               <SpinButton
                 isLoading={isNavigating}
-                tabIndex={0}
+                tabIndex={isSummaryInteractionEnabled ? 0 : -1}
                 className={`relative flex h-10 items-center gap-2 rounded-5 bg-background pl-2 pr-4 font-sans text-base font-semibold text-foreground dark:bg-dark-background dark:text-dark-foreground md:h-12 md:rounded-6 md:pl-3 md:pr-5`}
                 style={{ boxShadow: buttonShadow }}
               >
                 {displayedProject.button}
               </SpinButton>
-              {showKeyboardHints && (
+              {showKeyboardHints && isSummaryInteractionEnabled && (
                 <KeyboardHint
                   shortcut="enter"
                   className="absolute left-[calc(100%-0.75rem)] top-1/2 -translate-y-1/2"

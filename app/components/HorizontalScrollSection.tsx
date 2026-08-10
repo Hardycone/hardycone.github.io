@@ -96,8 +96,8 @@ const Panel = ({ title, text, className }: PanelProps) => {
           MainContent's max-width. 'w-full' ensures it
           fills that container. */}
       <div className="w-full max-w-5xl text-left text-black dark:text-white">
-        <h2 className="mb-4 text-3xl font-bold md:text-4xl">{title}</h2>
-        <p className="text-lg md:text-xl">{text}</p>
+        <h2 className="mb-4">{title}</h2>
+        <p>{text}</p>
       </div>
     </div>
   );

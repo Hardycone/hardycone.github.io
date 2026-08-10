@@ -23,3 +23,13 @@
 - Keep UI changes quiet, intentional, and consistent with the current visual language.
 - Avoid replacing custom motion with simpler behavior just because it is easier to implement.
 - Mobile visitors matter, but the central `ProjectSummary` concept should remain intact across viewport sizes.
+
+## Typography
+
+- Treat the base styles for `h1`, `h2`, `h3`, `h4`, and `p` in `globals.css` as authoritative, and use those elements consistently throughout case studies:
+  - Use `h1` for the case-study title, such as “Flux.”
+  - Use `h2` for the case-study tagline, such as “Designing quantitative UX research tools that balance rigor with usability.”
+  - Use `h3` for section headings, such as “The Product.”
+  - Use `h4` for subsection headings, such as “Quantitative evidence before implementation.”
+  - Use `p` for body copy by default.
+- Do not add element-level styles or Tailwind classes that override the typography defined for these elements in `globals.css` unless the request explicitly calls for an exception.

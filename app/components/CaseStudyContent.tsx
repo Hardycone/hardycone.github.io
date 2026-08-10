@@ -90,7 +90,9 @@ export default function CaseStudyContent({
   );
   const isBio = slug === "about-me";
   const PeekIcon = isBio ? PathIcon : ScrollIcon;
-  const peekTitle = isBio ? "My Work" : "Quick Take";
+  const peekTitle = isBio
+    ? "My Work"
+    : (project.sections[0]?.label ?? "Quick Take");
 
   // Dispatch event after animation completes
   useEffect(() => {
@@ -117,7 +119,7 @@ export default function CaseStudyContent({
             className="flex min-h-40 w-full flex-col rounded-6 border bg-background/90 p-3 text-foreground dark:bg-dark-background/90 dark:text-dark-foreground md:min-h-48 md:rounded-8 md:p-6"
             style={{ borderColor: peekBorderColor }}
           >
-            <div className="mb-2 flex items-center gap-4">
+            <div className="mb-2 flex items-center gap-2">
               <PeekIcon
                 size={40}
                 weight="duotone"

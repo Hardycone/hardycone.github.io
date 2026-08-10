@@ -315,7 +315,7 @@ export default function BioContactForm() {
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 8, opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="mb-4 flex items-start gap-2 rounded-2 border border-green-600/20 bg-emerald-800 p-4 font-sans text-sm text-background shadow-md dark:border-green-400/20 dark:bg-emerald-100 dark:text-dark-background"
+            className="mb-4 flex items-start gap-2 rounded-1.5 border border-green-600/20 bg-emerald-800 p-4 font-sans text-sm text-background dark:border-green-400/20 dark:bg-emerald-100 dark:text-dark-background"
           >
             <SmileyWinkIcon
               size={20}
@@ -348,7 +348,7 @@ export default function BioContactForm() {
         className="relative flex w-full flex-col gap-4"
       >
         <p>
-          Send me a message, or{" "}
+          Send me a message using this form, or{" "}
           <button
             type="button"
             tabIndex={0}
@@ -469,7 +469,7 @@ export default function BioContactForm() {
         </label>
 
         {error && (
-          <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+          <p role="alert" className="text-red-600 dark:text-red-400">
             {error}
           </p>
         )}
@@ -478,7 +478,7 @@ export default function BioContactForm() {
           type="submit"
           tabIndex={0}
           disabled={isSubmitting}
-          className="mt-1 min-h-11 rounded-1.5 bg-foreground px-5 font-sans text-sm font-semibold text-background transition-[transform,opacity] hover:scale-[0.97] active:scale-[0.98] disabled:cursor-wait disabled:opacity-50 supports-[corner-shape:squircle]:rounded-3 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-foreground dark:text-dark-background"
+          className="mt-1 min-h-11 rounded-1.5 bg-foreground px-5 font-sans text-sm font-semibold text-background transition-[transform,opacity] hover:brightness-150 active:scale-[0.98] disabled:cursor-wait disabled:opacity-50 supports-[corner-shape:squircle]:rounded-3 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-foreground dark:text-dark-background"
         >
           {isSubmitting ? (
             "Sending..."

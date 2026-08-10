@@ -27,13 +27,13 @@ interface CaseStudyOneProps {
 
 export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   const { resolvedTheme } = useTheme();
-  const [isFluxOpen, setIsFluxOpen] = useState(false);
-  const [isFantailOpen, setIsFantailOpen] = useState(false);
-  const [isAslfOpen, setIsAslfOpen] = useState(false);
-  const [isUwOpen, setIsUwOpen] = useState(false);
-  const [isSyracuseOpen, setIsSyracuseOpen] = useState(false);
-  const [isAwardsOpen, setIsAwardsOpen] = useState(false);
-  const [isBnuOpen, setIsBnuOpen] = useState(false);
+  const [isFluxOpen, setIsFluxOpen] = useState(true);
+  const [isFantailOpen, setIsFantailOpen] = useState(true);
+  const [isAslfOpen, setIsAslfOpen] = useState(true);
+  const [isUwOpen, setIsUwOpen] = useState(true);
+  const [isSyracuseOpen, setIsSyracuseOpen] = useState(true);
+  const [isAwardsOpen, setIsAwardsOpen] = useState(true);
+  const [isBnuOpen, setIsBnuOpen] = useState(true);
 
   const introTheme = useProjectTheme("intro");
   const fluxTheme = useProjectTheme("flux");
@@ -168,17 +168,16 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             />{" "}
             with two co-founders. Fantail brought AI into the early stages of
             filmmaking, from writing and referencing to storyboarding and
-            dialogue exploration. We grounded the product direction in discovery
-            research with dozens of working filmmakers, which revealed a clear
-            tension: they saw AI’s creative potential, but existing tools gave
-            them too little control over the process. Over six months, we turned
-            that insight into an MVP and pursued funding. I led much of the
-            product and design work, translating filmmaker needs into an
-            end-to-end creative workflow. Ultimately, we shut the company down.
-            The biggest lesson was founder-market fit: we had identified a real
-            problem and designed a thoughtful solution, but lacked the industry
-            access, funding network, and insider knowledge needed to build
-            credibility.
+            dialogue exploration. We grounded the product in discovery research
+            with dozens of working filmmakers, which revealed a clear tension:
+            they saw AI’s creative potential, but existing tools gave them too
+            little control over the process. Over six months, we turned that
+            insight into an MVP and pursued funding. I led much of the product
+            and design work, translating filmmaker needs into an end-to-end
+            creative workflow. Ultimately, we shut the company down. The biggest
+            lesson was founder-market fit: we had identified a real problem and
+            designed a thoughtful solution, but lacked the industry access,
+            funding network, and insider knowledge needed to build credibility.
           </p>
           <NarrativeAccordion isOpen={isFantailOpen}>
             <div className="mb-4 mt-4 flex gap-2 rounded-1 bg-fantail bg-opacity-[3%] p-8 dark:bg-dark-fantail/5 md:gap-4 md:rounded-2">
@@ -346,7 +345,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           <p>
             I’ve work on projects{" "}
             <FlourishName
-              name="recognized and supported"
+              name="recognized and funded"
               bgColor={hexToRgba(introTheme.hex.primary, 0.05)}
               gradientCenterColor={hexToRgba(introTheme.hex.soft, 1)}
               gradientMiddleColor={hexToRgba(introTheme.hex.soft, 1)}
@@ -559,14 +558,20 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           borderColor={borderColor}
         >
           <div className="mb-8">
-            <p>I am a generalist.</p>
             {/*Skills List*/}
             <ul className="text-xl">
               {/*1*/}
               <li>
-                <p className="mb-2 font-sans text-xl">
+                <p className="mb-2">
+                  AI-Enabled Design Engineering:{" "}
+                  <span className="italic">Agentic workflows</span>
+                </p>
+              </li>{" "}
+              {/*1*/}
+              <li>
+                <p className="mb-2">
                   Design and Animation:{" "}
-                  <span className="text-lg italic">
+                  <span className="italic">
                     Figma, Illustrator, Photoshop, After Effect, LottieFiles,
                     Framer Motion
                   </span>
@@ -574,35 +579,35 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               </li>
               {/*2*/}
               <li>
-                <p className="mb-2 font-sans text-xl">
+                <p className="mb-2">
                   Research and Analyses:{" "}
-                  <span className="text-lg italic">
-                    User Interview, Focus Groups, Survey Design, Statistical
-                    Methods (T-test, ANOVA, Linear Regression)
+                  <span className="fitalic">
+                    User Interview, User Surveying, Statistical Methods (T-test,
+                    ANOVA, Linear Regression)
                   </span>
                 </p>
               </li>
               {/*3*/}
               <li>
-                <p className="mb-2 font-sans text-xl">
+                <p className="mb-2">
                   Front-End:{" "}
-                  <span className="text-lg italic">
-                    Javascript, React, Next.js, Tailwind CSS
+                  <span className="italic">
+                    Typescript, React, Next.js, Tailwind CSS
                   </span>
                 </p>
               </li>
               {/*4*/}
               <li>
-                <p className="mb-2 font-sans text-xl">
+                <p className="mb-2">
                   Data Visualization:{" "}
-                  <span className="text-lg italic">D3.js, Tableau</span>
+                  <span className="italic">D3.js, Tableau</span>
                 </p>
               </li>
               {/*5*/}
               <li>
-                <p className="mb-2 font-sans text-xl">
+                <p className="mb-2">
                   Physical Prototyping:{" "}
-                  <span className="text-lg italic">
+                  <span className="italic">
                     Microcontrollers, 3D Modeling (Blender, Fusion 360,
                     SolidWorks), Digital Fabrication (3D Printing, Laser
                     Cutting, CNC Milling)

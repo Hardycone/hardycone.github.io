@@ -59,7 +59,6 @@ const projects: Project[] = [
     ],
     description:
       " I turn complex problems into usable systems. Across shipped B2B software, mixed reality interfaces, and public-sector design, I’ve led work from research and problem framing through stakeholder alignment, product strategy, and execution.",
-    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
     image: "/images/project-1.jpg",
     button: "More About Me",
     textColor: "intro",
@@ -98,7 +97,8 @@ const projects: Project[] = [
     slug: "flux",
     title: "Flux",
     role: "from 0 to 1.",
-    tagline: "Democratizing quantitative UX research",
+    tagline:
+      "Designing quantitative UX research tools that balance rigor with usability",
     tags: [
       { label: "AI", icon: "SparkleIcon" },
       { label: "Startup", icon: "RocketIcon" },
@@ -106,16 +106,20 @@ const projects: Project[] = [
       { label: "Data Vis", icon: "ChartLineIcon" },
     ],
     description:
-      "I co-founded a company on a mission to demystify and democratize rigorous quantitative UX insights for all product teams. This case study recounts how we went from 0 to 1 with a design-forward approach.",
-    bullets: ["Duration: 2 year", "Role: Co-founder"],
+      "I co-founded Flux and led product design, turning rigorous research methods into interfaces that felt intuitive and hard to misuse while still supporting expert flexibility.",
+    bullets: ["Role: Co-founder", "Scope: Research/Product/Design/Brand"],
     image: "/images/hero-flux.jpg",
     button: "Look Inside",
     textColor: "flux",
     bgColor: "fluxBackground",
     glyphAnimation: glyphTwoAnimation as GlyphAnimationData,
     sections: [
-      { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
-      { id: "section-2", label: 'The "0"', icon: "SealQuestionIcon" },
+      { id: "section-1", label: "The Product", icon: "ScrollIcon" },
+      {
+        id: "section-2",
+        label: "The 0",
+        icon: "SealQuestionIcon",
+      },
       {
         id: "section-3",
         label: "The Messy Middle",
@@ -123,12 +127,12 @@ const projects: Project[] = [
       },
       {
         id: "section-4",
-        label: 'The "1"',
+        label: "The 1",
         icon: "RocketLaunchIcon",
       },
       {
         id: "section-5",
-        label: "Outcome & Impact",
+        label: "Outcome",
         icon: "PresentationChartIcon",
       },
       {
@@ -139,14 +143,10 @@ const projects: Project[] = [
     ],
     externalLinks: [
       {
-        label: "GitHub",
-        url: "https://github.com/Hardycone",
-        icon: "GithubLogoIcon",
+        label: "Visit Flux",
+        url: "https://testwithflux.com",
+        icon: "GlobeIcon",
       },
-      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
-      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
-      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
-      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
     ],
   },
   {
@@ -154,15 +154,19 @@ const projects: Project[] = [
     slug: "fantail",
     role: "human-centered AI.",
     title: "Fantail",
-    tagline: "Empowering filmmakers to bring their stories to life",
+    tagline: "AI-assisted story development for filmmakers",
     tags: [
       { label: "AI", icon: "SparkleIcon" },
       { label: "Startup", icon: "RocketIcon" },
       { label: "Filmmaking", icon: "FilmSlateIcon" },
     ],
     description:
-      "Incubated during my time at University of Washington, Fantail is an AI-powered story development platform that helps filmmakers brainstorm, organize, storyboard, and pitch their projects.",
-    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
+      "Fantail was a startup I co-founded with two teammates while completing my MHCID at the University of Washington. We built a functional MVP that let filmmakers start with any creative material and gradually shape it into a structured, scene-by-scene story.",
+    bullets: [
+      "Duration: 6 months",
+      "Role: Co-founder & Product Designer",
+      "Research: 12 in-depth interviews",
+    ],
     button: "Look Inside",
     image: "/images/hero-fantail.png",
     textColor: "fantail",
@@ -170,28 +174,25 @@ const projects: Project[] = [
     glyphAnimation: glyphThreeAnimation as GlyphAnimationData,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
+      { id: "section-2", label: "The 0", icon: "SealQuestionIcon" },
       {
-        id: "section-2",
-        label: 'The "0": Where We Started',
-        icon: "SealQuestionIcon",
+        id: "section-3",
+        label: "The Messy Middle",
+        icon: "PuzzlePieceIcon",
       },
-      { id: "section-3", label: "The Messy Middle", icon: "PuzzlePieceIcon" },
       {
         id: "section-4",
-        label: 'The "1": What We Shipped',
+        label: "The 1",
         icon: "RocketLaunchIcon",
       },
       {
         id: "section-5",
-        label: "Outcome and Impact",
+        label: "Outcome",
         icon: "PresentationChartIcon",
       },
       { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
-    externalLinks: [
-      { label: "GitHub", url: "https://google.com", icon: "GithubLogoIcon" },
-      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
-    ],
+    externalLinks: [],
   },
   {
     id: "suits",
@@ -205,7 +206,11 @@ const projects: Project[] = [
     ],
     description:
       "The next generation of lunar and Mars missions call for interfaces that can effectively relay information and aid extra-vehicular missions on alien terrains. Our team went on to become a finalist in NASA's 2023 SUITS challenge and tested our prototype with NASA engineers at the Johnson Space Center.",
-    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
+    bullets: [
+      "Program: NASA SUITS 2023",
+      "Scope: EVA workflow & interface",
+      "Validation: NASA Rock Yard",
+    ],
     button: "Look Inside",
     image: "/images/hero-astrohuskies.jpg",
     textColor: "suits",
@@ -214,22 +219,25 @@ const projects: Project[] = [
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
       { id: "section-2", label: "Mission", icon: "TargetIcon" },
-      { id: "section-3", label: "Research", icon: "MagnifyingGlassIcon" },
+      { id: "section-3", label: "System Design", icon: "PuzzlePieceIcon" },
       {
         id: "section-4",
-        label: "Human-In-The-Loop",
+        label: "Testing",
         icon: "PersonSimpleCircleIcon",
       },
       {
         id: "section-5",
-        label: "Outcome and Impact",
-        icon: "PresentationChartIcon",
+        label: "Field Test",
+        icon: "PersonSimpleRunIcon",
       },
       { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
     externalLinks: [
-      { label: "GitHub", url: "https://google.com", icon: "GithubLogoIcon" },
-      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
+      {
+        label: "NASA SUITS Finalists",
+        url: "https://www.linkedin.com/posts/university-of-washington-master-of-human-computer-interaction-design_finalists-in-the-nasa-suits-challenge-activity-7102818439043452928-cooL",
+        icon: "FileTextIcon",
+      },
     ],
   },
   {
@@ -245,7 +253,11 @@ const projects: Project[] = [
     ],
     description:
       "I implemented a community-driven project that laid out a vision for the urban core of Wolcott, NY that promoted local pride, urban design, and watershed protection. Funded by the National Oceanic and Atmospheric Administration (NOAA).",
-    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
+    bullets: [
+      "Role: Project Manager",
+      "Process: 5 workshops",
+      "Status: Construction underway",
+    ],
     button: "Look Inside",
     image: "/images/hero-wolcott.jpg",
     textColor: "wolcott",
@@ -253,20 +265,29 @@ const projects: Project[] = [
     glyphAnimation: glyphFiveAnimation as GlyphAnimationData,
     sections: [
       { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
-      { id: "section-2", label: "Problem", icon: "SealQuestionIcon" },
-      { id: "section-3", label: "Research", icon: "MagnifyingGlassIcon" },
-      { id: "section-4", label: "Exploration", icon: "CompassRoseIcon" },
+      {
+        id: "section-2",
+        label: "Context",
+        icon: "SealQuestionIcon",
+      },
+      {
+        id: "section-3",
+        label: "Co-Design",
+        icon: "MagnifyingGlassIcon",
+      },
+      {
+        id: "section-4",
+        label: "Design Framework",
+        icon: "CompassRoseIcon",
+      },
       {
         id: "section-5",
-        label: "Outcome & Impact",
+        label: "Implementation",
         icon: "PresentationChartIcon",
       },
       { id: "section-6", label: "Reflection", icon: "BrainIcon" },
     ],
-    externalLinks: [
-      { label: "GitHub", url: "https://google.com", icon: "GithubLogoIcon" },
-      { label: "Figma", url: "https://google.com", icon: "FigmaLogoIcon" },
-    ],
+    externalLinks: [],
   },
 ];
 

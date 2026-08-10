@@ -1,29 +1,36 @@
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useTheme } from "next-themes";
-import projects from "@/data/projects";
-import { useActiveProject } from "@/app/context/ActiveProjectContext";
+import { motion, MotionValue, useTransform } from "framer-motion";
 import {
-  ScrollIcon,
+  ArrowRightIcon,
+  BrainIcon,
+  ChartBarIcon,
+  CheckCircleIcon,
+  CursorClickIcon,
+  PresentationChartIcon,
   PuzzlePieceIcon,
   RocketLaunchIcon,
-  PresentationChartIcon,
+  ScrollIcon,
   SealQuestionIcon,
-  BrainIcon,
+  UsersThreeIcon,
 } from "@phosphor-icons/react";
-import { MotionValue, useTransform, motion } from "framer-motion";
+import projects from "@/data/projects";
+import { useActiveProject } from "@/app/context/ActiveProjectContext";
+import { useProjectTheme } from "@/hooks/useProjectTheme";
+import CaseStudyFigure from "../CaseStudyFigure";
 import HorizontalFilmstrip from "../HorizontalScrollGroup";
 import LazyVideo from "../LazyVideo";
 import SectionContainer from "../SectionContainer";
 import SubSectionHeading from "../SubSectionHeading";
 import VerticalScrollCards from "../VerticalScrollGroup";
-import { useProjectTheme } from "@/hooks/useProjectTheme";
 
 interface CaseStudyTwoProps {
   scrollY: MotionValue<number>;
 }
+
+const contentNoteClass =
+  "rounded-1 border border-dashed border-foreground/20 px-4 py-3 italic text-foreground/60 dark:border-dark-foreground/20 dark:text-dark-foreground/60 md:rounded-2";
 
 export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
   const { resolvedTheme } = useTheme();
@@ -44,35 +51,54 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
 
   const borderColor = useTransform(
     borderOpacity,
-    (o) => `rgba(255,255,255,${o})`,
+    (opacity) => `rgba(255,255,255,${opacity})`,
   );
 
   return (
     <article>
-      {/*Section 1*/}
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
-          title="Quick Take"
+          title="The Product"
           icon={ScrollIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
           revealOnScroll={false}
         >
-          <p className="mb-10 px-2">
-            Quantitative UX insights can be game-changing, but often out of
-            reach. Rigorous A/B testing is prohibitively expensive and time
-            consuming, a luxury reserved for mature organizations. With Flux,
-            small teams can now unlock new opportunities, while large teams can
-            test up to{" "}
-            <span className={`font-bold ${theme.textColorClass}`}>
-              15x cheaper
-            </span>{" "}
-            and{" "}
-            <span className={`font-bold ${theme.textColorClass}`}>
-              10x faster
-            </span>
-            .
+          <SubSectionHeading
+            number="1"
+            heading="Quantitative evidence before implementation"
+          />
+          <p>AI made it building cheaper, but not choosing the right thing.</p>
+          <p className="mb-8 text-pretty">
+            Flux helps teams validate prototypes with quantitative evidence
+            before implementation. Teams configure studies, recruit
+            participants, run prototype tests, and generate reports that reveal
+            behavioral patterns and performance differences.
+          </p>
+          <div className="mb-8 grid gap-px overflow-hidden rounded-1 bg-foreground/10 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-foreground/15 md:grid-cols-3 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4">
+            {[
+              ["Audience", "Designers · Mixed-methods researchers"],
+              ["Role", "Co-founder · Product design lead"],
+              ["Status", "Live · Fully functional product"],
+            ].map(([label, value]) => (
+              <div
+                key={label}
+                className="bg-background p-5 dark:bg-dark-background"
+              >
+                <p className={`mb-1 font-semibold ${theme.textColorClass}`}>
+                  {label}
+                </p>
+                <p>{value}</p>
+              </div>
+            ))}
+          </div>
+          <p className={contentNoteClass}>
+            Content note: Lead with a clean dashboard hero. Place the marketing
+            video directly below as a “watch overview,” then show a simple
+            full-width workflow: configure study → recruit participants → run
+            prototype test → read report. Credit the video as work I created end
+            to end: concept, storyboarding, 3D, animation, and editing.
           </p>
           <LazyVideo
             src="https://assets.haichaowang.com/promo-export-01.mp4"
@@ -81,393 +107,414 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             playsInline
             className="rounded-1 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4"
           />
+          <p className="mb-12 mt-3 text-foreground/60 dark:text-dark-foreground/60">
+            I created the product film end to end, from concept and
+            storyboarding through 3D, animation, and editing.
+          </p>
+          <CaseStudyFigure caption="A simple orientation to the end-to-end Flux workflow.">
+            <div className="grid w-full max-w-4xl gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] md:items-center">
+              {[
+                ["Configure", "Prototype + study"],
+                ["Recruit", "Target participants"],
+                ["Test", "Behavior + feedback"],
+                ["Report", "Evidence + uncertainty"],
+              ].map(([title, copy], index, steps) => (
+                <div key={title} className="contents">
+                  <div className="flex min-h-28 flex-col justify-center rounded-1 bg-background p-4 text-center shadow-sm dark:bg-dark-background md:rounded-2">
+                    <span
+                      className={`font-sans text-sm font-bold ${theme.textColorClass}`}
+                    >
+                      {title}
+                    </span>
+                    <span className="mt-2 font-sans text-xs opacity-60">
+                      {copy}
+                    </span>
+                  </div>
+                  {index < steps.length - 1 && (
+                    <ArrowRightIcon
+                      size={18}
+                      className="mx-auto rotate-90 opacity-35 md:rotate-0"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </CaseStudyFigure>
         </SectionContainer>
       </section>
-      {/*Section 2*/}
+
       <section id="section-2" className="scroll-mt-24">
         <SectionContainer
-          title={`The "0"`}
+          title="The 0"
           icon={SealQuestionIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSectionHeading number="1" heading="Spotting the gap" />
-          <p className="mb-10 px-2">
-            We started Flux with a simple observation: UX practices are heavily
-            skewed toward qualitative methods. While designers and researchers
-            are comfortable with user interviews, surprisingly few leverage
-            quantitative methods like A/B testing.
+          <SubSectionHeading
+            number="1"
+            heading="More ideas, same decision risk"
+          />
+          <p className="mb-12 text-pretty px-2">
+            Prototyping tools let teams explore more directions than ever, but
+            teams were still guessing which concepts would land. Flux focuses on
+            quantitative prototype validation: testing designs with real
+            participants before committing to heavy implementation.
           </p>
-          <p
-            className={`${theme.bgColorClass} mb-16 rounded-1 border border-white bg-zinc-100 p-12 text-2xl leading-normal dark:bg-opacity-5 md:rounded-2`}
-          >
-            Even though quantitative UX research has the potential to deliver
-            clearer insights with higher confidence, it is only done by large
-            and mature organizations. Smaller teams seem to shy away.{" "}
-            <span className={`font-bold ${theme.textColorClass} `}>Why?</span>
-          </p>
-          <SubSectionHeading number="2" heading="The UX research landscape" />
-          <p className="mb-10 px-2">
-            We had a hunch: people don't do it because they don't know how.
-            Quantitative research is inherently scientific. While the core
-            concept isn't necessarily difficult to grasp, doing it well requires
-            specialized training in statistics.
-          </p>
-          <div
-            className={`relative mb-16 h-screen max-h-[600px] w-full rounded-1 border border-white bg-gradient-to-br from-emerald-500/5 to-rose-500/5 dark:border-white/25 dark:bg-opacity-5 md:rounded-2`}
-          >
-            <div className="absolute flex h-full w-full flex-col items-center gap-1 text-xs font-bold">
-              <span className="mt-4 bg-emerald-400 p-2 font-bold text-white">
-                High Confidence
-              </span>
-              <div className="from- w-1 flex-1 bg-gradient-to-b from-emerald-400 to-rose-400 dark:bg-white/20" />
-              <span className="mb-4 bg-rose-400 p-2 font-bold text-white">
-                Low Confidence
-              </span>
-            </div>
-            <div className="absolute flex h-full w-full items-center gap-1 text-xs font-bold">
-              <span className="ml-4 bg-emerald-400 p-2 font-bold text-white">
-                Low Cost
-              </span>
-              <div className="h-1 flex-1 bg-gradient-to-r from-emerald-400 to-rose-400 dark:bg-white/20" />
-              <span className="mr-4 bg-rose-400 p-2 font-bold text-white">
-                High Cost
-              </span>
-            </div>
-            <div
-              className={`group-hover:z-100 group absolute bottom-8 left-8 z-0 flex w-64 cursor-default flex-col items-center gap-2 rounded-1 border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground md:rounded-2`}
-            >
-              <span className={`font-sans text-lg font-semibold`}>
-                No UX research
-              </span>
-              <span className={`hidden text-sm group-hover:flex`}>
-                Rely on intuition and hope for the best
-              </span>
-            </div>
-            <div
-              className={`group-hover:z-100 group absolute right-8 top-8 z-0 flex w-64 cursor-default flex-col items-center gap-2 rounded-1 border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground md:rounded-2`}
-            >
-              <span className={`font-sans text-lg font-semibold`}>
-                In-product A/B testing
-              </span>
-              <span className={`hidden text-sm group-hover:flex`}>
-                Accurate but costly but it's okay because we can afford it.
-              </span>
-            </div>
-            <div
-              className={`group-hover:z-100 group absolute left-[50%] top-[50%] z-0 flex w-64 -translate-x-1/2 -translate-y-1/2 cursor-default flex-col items-center gap-2 rounded-1 border border-white bg-background/60 p-4 text-center shadow backdrop-blur-sm hover:shadow-lg dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground md:rounded-2`}
-            >
-              <span className={`font-sans text-lg font-semibold`}>
-                Qualitative UX research
-              </span>
-              <span className={`hidden text-sm group-hover:flex`}>
-                Interviews, usability tests, focus groups, etc.
-              </span>
-            </div>
-
-            <div
-              className={`group absolute left-1/2 top-[28%] flex w-3/4 -translate-x-1/2 -translate-y-1/2 items-center gap-2`}
-            >
-              <div
-                className={`bg-fluxBackground flex w-64 cursor-default flex-col items-center gap-2 rounded-1 border border-flux/40 bg-opacity-10 p-4 text-center text-flux shadow-xl backdrop-blur-sm group-hover:shadow-2xl dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground md:rounded-2`}
-              >
-                <span className={`font-sans text-lg font-semibold`}>
-                  Quantitative UX research
-                </span>
-                <span className={`hidden text-sm group-hover:flex`}>
-                  Prototype testing, heatmaps, button clicks, etc.
-                </span>
-              </div>
-              <div className="flex min-w-12 flex-1 items-center gap-[2%]">
-                <div
-                  className={`bg-fluxBackground flex h-4 w-full transition-all duration-200 ease-in-out [clip-path:polygon(0%_50%,100%_100%,100%_0%)] group-hover:h-8`}
-                />
-                <div
-                  className={`bg-fluxBackground flex h-2 w-full bg-opacity-80 transition-all duration-200 ease-in-out group-hover:h-4`}
-                />
-                <div
-                  className={`bg-fluxBackground flex h-2 w-full bg-opacity-70 transition-all duration-200 ease-in-out group-hover:h-4`}
-                />
-                <div
-                  className={`bg-fluxBackground flex h-2 w-full bg-opacity-70 transition-all duration-200 ease-in-out group-hover:h-4`}
-                />
-                <div
-                  className={`bg-fluxBackground flex h-2 w-full bg-opacity-50 transition-all duration-200 ease-in-out group-hover:h-4`}
-                />
-                <div
-                  className={`bg-fluxBackground flex h-2 w-full bg-opacity-40 transition-all duration-200 ease-in-out group-hover:h-4 group-hover:w-[150%]`}
-                />
-                <div
-                  className={`bg-fluxBackground flex h-2 w-full bg-opacity-30 transition-all duration-200 ease-in-out group-hover:h-4 group-hover:w-[200%]`}
-                />
-              </div>
-              <div
-                className={`bg-fluxBackground flex w-64 cursor-default flex-col items-center gap-2 rounded-1 border border-dashed border-flux/40 bg-opacity-10 p-4 text-center text-flux opacity-40 shadow backdrop-blur-sm dark:border-opacity-25 dark:bg-dark-background/60 dark:text-dark-foreground md:rounded-2`}
-              >
-                <span className={`font-sans text-lg font-semibold`}>
-                  Quantitative UX research
-                </span>
-                <span className={`hidden text-sm group-hover:flex`}>
-                  Prototype testing, heatmaps, button clicks, etc.
-                </span>
-              </div>
-            </div>
-          </div>
           <VerticalScrollCards
             highlightOnIntersect
-            sideContent={({ activeIndex }) => (
-              <>
-                <SubSectionHeading
-                  number="3"
-                  heading="Initial problem statement"
-                />
-                <p className="pb-2 pl-2 text-2xl leading-normal">
-                  Quantitative UX research is
-                </p>
-                <p className="pb-2 pl-2 text-2xl">
-                  <motion.span
+            sideContent={({ activeIndex: visibleCard }) => (
+              <div className="px-2">
+                <SubSectionHeading number="2" heading="Where the gap appears" />
+                <p className="mb-4">Teams need evidence</p>
+                {[
+                  "before implementation",
+                  "without live-product traffic",
+                  "without assembling a research stack",
+                ].map((label, index) => (
+                  <motion.p
+                    key={label}
+                    className="mb-3"
                     animate={{
                       color:
-                        activeIndex === 0
+                        visibleCard === index
                           ? theme.hex.primary
                           : theme.hex.foreground,
-                      fontSize: activeIndex === 0 ? "30px" : "24px",
-                      fontWeight: activeIndex === 0 ? "700" : "400",
+                      fontWeight: visibleCard === index ? 700 : 400,
                     }}
                   >
-                    intimidating
-                  </motion.span>
-                  ,
-                </p>{" "}
-                <p className="pb-2 pl-2 text-2xl">
-                  <motion.span
-                    animate={{
-                      color:
-                        activeIndex === 1
-                          ? theme.hex.primary
-                          : theme.hex.foreground,
-                      fontSize: activeIndex === 1 ? "30px" : "24px",
-                      fontWeight: activeIndex === 1 ? "700" : "400",
-                    }}
-                  >
-                    time-consuming
-                  </motion.span>
-                  ,
-                </p>
-                <p className="pb-2 pl-2 text-2xl">and involves a</p>
-                <p className="pl-2 text-2xl">
-                  <motion.span
-                    animate={{
-                      color:
-                        activeIndex === 2
-                          ? theme.hex.primary
-                          : theme.hex.foreground,
-                      fontSize: activeIndex === 2 ? "30px" : "24px",
-                      fontWeight: activeIndex === 2 ? "700" : "400",
-                    }}
-                  >
-                    fragmented workflow
-                  </motion.span>
-                  .
-                </p>
-              </>
+                    {label}
+                  </motion.p>
+                ))}
+              </div>
             )}
             cards={[
               {
-                id: "intimidating",
+                id: "concepts",
                 className:
-                  "flex h-auto flex-col items-end justify-between gap-6 p-6 md:h-full md:gap-0 md:p-[15%]",
+                  "flex h-auto min-h-72 flex-col justify-end p-6 md:h-full md:p-10",
                 content: (
                   <>
-                    <div
-                      className={`relative aspect-square w-full max-w-80 self-center overflow-hidden md:max-w-none md:self-auto`}
-                    >
-                      <img
-                        src="/images/Avalon-3D-Shapes-1_10.png"
-                        alt=""
-                        className="absolute inset-0 h-full w-full object-cover"
-                      />
-                    </div>
-                    <p className="ml-[0%]">
-                      Quantitative UX research is inherently scientific. It's a
-                      practical application of statistics. Doing it well
-                      requires an expertise in math.
+                    <CursorClickIcon
+                      size={42}
+                      weight="duotone"
+                      className={theme.textColorClass}
+                    />
+                    <h4 className="mt-8">Prototypes multiply quickly</h4>
+                    <p className="mt-3">
+                      Faster creation increased the number of plausible
+                      directions without making the choice between them easier.
                     </p>
                   </>
                 ),
               },
               {
-                id: "time-consuming",
+                id: "traffic",
                 className:
-                  "flex h-auto items-start justify-center p-6 md:h-full md:items-end md:p-12 md:pl-36",
-                content:
-                  "To detect meaningful difference, researchers often need to design a rigorous experiment and recruit hundreds of participants. A study could take weeks to finish.",
+                  "flex h-auto min-h-72 flex-col justify-end p-6 md:h-full md:p-10",
+                content: (
+                  <>
+                    <ChartBarIcon
+                      size={42}
+                      weight="duotone"
+                      className={theme.textColorClass}
+                    />
+                    <h4 className="mt-8">In-product testing comes later</h4>
+                    <p className="mt-3">
+                      Conventional A/B testing needs a live product and traffic.
+                      Flux helps teams evaluate designs before reaching that
+                      stage.
+                    </p>
+                  </>
+                ),
               },
               {
-                id: "fragmented-workflow",
+                id: "operation",
                 className:
-                  "flex h-auto items-start justify-center p-6 md:h-full md:items-end md:p-12 md:pl-36",
-                content:
-                  "The existing workflow for quantitative research involves integrating design prototypes with survey platforms. The data then need to be further analyzed and synthesized into a report. This process involves multiple tools.",
+                  "flex h-auto min-h-72 flex-col justify-end p-6 md:h-full md:p-10",
+                content: (
+                  <>
+                    <UsersThreeIcon
+                      size={42}
+                      weight="duotone"
+                      className={theme.textColorClass}
+                    />
+                    <h4 className="mt-8">Rigor is operationally heavy</h4>
+                    <p className="mt-3">
+                      Study setup, recruitment, data collection, analysis, and
+                      reporting often span multiple tools and skill sets.
+                    </p>
+                  </>
+                ),
               },
             ]}
           />
+          <p className={contentNoteClass}>
+            Content note: Show a simple decision-point diagram—several vague
+            ideas becoming a clearer fork, then a committed implementation path.
+            Keep it conceptual rather than UI-heavy.
+          </p>
         </SectionContainer>
       </section>
-      {/*Section 3*/}
+
       <section id="section-3" className="scroll-mt-24">
         <SectionContainer
           title="The Messy Middle"
           icon={PuzzlePieceIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
-          borderColor={"rgba(0,0,0,0)"}
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          borderColor="rgba(0,0,0,0)"
           cardClass="w-full min-w-0"
         >
-          <SubSectionHeading number="1" heading="Research method" />
-          <p className="mb-10 p-2">
-            To further understand our problem space, we reached out to our
-            network of colleagues in the tech industry.
+          <SubSectionHeading
+            number="1"
+            heading="Complexity surfaced at commitment points"
+          />
+          <p className="mb-10 text-pretty px-2">
+            Two moments repeatedly exposed the design tension. Teams had to
+            choose a defensible participant count without necessarily
+            understanding power analysis, and they had to configure an expensive
+            study before seeing the report it would produce. In both cases,
+            users needed guidance without losing visibility or control.
           </p>
-
           <HorizontalFilmstrip
             body={
               <>
-                <SubSectionHeading number="2" heading="Insights" />
-                <p className="mb-6 px-2">
-                  To further understand our problem space, we reached out to our
-                  network of colleagues in the tech industry.
+                <SubSectionHeading
+                  number="2"
+                  heading="Three recurring questions"
+                />
+                <p className="text-pretty px-2">
+                  Practitioner conversations and design reviews kept returning
+                  to the same questions across the product.
                 </p>
               </>
             }
             cards={[
-              {
-                id: "quant-research-resistance",
-                content: (
-                  <>
-                    <span className="text-6xl">1</span>
-                    <div className="flex h-full items-center justify-center">
-                      <h3 className="text-2xl font-bold">
-                        Everyone wants to do quantitative research. Come on. Who
-                        are you kidding?
-                      </h3>
-                    </div>
-                  </>
-                ),
-              },
-              {
-                id: "gap",
-                content: (
-                  <>
-                    <span className="text-6xl">2</span>
-                    <h3 className="mt-4 text-2xl font-bold">The Gap</h3>
-                  </>
-                ),
-              },
-              {
-                id: "solution",
-                content: (
-                  <>
-                    <span className="text-6xl">3</span>
-                    <h3 className="mt-4 text-2xl font-bold">The Solution</h3>
-                  </>
-                ),
-              },
-            ]}
+              [
+                "01",
+                "Valid without a stats lesson",
+                "How could teams run defensible studies without making setup feel like coursework?",
+              ],
+              [
+                "02",
+                "Guidance without restriction",
+                "How could the default path protect newer users while preserving expert control?",
+              ],
+              [
+                "03",
+                "Trust before the outcome exists",
+                "How could people understand what a study would produce before spending time and money to run it?",
+              ],
+            ].map(([number, title, copy]) => ({
+              id: title,
+              content: (
+                <>
+                  <span className={`text-sm font-bold ${theme.textColorClass}`}>
+                    {number}
+                  </span>
+                  <h4 className="mt-auto pt-8">{title}</h4>
+                  <p className="mt-3">{copy}</p>
+                </>
+              ),
+            }))}
           />
-          <SubSectionHeading number="3" heading="New problem statement" />
-          <p className="mb-24 px-2">
-            To further understand our problem space, we reached out to our
-            network of colleagues in the tech industry.
+          <p className={contentNoteClass}>
+            Content note: Show the early sample-size table as a brief sanity
+            check, whiteboard sketches exploring how much statistics to expose,
+            and notes or screenshots from practitioner check-ins.
           </p>
-          <SubSectionHeading number="4" heading="The pivot" />
-          <p className="mb-6 px-2">
-            To further understand our problem space, we reached out to our
-            network of colleagues in the tech industry.
+          <SubSectionHeading number="3" heading="The product-level tension" />
+          <p
+            className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
+            style={{ backgroundColor: theme.hex.soft }}
+          >
+            Designing Flux was not about removing statistical complexity. It was
+            about deciding which complexity belonged in the product, then
+            shaping it so people could act with confidence.
           </p>
         </SectionContainer>
       </section>
-      {/*Section 4*/}
+
       <section id="section-4" className="scroll-mt-24">
         <SectionContainer
-          title={`The "1"`}
+          title="The 1"
           icon={RocketLaunchIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
-          borderColor={"rgba(0,0,0,0)"}
-          cardClass=""
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          borderColor="rgba(0,0,0,0)"
         >
-          <SubSectionHeading number="1" heading="Ideation" />
-          <p className="mb-6 p-2">
-            To further understand our problem space, we reached out to our
-            network of colleagues in the tech industry.
+          <SubSectionHeading
+            number="1"
+            heading="Participant sizing: guide without locking in"
+          />
+          <p className="mb-8 text-pretty px-2">
+            Participant sizing made the beginner–expert tension concrete. Most
+            users did not want to perform a power analysis, while experienced
+            researchers still needed control over the assumptions. I designed a
+            heavily modified slider with four defensible sample-size ranges for
+            the guided path. An adjacent numeric input let experts move outside
+            those ranges when their own calculations called for it. The
+            guardrail was soft: opinionated enough to guide, but not rigid
+            enough to erase expertise.
           </p>
-          <SubSectionHeading number="2" heading="Exploration" />
+          <p className={contentNoteClass}>
+            Content note: Briefly show the early table that we sanity-checked
+            and moved past, then use an annotated close-up of the final slider
+            and adjacent numeric override. Do not manufacture a dramatic pivot.
+          </p>
+
+          <SubSectionHeading
+            number="2"
+            heading="Report preview: show value before commitment"
+          />
+          <p className="mb-8 text-pretty px-2">
+            Study setup created a different kind of uncertainty. Teams selected
+            report components and wrote questions long before any data existed,
+            yet a study could require recruiting hundreds of participants. I
+            introduced a live sample report populated with fictitious data. As
+            the study changed, the preview reflected those choices, letting
+            teams see the shape of the outcome before launching.
+          </p>
+          <p className={contentNoteClass}>
+            Content note: Show setup and the sample report side by side, plus a
+            short clip of report components appearing as they are enabled.
+          </p>
+
+          <SubSectionHeading number="3" heading="One pattern, two decisions" />
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              [
+                "Guide without oversimplifying",
+                "Build good research practice into the interface instead of relying on documentation or hand-holding.",
+              ],
+              [
+                "Make outcomes visible",
+                "Reduce uncertainty before users commit time, participants, and budget.",
+              ],
+              [
+                "Respect expertise",
+                "Keep the entry point approachable without hiding assumptions or removing expert control.",
+              ],
+            ].map(([title, copy]) => (
+              <div key={title}>
+                <h4 className={theme.textColorClass}>{title}</h4>
+                <p className="mt-2 text-pretty">{copy}</p>
+              </div>
+            ))}
+          </div>
+          <p className={`${contentNoteClass} mt-8`}>
+            Content note: Add one small visual tying both examples back to the
+            principle “guide, but do not restrict.”
+          </p>
         </SectionContainer>
       </section>
-      {/*Section 5*/}
+
       <section id="section-5" className="scroll-mt-24">
         <SectionContainer
-          title={`Outcome and Impact`}
+          title="Outcome"
           icon={PresentationChartIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
-          borderColor={"rgba(0,0,0,0)"}
-          cardClass=""
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          borderColor="rgba(0,0,0,0)"
         >
-          <SubSectionHeading number="1" heading="User journey " />
-          <p className="mb-10 px-2">
-            We launched a closed beta with 12 teams and saw strong engagement.
-            Teams used the tool to test landing page flows, signup friction, and
-            feature comprehension. Feedback praised its speed and clarity. The
-            product is now in early access with growing adoption. It’s helping
-            teams make design decisions with evidence, not guesswork—and
-            reshaping what quantitative UX looks like in practice.
+          <SubSectionHeading number="1" heading="A complete, live product" />
+          <p className="mb-8 text-pretty px-2">
+            Flux matured into a full platform for quantitative prototype
+            testing. Teams can configure a study, recruit participants, run
+            tests, and review decision-ready results in one product. It is fully
+            functional and publicly available, and my role has expanded into
+            customer development, sales, and product strategy.
           </p>
-          <SubSectionHeading number="2" heading="User interface" />
-          <p className="mb-10 px-2">
-            To further understand our problem space, we reached out to our
-            network of colleagues in the tech industry.
+          <div className="mb-8 grid gap-8 md:grid-cols-2">
+            <div>
+              <h4 className={theme.textColorClass}>
+                For experienced researchers
+              </h4>
+              <p className="mt-3 text-pretty">
+                Demo feedback suggested that transparent assumptions and expert
+                overrides helped the methodology feel credible rather than
+                opaque or oversimplified.
+              </p>
+            </div>
+            <div>
+              <h4 className={theme.textColorClass}>For newer researchers</h4>
+              <p className="mt-3 text-pretty">
+                Guided setup and plain-language explanations helped people
+                follow the core concepts without prior statistical training.
+              </p>
+            </div>
+          </div>
+          <a
+            href="https://testwithflux.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`inline-flex items-center gap-2 rounded-full border px-5 py-3 font-sans font-semibold transition-transform hover:scale-[0.98] ${theme.borderColorClass} ${theme.textColorClass}`}
+          >
+            Visit testwithflux.com
+            <ArrowRightIcon size={18} />
+          </a>
+          <div className="mt-12 flex items-start gap-3 border-t pt-5 dark:border-dark-foreground/20">
+            <CheckCircleIcon
+              size={24}
+              weight="fill"
+              className={`shrink-0 ${theme.textColorClass}`}
+            />
+            <p className="text-pretty">
+              Across dozens of product demos, the clearest response was to the
+              combination of guided setup and preserved expert control.
+            </p>
+          </div>
+          <p className={`${contentNoteClass} mt-8`}>
+            Content note: Show a minimal set of final product screens and one or
+            two representative feedback quotes, if the original wording is
+            available.
           </p>
         </SectionContainer>
       </section>
-      {/*Section 6*/}
+
       <section id="section-6" className="scroll-mt-24">
         <SectionContainer
-          title={`Reflection`}
+          title="Reflection"
           icon={BrainIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
-          cardClass=""
         >
-          <SubSectionHeading number="1" heading="Launch" />
-          <p className="mb-10 px-2">
-            We launched a closed beta with 12 teams and saw strong engagement.
-            Teams used the tool to test landing page flows, signup friction, and
-            feature comprehension. Feedback praised its speed and clarity. The
-            product is now in early access with growing adoption. It’s helping
-            teams make design decisions with evidence, not guesswork—and
-            reshaping what quantitative UX looks like in practice.
+          <SubSectionHeading number="1" heading="What I carry forward" />
+          <p className="mb-10 text-pretty">
+            Flux gave me a more grounded view of simplification. It is not about
+            removing complexity; it is about shaping complexity so people can
+            use it with confidence. Building the product also reinforced that
+            technically strong UX is only one part of building a viable company.
+            Product design, distribution, and business strategy cannot be
+            treated as separate systems.
           </p>
-          <SubSectionHeading number="2" heading="Feedback" />
-          <p className="mb-10 px-2">
-            We launched a closed beta with 12 teams and saw strong engagement.
-            Teams used the tool to test landing page flows, signup friction, and
-            feature comprehension. Feedback praised its speed and clarity. The
-            product is now in early access with growing adoption. It’s helping
-            teams make design decisions with evidence, not guesswork—and
-            reshaping what quantitative UX looks like in practice.
-          </p>
-          <SubSectionHeading number="3" heading="Lessons learned" />
-          <p className="mb-10 px-2">
-            We launched a closed beta with 12 teams and saw strong engagement.
-            Teams used the tool to test landing page flows, signup friction, and
-            feature comprehension. Feedback praised its speed and clarity. The
-            product is now in early access with growing adoption. It’s helping
-            teams make design decisions with evidence, not guesswork—and
-            reshaping what quantitative UX looks like in practice.
+          <div className="mb-8 grid gap-8 md:grid-cols-3">
+            {[
+              [
+                "Ease is engineered",
+                "A calm experience can carry substantial rigor underneath when the product makes the right decisions visible.",
+              ],
+              [
+                "Expertise deserves an exit ramp",
+                "Good guardrails support the default path while leaving room for informed exceptions.",
+              ],
+              [
+                "The product is more than the interface",
+                "A strong experience has to operate within a viable strategy for access, distribution, and growth.",
+              ],
+            ].map(([title, copy]) => (
+              <div key={title}>
+                <h4>{title}</h4>
+                <p className="mt-2 text-pretty">{copy}</p>
+              </div>
+            ))}
+          </div>
+          <p className={contentNoteClass}>
+            Content note: End with one minimal visual of the finished product,
+            keeping the emphasis on the design lesson rather than commercial
+            success.
           </p>
         </SectionContainer>
       </section>

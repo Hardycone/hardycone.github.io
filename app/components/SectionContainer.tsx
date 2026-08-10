@@ -78,7 +78,7 @@ export default function SectionContainer({
     >
       {showHeading && Icon ? (
         <>
-          <div className={`mb-2 flex items-center gap-4`}>
+          <div className={`mb-2 flex items-center gap-2`}>
             <Icon
               size={isMdUp ? 40 : 30}
               weight="duotone"

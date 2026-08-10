@@ -130,7 +130,7 @@ function ContactPanel({
         <h5 className="font-sans text-xl font-bold sm:text-xl">
           Let&apos;s chat!
         </h5>
-        <p className="mt-1 text-sm">
+        <p className="mt-1">
           Send me a message, or{" "}
           <button
             type="button"
@@ -247,7 +247,7 @@ function ContactPanel({
       </label>
 
       {error && (
-        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="text-red-600 dark:text-red-400">
           {error}
         </p>
       )}
