@@ -27,6 +27,11 @@ export interface ExternalLink {
   icon: string;
 }
 
+export interface ProjectBullet {
+  label: string;
+  content: string;
+}
+
 export interface Project {
   id: string;
   slug: string;
@@ -35,7 +40,7 @@ export interface Project {
   tagline?: string;
   tags?: Tag[];
   description?: string;
-  bullets?: string[];
+  bullets?: ProjectBullet[];
   image: string;
   button: string;
   textColor: string;
@@ -98,7 +103,7 @@ const projects: Project[] = [
     title: "Flux",
     role: "from 0 to 1.",
     tagline:
-      "Designing quantitative UX research tools that balance rigor with usability",
+      "Designing quantitative UX research workflows that balance rigor with usability",
     tags: [
       { label: "AI", icon: "SparkleIcon" },
       { label: "Startup", icon: "RocketIcon" },
@@ -106,8 +111,11 @@ const projects: Project[] = [
       { label: "Data Vis", icon: "ChartLineIcon" },
     ],
     description:
-      "I co-founded Flux and led product design, turning rigorous research methods into interfaces that felt intuitive and hard to misuse while still supporting expert flexibility.",
-    bullets: ["Role: Co-founder", "Scope: Research/Product/Design/Brand"],
+      "I co-founded Flux and led product design, turning rigorous research methods into interfaces that feel intuitive and hard to misuse while still supporting expert flexibility.",
+    bullets: [
+      { label: "Role", content: "Co-founder" },
+      { label: "Scope", content: "Research/Product/Design/Brand" },
+    ],
     image: "/images/hero-flux.jpg",
     button: "Look Inside",
     textColor: "flux",
@@ -163,9 +171,9 @@ const projects: Project[] = [
     description:
       "Fantail was a startup I co-founded with two teammates while completing my MHCID at the University of Washington. We built a functional MVP that let filmmakers start with any creative material and gradually shape it into a structured, scene-by-scene story.",
     bullets: [
-      "Duration: 6 months",
-      "Role: Co-founder & Product Designer",
-      "Research: 12 in-depth interviews",
+      { label: "Duration", content: "6 months" },
+      { label: "Role", content: "Co-founder & Product Designer" },
+      { label: "Research", content: "12 in-depth interviews" },
     ],
     button: "Look Inside",
     image: "/images/hero-fantail.png",
@@ -207,9 +215,9 @@ const projects: Project[] = [
     description:
       "The next generation of lunar and Mars missions call for interfaces that can effectively relay information and aid extra-vehicular missions on alien terrains. Our team went on to become a finalist in NASA's 2023 SUITS challenge and tested our prototype with NASA engineers at the Johnson Space Center.",
     bullets: [
-      "Program: NASA SUITS 2023",
-      "Scope: EVA workflow & interface",
-      "Validation: NASA Rock Yard",
+      { label: "Program", content: "NASA SUITS 2023" },
+      { label: "Scope", content: "EVA workflow & interface" },
+      { label: "Validation", content: "NASA Rock Yard" },
     ],
     button: "Look Inside",
     image: "/images/hero-astrohuskies.jpg",
@@ -254,9 +262,9 @@ const projects: Project[] = [
     description:
       "I implemented a community-driven project that laid out a vision for the urban core of Wolcott, NY that promoted local pride, urban design, and watershed protection. Funded by the National Oceanic and Atmospheric Administration (NOAA).",
     bullets: [
-      "Role: Project Manager",
-      "Process: 5 workshops",
-      "Status: Construction underway",
+      { label: "Role", content: "Project Manager" },
+      { label: "Process", content: "5 workshops" },
+      { label: "Status", content: "Construction underway" },
     ],
     button: "Look Inside",
     image: "/images/hero-wolcott.jpg",

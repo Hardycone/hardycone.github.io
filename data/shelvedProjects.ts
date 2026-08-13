@@ -15,7 +15,11 @@ const shelvedProjects: Project[] = [
     ],
     description:
       "I studied Boston's Chinatown and delievered a suite of design recommendations to key stakeholders that aimed at promoting the neighorhood's cultural identity. Several of my proposals were later partially implemented.",
-    bullets: ["Duration: 1 year", "Collaborators: Team of 12", "Role: Boss"],
+    bullets: [
+      { label: "Duration", content: "1 year" },
+      { label: "Collaborators", content: "Team of 12" },
+      { label: "Role", content: "Boss" },
+    ],
     button: "Look Inside",
     image: "/images/hero-ribbon.png",
     textColor: "chinatown",

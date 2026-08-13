@@ -102,6 +102,28 @@ body {
   .dark .glyph-three .glyph-lottie path[stroke] {
     stroke: #27272a;
   }
+
+  .gradient-text-reveal {
+    background-image: linear-gradient(
+      90deg,
+      currentColor 0%,
+      currentColor 33.33%,
+      #82bcff 40%,
+      #2483ff 45%,
+      #ff66f4 50%,
+      #ff3029 55%,
+      #fe7b02 60%,
+      transparent 66.67%,
+      transparent 100%
+    );
+    background-position: 100% 0;
+    background-repeat: no-repeat;
+    background-size: 300% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
 }
 
 @layer base {
@@ -114,13 +136,13 @@ body {
   }
 
   h3 {
-    @apply font-sans text-2xl font-bold md:text-4xl;
+    @apply font-sans text-3xl font-bold md:text-4xl;
   }
 
   h4 {
-    @apply font-sans text-xl font-semibold;
+    @apply font-sans text-lg font-semibold md:text-xl;
   }
   p {
-    @apply font-sans text-base;
+    @apply text-pretty font-sans text-base;
   }
 }

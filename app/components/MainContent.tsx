@@ -983,7 +983,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       <div
         className={`relative z-10 flex flex-1 flex-col overflow-hidden ${
           shouldReserveGlyphRail ? "min-w-max" : ""
-        }`}
+        } ${viewMode === "case-study" ? "pointer-events-none" : ""}`}
       >
         <GlyphCarousel />
       </div>
@@ -1070,7 +1070,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
         </AnimatePresence>
         {children}
       </motion.div>
-      <div className="relative z-10 min-w-0 flex-1" />
+      <div
+        className={`relative z-10 min-w-0 flex-1 ${
+          viewMode === "case-study" ? "pointer-events-none" : ""
+        }`}
+      />
 
       <BottomBar />
     </main>

@@ -745,14 +745,19 @@ export default function ProjectSummary({
                   initial={{ y: 100, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2, duration: 0.2, ease: "easeOut" }}
-                  className="flex flex-row gap-12 tall:flex-col tall:gap-0"
+                  className="flex w-full flex-row justify-between gap-x-6 lg:gap-x-12 tall:flex-col tall:gap-x-0 tall:gap-y-3"
                 >
                   {displayedProject.bullets.map((bullet) => (
                     <li
-                      key={bullet}
-                      className={`font-sans text-base font-semibold text-foreground dark:text-dark-foreground md:py-1 md:text-xl`}
+                      key={`${bullet.label}:${bullet.content}`}
+                      className="min-w-0 flex-[1_1_auto] font-sans text-foreground dark:text-dark-foreground md:py-1"
                     >
-                      {bullet}
+                      <span className="block text-xs font-semibold opacity-60 md:text-sm">
+                        {bullet.label}
+                      </span>
+                      <span className="mt-1 block text-base font-semibold md:text-xl">
+                        {bullet.content}
+                      </span>
                     </li>
                   ))}
                 </motion.ul>
