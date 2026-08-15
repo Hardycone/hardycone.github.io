@@ -28,10 +28,10 @@ export default function SubSection({
   const content = (
     <>
       {heading ? (
-        <h4 className="flex w-fit items-center gap-2 dark:bg-opacity-20">
+        <h4 className="flex w-fit items-start gap-1.5">
           {number ? (
-            <div className="flex size-5 items-center justify-center rounded-full bg-foreground dark:bg-dark-foreground md:size-6">
-              <span className="font-sans text-sm font-bold text-background dark:text-dark-background md:text-base">
+            <div className="flex h-[1.875rem] w-[1.5rem] shrink-0 items-center justify-center">
+              <span className="flex size-[1.5rem] items-center justify-center rounded-full bg-zinc-700 font-sans text-[1rem] font-black text-background dark:bg-zinc-300 dark:text-dark-background">
                 {number}
               </span>
             </div>

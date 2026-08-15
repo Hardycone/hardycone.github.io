@@ -167,7 +167,7 @@ export default function VerticalScrollCards({
 
   return (
     <div
-      className={`relative block md:flex ${className}`}
+      className={`relative block gap-4 md:flex ${className}`}
       style={
         {
           "--vertical-scroll-side-width": sideWidth,

@@ -355,7 +355,7 @@ export default function TopBar({
         },
         {
           root: null,
-          rootMargin: "-10% 0px -85% 0px",
+          rootMargin: "-40% 0px -55% 0px",
           threshold: 0,
         },
       );

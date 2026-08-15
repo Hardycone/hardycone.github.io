@@ -63,7 +63,7 @@ const projects: Project[] = [
       { label: "Researcher", icon: "MagnifyingGlassIcon" },
     ],
     description:
-      " I turn complex problems into usable systems. Across shipped B2B software, mixed reality interfaces, and public-sector design, I’ve led work from research and problem framing through stakeholder alignment, product strategy, and execution.",
+      " I turn complex problems into delightfully usable systems. Across shipped B2B software, mixed reality interfaces, and public-sector design, I’ve led work from research and problem framing through stakeholder alignment, product strategy, and execution.",
     image: "/images/project-1.jpg",
     button: "More About Me",
     textColor: "intro",
@@ -103,7 +103,7 @@ const projects: Project[] = [
     title: "Flux",
     role: "from 0 to 1.",
     tagline:
-      "Designing quantitative UX research workflows that balance rigor with usability",
+      "Quantitative UX research workflows that balance rigor with usability",
     tags: [
       { label: "AI", icon: "SparkleIcon" },
       { label: "Startup", icon: "RocketIcon" },
@@ -111,7 +111,7 @@ const projects: Project[] = [
       { label: "Data Vis", icon: "ChartLineIcon" },
     ],
     description:
-      "I co-founded Flux and led product design, turning rigorous research methods into interfaces that feel intuitive and hard to misuse while still supporting expert flexibility.",
+      "I co-founded Flux and led product design, turning quantitative research methods into interfaces that feel intuitive without compromising statistical rigor.",
     bullets: [
       { label: "Role", content: "Co-founder" },
       { label: "Scope", content: "Research/Product/Design/Brand" },
@@ -169,7 +169,7 @@ const projects: Project[] = [
       { label: "Filmmaking", icon: "FilmSlateIcon" },
     ],
     description:
-      "Fantail was a startup I co-founded with two teammates while completing my MHCID at the University of Washington. We built a functional MVP that let filmmakers start with any creative material and gradually shape it into a structured, scene-by-scene story.",
+      "I co-founded Fantail, an AI-powered story development platform that let filmmakers start with any creative material and gradually shape it into a structured, scene-by-scene story.",
     bullets: [
       { label: "Duration", content: "6 months" },
       { label: "Role", content: "Co-founder & Product Designer" },
@@ -207,7 +207,7 @@ const projects: Project[] = [
     slug: "nasa-suits",
     role: "next-gen interfaces.",
     title: "Astrohuskies",
-    tagline: "Building AR interfaces for next gen NASA missions",
+    tagline: "Building XR interfaces for next-gen Artemis missions",
     tags: [
       { label: "XR", icon: "VisorIcon" },
       { label: "Artemis", icon: "PlanetIcon" },
@@ -251,7 +251,7 @@ const projects: Project[] = [
   {
     id: "wolcott",
     slug: "wolcott",
-    role: "alongside communities.",
+    role: "alongside stakeholders.",
     title: "Wolcott Falls",
     tagline: "Co-designing a community space for a rural New York town",
     tags: [

@@ -180,7 +180,9 @@ export default function MainContent({ children }: { children: ReactNode }) {
       }
 
       headerIntroProgress.set(progress);
-      updateSectionHighlightEnabled(progress >= HEADER_IMAGE_FADE_START_PROGRESS);
+      updateSectionHighlightEnabled(
+        progress >= HEADER_IMAGE_FADE_START_PROGRESS,
+      );
       return progress;
     },
     [
@@ -950,7 +952,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   return (
     <main
-      className={`relative isolate flex w-full bg-background transition-colors dark:bg-dark-background ${
+      className={`relative isolate flex w-full overflow-x-clip bg-background transition-colors dark:bg-dark-background ${
         isHomeScrollLocked
           ? "h-[100svh] touch-none overflow-y-hidden"
           : isCaseStudyScrollLocked
@@ -1027,7 +1029,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
         </motion.div>
       )}
       <motion.div
-        className={`relative z-10 flex w-full max-w-5xl flex-col items-center gap-6 px-2 md:px-4`}
+        className={`relative z-10 flex w-full max-w-6xl flex-col items-start gap-6 px-2 md:px-4`}
       >
         <MyName />
         {viewMode === "case-study" &&

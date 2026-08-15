@@ -62,7 +62,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           revealOnScroll={false}
         >
           <SubSection>
-            <p className="px-2">
+            <p>
               Fantail was an AI-assisted story development startup I co-founded
               with two teammates while completing my MHCID at the University of
               Washington. We focused on the messy early phase where a film idea
@@ -70,7 +70,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
               to support that moment without forcing a rigid, script-first
               process.
             </p>
-            <p className="px-2">
+            <p>
               Over six months, we moved from discovery research to a functional
               MVP that let indie filmmakers start with any creative input and
               shape it into a structured story. We heard encouraging early
@@ -110,7 +110,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           borderColor={borderColor}
         >
           <SubSection number="1" heading="Starting with ambiguity">
-            <p className="px-2">
+            <p>
               We began with a wide problem space in indie filmmaking and,
               through twelve semi-structured interviews, narrowed to a clear
               gap: early story vision is hard to externalize and align around.
@@ -144,7 +144,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           borderColor={borderColor}
         >
           <SubSection number="1" heading="Research refined the lens">
-            <p className="px-2">
+            <p>
               I ran hour-long, semi-structured interviews with twelve
               independent filmmakers. Each session paired an interviewer with a
               note-taker and followed a flexible guide grounded in our research
@@ -158,7 +158,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
               number="2"
               primaryColor={theme.hex.primary}
               body={
-                <p className="px-2">
+                <p>
                   The strongest finding was not a single preferred workflow. It
                   was that the process was deeply personal, organic, and
                   non-uniform.
@@ -246,7 +246,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           borderColor={borderColor}
         >
           <SubSection number="1" heading="A script-agnostic start">
-            <p className="px-2">
+            <p>
               Fantail was designed around a simple bet. Instead of forcing
               filmmakers to begin with a rigid screenplay format, we let them
               start with any creative material they already had and gradually
@@ -258,7 +258,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           </SubSection>
 
           <SubSection number="2" heading="Scenes without rigidity">
-            <p className="px-2">
+            <p>
               The core organizing unit was the scene. Our research showed that
               filmmaking processes vary widely, but all films are built out of
               scenes. That gave us a shared structure without dictating how a
@@ -271,7 +271,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           </SubSection>
 
           <SubSection number="3" heading="Three connected areas">
-            <p className="px-2">
+            <p>
               Each scene was divided into references, script, and storyboard.
               Together, the three areas connected raw inspiration to the written
               layer and then to visual frames.
@@ -315,7 +315,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           </SubSection>
 
           <SubSection number="4" heading="Start anywhere, build outward">
-            <p className="px-2">
+            <p>
               A scene could start with a photo, a line of dialogue, a character
               note, or another fragment. From there, users could add context,
               highlight text, generate storyboard frames, and refine composition
@@ -329,7 +329,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           </SubSection>
 
           <SubSection number="5" heading="Deliberate cuts">
-            <p className="px-2">
+            <p>
               We explored AI table reads and permission-based collaboration, but
               held both back. Voice quality was not consistent enough, and
               collaboration expanded the scope before the core loop had been
@@ -375,7 +375,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
                 </p>
               </div>
             </div>
-            <p className="px-2">
+            <p>
               The process also exposed a founder-market-fit gap. We were
               passionate about the opportunity, but lacked deep industry access
               and distribution channels. Investor conversations repeatedly
@@ -399,7 +399,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           borderColor={borderColor}
         >
           <SubSection number="1" heading="What I carried forward">
-            <p className="px-2">
+            <p>
               Fantail taught me how to turn a messy creative process into a
               structured product system. It also taught me that a strong concept
               and thoughtful UX are not enough without distribution and

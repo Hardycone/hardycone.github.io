@@ -10,7 +10,9 @@ import {
   useInView,
   useReducedMotion,
 } from "framer-motion";
-import { useIsMdUp } from "@/hooks/useIsMdUp";
+import { useProjectTheme } from "@/hooks/useProjectTheme";
+import { useActiveProject } from "@/app/context/ActiveProjectContext";
+import projects from "@/data/projects";
 import GradientHeadingReveal from "./GradientHeadingReveal";
 
 interface SectionContainerBaseProps {
@@ -66,16 +68,17 @@ export default function SectionContainer({
     margin: "0px 0px -15% 0px",
   });
 
-  const isMdUp = useIsMdUp();
+  const { activeIndex } = useActiveProject();
+  const theme = useProjectTheme(projects[activeIndex].id);
 
   return (
     <motion.div
       ref={containerRef}
-      className={`flex flex-col rounded-6 border bg-background/90 p-3 text-foreground supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-background/90 dark:text-dark-foreground md:rounded-8 md:p-6 supports-[corner-shape:squircle]:md:rounded-16 ${cardClass}`}
+      className={`flex flex-col rounded-6 border bg-background/90 p-2 text-foreground supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-background/90 dark:text-dark-foreground md:rounded-8 md:p-6 supports-[corner-shape:squircle]:md:rounded-16 ${cardClass}`}
       style={{ borderColor }}
       initial={
         shouldRevealOnScroll
-          ? { opacity: 0, y: 48, scale: 0.98, filter: "blur(4px)" }
+          ? { opacity: 0, y: 48, scale: 0.9, filter: "blur(4px)" }
           : false
       }
       animate={
@@ -97,8 +100,8 @@ export default function SectionContainer({
           <GradientHeadingReveal
             animateReveal={animateHeadingReveal}
             icon={Icon}
-            iconSize={isMdUp ? 40 : 30}
             isRevealed={!shouldRevealOnScroll || isContainerInView}
+            primaryColor={theme.hex.primary}
             textColorClass={textColorClass}
             title={title}
           />
@@ -109,7 +112,7 @@ export default function SectionContainer({
           />
         </>
       ) : null}
-      <div className={`flex flex-col gap-8 p-0 md:p-12 ${contentClassName}`}>
+      <div className={`flex flex-col gap-8 p-1 md:p-12 ${contentClassName}`}>
         {children}
       </div>
     </motion.div>

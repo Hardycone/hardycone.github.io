@@ -1,6 +1,6 @@
 "use client";
 
-import { ComponentType, useEffect, useId, useRef } from "react";
+import { ComponentType, useEffect, useId, useMemo, useRef } from "react";
 import { IconProps } from "@phosphor-icons/react";
 import {
   animate,
@@ -13,17 +13,46 @@ import {
 interface GradientHeadingRevealProps {
   animateReveal?: boolean;
   icon: ComponentType<IconProps>;
-  iconSize: number;
   isRevealed: boolean;
+  primaryColor: string;
   textColorClass?: string;
   title: string;
+}
+
+const SWEEP_SETTLE_CLEARANCE_RATIO = 0.1;
+
+function shiftHexHue(hex: string, degrees: number) {
+  const normalizedHex = hex.replace("#", "");
+  if (!/^[\da-f]{6}$/i.test(normalizedHex)) return hex;
+
+  const [red, green, blue] = [0, 2, 4].map(
+    (offset) => parseInt(normalizedHex.slice(offset, offset + 2), 16) / 255,
+  );
+  const maximum = Math.max(red, green, blue);
+  const minimum = Math.min(red, green, blue);
+  const range = maximum - minimum;
+  const lightness = (maximum + minimum) / 2;
+
+  let hue = 0;
+  if (range !== 0) {
+    if (maximum === red) hue = ((green - blue) / range) % 6;
+    else if (maximum === green) hue = (blue - red) / range + 2;
+    else hue = (red - green) / range + 4;
+    hue *= 60;
+  }
+
+  const saturation =
+    range === 0 ? 0 : range / (1 - Math.abs(2 * lightness - 1));
+  const shiftedHue = (hue + degrees + 360) % 360;
+
+  return `hsl(${shiftedHue} ${saturation * 100}% ${lightness * 100}%)`;
 }
 
 export default function GradientHeadingReveal({
   animateReveal = true,
   icon: Icon,
-  iconSize,
   isRevealed,
+  primaryColor,
   textColorClass,
   title,
 }: GradientHeadingRevealProps) {
@@ -32,11 +61,22 @@ export default function GradientHeadingReveal({
   const textRef = useRef<HTMLSpanElement>(null);
   const gradientId = `gradient-heading-reveal-${useId().replace(/:/g, "")}`;
   const shouldReduceMotion = useReducedMotion();
+  const sweepColors = useMemo(
+    () => ({
+      minusSmall: shiftHexHue(primaryColor, -36),
+      minusTiny: shiftHexHue(primaryColor, -18),
+      primary: primaryColor,
+      plusTiny: shiftHexHue(primaryColor, 18),
+      plusSmall: shiftHexHue(primaryColor, 36),
+    }),
+    [primaryColor],
+  );
+  const textGradient = `linear-gradient(90deg, currentColor 0%, currentColor 34%, ${sweepColors.minusSmall} 40%, ${sweepColors.minusTiny} 45%, ${sweepColors.primary} 50%, ${sweepColors.plusTiny} 55%, ${sweepColors.plusSmall} 60%, transparent 66.67%, transparent 100%)`;
 
   const progress = useMotionValue(animateReveal ? 0 : 1);
   const headingWidth = useMotionValue(1);
-  const renderedIconWidth = useMotionValue(iconSize);
-  const textOffset = useMotionValue(iconSize);
+  const renderedIconWidth = useMotionValue(30);
+  const textOffset = useMotionValue(30);
 
   useEffect(() => {
     const updateMeasurements = () => {
@@ -71,7 +111,7 @@ export default function GradientHeadingReveal({
     }
 
     const revealAnimation = animate(progress, 1, {
-      duration: 2,
+      duration: 1.5,
       ease: [0.22, 1, 0.36, 1],
     });
 
@@ -85,30 +125,42 @@ export default function GradientHeadingReveal({
   const textBackgroundPosition = useTransform(
     [progress, headingWidth, textOffset],
     ([currentProgress, width, offset]: number[]) =>
-      `${-2 * width * (1 - currentProgress) - offset}px 0`,
+      `${
+        -2 * width * (1 - currentProgress) +
+        SWEEP_SETTLE_CLEARANCE_RATIO * width * currentProgress -
+        offset
+      }px 0`,
   );
   const iconGradientX1 = useTransform(
     [progress, headingWidth, renderedIconWidth],
     ([currentProgress, width, currentIconWidth]: number[]) =>
-      ((-2 * width * (1 - currentProgress)) / currentIconWidth) * 256,
+      ((-2 * width * (1 - currentProgress) +
+        SWEEP_SETTLE_CLEARANCE_RATIO * width * currentProgress) /
+        currentIconWidth) *
+      256,
   );
   const iconGradientX2 = useTransform(
     [progress, headingWidth, renderedIconWidth],
     ([currentProgress, width, currentIconWidth]: number[]) =>
-      ((-2 * width * (1 - currentProgress) + 3 * width) / currentIconWidth) *
+      ((-2 * width * (1 - currentProgress) +
+        SWEEP_SETTLE_CLEARANCE_RATIO * width * currentProgress +
+        3 * width) /
+        currentIconWidth) *
       256,
   );
 
   return (
     <div
       ref={headingRef}
-      className="mb-2 flex w-fit max-w-full items-center gap-2"
+      className="mb-2 flex w-fit max-w-full items-start gap-1"
     >
-      <span ref={iconRef} className="inline-flex shrink-0">
+      <span
+        ref={iconRef}
+        className="inline-flex h-[2.34375rem] w-[1.875rem] shrink-0 items-center justify-center md:h-[2.8125rem] md:w-[2.25rem]"
+      >
         <Icon
-          size={iconSize}
-          weight="duotone"
-          className={textColorClass}
+          weight="fill"
+          className={`size-[1.875rem] md:size-[2.25rem] ${textColorClass ?? ""}`}
           color={`url(#${gradientId})`}
         >
           <defs>
@@ -121,12 +173,12 @@ export default function GradientHeadingReveal({
               y2={128}
             >
               <stop offset="0%" stopColor="currentColor" />
-              <stop offset="33.33%" stopColor="currentColor" />
-              <stop offset="40%" stopColor="#82bcff" />
-              <stop offset="45%" stopColor="#2483ff" />
-              <stop offset="50%" stopColor="#ff66f4" />
-              <stop offset="55%" stopColor="#ff3029" />
-              <stop offset="60%" stopColor="#fe7b02" />
+              <stop offset="34%" stopColor="currentColor" />
+              <stop offset="40%" stopColor={sweepColors.minusSmall} />
+              <stop offset="45%" stopColor={sweepColors.minusTiny} />
+              <stop offset="50%" stopColor={sweepColors.primary} />
+              <stop offset="55%" stopColor={sweepColors.plusTiny} />
+              <stop offset="60%" stopColor={sweepColors.plusSmall} />
               <stop offset="66.67%" stopColor="currentColor" stopOpacity={0} />
               <stop offset="100%" stopColor="currentColor" stopOpacity={0} />
             </motion.linearGradient>
@@ -138,6 +190,7 @@ export default function GradientHeadingReveal({
           ref={textRef}
           className="gradient-text-reveal inline"
           style={{
+            backgroundImage: textGradient,
             backgroundPosition: textBackgroundPosition,
             backgroundSize: textBackgroundSize,
           }}

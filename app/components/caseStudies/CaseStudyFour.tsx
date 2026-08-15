@@ -64,7 +64,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           revealOnScroll={false}
         >
           <SubSection>
-            <p className="px-2">
+            <p>
               For NASA&apos;s SUITS challenge, our multidisciplinary team
               designed and built an augmented-reality interface for a simulated
               lunar EVA. The system guided an astronaut from suit disconnect
@@ -110,7 +110,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
             number="1"
             heading="Designing the whole EVA, not isolated screens"
           >
-            <p className="px-2">
+            <p>
               NASA supplied a task list rather than a conventional product
               brief. We translated it into a continuous journey, including
               failure-prone handoffs between navigation, communication,
@@ -216,7 +216,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
             number="1"
             heading="Make the right information glanceable"
           >
-            <p className="px-2">
+            <p>
               A headset can display almost anything; that made restraint the
               core design problem. Persistent information was limited to mission
               state, safety, and orientation. Everything else appeared when the
@@ -273,7 +273,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
 
       <section id="section-4" className="scroll-mt-24">
         <SectionContainer
-          title="Testing"
+          title="Human-In-The-Loop Evaluations"
           icon={PersonSimpleCircleIcon}
           textColorClass="text-foreground dark:text-dark-foreground"
           bgColorClass="bg-foreground dark:bg-dark-foreground"
@@ -283,7 +283,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
             number="1"
             heading="Testing behavior, not screen preference"
           >
-            <p className="px-2">
+            <p>
               We rehearsed the mission as a sequence of physical actions. Tests
               focused on whether participants noticed alerts, recovered their
               orientation, completed tasks, and understood what the system would
@@ -329,7 +329,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           borderColor={borderColor}
         >
           <SubSection number="1" heading="NASA Rock Yard, after dark">
-            <p className="px-2">
+            <p>
               As a SUITS finalist, the team brought the prototype to Johnson
               Space Center. NASA engineers ran the simulated EVA in the Rock
               Yard at night, giving us a realistic test of navigation,

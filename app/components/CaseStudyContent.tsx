@@ -108,7 +108,7 @@ export default function CaseStudyContent({
       {isVisible && (
         <motion.div
           aria-hidden="true"
-          className="pointer-events-none fixed inset-x-0 top-[calc(100lvh-3.5rem)] z-40 mx-auto h-16 w-full max-w-5xl px-2 md:top-[calc(100lvh-5rem)] md:h-24 md:px-4"
+          className="pointer-events-none fixed inset-x-0 top-[calc(100lvh-3.5rem)] z-40 mx-auto h-16 w-full max-w-6xl px-2 md:top-[calc(100lvh-5rem)] md:h-24 md:px-4"
           style={{ opacity: peekOpacity }}
         >
           <motion.div
@@ -122,7 +122,7 @@ export default function CaseStudyContent({
             <div className="mb-2 flex items-center gap-2">
               <PeekIcon
                 size={40}
-                weight="duotone"
+                weight="fill"
                 className="h-[30px] w-[30px] md:h-10 md:w-10"
               />
               <h3>{peekTitle}</h3>

@@ -64,7 +64,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           revealOnScroll={false}
         >
           <SubSection>
-            <p className="px-2">
+            <p>
               Wolcott Falls was a NOAA-funded effort to turn a valued but
               underused natural landmark into a catalyst for the village center.
               As project manager, I led a five-workshop co-design process from
@@ -107,7 +107,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           borderColor={borderColor}
         >
           <SubSection number="1" heading="More than a beautification project">
-            <p className="px-2">
+            <p>
               The falls sat close to Main Street but felt disconnected from
               daily village life. Access, visibility, gathering space, and
               watershed health were intertwined—and residents had seen plans
@@ -169,7 +169,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
             number="1"
             heading="Five workshops, one continuous conversation"
           >
-            <p className="px-2">
+            <p>
               Each workshop returned something tangible to residents. That made
               participation cumulative: stories became priorities, priorities
               became alternatives, and alternatives became commitments.
@@ -181,7 +181,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
               number="2"
               primaryColor={theme.hex.primary}
               body={
-                <p className="px-2">
+                <p>
                   We used familiar language, maps, photographs, and trade-off
                   exercises rather than asking residents to react to a finished
                   plan.
@@ -241,7 +241,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           borderColor={borderColor}
         >
           <SubSection number="1" heading="A framework that could be phased">
-            <p className="px-2">
+            <p>
               The preferred concept was organized as a connected family of
               projects rather than one expensive intervention. That let the
               village pursue funding and construction in practical increments.
@@ -277,7 +277,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
             </CaseStudyFigure>
           </SubSection>
           <SubSection number="2" heading="Design packet to action plan">
-            <p className="px-2">
+            <p>
               The final package paired spatial concepts with priorities,
               responsibilities, funding logic, and concrete next steps—giving
               the community something it could continue using after our
@@ -296,7 +296,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           borderColor={borderColor}
         >
           <SubSection number="1" heading="A plan that kept moving">
-            <p className="px-2">
+            <p>
               The process produced a community-backed design packet and an
               implementable set of next steps. The same grant source continued
               funding the work, and construction broke ground in 2026 after I

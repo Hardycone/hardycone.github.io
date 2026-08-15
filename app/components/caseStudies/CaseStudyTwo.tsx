@@ -66,7 +66,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           borderColor={borderColor}
           revealOnScroll={false}
         >
-          <SubSection heading="What it is">
+          <SubSection number="1" heading="What it is">
             <p>
               Flux helps product teams validate prototypes with scaled
               quantitative evidence before implementation. Teams can configure
@@ -95,7 +95,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               storyboarding through 3D, animation, and editing.
             </p>
           </SubSection>
-          <SubSection heading="How it works">
+          <SubSection number="2" heading="How it works">
             <CaseStudyFigure caption="A simple orientation to the end-to-end Flux workflow.">
               <div className="grid w-full max-w-4xl gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] md:items-center">
                 {[
@@ -137,7 +137,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection heading="Spotting the gap">
+          <SubSection number="1" heading="Spotting the gap">
             <p>
               Flux started with a simple observation: AI has drastically lowered
               the cost of building, but not the cost of building the wrong
@@ -155,7 +155,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               statistical confidence that can match this speed.
             </span>
           </SubSection>
-          <SubSection heading="Research and discovery">
+          <SubSection number="2" heading="Research and discovery">
             <p>
               My cofounder and I started with conversations with people in our
               network. We had a mix of casual conversations and more structured
@@ -169,7 +169,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               cardHeight="min(calc(100dvh - 6rem), 400px)"
               primaryColor={theme.hex.primary}
               sideContent={({ activeIndex: visibleCard }) => (
-                <SubSection heading="Framing the problem">
+                <SubSection number="3" heading="Framing the problem">
                   <p>
                     Existing quantitativ UX research workflows are{" "}
                     {[
@@ -284,7 +284,10 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           borderColor="rgba(0,0,0,0)"
           cardClass="w-full min-w-0"
         >
-          <SubSection heading="Complexity surfaced at commitment points">
+          <SubSection
+            number="1"
+            heading="Complexity surfaced at commitment points"
+          >
             <p>
               Two moments repeatedly exposed the design tension. Teams had to
               choose a defensible participant count without necessarily
@@ -343,7 +346,10 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               expose, and notes or screenshots from practitioner check-ins.
             </p>
           </SubSection>
-          <SubSection number="3" heading="The product-level tension">
+          <SubSection
+            number="3"
+            heading="The product-level tension that is so tense and so irritating, i'm honestly kind of intimidated. i mean what the hell. how is this even part of the discussion in any way whatsoever?"
+          >
             <p
               className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
               style={{ backgroundColor: theme.hex.soft }}
@@ -368,7 +374,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             number="1"
             heading="Participant sizing: guide without locking in"
           >
-            <p className="px-2">
+            <p>
               Participant sizing made the beginner–expert tension concrete. Most
               users did not want to perform a power analysis, while experienced
               researchers still needed control over the assumptions. I designed
@@ -390,7 +396,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             number="2"
             heading="Report preview: show value before commitment"
           >
-            <p className="px-2">
+            <p>
               Study setup created a different kind of uncertainty. Teams
               selected report components and wrote questions long before any
               data existed, yet a study could require recruiting hundreds of
@@ -444,7 +450,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           borderColor={borderColor}
         >
           <SubSection number="1" heading="A complete, live product">
-            <p className="px-2">
+            <p>
               Flux matured into a full platform for quantitative prototype
               testing. Teams can configure a study, recruit participants, run
               tests, and review decision-ready results in one product. It is
