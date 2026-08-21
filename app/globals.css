@@ -36,6 +36,12 @@ body {
 }
 
 @layer components {
+  @media (hover: none) and (pointer: coarse) {
+    .section-container-scroll-reveal {
+      filter: none !important;
+    }
+  }
+
   .partial-stroke::after {
     content: "";
     position: absolute;
@@ -123,13 +129,13 @@ body {
   }
 
   h3 {
-    @apply font-sans text-[1.875rem] font-bold leading-tight md:text-[2.25rem];
+    @apply font-sans text-[1.875rem] font-bold leading-tight text-foreground-light dark:text-dark-foreground-light md:text-[2.25rem];
   }
 
   h4 {
-    @apply font-sans text-[1.5rem] font-semibold leading-tight text-zinc-700 dark:text-zinc-300;
+    @apply font-sans text-[1.5rem] font-semibold leading-tight text-foreground-light dark:text-dark-foreground-light;
   }
   p {
-    @apply text-pretty font-sans text-[0.875rem] leading-snug text-zinc-600 dark:text-zinc-400 md:text-[1rem];
+    @apply text-pretty font-sans text-[0.875rem] leading-snug text-foreground-ultralight dark:text-dark-foreground-ultralight md:text-[1rem];
   }
 }

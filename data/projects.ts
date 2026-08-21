@@ -116,7 +116,7 @@ const projects: Project[] = [
       { label: "Role", content: "Co-founder" },
       { label: "Scope", content: "Research/Product/Design/Brand" },
     ],
-    image: "/images/hero-flux.jpg",
+    image: "/images/hero-flux.webp",
     button: "Look Inside",
     textColor: "flux",
     bgColor: "fluxBackground",
@@ -176,7 +176,7 @@ const projects: Project[] = [
       { label: "Research", content: "12 in-depth interviews" },
     ],
     button: "Look Inside",
-    image: "/images/hero-fantail.png",
+    image: "/images/hero-fantail.webp",
     textColor: "fantail",
     bgColor: "fantailBackground",
     glyphAnimation: glyphThreeAnimation as GlyphAnimationData,
@@ -207,13 +207,13 @@ const projects: Project[] = [
     slug: "nasa-suits",
     role: "next-gen interfaces.",
     title: "Astrohuskies",
-    tagline: "Building XR interfaces for next-gen Artemis missions",
+    tagline: "XR interfaces for next-gen Artemis missions",
     tags: [
       { label: "XR", icon: "VisorIcon" },
       { label: "Artemis", icon: "PlanetIcon" },
     ],
     description:
-      "The next generation of lunar and Mars missions call for interfaces that can effectively relay information and aid extra-vehicular missions on alien terrains. Our team went on to become a finalist in NASA's 2023 SUITS challenge and tested our prototype with NASA engineers at the Johnson Space Center.",
+      "I worked as a designer in the UW Reality Lab to build a XR spacesuit interface for NASA's 2023 SUITS challenge. Our team was one of ten finalists to attend demo day at the Johnson Space Center.",
     bullets: [
       { label: "Program", content: "NASA SUITS 2023" },
       { label: "Scope", content: "EVA workflow & interface" },
@@ -253,14 +253,14 @@ const projects: Project[] = [
     slug: "wolcott",
     role: "alongside stakeholders.",
     title: "Wolcott Falls",
-    tagline: "Co-designing a community space for a rural New York town",
+    tagline: "Stakeholder-driven urban design for a rural New York town",
     tags: [
       { label: "Co-Design", icon: "UsersThreeIcon" },
       { label: "Stakeholders", icon: "HandshakeIcon" },
       { label: "Environmental Justice", icon: "FlowerTulipIcon" },
     ],
     description:
-      "I implemented a community-driven project that laid out a vision for the urban core of Wolcott, NY that promoted local pride, urban design, and watershed protection. Funded by the National Oceanic and Atmospheric Administration (NOAA).",
+      "I directed and implemented an NOAA Sea Grant that laid out a vision for Wolcott, NY that promoted local pride, urban design, and watershed protection .",
     bullets: [
       { label: "Role", content: "Project Manager" },
       { label: "Process", content: "5 workshops" },

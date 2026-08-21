@@ -21,7 +21,7 @@ import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import CaseStudyFigure from "../CaseStudyFigure";
-import HorizontalFilmstrip from "../HorizontalScrollGroup";
+import HorizontalScrollGroup from "../HorizontalScrollGroup";
 import SectionContainer from "../SectionContainer";
 import SubSection from "../SubSection";
 
@@ -61,6 +61,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           textColorClass="text-foreground dark:text-dark-foreground"
           bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
+          exitOnScroll
           revealOnScroll={false}
         >
           <SubSection>
@@ -176,16 +177,16 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
             </p>
           </SubSection>
           <SubSection spacing="none">
-            <HorizontalFilmstrip
-              heading="The co-design sequence"
-              number="2"
+            <HorizontalScrollGroup
               primaryColor={theme.hex.primary}
               body={
-                <p>
-                  We used familiar language, maps, photographs, and trade-off
-                  exercises rather than asking residents to react to a finished
-                  plan.
-                </p>
+                <SubSection number="2" heading="The co-design sequence">
+                  <p>
+                    We used familiar language, maps, photographs, and trade-off
+                    exercises rather than asking residents to react to a
+                    finished plan.
+                  </p>
+                </SubSection>
               }
               cards={[
                 [

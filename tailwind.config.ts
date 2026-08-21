@@ -31,6 +31,8 @@ export default {
       colors: {
         // 1. Base UI
         foreground: PALETTE.base.foreground,
+        "foreground-light": PALETTE.base.foregroundLight,
+        "foreground-ultralight": PALETTE.base.foregroundUltralight,
         background: PALETTE.base.background,
 
         // 2. Project Colors (Light Mode)
@@ -62,6 +64,8 @@ export default {
         // 3. Dark Mode Specifics (prefixed with 'dark-')
         dark: {
           foreground: PALETTE.base.darkForeground,
+          "foreground-light": PALETTE.base.darkForegroundLight,
+          "foreground-ultralight": PALETTE.base.darkForegroundUltralight,
           background: PALETTE.base.darkBackground,
 
           intro: PALETTE.intro.dark.primary,

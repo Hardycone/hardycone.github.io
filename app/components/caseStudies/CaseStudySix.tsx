@@ -44,6 +44,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
+          exitOnScroll
           revealOnScroll={false}
         >
           <SubSection spacing="none">

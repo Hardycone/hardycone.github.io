@@ -28,14 +28,12 @@ import CaseStudyContent from "./CaseStudyContent";
 import MyName from "./MyName";
 import HomeSymbolBackdrop from "./HomeSymbolBackdrop";
 import {
-  HEADER_INTRO_DISTANCE_LVH,
+  HEADER_INTRO_DISTANCE_SVH,
   HEADER_PANE_NAV_CONTENT_FADE_MS,
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
   HEADER_PANE_NAV_MORPH_MS,
   HEADER_PANE_NAV_MORPH_PROGRESS,
   HEADER_IMAGE_FADE_START_PROGRESS,
-  BOTTOM_CARD_REVEAL_END_DISTANCE_PX,
-  BOTTOM_CARD_REVEAL_START_DISTANCE_VH,
 } from "@/lib/caseStudyTransitions";
 // import DebugViewport from "./DebugViewport";
 import BottomBar from "./BottomBar";
@@ -105,6 +103,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     restSpeed: 0.01,
   });
   const bottomRevealAnchorRef = useRef<HTMLDivElement>(null);
+  const bottomRevealSpacerRef = useRef<HTMLDivElement>(null);
   const floatingPaneRef = useRef<HTMLDivElement>(null);
   const centerNavRef = useRef<HTMLDivElement>(null);
   const paneNavSurfaceRef = useRef<PaneNavSurface>("pane");
@@ -196,7 +195,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   const updateBottomRevealProgress = useCallback(() => {
     const anchor = bottomRevealAnchorRef.current;
-    if (!anchor || viewMode !== "case-study") {
+    const spacer = bottomRevealSpacerRef.current;
+    if (!anchor || !spacer || viewMode !== "case-study") {
       bottomRevealProgress.set(0);
       return 0;
     }
@@ -204,17 +204,15 @@ export default function MainContent({ children }: { children: ReactNode }) {
     const visualViewport = window.visualViewport;
     const viewportHeight = visualViewport?.height ?? window.innerHeight;
     const viewportBottom = (visualViewport?.offsetTop ?? 0) + viewportHeight;
-    const distanceFromBottom =
-      anchor.getBoundingClientRect().top - viewportBottom;
-    const revealDistance =
-      viewportHeight * (BOTTOM_CARD_REVEAL_START_DISTANCE_VH / 100);
+    const distanceIntoViewport =
+      viewportBottom - anchor.getBoundingClientRect().top;
     const animationDistance = Math.max(
       1,
-      revealDistance - BOTTOM_CARD_REVEAL_END_DISTANCE_PX,
+      spacer.getBoundingClientRect().height,
     );
     const progress = Math.min(
       1,
-      Math.max(0, (revealDistance - distanceFromBottom) / animationDistance),
+      Math.max(0, distanceIntoViewport / animationDistance),
     );
 
     bottomRevealProgress.set(progress);
@@ -977,7 +975,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
           ref={headerIntroEndRef}
           aria-hidden="true"
           className="pointer-events-none absolute left-0 h-px w-px"
-          style={{ top: `${HEADER_INTRO_DISTANCE_LVH}lvh` }}
+          style={{ top: `${HEADER_INTRO_DISTANCE_SVH}svh` }}
         />
       )}
 
@@ -1029,26 +1027,19 @@ export default function MainContent({ children }: { children: ReactNode }) {
         </motion.div>
       )}
       <motion.div
-        className={`relative z-10 flex w-full max-w-6xl flex-col items-start gap-6 px-2 md:px-4`}
+        className={`relative z-10 flex w-full max-w-5xl flex-col items-start gap-6 px-2 md:px-4`}
       >
         <MyName />
         {viewMode === "case-study" &&
           (caseStudyContentReady || transitioningToNext) && (
             <CaseStudyContent
+              bottomRevealAnchorRef={bottomRevealAnchorRef}
+              bottomRevealSpacerRef={bottomRevealSpacerRef}
               scrollY={scrollY}
               headerIntroProgress={headerIntroProgress}
               isVisible={caseStudyContentReady && !transitioningToNext}
               exitDirection={caseStudyExitDirection}
               onExitComplete={handleCaseStudyExitComplete}
-            />
-          )}
-        {viewMode === "case-study" &&
-          (caseStudyContentReady || transitioningToNext) && (
-            <div
-              ref={bottomRevealAnchorRef}
-              data-bottom-reveal-anchor
-              aria-hidden="true"
-              className="h-0 w-full"
             />
           )}
         <AnimatePresence mode="wait">

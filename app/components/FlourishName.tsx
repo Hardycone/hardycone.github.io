@@ -194,7 +194,7 @@ export default function FlourishName({
           config.onFlourish?.();
 
           const basePx = parseFloat(getComputedStyle(el2).fontSize);
-          const growPx = Math.round(basePx * 1.1);
+          const growPx = Math.round(basePx * 1.05);
 
           await animate(
             el2,

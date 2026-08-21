@@ -128,10 +128,10 @@ export default function ProjectSummary({
   const supportsSquircle = useSupportsSquircle();
   const bottomCardHeight = useMotionValue(200);
   const [hasBottomRevealCompleted, setHasBottomRevealCompleted] = useState(
-    () => bottomVisualProgress.get() >= 0.999,
+    () => bottomVisualProgress.get() >= 0.9,
   );
   useMotionValueEvent(bottomVisualProgress, "change", (progress) => {
-    const hasCompleted = progress >= 0.999;
+    const hasCompleted = progress >= 0.9;
     setHasBottomRevealCompleted((previous) =>
       previous === hasCompleted ? previous : hasCompleted,
     );
@@ -511,14 +511,14 @@ export default function ProjectSummary({
 
   const containerClasses =
     variant === "header"
-      ? "fixed inset-0 w-full h-[100lvh] items-center justify-center "
+      ? "fixed inset-0 w-full h-[100svh] items-center justify-center "
       : variant === "preview"
         ? "relative h-[100svh] w-full max-w-5xl justify-center [container-type:inline-size]"
-        : "fixed items-center justify-end w-full h-[max(60lvh,300px)] bottom-0 max-w-5xl p-2 ";
+        : "fixed inset-x-0 bottom-0 mx-auto h-[max(60svh,300px)] w-full max-w-5xl items-center justify-end p-2 ";
 
   const cardClasses =
     variant === "header"
-      ? "cursor-default h-full max-w-[2650px] items-center p-10 pt-[15svh] pb-18 md:wide:pb-28"
+      ? "cursor-default h-full max-w-[2650px] items-center p-10 justify-center pb-18 md:wide:pb-28"
       : variant === "preview"
         ? "supertall:top-12 top-8 superwide:top-0 cursor-pointer p-3 md:p-6 h-[max(70cqw,50svh)] md:h-[max(80cqw,50svh)] superwide:h-[90svh] wide:h-[min(60cqw,70svh)] lg:superwide:h-[min(60cqw,70svh)] lg:h-[max(60cqw,50svh)] supertall:h-[clamp(36cqw,70svh,150cqw)] "
         : `${isSummaryInteractionEnabled ? "cursor-pointer" : "pointer-events-none cursor-default"} p-3 md:p-6 h-full`;
@@ -570,6 +570,8 @@ export default function ProjectSummary({
       ref={ref}
       style={{
         opacity: summaryOpacity,
+        originX: variant === "bottom" ? 0.5 : undefined,
+        originY: variant === "bottom" ? 0 : undefined,
         scale: summaryScale,
         y: summaryY,
         filter: summaryFilter,
@@ -578,11 +580,9 @@ export default function ProjectSummary({
       className={`z-10 flex flex-col ${containerClasses}`}
     >
       {/* Bottom variant title bar */}
-      {variant === "bottom" && (
-        <h6 className="relative mb-6 items-start font-sans text-lg font-bold">
-          Next Up
-        </h6>
-      )}
+      {/* {variant === "bottom" && (
+        <h3 className="relative mb-6 items-start">Next Up</h3>
+      )} */}
       {/* Card */}
       <motion.div
         ref={setBottomCardRef}
@@ -717,17 +717,17 @@ export default function ProjectSummary({
             <motion.h2
               layout="position"
               layoutDependency={layoutDependency}
-              className={`extremelywide:hidden } mb-2 text-foreground opacity-70 dark:text-dark-foreground md:mb-4 lg:mb-5 xl:mb-6 2xl:mb-7`}
+              className={`extremelywide:hidden mb-2 md:mb-4 lg:mb-5 xl:mb-6 2xl:mb-7`}
             >
               {displayedProject.tagline}
             </motion.h2>
 
             {/* Description */}
 
-            <motion.p
+            <motion.h5
               layout
               layoutDependency={layoutDependency}
-              className={`text-foreground dark:text-dark-foreground ${
+              className={`text-pretty font-sans text-[0.875rem] leading-snug md:text-[1rem] ${
                 variant === "header"
                   ? "mb-2 md:mb-4 md:border-l-4 md:border-foreground md:py-2 md:pl-4 md:dark:border-dark-foreground lg:mb-5 xl:mb-6 xl:w-[70%] 2xl:mb-7"
                   : variant === "preview"
@@ -736,7 +736,7 @@ export default function ProjectSummary({
               }`}
             >
               {displayedProject.description}
-            </motion.p>
+            </motion.h5>
 
             {/* Bullet points */}
             {variant === "header" && displayedProject.bullets && (

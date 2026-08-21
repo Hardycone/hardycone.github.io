@@ -20,6 +20,14 @@ interface GradientHeadingRevealProps {
 }
 
 const SWEEP_SETTLE_CLEARANCE_RATIO = 0.1;
+const SWEEP_BACKGROUND_WIDTH_RATIO = 3;
+const UNREVEALED_OPACITY = 0.2;
+const SWEEP_STOP_SHIFT_PERCENT =
+  (SWEEP_SETTLE_CLEARANCE_RATIO / SWEEP_BACKGROUND_WIDTH_RATIO) * 100;
+
+function shiftedSweepStop(stop: number) {
+  return `${stop + SWEEP_STOP_SHIFT_PERCENT}%`;
+}
 
 function shiftHexHue(hex: string, degrees: number) {
   const normalizedHex = hex.replace("#", "");
@@ -71,7 +79,8 @@ export default function GradientHeadingReveal({
     }),
     [primaryColor],
   );
-  const textGradient = `linear-gradient(90deg, currentColor 0%, currentColor 34%, ${sweepColors.minusSmall} 40%, ${sweepColors.minusTiny} 45%, ${sweepColors.primary} 50%, ${sweepColors.plusTiny} 55%, ${sweepColors.plusSmall} 60%, transparent 66.67%, transparent 100%)`;
+  const unrevealedColor = `color-mix(in srgb, currentColor ${UNREVEALED_OPACITY * 100}%, transparent)`;
+  const textGradient = `linear-gradient(90deg, currentColor 0%, currentColor ${shiftedSweepStop(34)}, ${sweepColors.minusSmall} ${shiftedSweepStop(40)}, ${sweepColors.minusTiny} ${shiftedSweepStop(45)}, ${sweepColors.primary} ${shiftedSweepStop(50)}, ${sweepColors.plusTiny} ${shiftedSweepStop(55)}, ${sweepColors.plusSmall} ${shiftedSweepStop(60)}, transparent ${shiftedSweepStop(66.67)}, transparent 100%)`;
 
   const progress = useMotionValue(animateReveal ? 0 : 1);
   const headingWidth = useMotionValue(1);
@@ -111,7 +120,7 @@ export default function GradientHeadingReveal({
     }
 
     const revealAnimation = animate(progress, 1, {
-      duration: 1.5,
+      duration: 3,
       ease: [0.22, 1, 0.36, 1],
     });
 
@@ -120,31 +129,28 @@ export default function GradientHeadingReveal({
 
   const textBackgroundSize = useTransform(
     headingWidth,
-    (width) => `${width * 3}px 100%`,
+    (width) => `${width * SWEEP_BACKGROUND_WIDTH_RATIO}px 100%`,
   );
   const textBackgroundPosition = useTransform(
     [progress, headingWidth, textOffset],
     ([currentProgress, width, offset]: number[]) =>
       `${
-        -2 * width * (1 - currentProgress) +
-        SWEEP_SETTLE_CLEARANCE_RATIO * width * currentProgress -
+        -(2 + SWEEP_SETTLE_CLEARANCE_RATIO) * width * (1 - currentProgress) -
         offset
       }px 0`,
   );
   const iconGradientX1 = useTransform(
     [progress, headingWidth, renderedIconWidth],
     ([currentProgress, width, currentIconWidth]: number[]) =>
-      ((-2 * width * (1 - currentProgress) +
-        SWEEP_SETTLE_CLEARANCE_RATIO * width * currentProgress) /
+      ((-(2 + SWEEP_SETTLE_CLEARANCE_RATIO) * width * (1 - currentProgress)) /
         currentIconWidth) *
       256,
   );
   const iconGradientX2 = useTransform(
     [progress, headingWidth, renderedIconWidth],
     ([currentProgress, width, currentIconWidth]: number[]) =>
-      ((-2 * width * (1 - currentProgress) +
-        SWEEP_SETTLE_CLEARANCE_RATIO * width * currentProgress +
-        3 * width) /
+      ((-(2 + SWEEP_SETTLE_CLEARANCE_RATIO) * width * (1 - currentProgress) +
+        SWEEP_BACKGROUND_WIDTH_RATIO * width) /
         currentIconWidth) *
       256,
   );
@@ -173,23 +179,47 @@ export default function GradientHeadingReveal({
               y2={128}
             >
               <stop offset="0%" stopColor="currentColor" />
-              <stop offset="34%" stopColor="currentColor" />
-              <stop offset="40%" stopColor={sweepColors.minusSmall} />
-              <stop offset="45%" stopColor={sweepColors.minusTiny} />
-              <stop offset="50%" stopColor={sweepColors.primary} />
-              <stop offset="55%" stopColor={sweepColors.plusTiny} />
-              <stop offset="60%" stopColor={sweepColors.plusSmall} />
-              <stop offset="66.67%" stopColor="currentColor" stopOpacity={0} />
-              <stop offset="100%" stopColor="currentColor" stopOpacity={0} />
+              <stop offset={shiftedSweepStop(34)} stopColor="currentColor" />
+              <stop
+                offset={shiftedSweepStop(40)}
+                stopColor={sweepColors.minusSmall}
+              />
+              <stop
+                offset={shiftedSweepStop(45)}
+                stopColor={sweepColors.minusTiny}
+              />
+              <stop
+                offset={shiftedSweepStop(50)}
+                stopColor={sweepColors.primary}
+              />
+              <stop
+                offset={shiftedSweepStop(55)}
+                stopColor={sweepColors.plusTiny}
+              />
+              <stop
+                offset={shiftedSweepStop(60)}
+                stopColor={sweepColors.plusSmall}
+              />
+              <stop
+                offset={shiftedSweepStop(66.67)}
+                stopColor="currentColor"
+                stopOpacity={UNREVEALED_OPACITY}
+              />
+              <stop
+                offset="100%"
+                stopColor="currentColor"
+                stopOpacity={UNREVEALED_OPACITY}
+              />
             </motion.linearGradient>
           </defs>
         </Icon>
       </span>
-      <h3 className={textColorClass}>
+      <h3>
         <motion.span
           ref={textRef}
           className="gradient-text-reveal inline"
           style={{
+            backgroundColor: unrevealedColor,
             backgroundImage: textGradient,
             backgroundPosition: textBackgroundPosition,
             backgroundSize: textBackgroundSize,

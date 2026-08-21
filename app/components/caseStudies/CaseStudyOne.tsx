@@ -76,7 +76,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   );
 
   return (
-    <article className="mx-auto w-full min-w-0 max-w-5xl">
+    <article className="mx-auto w-full min-w-0 max-w-6xl">
       {/*Section 1: Resume*/}
       <section id="section-1" className="mb-8 w-full min-w-0 scroll-mt-24">
         {/*Section Header Block*/}
@@ -88,6 +88,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           textColorClass={"text-foreground dark:text-dark-foreground"}
           bgColorClass={"bg-foreground dark:bg-dark-foreground"}
           borderColor={borderColor}
+          exitOnScroll
           revealOnScroll={false}
         >
           <SubSection spacing="none">
@@ -655,7 +656,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             </p>
           </SubSection>
         </SectionContainer>
-        <div className="relative left-1/2 mx-auto mb-8 w-[calc(100svw-2rem)] max-w-[1440px] -translate-x-1/2">
+        <div className="relative left-1/2 mb-8 w-[calc(100svw-2rem)] max-w-[1440px] -translate-x-1/2">
           {/*Image Grid*/}
           <div className="grid grid-cols-4 grid-rows-4 gap-2">
             {/* Image 1 - 4 cells horizontally */}
@@ -699,7 +700,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             </div>
             <div className="relative">
               <img
-                src="/images/IMG_2354.jpg"
+                src="/images/IMG_2354.JPG"
                 alt="Dummy Image 7"
                 className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
               />

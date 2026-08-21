@@ -45,6 +45,12 @@ export const useProjectTheme = (projectKey: string) => {
     soft: isDark ? paletteGroup.dark.soft : paletteGroup.light.soft,
     background: isDark ? PALETTE.base.darkBackground : PALETTE.base.background,
     foreground: isDark ? PALETTE.base.darkForeground : PALETTE.base.foreground,
+    foregroundLight: isDark
+      ? PALETTE.base.darkForegroundLight
+      : PALETTE.base.foregroundLight,
+    foregroundUltralight: isDark
+      ? PALETTE.base.darkForegroundUltralight
+      : PALETTE.base.foregroundUltralight,
   };
 
   return { ...classes, hex };

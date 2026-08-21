@@ -16,7 +16,7 @@ import {
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
-import HorizontalFilmstrip from "../HorizontalScrollGroup";
+import HorizontalScrollGroup from "../HorizontalScrollGroup";
 import SectionContainer from "../SectionContainer";
 import SubSection from "../SubSection";
 
@@ -59,6 +59,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           textColorClass="text-foreground dark:text-dark-foreground"
           bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
+          exitOnScroll
           revealOnScroll={false}
         >
           <SubSection>
@@ -103,7 +104,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
 
       <section id="section-2" className="scroll-mt-24">
         <SectionContainer
-          title="The 0"
+          title="The Zero"
           icon={SealQuestionIcon}
           textColorClass="text-foreground dark:text-dark-foreground"
           bgColorClass="bg-foreground dark:bg-dark-foreground"
@@ -153,16 +154,16 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
             </p>
           </SubSection>
           <SubSection spacing="none">
-            <HorizontalFilmstrip
-              heading="Messy was the pattern"
-              number="2"
+            <HorizontalScrollGroup
               primaryColor={theme.hex.primary}
               body={
-                <p>
-                  The strongest finding was not a single preferred workflow. It
-                  was that the process was deeply personal, organic, and
-                  non-uniform.
-                </p>
+                <SubSection number="2" heading="Messy was the pattern">
+                  <p>
+                    The strongest finding was not a single preferred workflow.
+                    It was that the process was deeply personal, organic, and
+                    non-uniform.
+                  </p>
+                </SubSection>
               }
               cards={[
                 {
@@ -239,7 +240,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
 
       <section id="section-4" className="scroll-mt-24">
         <SectionContainer
-          title="The 1"
+          title="The One"
           icon={RocketLaunchIcon}
           textColorClass="text-foreground dark:text-dark-foreground"
           bgColorClass="bg-foreground dark:bg-dark-foreground"

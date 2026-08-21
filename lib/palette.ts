@@ -18,8 +18,12 @@ export const PALETTE = {
   base: {
     background: "#f4f4f5", // zinc-100
     foreground: "#27272a", // zinc-800
+    foregroundLight: "#3f3f46", // zinc-700
+    foregroundUltralight: "#52525b", // zinc-600
     darkBackground: "#18181b", // zinc-900
     darkForeground: "#f4f4f5", // zinc-100
+    darkForegroundLight: "#d4d4d8", // zinc-300
+    darkForegroundUltralight: "#a1a1aa", // zinc-400
   },
 
   // Project: Intro (Zinc/Grayscale)

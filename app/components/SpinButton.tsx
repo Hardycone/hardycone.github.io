@@ -20,45 +20,47 @@ export default function SpinButton({
   tabIndex,
 }: SpinButtonProps) {
   return (
-    <motion.button
-      type="button"
-      tabIndex={tabIndex}
-      className={`transition-scale hover:scale-[0.97] active:scale-95 active:text-opacity-20 ${className}`}
-      style={style}
-    >
-      {/* Fixed width container to prevent layout shifts when icon swaps */}
-      <div className="relative flex h-6 w-6 items-center justify-center">
-        <AnimatePresence mode="wait">
-          {isLoading ? (
-            <motion.div
-              key="spinner"
-              initial={{ opacity: 0, scale: 0.5, rotate: 0 }}
-              animate={{ opacity: 1, scale: 1, rotate: 360 }}
-              exit={{ opacity: 0, scale: 0 }}
-              transition={{
-                rotate: {
-                  repeat: Infinity,
-                  duration: 0.8,
-                  ease: "linear",
-                },
-              }}
-            >
-              <CircleNotchIcon size={24} weight="bold" />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="arrow"
-              initial={{ opacity: 0, x: -5 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <ArrowCircleRightIcon size={24} weight="bold" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-      <span>{children}</span>
-    </motion.button>
+    <span className="group/spin-button inline-flex">
+      <motion.button
+        type="button"
+        tabIndex={tabIndex}
+        className={`transition-scale active:scale-95 active:text-opacity-20 group-hover/spin-button:scale-[0.97] ${className}`}
+        style={style}
+      >
+        {/* Fixed width container to prevent layout shifts when icon swaps */}
+        <div className="relative flex h-6 w-6 items-center justify-center">
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <motion.div
+                key="spinner"
+                initial={{ opacity: 0, scale: 0.5, rotate: 0 }}
+                animate={{ opacity: 1, scale: 1, rotate: 360 }}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{
+                  rotate: {
+                    repeat: Infinity,
+                    duration: 0.8,
+                    ease: "linear",
+                  },
+                }}
+              >
+                <CircleNotchIcon size={24} weight="bold" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="arrow"
+                initial={{ opacity: 0, x: -5 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 5 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ArrowCircleRightIcon size={24} weight="bold" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        <span>{children}</span>
+      </motion.button>
+    </span>
   );
 }

@@ -52,11 +52,11 @@ export default function VerticalScrollCards({
   cardFrameClassName = "",
   cardClassName = "",
   sideWidth = "24rem",
-  cardHeight = "min(calc(100dvh - 6rem), 800px)",
+  cardHeight = "min(calc(100dvh - 5rem), 800px)",
   primaryColor,
   hoverBorderOpacity = 0.6,
-  activeRangeStart = 96,
-  activeRangeEnd = 256,
+  activeRangeStart = 80,
+  activeRangeEnd = 240,
 }: VerticalScrollCardsProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const cardFrameRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -150,7 +150,7 @@ export default function VerticalScrollCards({
       }
 
       window.scrollTo({
-        top: cardTop - 96,
+        top: cardTop - 80,
         behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
           ? "auto"
           : "smooth",
@@ -183,11 +183,11 @@ export default function VerticalScrollCards({
       <div
         className={`mb-8 w-full md:mb-0 md:w-[var(--vertical-scroll-side-width)] md:flex-none ${sideClassName}`}
       >
-        <div className="h-auto md:sticky md:top-24 md:h-[var(--vertical-scroll-card-height)]">
+        <div className="h-auto md:sticky md:top-20 md:h-[var(--vertical-scroll-card-height)]">
           {renderedSideContent}
         </div>
       </div>
-      <div className="relative min-w-0 md:flex-1">
+      <div className="relative flex min-w-0 flex-col gap-4 md:flex-1">
         {cards.map((card, index) => (
           <div
             key={card.id ?? index}
@@ -196,7 +196,7 @@ export default function VerticalScrollCards({
             }}
             data-card-index={index}
             onClick={handleCardClick}
-            className={`h-auto scroll-mt-[6rem] pb-6 text-lg md:h-[var(--vertical-scroll-card-height)] md:cursor-pointer md:pb-8 ${cardFrameClassName}`}
+            className={`h-auto scroll-mt-20 text-lg md:h-[var(--vertical-scroll-card-height)] md:cursor-pointer ${cardFrameClassName}`}
           >
             <div
               className={`overflow-clip rounded-1 border border-white shadow supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:border-white/25 md:rounded-2 md:transition-[border-color,filter] md:duration-300 md:hover:border-[var(--vertical-scroll-hover-color)] md:hover:brightness-105 supports-[corner-shape:squircle]:md:rounded-4 motion-reduce:md:transition-none ${cardClassName} ${card.className ?? ""}`}

@@ -6,9 +6,13 @@ import { ReactNode, useRef } from "react";
 import { IconProps } from "@phosphor-icons/react";
 import {
   MotionValue,
+  UseInViewOptions,
   motion,
   useInView,
   useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
 } from "framer-motion";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
@@ -22,8 +26,10 @@ interface SectionContainerBaseProps {
 
   borderColor?: MotionValue<string> | string;
   animateHeadingReveal?: boolean;
-  cardClass?: string;
+  cardClassName?: string;
   contentClassName?: string;
+  exitOnScroll?: boolean;
+  headingRevealAt?: number;
   revealOnScroll?: boolean;
   showDivider?: boolean;
   children: ReactNode;
@@ -49,24 +55,66 @@ export default function SectionContainer({
   icon: Icon,
   textColorClass,
   bgColorClass,
-  // bgOpacityClass = "bg-opacity-20 dark:bg-opacity-20",
-
   borderColor,
   animateHeadingReveal = true,
-  cardClass = "",
-  contentClassName = "",
+  cardClassName = "p-2 md:p-6 bg-background/90 dark:bg-dark-background/90",
+  contentClassName = "p-1 md:p-12",
+  exitOnScroll = true,
+  headingRevealAt = 80,
   revealOnScroll = true,
   showDivider = false,
   children,
 }: SectionContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
-  const shouldRevealOnScroll = revealOnScroll && !shouldReduceMotion;
-  const isContainerInView = useInView(containerRef, {
+  const shouldAnimateEntry = revealOnScroll && !shouldReduceMotion;
+  const shouldAnimateExit = exitOnScroll && !shouldReduceMotion;
+  const shouldAnimateOnScroll = shouldAnimateEntry || shouldAnimateExit;
+  const headingRevealViewportPosition = Math.min(
+    100,
+    Math.max(0, headingRevealAt),
+  );
+  const headingRevealRootMargin =
+    `0px 0px -${100 - headingRevealViewportPosition}% 0px` as UseInViewOptions["margin"];
+  const hasHeadingEnteredRevealZone = useInView(containerRef, {
     once: true,
     amount: "some",
-    margin: "0px 0px -15% 0px",
+    margin: headingRevealRootMargin,
   });
+  const { scrollYProgress: entryProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 100%", "start 70%"],
+  });
+  const { scrollYProgress: exitProgress } = useScroll({
+    target: containerRef,
+    offset: ["end 30%", "end 0%"],
+  });
+  const revealOriginY = useTransform(exitProgress, (exit) =>
+    exit > 0 ? 1 : 0,
+  );
+  const visibleProgress = useTransform(
+    [entryProgress, exitProgress],
+    ([entry, exit]: number[]) =>
+      Math.min(
+        shouldAnimateEntry ? entry : 1,
+        shouldAnimateExit ? 1 - exit : 1,
+      ),
+  );
+  const revealProgress = useSpring(visibleProgress, {
+    stiffness: 300,
+    damping: 30,
+    mass: 0.5,
+    restDelta: 0.001,
+    restSpeed: 0.01,
+  });
+  const revealOpacity = useTransform(revealProgress, [0, 1], [0, 1]);
+  const revealY = useTransform(revealProgress, [0, 1], [48, 0]);
+  const revealScale = useTransform(revealProgress, [0, 1], [0.9, 1]);
+  const revealFilter = useTransform(
+    revealProgress,
+    [0, 1],
+    ["blur(4px)", "blur(0px)"],
+  );
 
   const { activeIndex } = useActiveProject();
   const theme = useProjectTheme(projects[activeIndex].id);
@@ -74,33 +122,23 @@ export default function SectionContainer({
   return (
     <motion.div
       ref={containerRef}
-      className={`flex flex-col rounded-6 border bg-background/90 p-2 text-foreground supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-background/90 dark:text-dark-foreground md:rounded-8 md:p-6 supports-[corner-shape:squircle]:md:rounded-16 ${cardClass}`}
-      style={{ borderColor }}
-      initial={
-        shouldRevealOnScroll
-          ? { opacity: 0, y: 48, scale: 0.9, filter: "blur(4px)" }
-          : false
-      }
-      animate={
-        shouldRevealOnScroll && isContainerInView
-          ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-          : undefined
-      }
-      transition={
-        shouldRevealOnScroll
-          ? {
-              duration: 0.75,
-              ease: [0.22, 1, 0.36, 1],
-            }
-          : undefined
-      }
+      className={`section-container-scroll-reveal flex flex-col rounded-6 border text-foreground supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:text-dark-foreground md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16 ${cardClassName}`}
+      style={{
+        borderColor,
+        opacity: shouldAnimateOnScroll ? revealOpacity : 1,
+        originX: shouldAnimateOnScroll ? 0.5 : undefined,
+        originY: shouldAnimateOnScroll ? revealOriginY : undefined,
+        y: shouldAnimateOnScroll ? revealY : 0,
+        scale: shouldAnimateOnScroll ? revealScale : 1,
+        filter: shouldAnimateOnScroll ? revealFilter : "blur(0px)",
+      }}
     >
       {showHeading && Icon ? (
         <>
           <GradientHeadingReveal
             animateReveal={animateHeadingReveal}
             icon={Icon}
-            isRevealed={!shouldRevealOnScroll || isContainerInView}
+            isRevealed={!shouldAnimateEntry || hasHeadingEnteredRevealZone}
             primaryColor={theme.hex.primary}
             textColorClass={textColorClass}
             title={title}
@@ -112,7 +150,7 @@ export default function SectionContainer({
           />
         </>
       ) : null}
-      <div className={`flex flex-col gap-8 p-1 md:p-12 ${contentClassName}`}>
+      <div className={`flex flex-col gap-8 ${contentClassName}`}>
         {children}
       </div>
     </motion.div>

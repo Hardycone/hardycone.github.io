@@ -387,7 +387,7 @@ export default function TopBar({
   }, [sectionHighlightEnabled, sections, pathname]);
 
   return (
-    <div className="fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[2650px] p-3.5 md:p-[1.625rem]">
+    <div className="pointer-events-none fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[2650px] p-3.5 md:p-[1.625rem]">
       <AnimatePresence>
         <motion.div
           key="topbar"
@@ -397,7 +397,7 @@ export default function TopBar({
             opacity: viewMode === "home" ? 0 : 1,
           }}
           exit={{ y: -60, opacity: 0 }}
-          className="z-50 flex w-full justify-between"
+          className="pointer-events-none z-50 flex w-full justify-between"
         >
           <motion.button
             type="button"
@@ -407,7 +407,7 @@ export default function TopBar({
             style={{ boxShadow: barShadow }}
             transition={{ duration: 0.1 }}
             whileHover={{ scale: 1.1 }}
-            className="relative h-9 w-9 rounded-full bg-background p-2 text-foreground transition-colors hover:scale-110 dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
+            className="pointer-events-auto relative h-9 w-9 rounded-full bg-background p-2 text-foreground transition-colors hover:scale-110 dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
             onClick={() => {
               flashShortcutHint("home");
               handleHomeClick();
@@ -538,7 +538,7 @@ export default function TopBar({
       <motion.div
         initial={{ y: -60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="ml-auto flex gap-2 rounded-full md:gap-4"
+        className="pointer-events-auto ml-auto flex gap-2 rounded-full md:gap-4"
       >
         {/*Resume button*/}
         <motion.button

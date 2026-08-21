@@ -21,7 +21,7 @@ import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import CaseStudyFigure from "../CaseStudyFigure";
-import HorizontalFilmstrip from "../HorizontalScrollGroup";
+import HorizontalScrollGroup from "../HorizontalScrollGroup";
 import SectionContainer from "../SectionContainer";
 import SubSection from "../SubSection";
 
@@ -61,6 +61,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           textColorClass="text-foreground dark:text-dark-foreground"
           bgColorClass="bg-foreground dark:bg-dark-foreground"
           borderColor={borderColor}
+          exitOnScroll
           revealOnScroll={false}
         >
           <SubSection>
@@ -118,17 +119,20 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
             </p>
           </SubSection>
           <SubSection spacing="none">
-            <HorizontalFilmstrip
+            <HorizontalScrollGroup
               fillAvailableHeight
               bottomMargin="2rem"
-              heading="The simulated mission"
-              number="2"
+              cardWidth="80rem"
               primaryColor={theme.hex.primary}
               body={
-                <p>
-                  Each phase had different information needs, but the interface
-                  still had to feel like one dependable system.
-                </p>
+                <SubSection number="2" heading="The simulated mission">
+                  <p>
+                    Each phase had different information needs, but the
+                    interface still had to feel like one dependable system.
+                    Each phase had different information needs, but the
+                    interface still had to feel like one dependable system.
+                  </p>
+                </SubSection>
               }
               cards={[
                 {

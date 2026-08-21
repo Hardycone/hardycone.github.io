@@ -8,11 +8,11 @@ import {
   useTransform,
 } from "framer-motion";
 import projects from "@/data/projects";
-import { type CSSProperties, useEffect } from "react";
+import { type CSSProperties, type RefObject, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { PathIcon, ScrollIcon } from "@phosphor-icons/react";
 import {
-  HEADER_CONTENT_START_LVH,
+  HEADER_CONTENT_START_SVH,
   HEADER_IMAGE_FADE_START_PROGRESS,
 } from "@/lib/caseStudyTransitions";
 
@@ -22,6 +22,8 @@ import CaseStudyThree from "./caseStudies/CaseStudyThree";
 import CaseStudyFour from "./caseStudies/CaseStudyFour";
 import CaseStudyFive from "./caseStudies/CaseStudyFive";
 interface CaseStudyContentProps {
+  bottomRevealAnchorRef: RefObject<HTMLDivElement | null>;
+  bottomRevealSpacerRef: RefObject<HTMLDivElement | null>;
   scrollY: MotionValue<number>;
   headerIntroProgress: MotionValue<number>;
   isVisible?: boolean;
@@ -55,6 +57,8 @@ const contentVariants = {
 };
 
 export default function CaseStudyContent({
+  bottomRevealAnchorRef,
+  bottomRevealSpacerRef,
   scrollY,
   headerIntroProgress,
   isVisible = true,
@@ -108,7 +112,7 @@ export default function CaseStudyContent({
       {isVisible && (
         <motion.div
           aria-hidden="true"
-          className="pointer-events-none fixed inset-x-0 top-[calc(100lvh-3.5rem)] z-40 mx-auto h-16 w-full max-w-6xl px-2 md:top-[calc(100lvh-5rem)] md:h-24 md:px-4"
+          className="pointer-events-none fixed inset-x-0 top-[calc(100svh-3.5rem)] z-40 mx-auto h-16 w-full max-w-6xl px-2 md:top-[calc(100svh-5rem)] md:h-24 md:px-4"
           style={{ opacity: peekOpacity }}
         >
           <motion.div
@@ -135,12 +139,12 @@ export default function CaseStudyContent({
         className="h-[calc(var(--header-content-start)-3.5rem)] md:h-[calc(var(--header-content-start)-5rem)]"
         style={
           {
-            "--header-content-start": `${HEADER_CONTENT_START_LVH}lvh`,
+            "--header-content-start": `${HEADER_CONTENT_START_SVH}svh`,
           } as CSSProperties
         }
       />
       <motion.div
-        className="relative w-full min-w-0"
+        className="relative left-1/2 z-40 w-[calc(100vw-1rem)] min-w-0 max-w-6xl -translate-x-1/2 md:w-[calc(100vw-2rem)]"
         style={{ opacity: contentOpacity }}
       >
         <AnimatePresence
@@ -163,7 +167,18 @@ export default function CaseStudyContent({
           )}
         </AnimatePresence>
       </motion.div>
-      <div className="h-[max(60lvh,300px)]" />
+      <div
+        ref={bottomRevealAnchorRef}
+        data-bottom-reveal-anchor
+        aria-hidden="true"
+        className="h-0 w-full"
+      />
+      <div
+        ref={bottomRevealSpacerRef}
+        data-bottom-reveal-spacer
+        aria-hidden="true"
+        className="h-[max(60lvh,300px)] w-full"
+      />
     </div>
   );
 }
