@@ -69,6 +69,7 @@ export default function GradientHeadingReveal({
   const textRef = useRef<HTMLSpanElement>(null);
   const gradientId = `gradient-heading-reveal-${useId().replace(/:/g, "")}`;
   const shouldReduceMotion = useReducedMotion();
+  const shouldAnimateSweep = animateReveal && !shouldReduceMotion;
   const sweepColors = useMemo(
     () => ({
       minusSmall: shiftHexHue(primaryColor, -36),
@@ -167,7 +168,7 @@ export default function GradientHeadingReveal({
         <Icon
           weight="fill"
           className={`size-[1.875rem] md:size-[2.25rem] ${textColorClass ?? ""}`}
-          color={`url(#${gradientId})`}
+          color={shouldAnimateSweep ? `url(#${gradientId})` : "currentColor"}
         >
           <defs>
             <motion.linearGradient
@@ -217,13 +218,19 @@ export default function GradientHeadingReveal({
       <h3>
         <motion.span
           ref={textRef}
-          className="gradient-text-reveal inline"
-          style={{
-            backgroundColor: unrevealedColor,
-            backgroundImage: textGradient,
-            backgroundPosition: textBackgroundPosition,
-            backgroundSize: textBackgroundSize,
-          }}
+          className={
+            shouldAnimateSweep ? "gradient-text-reveal inline" : "inline"
+          }
+          style={
+            shouldAnimateSweep
+              ? {
+                  backgroundColor: unrevealedColor,
+                  backgroundImage: textGradient,
+                  backgroundPosition: textBackgroundPosition,
+                  backgroundSize: textBackgroundSize,
+                }
+              : undefined
+          }
         >
           {title}
         </motion.span>

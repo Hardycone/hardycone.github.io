@@ -514,7 +514,7 @@ export default function ProjectSummary({
       ? "fixed inset-0 w-full h-[100svh] items-center justify-center "
       : variant === "preview"
         ? "relative h-[100svh] w-full max-w-5xl justify-center [container-type:inline-size]"
-        : "fixed inset-x-0 bottom-0 mx-auto h-[max(60svh,300px)] w-full max-w-5xl items-center justify-end p-2 ";
+        : "fixed inset-x-0 bottom-0 mx-auto h-[max(60svh,300px)] w-full max-w-6xl items-center justify-end p-2 ";
 
   const cardClasses =
     variant === "header"
@@ -580,9 +580,9 @@ export default function ProjectSummary({
       className={`z-10 flex flex-col ${containerClasses}`}
     >
       {/* Bottom variant title bar */}
-      {/* {variant === "bottom" && (
+      {variant === "bottom" && (
         <h3 className="relative mb-6 items-start">Next Up</h3>
-      )} */}
+      )}
       {/* Card */}
       <motion.div
         ref={setBottomCardRef}
@@ -717,7 +717,7 @@ export default function ProjectSummary({
             <motion.h2
               layout="position"
               layoutDependency={layoutDependency}
-              className={`extremelywide:hidden mb-2 md:mb-4 lg:mb-5 xl:mb-6 2xl:mb-7`}
+              className={`extremelywide:hidden`}
             >
               {displayedProject.tagline}
             </motion.h2>
@@ -727,9 +727,9 @@ export default function ProjectSummary({
             <motion.h5
               layout
               layoutDependency={layoutDependency}
-              className={`text-pretty font-sans text-[0.875rem] leading-snug md:text-[1rem] ${
+              className={`mt-2 text-pretty font-sans text-[0.875rem] leading-snug md:mt-4 md:text-[1rem] lg:mt-5 xl:mt-6 2xl:mt-7 ${
                 variant === "header"
-                  ? "mb-2 md:mb-4 md:border-l-4 md:border-foreground md:py-2 md:pl-4 md:dark:border-dark-foreground lg:mb-5 xl:mb-6 xl:w-[70%] 2xl:mb-7"
+                  ? "md:border-l-4 md:border-foreground md:py-2 md:pl-4 md:dark:border-dark-foreground xl:w-[70%]"
                   : variant === "preview"
                     ? ""
                     : "hidden"
@@ -745,7 +745,7 @@ export default function ProjectSummary({
                   initial={{ y: 100, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2, duration: 0.2, ease: "easeOut" }}
-                  className="flex w-full flex-row justify-between gap-x-6 lg:gap-x-12 tall:flex-col tall:gap-x-0 tall:gap-y-3"
+                  className="mt-2 flex w-full flex-row justify-between gap-x-6 md:mt-4 lg:mt-5 lg:gap-x-12 xl:mt-6 2xl:mt-7 tall:flex-col tall:gap-x-0 tall:gap-y-3"
                 >
                   {displayedProject.bullets.map((bullet) => (
                     <li

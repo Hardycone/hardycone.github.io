@@ -4,6 +4,7 @@ import { useTheme } from "next-themes";
 import { MotionValue, useTransform } from "framer-motion";
 import {
   BrainIcon,
+  PackageIcon,
   FileTextIcon,
   FilmStripIcon,
   ImageSquareIcon,
@@ -54,52 +55,108 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
           animateHeadingReveal={false}
-          title="Quick Take"
-          icon={ScrollIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          title="The Product"
+          icon={PackageIcon}
           borderColor={borderColor}
           exitOnScroll
           revealOnScroll={false}
         >
-          <SubSection>
-            <p>
-              Fantail was an AI-assisted story development startup I co-founded
-              with two teammates while completing my MHCID at the University of
-              Washington. We focused on the messy early phase where a film idea
-              is still a mood, an image, or a fragment of dialogue. Our aim was
-              to support that moment without forcing a rigid, script-first
-              process.
-            </p>
-            <p>
-              Over six months, we moved from discovery research to a functional
-              MVP that let indie filmmakers start with any creative input and
-              shape it into a structured story. We heard encouraging early
-              reactions, especially to the flexible, scene-based approach, but
-              we did not secure funding and chose not to continue bootstrapping.
-            </p>
-            <div className="grid gap-px overflow-hidden rounded-1 bg-foreground/10 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-foreground/15 md:grid-cols-3 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4">
-              {[
-                ["Role", "Co-founder · Product design"],
-                ["Research", "12 in-depth filmmaker interviews"],
-                ["Outcome", "Functional MVP · Early positive feedback"],
-              ].map(([label, value]) => (
-                <div
-                  key={label}
-                  className="bg-background p-5 dark:bg-dark-background"
-                >
-                  <p className={`mb-1 font-semibold ${theme.textColorClass}`}>
-                    {label}
-                  </p>
-                  <p>{value}</p>
-                </div>
-              ))}
-            </div>
-            <p className={contentNoteClass}>
-              Content note: Show a hero image of the main workspace.
-            </p>
-          </SubSection>
+          <p>
+            <span className="font-bold text-fantail dark:text-dark-fantail">
+              Fantail offered filmmakers focused on the messy early phase where
+              a film idea is still a mood, an image, or a fragment of dialogue.
+            </span>{" "}
+            Our aim was to support that moment without forcing a rigid process.
+            Our aim was to support that moment without forcing a rigid process.
+            Our aim was to support that moment without forcing a rigid process.
+            Our aim was to support that moment without forcing a rigid process.
+          </p>
         </SectionContainer>
+      </section>
+      <section>
+        <HorizontalScrollGroup
+          alignment="centered"
+          fillAvailableHeight
+          bottomMargin="2rem"
+          cardAspectRatio="16/9"
+          primaryColor={theme.hex.primary}
+          stickyTop="5rem"
+          cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
+          cards={[
+            [
+              "Import",
+              "Import design prototypes",
+              "Researchers can bring in interactive prototypes created in Figma, or live hosted prototypes.",
+            ],
+            [
+              "Configure",
+              "Configure the experiment",
+              "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
+            ],
+            [
+              "Recruit",
+              "Set a recruit goal and choose participant source",
+              "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
+            ],
+            [
+              "Test",
+              "Once the experiment is launched, participant results immediately start being recorded",
+              "There is not much to do other than wait",
+            ],
+            [
+              "Report",
+              "Get report within hours",
+              "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
+            ],
+          ].map(([number, title, copy]) => ({
+            id: title,
+            content: (
+              <>
+                <span className={`text-sm font-bold ${theme.textColorClass}`}>
+                  {number}
+                </span>
+                <h4 className="mt-auto pt-8">{title}</h4>
+                <p className="mt-3">{copy}</p>
+              </>
+            ),
+          }))}
+        />{" "}
+        <SubSection>
+          <p>
+            Fantail was an AI-assisted story development startup I co-founded
+            with two teammates while completing my MHCID at the University of
+            Washington. We focused on the messy early phase where a film idea is
+            still a mood, an image, or a fragment of dialogue. Our aim was to
+            support that moment without forcing a rigid, script-first process.
+          </p>
+          <p>
+            Over six months, we moved from discovery research to a functional
+            MVP that let indie filmmakers start with any creative input and
+            shape it into a structured story. We heard encouraging early
+            reactions, especially to the flexible, scene-based approach, but we
+            did not secure funding and chose not to continue bootstrapping.
+          </p>
+          <div className="grid gap-px overflow-hidden rounded-1 bg-foreground/10 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-foreground/15 md:grid-cols-3 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4">
+            {[
+              ["Role", "Co-founder · Product design"],
+              ["Research", "12 in-depth filmmaker interviews"],
+              ["Outcome", "Functional MVP · Early positive feedback"],
+            ].map(([label, value]) => (
+              <div
+                key={label}
+                className="bg-background p-5 dark:bg-dark-background"
+              >
+                <p className={`mb-1 font-semibold ${theme.textColorClass}`}>
+                  {label}
+                </p>
+                <p>{value}</p>
+              </div>
+            ))}
+          </div>
+          <p className={contentNoteClass}>
+            Content note: Show a hero image of the main workspace.
+          </p>
+        </SubSection>
       </section>
 
       <section id="section-2" className="scroll-mt-24">
@@ -135,7 +192,6 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           </SubSection>
         </SectionContainer>
       </section>
-
       <section id="section-3" className="scroll-mt-24">
         <SectionContainer
           title="The Messy Middle"
@@ -237,7 +293,6 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           </SubSection>
         </SectionContainer>
       </section>
-
       <section id="section-4" className="scroll-mt-24">
         <SectionContainer
           title="The One"
@@ -346,7 +401,6 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           </SubSection>
         </SectionContainer>
       </section>
-
       <section id="section-5" className="scroll-mt-24">
         <SectionContainer
           title="Outcome"
@@ -390,7 +444,6 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           </SubSection>
         </SectionContainer>
       </section>
-
       <section id="section-6" className="scroll-mt-24">
         <SectionContainer
           title="Reflection"

@@ -23,9 +23,12 @@ export interface HorizontalFilmstripCard {
   className?: string;
 }
 
+export type HorizontalFilmstripAlignment = "aligned" | "centered";
+
 export interface HorizontalFilmstripProps {
-  body: ReactNode;
+  body?: ReactNode;
   cards: HorizontalFilmstripCard[];
+  alignment?: HorizontalFilmstripAlignment;
   className?: string;
   bodyClassName?: string;
   cardClassName?: string;
@@ -34,6 +37,7 @@ export interface HorizontalFilmstripProps {
   cardHeight?: string;
   mobileCardMinHeight?: string;
   fillAvailableHeight?: boolean;
+  stickyTop?: string;
   bottomMargin?: string;
   primaryColor: string;
   hoverBorderOpacity?: number;
@@ -44,6 +48,7 @@ interface HorizontalFilmstripStyle extends CSSProperties {
   "--filmstrip-card-aspect-ratio"?: string;
   "--filmstrip-card-height": string;
   "--filmstrip-mobile-card-min-height": string;
+  "--filmstrip-sticky-top": string;
   "--filmstrip-bottom-margin": string;
   "--filmstrip-primary-color": string;
   "--filmstrip-hover-color": string;
@@ -81,14 +86,17 @@ function getDocumentOffsetTop(element: HTMLElement) {
 export default function HorizontalFilmstrip({
   body,
   cards,
+  alignment = "aligned",
   className = "",
   bodyClassName = "",
-  cardClassName = "",
+  cardClassName =
+    "rounded-1 md:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:md:rounded-4",
   cardWidth = "min(42vw, 30rem)",
   cardAspectRatio,
   cardHeight = "min(60svh, 36rem)",
   mobileCardMinHeight = "20rem",
   fillAvailableHeight = false,
+  stickyTop = "2rem",
   bottomMargin = "6rem",
   primaryColor,
   hoverBorderOpacity = 0.6,
@@ -100,6 +108,7 @@ export default function HorizontalFilmstrip({
   const suppressCardClickRef = useRef(false);
   const suppressCardClickTimeoutRef = useRef<number | null>(null);
   const inertiaFrameRef = useRef<number | null>(null);
+  const [railStartX, setRailStartX] = useState(0);
   const [travel, setTravel] = useState(0);
   const [isEnabled, setIsEnabled] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
@@ -108,7 +117,12 @@ export default function HorizontalFilmstrip({
     target: targetRef,
     offset: ["start start", "end end"],
   });
-  const x = useTransform(scrollYProgress, [0, 1], [0, isEnabled ? -travel : 0]);
+  const railEndX = railStartX - travel;
+  const x = useTransform(
+    scrollYProgress,
+    [0, 1],
+    isEnabled ? [railStartX, railEndX] : [0, 0],
+  );
 
   const updateActiveCard = useCallback(
     (currentX: number) => {
@@ -119,7 +133,10 @@ export default function HorizontalFilmstrip({
         return;
       }
 
-      const currentTravel = Math.min(travel, Math.max(0, -currentX));
+      const currentTravel = Math.min(
+        travel,
+        Math.max(0, railStartX - currentX),
+      );
       if (currentTravel <= 1 || travel <= 0) {
         setActiveCardIndex(0);
         return;
@@ -129,7 +146,7 @@ export default function HorizontalFilmstrip({
         return;
       }
 
-      const viewportCenter = currentTravel + viewport.clientWidth / 2;
+      const viewportCenter = viewport.clientWidth / 2 - currentX;
       const cardElements = Array.from(track.children) as HTMLElement[];
       let closestIndex = 0;
       let closestDistance = Number.POSITIVE_INFINITY;
@@ -145,7 +162,7 @@ export default function HorizontalFilmstrip({
 
       setActiveCardIndex(closestIndex);
     },
-    [cards.length, isEnabled, travel],
+    [cards.length, isEnabled, railStartX, travel],
   );
 
   useMotionValueEvent(x, "change", updateActiveCard);
@@ -405,11 +422,12 @@ export default function HorizontalFilmstrip({
 
       const card = event.currentTarget;
       const sectionStartY = getDocumentOffsetTop(target);
-      const centeredCardOffset =
-        card.offsetLeft + card.offsetWidth / 2 - viewport.clientWidth / 2;
-      // Center when possible, but never travel past the rail endpoints:
-      // 0 keeps the first card left-aligned; `travel` keeps the last right-aligned.
-      const targetTravel = Math.min(travel, Math.max(0, centeredCardOffset));
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const centeredCardX = viewport.clientWidth / 2 - cardCenter;
+      const targetX = Math.min(railStartX, Math.max(railEndX, centeredCardX));
+      // Center the selected card when possible while respecting the selected
+      // alignment mode's measured first- and last-card endpoints.
+      const targetTravel = railStartX - targetX;
       const targetScrollY = sectionStartY + targetTravel;
       const boundedTargetScrollY =
         targetTravel <= 0
@@ -425,7 +443,7 @@ export default function HorizontalFilmstrip({
           : "smooth",
       });
     },
-    [isEnabled, travel],
+    [isEnabled, railEndX, railStartX, travel],
   );
 
   useEffect(() => {
@@ -440,6 +458,7 @@ export default function HorizontalFilmstrip({
 
   useEffect(() => {
     if (!isEnabled) {
+      setRailStartX(0);
       setTravel(0);
       return;
     }
@@ -450,8 +469,31 @@ export default function HorizontalFilmstrip({
 
     const updateTravel = () => {
       const viewportWidth = viewport.clientWidth;
-      const trackWidth = track.offsetWidth;
-      setTravel(Math.max(0, trackWidth - viewportWidth));
+      const cardElements = Array.from(track.children) as HTMLElement[];
+      const firstCard = cardElements[0];
+      const lastCard = cardElements.at(-1);
+
+      if (!firstCard || !lastCard) {
+        setRailStartX(0);
+        setTravel(0);
+        return;
+      }
+
+      const firstCardLeft = firstCard.offsetLeft;
+      const firstCardCenter = firstCardLeft + firstCard.offsetWidth / 2;
+      const lastCardRight = lastCard.offsetLeft + lastCard.offsetWidth;
+      const lastCardCenter = lastCard.offsetLeft + lastCard.offsetWidth / 2;
+      const nextStartX =
+        alignment === "centered"
+          ? viewportWidth / 2 - firstCardCenter
+          : -firstCardLeft;
+      const nextEndX =
+        alignment === "centered"
+          ? viewportWidth / 2 - lastCardCenter
+          : viewportWidth - lastCardRight;
+
+      setRailStartX(nextStartX);
+      setTravel(Math.max(0, nextStartX - nextEndX));
     };
 
     updateTravel();
@@ -465,7 +507,7 @@ export default function HorizontalFilmstrip({
       resizeObserver.disconnect();
       window.removeEventListener("resize", updateTravel);
     };
-  }, [isEnabled]);
+  }, [alignment, cards.length, isEnabled]);
 
   return (
     <div
@@ -477,6 +519,7 @@ export default function HorizontalFilmstrip({
           "--filmstrip-card-aspect-ratio": cardAspectRatio,
           "--filmstrip-card-height": cardHeight,
           "--filmstrip-mobile-card-min-height": mobileCardMinHeight,
+          "--filmstrip-sticky-top": stickyTop,
           "--filmstrip-bottom-margin": bottomMargin,
           "--filmstrip-primary-color": primaryColor,
           "--filmstrip-hover-color": hexToRgba(
@@ -492,15 +535,17 @@ export default function HorizontalFilmstrip({
       }
     >
       <div
-        className={`flex flex-col md:sticky md:top-[2rem] ${fillAvailableHeight ? "md:h-[calc(100svh-2rem-var(--filmstrip-bottom-margin))]" : ""}`}
+        className={`flex flex-col md:sticky md:top-[var(--filmstrip-sticky-top)] ${fillAvailableHeight ? "md:h-[calc(100svh-var(--filmstrip-sticky-top)-var(--filmstrip-bottom-margin))]" : ""}`}
       >
+        {body !== undefined && body !== null ? (
+          <div
+            className={`relative z-10 mb-4 ${fillAvailableHeight ? "md:flex-none" : ""} ${bodyClassName}`}
+          >
+            {body}
+          </div>
+        ) : null}
         <div
-          className={`relative z-10 mb-4 ${fillAvailableHeight ? "md:flex-none" : ""} ${bodyClassName}`}
-        >
-          {body}
-        </div>
-        <div
-          className={`relative mb-24 h-auto w-full [container-type:inline-size] ${fillAvailableHeight ? "md:mb-0 md:min-h-0 md:flex-1" : "md:h-[var(--filmstrip-card-height)]"}`}
+          className={`relative h-auto w-full [container-type:inline-size] ${fillAvailableHeight ? "md:mb-0 md:min-h-0 md:flex-1" : "md:h-[var(--filmstrip-card-height)]"}`}
         >
           <div className="h-auto w-full overflow-visible md:absolute md:left-1/2 md:top-0 md:h-full md:w-screen md:-translate-x-1/2 md:overflow-x-clip md:overflow-y-visible">
             <div
@@ -510,13 +555,13 @@ export default function HorizontalFilmstrip({
               <motion.div
                 ref={trackRef}
                 style={{ x }}
-                className="flex h-auto w-full flex-col gap-6 md:absolute md:left-0 md:top-0 md:h-full md:w-max md:flex-row md:gap-8 md:will-change-transform"
+                className="flex h-auto w-full flex-col gap-6 md:absolute md:left-0 md:top-0 md:h-full md:w-max md:flex-row md:gap-4 md:will-change-transform"
               >
                 {cards.map((card, index) => (
                   <div
                     key={card.id ?? index}
                     onClick={handleCardClick}
-                    className={`flex min-h-[var(--filmstrip-mobile-card-min-height)] w-full shrink-0 flex-col overflow-auto rounded-1 border border-white bg-zinc-50 p-8 shadow supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:border-white/25 dark:bg-zinc-800 md:h-full md:min-h-0 md:cursor-pointer md:rounded-2 md:transition-[border-color,filter] md:duration-300 md:hover:border-[var(--filmstrip-hover-color)] md:hover:brightness-105 supports-[corner-shape:squircle]:md:rounded-4 motion-reduce:md:transition-none ${cardAspectRatio ? "md:aspect-[var(--filmstrip-card-aspect-ratio)] md:w-auto" : "md:w-[var(--filmstrip-card-width)]"} ${cardClassName} ${card.className ?? ""}`}
+                    className={`flex min-h-[var(--filmstrip-mobile-card-min-height)] w-full shrink-0 flex-col overflow-auto border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800 md:h-full md:min-h-0 md:cursor-pointer md:transition-[border-color,filter] md:duration-300 md:hover:border-[var(--filmstrip-hover-color)] md:hover:brightness-105 motion-reduce:md:transition-none ${cardAspectRatio ? "md:aspect-[var(--filmstrip-card-aspect-ratio)] md:w-auto" : "md:w-[var(--filmstrip-card-width)]"} ${cardClassName} ${card.className ?? ""}`}
                     style={{
                       borderColor:
                         isEnabled && activeCardIndex === index

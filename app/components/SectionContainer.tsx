@@ -9,6 +9,8 @@ import {
   UseInViewOptions,
   motion,
   useInView,
+  useMotionValue,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -58,7 +60,7 @@ export default function SectionContainer({
   borderColor,
   animateHeadingReveal = true,
   cardClassName = "p-2 md:p-6 bg-background/90 dark:bg-dark-background/90",
-  contentClassName = "p-1 md:p-12",
+  contentClassName = "p-2 md:p-6",
   exitOnScroll = true,
   headingRevealAt = 80,
   revealOnScroll = true,
@@ -89,9 +91,8 @@ export default function SectionContainer({
     target: containerRef,
     offset: ["end 30%", "end 0%"],
   });
-  const revealOriginY = useTransform(exitProgress, (exit) =>
-    exit > 0 ? 1 : 0,
-  );
+  const revealOriginY = useMotionValue(0);
+  const hasEnteredExitZoneRef = useRef(false);
   const visibleProgress = useTransform(
     [entryProgress, exitProgress],
     ([entry, exit]: number[]) =>
@@ -108,13 +109,30 @@ export default function SectionContainer({
     restSpeed: 0.01,
   });
   const revealOpacity = useTransform(revealProgress, [0, 1], [0, 1]);
-  const revealY = useTransform(revealProgress, [0, 1], [48, 0]);
   const revealScale = useTransform(revealProgress, [0, 1], [0.9, 1]);
   const revealFilter = useTransform(
     revealProgress,
     [0, 1],
     ["blur(4px)", "blur(0px)"],
   );
+  useMotionValueEvent(exitProgress, "change", (exit) => {
+    if (!shouldAnimateExit || exit <= 0) return;
+
+    hasEnteredExitZoneRef.current = true;
+    revealOriginY.set(1);
+  });
+  useMotionValueEvent(revealProgress, "change", (progress) => {
+    if (
+      !hasEnteredExitZoneRef.current ||
+      exitProgress.get() > 0 ||
+      progress !== 1
+    ) {
+      return;
+    }
+
+    hasEnteredExitZoneRef.current = false;
+    revealOriginY.set(0);
+  });
 
   const { activeIndex } = useActiveProject();
   const theme = useProjectTheme(projects[activeIndex].id);
@@ -122,13 +140,12 @@ export default function SectionContainer({
   return (
     <motion.div
       ref={containerRef}
-      className={`section-container-scroll-reveal flex flex-col rounded-6 border text-foreground supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:text-dark-foreground md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16 ${cardClassName}`}
+      className={`section-container-scroll-reveal flex flex-col rounded-6 border text-foreground transition-[background-color] duration-150 supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:text-dark-foreground md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16 ${cardClassName}`}
       style={{
         borderColor,
         opacity: shouldAnimateOnScroll ? revealOpacity : 1,
         originX: shouldAnimateOnScroll ? 0.5 : undefined,
         originY: shouldAnimateOnScroll ? revealOriginY : undefined,
-        y: shouldAnimateOnScroll ? revealY : 0,
         scale: shouldAnimateOnScroll ? revealScale : 1,
         filter: shouldAnimateOnScroll ? revealFilter : "blur(0px)",
       }}

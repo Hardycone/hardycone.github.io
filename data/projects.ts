@@ -111,7 +111,7 @@ const projects: Project[] = [
       { label: "Data Vis", icon: "ChartLineIcon" },
     ],
     description:
-      "I co-founded Flux and led product design, turning quantitative research methods into interfaces that feel intuitive without compromising statistical rigor.",
+      "I co-founded Flux and led product design, turning quantitative user research methods into interfaces that feel intuitive without compromising statistical rigor.",
     bullets: [
       { label: "Role", content: "Co-founder" },
       { label: "Scope", content: "Research/Product/Design/Brand" },

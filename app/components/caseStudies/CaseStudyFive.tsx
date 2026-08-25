@@ -6,6 +6,7 @@ import { MotionValue, useTransform } from "framer-motion";
 import {
   BrainIcon,
   BuildingsIcon,
+  PackageIcon,
   CheckCircleIcon,
   CompassRoseIcon,
   MagnifyingGlassIcon,
@@ -53,6 +54,118 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
 
   return (
     <article className="flex flex-col gap-12">
+      <section id="section-1" className="scroll-mt-24">
+        <SectionContainer
+          animateHeadingReveal={false}
+          title="The Product"
+          icon={PackageIcon}
+          borderColor={borderColor}
+          exitOnScroll
+          revealOnScroll={false}
+        >
+          <p>
+            This project saw the redesign of a Wolcott&rsquo;s urban core{" "}
+            <span className="font-bold text-wolcott dark:text-dark-wolcott">
+              mixed reality interface for a simulated Extravehicular Activity
+              (EVA) mission
+            </span>{" "}
+            on the lunar surface. The system guided an astronaut from suit
+            disconnect through field science and a safe return route.{" "}
+          </p>
+        </SectionContainer>
+      </section>
+      <section>
+        <HorizontalScrollGroup
+          alignment="centered"
+          fillAvailableHeight
+          bottomMargin="2rem"
+          cardAspectRatio="16/9"
+          primaryColor={theme.hex.primary}
+          stickyTop="5rem"
+          cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
+          cards={[
+            [
+              "Import",
+              "Import design prototypes",
+              "Researchers can bring in interactive prototypes created in Figma, or live hosted prototypes.",
+            ],
+            [
+              "Configure",
+              "Configure the experiment",
+              "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
+            ],
+            [
+              "Recruit",
+              "Set a recruit goal and choose participant source",
+              "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
+            ],
+            [
+              "Test",
+              "Once the experiment is launched, participant results immediately start being recorded",
+              "There is not much to do other than wait",
+            ],
+            [
+              "Report",
+              "Get report within hours",
+              "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
+            ],
+          ].map(([number, title, copy]) => ({
+            id: title,
+            content: (
+              <>
+                <span className={`text-sm font-bold ${theme.textColorClass}`}>
+                  {number}
+                </span>
+                <h4 className="mt-auto pt-8">{title}</h4>
+                <p className="mt-3">{copy}</p>
+              </>
+            ),
+          }))}
+        />
+        <SectionContainer
+          animateHeadingReveal={false}
+          title="Quick Take"
+          icon={ScrollIcon}
+          textColorClass="text-foreground dark:text-dark-foreground"
+          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          borderColor={borderColor}
+          exitOnScroll
+          revealOnScroll={false}
+        >
+          <SubSection>
+            <p>
+              For NASA&apos;s SUITS challenge, our multidisciplinary team
+              designed and built an augmented-reality interface for a simulated
+              lunar EVA. The system guided an astronaut from suit disconnect
+              through field science and a safe return route.
+            </p>
+            <div className="grid gap-px overflow-hidden rounded-1 bg-foreground/10 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-foreground/15 md:grid-cols-3 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4">
+              {[
+                ["Scope", "End-to-end EVA task experience"],
+                ["Platform", "Mixed reality prototype"],
+                ["Validation", "Night test at NASA's Rock Yard"],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  className="bg-background p-5 dark:bg-dark-background"
+                >
+                  <p className={`mb-1 font-semibold ${theme.textColorClass}`}>
+                    {label}
+                  </p>
+                  <p>{value}</p>
+                </div>
+              ))}
+            </div>
+            <CaseStudyFigure caption="The prototype was evaluated outdoors at night with NASA engineers.">
+              <img
+                src="/images/hero-astrohuskies.jpg"
+                alt="Astrohuskies mixed-reality lunar EVA prototype"
+                className="h-full max-h-[34rem] w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4"
+              />
+            </CaseStudyFigure>
+          </SubSection>
+        </SectionContainer>
+      </section>
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
           animateHeadingReveal={false}
