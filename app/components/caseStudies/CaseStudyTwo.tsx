@@ -4,7 +4,6 @@ import { useTheme } from "next-themes";
 import { motion, MotionValue, useTransform } from "framer-motion";
 import {
   BrainIcon,
-  CheckCircleIcon,
   AtomIcon,
   PresentationChartIcon,
   HourglassMediumIcon,

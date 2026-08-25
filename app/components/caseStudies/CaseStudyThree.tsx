@@ -11,7 +11,6 @@ import {
   PresentationChartIcon,
   PuzzlePieceIcon,
   RocketLaunchIcon,
-  ScrollIcon,
   SealQuestionIcon,
 } from "@phosphor-icons/react";
 import projects from "@/data/projects";

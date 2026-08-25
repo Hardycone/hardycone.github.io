@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useTheme } from "next-themes";
@@ -14,7 +13,6 @@ import {
   PersonSimpleRunIcon,
   PlugIcon,
   PuzzlePieceIcon,
-  ScrollIcon,
   TargetIcon,
   TestTubeIcon,
 } from "@phosphor-icons/react";
