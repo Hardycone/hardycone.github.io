@@ -50,7 +50,7 @@ export default function VerticalScrollCards({
   className = "",
   sideClassName = "",
   cardFrameClassName = "",
-  cardClassName = "",
+  cardClassName = "rounded-1 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4",
   sideWidth = "24rem",
   cardHeight = "min(calc(100dvh - 5rem), 800px)",
   primaryColor,
@@ -199,7 +199,7 @@ export default function VerticalScrollCards({
             className={`h-auto scroll-mt-20 text-lg md:h-[var(--vertical-scroll-card-height)] md:cursor-pointer ${cardFrameClassName}`}
           >
             <div
-              className={`overflow-clip rounded-1 border border-white shadow supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:border-white/25 md:rounded-2 md:transition-[border-color,filter] md:duration-300 md:hover:border-[var(--vertical-scroll-hover-color)] md:hover:brightness-105 supports-[corner-shape:squircle]:md:rounded-4 motion-reduce:md:transition-none ${cardClassName} ${card.className ?? ""}`}
+              className={`overflow-clip border border-white shadow dark:border-white/25 md:transition-[border-color,filter] md:duration-300 md:hover:border-[var(--vertical-scroll-hover-color)] md:hover:brightness-105 motion-reduce:md:transition-none ${cardClassName} ${card.className ?? ""}`}
               style={{
                 borderColor:
                   isMdUp && activeIndex === index ? primaryColor : undefined,

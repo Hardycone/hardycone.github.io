@@ -2,7 +2,7 @@
 
 "use client";
 
-import { ReactNode, useRef } from "react";
+import { ComponentType, ReactNode, useRef } from "react";
 import { IconProps } from "@phosphor-icons/react";
 import {
   MotionValue,
@@ -19,69 +19,93 @@ import {
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import projects from "@/data/projects";
-import GradientHeadingReveal from "./GradientHeadingReveal";
+import SectionContainerHeading from "./SectionContainerHeading";
 
 interface SectionContainerBaseProps {
-  textColorClass?: string;
-  bgColorClass?: string;
-  // bgOpacityClass?: string;
-
-  borderColor?: MotionValue<string> | string;
-  animateHeadingReveal?: boolean;
-  cardClassName?: string;
+  containerClassName?: string;
   contentClassName?: string;
+  entryOnScroll?: boolean;
   exitOnScroll?: boolean;
-  headingRevealAt?: number;
-  revealOnScroll?: boolean;
-  showDivider?: boolean;
   children: ReactNode;
 }
 
-type SectionContainerProps = SectionContainerBaseProps &
-  (
-    | {
-        showHeading?: true;
-        title: string;
-        icon: React.ComponentType<IconProps>;
-      }
-    | {
-        showHeading: false;
-        title?: never;
-        icon?: never;
-      }
-  );
+type SectionContainerBorderProps =
+  | {
+      showBorder?: true;
+      borderColor?: MotionValue<string> | string;
+    }
+  | {
+      showBorder: false;
+      borderColor?: never;
+    };
 
-export default function SectionContainer({
-  title,
-  showHeading = true,
-  icon: Icon,
-  textColorClass,
-  bgColorClass,
-  borderColor,
-  animateHeadingReveal = true,
-  cardClassName = "p-2 md:p-6 bg-background/90 dark:bg-dark-background/90",
-  contentClassName = "p-2 md:p-6",
-  exitOnScroll = true,
-  headingRevealAt = 80,
-  revealOnScroll = true,
-  showDivider = false,
-  children,
-}: SectionContainerProps) {
+type SectionContainerHeadingSweepProps =
+  | {
+      showHeadingSweep?: true;
+      headingSweepColor?: string;
+      headingSweepAt?: number;
+    }
+  | {
+      showHeadingSweep: false;
+      headingSweepColor?: never;
+      headingSweepAt?: never;
+    };
+
+type SectionContainerDividerProps =
+  | {
+      showDivider?: false;
+      dividerColorClassName?: never;
+    }
+  | {
+      showDivider: true;
+      dividerColorClassName: string;
+    };
+
+type SectionContainerHeadingProps =
+  | ({
+      showHeading?: true;
+      headingIcon: ComponentType<IconProps>;
+      heading: string;
+      headingBaseColorClassName?: string;
+    } & SectionContainerHeadingSweepProps &
+      SectionContainerDividerProps)
+  | {
+      showHeading: false;
+      headingIcon?: never;
+      heading?: never;
+      headingBaseColorClassName?: never;
+      showHeadingSweep?: never;
+      headingSweepColor?: never;
+      headingSweepAt?: never;
+      showDivider?: never;
+      dividerColorClassName?: never;
+    };
+
+type SectionContainerProps = SectionContainerBaseProps &
+  SectionContainerBorderProps &
+  SectionContainerHeadingProps;
+
+export default function SectionContainer(props: SectionContainerProps) {
+  const {
+    containerClassName = "p-2 md:p-6 bg-background/90 dark:bg-dark-background/90 rounded-6 supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16",
+    contentClassName = "p-2 md:p-6",
+    entryOnScroll = true,
+    exitOnScroll = true,
+    children,
+  } = props;
+  const showBorder = props.showBorder !== false;
+  const headingSweepAt = Math.min(100, Math.max(0, props.headingSweepAt ?? 80));
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
-  const shouldAnimateEntry = revealOnScroll && !shouldReduceMotion;
+  const shouldAnimateEntry = entryOnScroll && !shouldReduceMotion;
   const shouldAnimateExit = exitOnScroll && !shouldReduceMotion;
   const shouldAnimateOnScroll = shouldAnimateEntry || shouldAnimateExit;
-  const headingRevealViewportPosition = Math.min(
-    100,
-    Math.max(0, headingRevealAt),
-  );
-  const headingRevealRootMargin =
-    `0px 0px -${100 - headingRevealViewportPosition}% 0px` as UseInViewOptions["margin"];
-  const hasHeadingEnteredRevealZone = useInView(containerRef, {
+  const headingSweepRootMargin =
+    `0px 0px -${100 - headingSweepAt}% 0px` as UseInViewOptions["margin"];
+  const hasHeadingEnteredSweepZone = useInView(containerRef, {
     once: true,
     amount: "some",
-    margin: headingRevealRootMargin,
+    margin: headingSweepRootMargin,
   });
   const { scrollYProgress: entryProgress } = useScroll({
     target: containerRef,
@@ -140,9 +164,9 @@ export default function SectionContainer({
   return (
     <motion.div
       ref={containerRef}
-      className={`section-container-scroll-reveal flex flex-col rounded-6 border text-foreground transition-[background-color] duration-150 supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:text-dark-foreground md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16 ${cardClassName}`}
+      className={`section-container-scroll-reveal flex flex-col text-foreground transition-[background-color] duration-150 dark:text-dark-foreground ${showBorder ? "border" : ""} ${containerClassName}`}
       style={{
-        borderColor,
+        borderColor: showBorder ? props.borderColor : undefined,
         opacity: shouldAnimateOnScroll ? revealOpacity : 1,
         originX: shouldAnimateOnScroll ? 0.5 : undefined,
         originY: shouldAnimateOnScroll ? revealOriginY : undefined,
@@ -150,21 +174,21 @@ export default function SectionContainer({
         filter: shouldAnimateOnScroll ? revealFilter : "blur(0px)",
       }}
     >
-      {showHeading && Icon ? (
+      {props.showHeading !== false ? (
         <>
-          <GradientHeadingReveal
-            animateReveal={animateHeadingReveal}
-            icon={Icon}
-            isRevealed={!shouldAnimateEntry || hasHeadingEnteredRevealZone}
-            primaryColor={theme.hex.primary}
-            textColorClass={textColorClass}
-            title={title}
+          <SectionContainerHeading
+            showHeadingSweep={props.showHeadingSweep ?? true}
+            headingIcon={props.headingIcon}
+            isRevealed={!shouldAnimateEntry || hasHeadingEnteredSweepZone}
+            headingSweepColor={props.headingSweepColor ?? theme.hex.primary}
+            headingBaseColorClassName={props.headingBaseColorClassName}
+            heading={props.heading}
           />
-          <div
-            className={`h-0.5 w-full rounded-full ${
-              showDivider ? bgColorClass : "invisible"
-            }`}
-          />
+          {props.showDivider ? (
+            <div
+              className={`h-0.5 w-full rounded-full ${props.dividerColorClassName}`}
+            />
+          ) : null}
         </>
       ) : null}
       <div className={`flex flex-col gap-8 ${contentClassName}`}>

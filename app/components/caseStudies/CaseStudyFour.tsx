@@ -54,12 +54,12 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
     <article className="flex flex-col gap-12">
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
-          animateHeadingReveal={false}
-          title="The Product"
-          icon={PackageIcon}
+          showHeadingSweep={false}
+          heading="The Product"
+          headingIcon={PackageIcon}
           borderColor={borderColor}
           exitOnScroll
-          revealOnScroll={false}
+          entryOnScroll={false}
         >
           <p>
             We built a{" "}
@@ -154,10 +154,9 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
 
       <section id="section-2" className="scroll-mt-24">
         <SectionContainer
-          title="Mission"
-          icon={TargetIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="Mission"
+          headingIcon={TargetIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection
@@ -263,10 +262,9 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
 
       <section id="section-3" className="scroll-mt-24">
         <SectionContainer
-          title="System Design"
-          icon={PuzzlePieceIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="System Design"
+          headingIcon={PuzzlePieceIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection
@@ -330,10 +328,9 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
 
       <section id="section-4" className="scroll-mt-24">
         <SectionContainer
-          title="Human-In-The-Loop Evaluations"
-          icon={PersonSimpleCircleIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="Human-In-The-Loop Evaluations"
+          headingIcon={PersonSimpleCircleIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection
@@ -379,10 +376,9 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
 
       <section id="section-5" className="scroll-mt-24">
         <SectionContainer
-          title="Field Test"
-          icon={PersonSimpleRunIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="Field Test"
+          headingIcon={PersonSimpleRunIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection number="1" heading="NASA Rock Yard, after dark">
@@ -406,10 +402,9 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
 
       <section id="section-6" className="scroll-mt-24">
         <SectionContainer
-          title="Reflection"
-          icon={BrainIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="Reflection"
+          headingIcon={BrainIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection

@@ -22,6 +22,7 @@ import {
 } from "@/lib/caseStudyTransitions";
 
 import {
+  PackageIcon,
   ScrollIcon,
   PuzzlePieceIcon,
   TargetIcon,
@@ -475,6 +476,7 @@ export default function TopBar({
                 <div className="hidden gap-2 sm:flex lg:gap-4">
                   {sections.map((section, index) => {
                     const Icons = {
+                      PackageIcon,
                       ScrollIcon,
                       PuzzlePieceIcon,
                       TargetIcon,

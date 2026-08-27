@@ -10,13 +10,13 @@ import {
   useTransform,
 } from "framer-motion";
 
-interface GradientHeadingRevealProps {
-  animateReveal?: boolean;
-  icon: ComponentType<IconProps>;
+interface SectionContainerHeadingProps {
+  showHeadingSweep?: boolean;
+  headingIcon: ComponentType<IconProps>;
   isRevealed: boolean;
-  primaryColor: string;
-  textColorClass?: string;
-  title: string;
+  headingSweepColor: string;
+  headingBaseColorClassName?: string;
+  heading: string;
 }
 
 const SWEEP_SETTLE_CLEARANCE_RATIO = 0.1;
@@ -56,34 +56,34 @@ function shiftHexHue(hex: string, degrees: number) {
   return `hsl(${shiftedHue} ${saturation * 100}% ${lightness * 100}%)`;
 }
 
-export default function GradientHeadingReveal({
-  animateReveal = true,
-  icon: Icon,
+export default function SectionContainerHeading({
+  showHeadingSweep = true,
+  headingIcon: HeadingIcon,
   isRevealed,
-  primaryColor,
-  textColorClass,
-  title,
-}: GradientHeadingRevealProps) {
+  headingSweepColor,
+  headingBaseColorClassName,
+  heading,
+}: SectionContainerHeadingProps) {
   const headingRef = useRef<HTMLDivElement>(null);
   const iconRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
-  const gradientId = `gradient-heading-reveal-${useId().replace(/:/g, "")}`;
+  const gradientId = `section-container-heading-${useId().replace(/:/g, "")}`;
   const shouldReduceMotion = useReducedMotion();
-  const shouldAnimateSweep = animateReveal && !shouldReduceMotion;
+  const shouldAnimateSweep = showHeadingSweep && !shouldReduceMotion;
   const sweepColors = useMemo(
     () => ({
-      minusSmall: shiftHexHue(primaryColor, -36),
-      minusTiny: shiftHexHue(primaryColor, -18),
-      primary: primaryColor,
-      plusTiny: shiftHexHue(primaryColor, 18),
-      plusSmall: shiftHexHue(primaryColor, 36),
+      minusSmall: shiftHexHue(headingSweepColor, -36),
+      minusTiny: shiftHexHue(headingSweepColor, -18),
+      primary: headingSweepColor,
+      plusTiny: shiftHexHue(headingSweepColor, 18),
+      plusSmall: shiftHexHue(headingSweepColor, 36),
     }),
-    [primaryColor],
+    [headingSweepColor],
   );
   const unrevealedColor = `color-mix(in srgb, currentColor ${UNREVEALED_OPACITY * 100}%, transparent)`;
   const textGradient = `linear-gradient(90deg, currentColor 0%, currentColor ${shiftedSweepStop(34)}, ${sweepColors.minusSmall} ${shiftedSweepStop(40)}, ${sweepColors.minusTiny} ${shiftedSweepStop(45)}, ${sweepColors.primary} ${shiftedSweepStop(50)}, ${sweepColors.plusTiny} ${shiftedSweepStop(55)}, ${sweepColors.plusSmall} ${shiftedSweepStop(60)}, transparent ${shiftedSweepStop(66.67)}, transparent 100%)`;
 
-  const progress = useMotionValue(animateReveal ? 0 : 1);
+  const progress = useMotionValue(showHeadingSweep ? 0 : 1);
   const headingWidth = useMotionValue(1);
   const renderedIconWidth = useMotionValue(30);
   const textOffset = useMotionValue(30);
@@ -110,7 +110,7 @@ export default function GradientHeadingReveal({
   }, [headingWidth, renderedIconWidth, textOffset]);
 
   useEffect(() => {
-    if (shouldReduceMotion || !animateReveal) {
+    if (shouldReduceMotion || !showHeadingSweep) {
       progress.set(1);
       return;
     }
@@ -126,7 +126,7 @@ export default function GradientHeadingReveal({
     });
 
     return () => revealAnimation.stop();
-  }, [animateReveal, isRevealed, progress, shouldReduceMotion]);
+  }, [isRevealed, progress, shouldReduceMotion, showHeadingSweep]);
 
   const textBackgroundSize = useTransform(
     headingWidth,
@@ -159,15 +159,15 @@ export default function GradientHeadingReveal({
   return (
     <div
       ref={headingRef}
-      className="mb-2 flex w-fit max-w-full items-start gap-1"
+      className={`mb-2 flex w-fit max-w-full items-start gap-1 ${headingBaseColorClassName ?? ""}`}
     >
       <span
         ref={iconRef}
         className="inline-flex h-[2.34375rem] w-[1.875rem] shrink-0 items-center justify-center md:h-[2.8125rem] md:w-[2.25rem]"
       >
-        <Icon
+        <HeadingIcon
           weight="fill"
-          className={`size-[1.875rem] md:size-[2.25rem] ${textColorClass ?? ""}`}
+          className="size-[1.875rem] md:size-[2.25rem]"
           color={shouldAnimateSweep ? `url(#${gradientId})` : "currentColor"}
         >
           <defs>
@@ -213,7 +213,7 @@ export default function GradientHeadingReveal({
               />
             </motion.linearGradient>
           </defs>
-        </Icon>
+        </HeadingIcon>
       </span>
       <h3>
         <motion.span
@@ -232,7 +232,7 @@ export default function GradientHeadingReveal({
               : undefined
           }
         >
-          {title}
+          {heading}
         </motion.span>
       </h3>
     </div>

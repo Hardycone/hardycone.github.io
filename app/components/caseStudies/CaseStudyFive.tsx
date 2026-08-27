@@ -56,12 +56,12 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
     <article className="flex flex-col gap-12">
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
-          animateHeadingReveal={false}
-          title="The Product"
-          icon={PackageIcon}
+          showHeadingSweep={false}
+          heading="The Product"
+          headingIcon={PackageIcon}
           borderColor={borderColor}
           exitOnScroll
-          revealOnScroll={false}
+          entryOnScroll={false}
         >
           <p>
             This project saw the redesign of a Wolcott&rsquo;s urban core{" "}
@@ -123,14 +123,13 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           }))}
         />
         <SectionContainer
-          animateHeadingReveal={false}
-          title="Quick Take"
-          icon={ScrollIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          showHeadingSweep={false}
+          heading="Quick Take"
+          headingIcon={ScrollIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
           exitOnScroll
-          revealOnScroll={false}
+          entryOnScroll={false}
         >
           <SubSection>
             <p>
@@ -168,14 +167,13 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
       </section>
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
-          animateHeadingReveal={false}
-          title="Quick Take"
-          icon={ScrollIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          showHeadingSweep={false}
+          heading="Quick Take"
+          headingIcon={ScrollIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
           exitOnScroll
-          revealOnScroll={false}
+          entryOnScroll={false}
         >
           <SubSection>
             <p>
@@ -214,10 +212,9 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
 
       <section id="section-2" className="scroll-mt-24">
         <SectionContainer
-          title="Context"
-          icon={SealQuestionIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="Context"
+          headingIcon={SealQuestionIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection number="1" heading="More than a beautification project">
@@ -273,10 +270,9 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
 
       <section id="section-3" className="scroll-mt-24">
         <SectionContainer
-          title="Co-Design"
-          icon={MagnifyingGlassIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="Co-Design"
+          headingIcon={MagnifyingGlassIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection
@@ -348,10 +344,9 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
 
       <section id="section-4" className="scroll-mt-24">
         <SectionContainer
-          title="Design Framework"
-          icon={CompassRoseIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="Design Framework"
+          headingIcon={CompassRoseIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection number="1" heading="A framework that could be phased">
@@ -403,10 +398,9 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
 
       <section id="section-5" className="scroll-mt-24">
         <SectionContainer
-          title="Implementation"
-          icon={PresentationChartIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="Implementation"
+          headingIcon={PresentationChartIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection number="1" heading="A plan that kept moving">
@@ -441,10 +435,9 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
 
       <section id="section-6" className="scroll-mt-24">
         <SectionContainer
-          title="Reflection"
-          icon={BrainIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="Reflection"
+          headingIcon={BrainIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection number="1" heading="Designing for ownership">

@@ -5,7 +5,6 @@ import { motion, MotionValue, useTransform } from "framer-motion";
 import {
   BrainIcon,
   AtomIcon,
-  PresentationChartIcon,
   HourglassMediumIcon,
   PuzzlePieceIcon,
   RocketLaunchIcon,
@@ -55,12 +54,12 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
     <article className="flex flex-col gap-8">
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
-          animateHeadingReveal={false}
-          title="The Product"
-          icon={PackageIcon}
+          showHeadingSweep={false}
+          heading="The Product"
+          headingIcon={PackageIcon}
           borderColor={borderColor}
           exitOnScroll
-          revealOnScroll={false}
+          entryOnScroll={false}
         >
           <p>
             <span className="font-bold text-flux dark:text-dark-flux">
@@ -73,60 +72,65 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             their prototypes, all without any expertise in quantitative methods.
           </p>
         </SectionContainer>
-      </section>
-      <section>
-        <HorizontalScrollGroup
-          alignment="centered"
-          fillAvailableHeight
-          bottomMargin="2rem"
-          cardAspectRatio="16/9"
-          primaryColor={theme.hex.primary}
-          stickyTop="5rem"
-          cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
-          cards={[
-            [
-              "Import",
-              "Import design prototypes",
-              "Researchers can bring in interactive prototypes created in Figma, or live hosted prototypes.",
-            ],
-            [
-              "Configure",
-              "Configure the experiment",
-              "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
-            ],
-            [
-              "Recruit",
-              "Set a recruit goal and choose participant source",
-              "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
-            ],
-            [
-              "Test",
-              "Once the experiment is launched, participant results immediately start being recorded",
-              "There is not much to do other than wait",
-            ],
-            [
-              "Report",
-              "Get report within hours",
-              "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
-            ],
-          ].map(([number, title, copy]) => ({
-            id: title,
-            content: (
-              <>
-                <span className={`text-sm font-bold ${theme.textColorClass}`}>
-                  {number}
-                </span>
-                <h4 className="mt-auto pt-8">{title}</h4>
-                <p className="mt-3">{copy}</p>
-              </>
-            ),
-          }))}
-        />
+        <SectionContainer
+          showHeading={false}
+          showBorder={false}
+          containerClassName="mt-4"
+          contentClassName=""
+        >
+          <HorizontalScrollGroup
+            alignment="aligned"
+            fillAvailableHeight
+            bottomMargin="2rem"
+            cardAspectRatio="16/9"
+            primaryColor={theme.hex.primary}
+            stickyTop="5rem"
+            cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
+            cards={[
+              [
+                "Import",
+                "Import design prototypes",
+                "Researchers can bring in interactive prototypes created in Figma, or live hosted prototypes.",
+              ],
+              [
+                "Configure",
+                "Configure the experiment",
+                "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
+              ],
+              [
+                "Recruit",
+                "Set a recruit goal and choose participant source",
+                "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
+              ],
+              [
+                "Test",
+                "Once the experiment is launched, participant results immediately start being recorded",
+                "There is not much to do other than wait",
+              ],
+              [
+                "Report",
+                "Get report within hours",
+                "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
+              ],
+            ].map(([number, title, copy]) => ({
+              id: title,
+              content: (
+                <>
+                  <span className={`text-sm font-bold ${theme.textColorClass}`}>
+                    {number}
+                  </span>
+                  <h4 className="mt-auto pt-8">{title}</h4>
+                  <p className="mt-3">{copy}</p>
+                </>
+              ),
+            }))}
+          />
+        </SectionContainer>
       </section>
       <section id="section-2" className="scroll-mt-24">
         <SectionContainer
-          title="The Zero"
-          icon={SealQuestionIcon}
+          heading="The Zero"
+          headingIcon={SealQuestionIcon}
           borderColor={borderColor}
         >
           <p>
@@ -184,6 +188,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               highlightOnIntersect
               sideWidth="max(10rem,40%)"
               cardHeight="min(calc(100dvh - 5rem), 400px)"
+              cardClassName="rounded-6 supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16"
               primaryColor={theme.hex.primary}
               sideContent={({ activeIndex: visibleCard }) => (
                 <SubSection heading="Framing the problem">
@@ -300,46 +305,74 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
 
       <section id="section-3" className="scroll-mt-24">
         <SectionContainer
-          title="The Messy Middle"
-          icon={PuzzlePieceIcon}
-          borderColor="rgba(0,0,0,0)"
+          heading="The Messy Middle"
+          headingIcon={PuzzlePieceIcon}
+          showBorder={false}
         >
           <p>
             Once we established the problem space, we started sketching out what
             Flux needed to be. Along the way, we encountered many interesting
             design challenges. I will elaborate on 3 of them.
           </p>
-          <SubSection heading="Balancing rigor and usability">
-            <p>
-              An overarching theme is finding the balance between a product that
-              inspires confidence in the results it delivers and a product that
-              is easy and intuitive to use. Two moments repeatedly exposed the
-              design tension. Teams had to choose a defensible participant count
-              without necessarily understanding power analysis, and they had to
-              configure an expensive study before seeing the report it would
-              produce. In both cases, users needed guidance without losing
-              visibility or control.
-            </p>
-            <p>Valid without a stat lesson</p>
-            <p>
-              How could teams run defensible studies without making setup feel
-              like coursework?
-            </p>
-            <p>Guidance without restriction</p>
-            <p>
-              How could the default path protect newer users while preserving
-              expert control?
-            </p>
-
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] The central tension: how do we design a product that
-              deals with highly scientific research methods in a way that is
-              easy to understand?
-            </span>
-          </SubSection>
+          <HorizontalScrollGroup
+            body={
+              <SubSection heading="Balancing rigor and usability">
+                <span
+                  className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
+                  style={{ backgroundColor: theme.hex.soft }}
+                >
+                  [Placeholder] The central tension: how do we design a product
+                  that deals with highly scientific research methods in a way
+                  that is easy to understand?
+                </span>
+              </SubSection>
+            }
+            alignment="centered"
+            fillAvailableHeight
+            bottomMargin="2rem"
+            cardAspectRatio="16/9"
+            primaryColor={theme.hex.primary}
+            stickyTop="5rem"
+            cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
+            cards={[
+              [
+                "Import",
+                "Import design prototypes",
+                " An overarching theme is finding the balance between a product that inspires confidence in the results it delivers and a product that is easy and intuitive to use. Two moments                  repeatedly exposed the design tension. Teams had to choose a defensible participant count without necessarily understanding power analysis, and they had to configure an expensive study before seeing the report it would produce. In both cases, users needed guidance without losing visibility or control. Valid without a stat lesson How could teams run defensible studies without making setup feel like coursework? Guidance without restriction How could the default path protect newer users while preserving expert control?",
+              ],
+              [
+                "Configure",
+                "Configure the experiment",
+                "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
+              ],
+              [
+                "Recruit",
+                "Set a recruit goal and choose participant source",
+                "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
+              ],
+              [
+                "Test",
+                "Once the experiment is launched, participant results immediately start being recorded",
+                "There is not much to do other than wait",
+              ],
+              [
+                "Report",
+                "Get report within hours",
+                "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
+              ],
+            ].map(([number, title, copy]) => ({
+              id: title,
+              content: (
+                <>
+                  <span className={`text-sm font-bold ${theme.textColorClass}`}>
+                    {number}
+                  </span>
+                  <h4 className="mt-auto pt-8">{title}</h4>
+                  <p className="mt-3">{copy}</p>
+                </>
+              ),
+            }))}
+          />
           <SubSection heading="Building for trust in underlying methodology">
             <p>
               An overarching theme is finding the balance between a product that
@@ -397,81 +430,20 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
 
       <section id="section-4" className="scroll-mt-24">
         <SectionContainer
-          title="The One"
-          icon={RocketLaunchIcon}
-          borderColor="rgba(0,0,0,0)"
+          heading="The One"
+          headingIcon={RocketLaunchIcon}
+          showBorder={false}
         >
-          <p>
-            Numerous iterations led us to Verion 1 of Flux which we launched to
-            the public in April of 2026.
-          </p>
-          <SubSection heading="Beta launch">
+          <SubSection heading="Launch">
             <p>
-              Flux matured into an end-to-end platform for quantitative
-              prototype testing. Teams can configure a study, recruit
-              participants, run tests, and review decision-ready results in one
-              product. It is fully functional and publicly available, and my
-              role has expanded into customer development, sales, and product
-              strategy.
-            </p>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] “Great for more ambiguous testing where we want to
-              get a quant pulse on key changes without building extensively.”
-              Product Manager - Consumer App
-            </span>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] “Good tool for designers in a team that wants to
-              democratize sound research.” UX Researcher - Consumer App
-            </span>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] “Flux helps when we have prototypes but no bandwidth
-              to fully build something to test with confidence.” UX Research
-              Manager - Consumer App
-            </span>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] “After doing interviews with a dozen users and
-              identifying a promising direction, this can be a way to elevate
-              the confidence of the insights with more tangible evidence.” UX
-              Researcher - Big Tech
-            </span>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] “Being able to reduce the number of design variants
-              before developing them further is a great advantage. It&rsquo;s a
-              way of doing no-code A/B testing.” Engineering Manager - Consumer
-              App
-            </span>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] “I really like how it looks. It&rsquo;s very easy to
-              follow.” UX Manager - Big Tech
-            </span>
-          </SubSection>
-          <SubSection heading="Publich launch">
-            <p>
-              Study setup created a different kind of uncertainty. Teams
-              selected report components and wrote questions long before any
-              data existed, yet a study could require recruiting hundreds of
-              participants. I introduced a live sample report populated with
-              fictitious data. As the study changed, the preview reflected those
-              choices, letting teams see the shape of the outcome before
-              launching.
+              Numerous iterations led us to Verion 1 of Flux which we launched
+              to the public in April of 2026. Study setup created a different
+              kind of uncertainty. Teams selected report components and wrote
+              questions long before any data existed, yet a study could require
+              recruiting hundreds of participants. I introduced a live sample
+              report populated with fictitious data. As the study changed, the
+              preview reflected those choices, letting teams see the shape of
+              the outcome before launching.
             </p>
             <p className={contentNoteClass}>
               Content note: Show setup and the sample report side by side, plus
@@ -485,16 +457,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               className="rounded-1 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4"
             />
           </SubSection>
-        </SectionContainer>
-      </section>
-
-      <section id="section-5" className="scroll-mt-24">
-        <SectionContainer
-          title="Outcome"
-          icon={PresentationChartIcon}
-          borderColor={borderColor}
-        >
-          <SubSection heading="Feedback">
+          <SubSection heading="Reception">
             <p>
               Flux matured into an end-to-end platform for quantitative
               prototype testing. Teams can configure a study, recruit
@@ -552,42 +515,15 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               follow.” UX Manager - Big Tech
             </span>
           </SubSection>
-          <div className="grid gap-8 md:grid-cols-2">
-            <div>
-              <h4 className={theme.textColorClass}>
-                For experienced researchers
-              </h4>
-              <p className="mt-3">
-                Demo feedback suggested that transparent assumptions and expert
-                overrides helped the methodology feel credible rather than
-                opaque or oversimplified.
-              </p>
-            </div>
-            <div>
-              <h4 className={theme.textColorClass}>For newer researchers</h4>
-              <p className="mt-3">
-                Guided setup and plain-language explanations helped people
-                follow the core concepts without prior statistical training.
-              </p>
-            </div>
-          </div>
         </SectionContainer>
       </section>
 
-      <section id="section-6" className="mb-12 scroll-mt-24">
+      <section id="section-5" className="mb-12 scroll-mt-24">
         <SectionContainer
-          title="Reflection"
-          icon={BrainIcon}
+          heading="Reflections"
+          headingIcon={BrainIcon}
           borderColor={borderColor}
         >
-          <p>
-            Flux gave me a more grounded view of simplification. It is not about
-            removing complexity; it is about shaping complexity so people can
-            use it with confidence. Building the product also reinforced that
-            technically strong UX is only one part of building a viable company.
-            Product design, distribution, and business strategy cannot be
-            treated as separate systems.
-          </p>
           <SubSection heading="Leveraging AI">
             <p>
               It has been an exciting learning experience to incorporate AI into
@@ -602,30 +538,14 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               important.
             </p>
           </SubSection>
-          <SubSection heading="Designing for growth">
+          <SubSection heading="Navigating Ambiguity">
             <p>
-              A calm experience can carry substantial rigor underneath when the
-              product makes the right decisions visible. Good guardrails support
-              the default path while leaving room for informed exceptions.
-            </p>
-
-            <p className={contentNoteClass}>
-              Content note: End with one minimal visual of the finished product,
-              keeping the emphasis on the design lesson rather than commercial
-              success.
-            </p>
-          </SubSection>
-          <SubSection number="3" heading="">
-            <p>
-              A calm experience can carry substantial rigor underneath when the
-              product makes the right decisions visible. Good guardrails support
-              the default path while leaving room for informed exceptions.
-            </p>
-
-            <p className={contentNoteClass}>
-              Content note: End with one minimal visual of the finished product,
-              keeping the emphasis on the design lesson rather than commercial
-              success.
+              My favorite part of this experience. It&rsquo;s a unique challenge
+              that doesn&rsquo;t come along all the time. No matter how closely
+              we follow a certain design process or methodology, at the end of
+              the day we&rsquo;re creating something that doesn&rsquo;t exist
+              yet. Research can only get you so far. The rest comes down to
+              intuition, vision, and ability to execute.
             </p>
           </SubSection>
         </SectionContainer>

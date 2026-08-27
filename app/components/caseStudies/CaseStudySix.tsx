@@ -38,14 +38,15 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
     <article>
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
-          animateHeadingReveal={false}
-          title="Quick Take"
-          icon={ScrollIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          showHeadingSweep={false}
+          heading="Quick Take"
+          headingIcon={ScrollIcon}
+          headingBaseColorClassName={
+            "text-foreground dark:text-dark-foreground"
+          }
           borderColor={borderColor}
           exitOnScroll
-          revealOnScroll={false}
+          entryOnScroll={false}
         >
           <SubSection spacing="none">
             <p className="mb-6">
@@ -65,10 +66,11 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
       </section>
       <section id="section-2" className="scroll-mt-24">
         <SectionContainer
-          title="Quick Take"
-          icon={ScrollIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          heading="Quick Take"
+          headingIcon={ScrollIcon}
+          headingBaseColorClassName={
+            "text-foreground dark:text-dark-foreground"
+          }
           borderColor={borderColor}
         >
           <SubSection spacing="none">
@@ -166,10 +168,11 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
       </section>
       <section id="section-3" className="scroll-mt-24">
         <SectionContainer
-          title="Quick Take"
-          icon={ScrollIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          heading="Quick Take"
+          headingIcon={ScrollIcon}
+          headingBaseColorClassName={
+            "text-foreground dark:text-dark-foreground"
+          }
           borderColor={borderColor}
         >
           <SubSection spacing="none">
@@ -259,10 +262,11 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
       </section>
       <section id="section-4" className="scroll-mt-24">
         <SectionContainer
-          title="Quick Take"
-          icon={ScrollIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          heading="Quick Take"
+          headingIcon={ScrollIcon}
+          headingBaseColorClassName={
+            "text-foreground dark:text-dark-foreground"
+          }
           borderColor={borderColor}
         >
           <SubSection spacing="none">
@@ -419,10 +423,11 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
       </section>
       <section id="section-5" className="scroll-mt-24">
         <SectionContainer
-          title="Quick Take"
-          icon={ScrollIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          heading="Quick Take"
+          headingIcon={ScrollIcon}
+          headingBaseColorClassName={
+            "text-foreground dark:text-dark-foreground"
+          }
           borderColor={borderColor}
         >
           <SubSection spacing="none">

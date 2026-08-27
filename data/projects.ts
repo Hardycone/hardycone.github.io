@@ -122,7 +122,7 @@ const projects: Project[] = [
     bgColor: "fluxBackground",
     glyphAnimation: glyphTwoAnimation as GlyphAnimationData,
     sections: [
-      { id: "section-1", label: "The Product", icon: "ScrollIcon" },
+      { id: "section-1", label: "The Product", icon: "PackageIcon" },
       {
         id: "section-2",
         label: "The 0",
@@ -140,11 +140,6 @@ const projects: Project[] = [
       },
       {
         id: "section-5",
-        label: "Outcome",
-        icon: "PresentationChartIcon",
-      },
-      {
-        id: "section-6",
         label: "Reflection",
         icon: "BrainIcon",
       },

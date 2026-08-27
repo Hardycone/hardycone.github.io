@@ -17,18 +17,18 @@ import {
 } from "framer-motion";
 import { hexToRgba } from "@/lib/palette";
 
-export interface HorizontalFilmstripCard {
+export interface HorizontalCard {
   id?: string;
   content: ReactNode;
   className?: string;
 }
 
-export type HorizontalFilmstripAlignment = "aligned" | "centered";
+export type HorizontalCardAlignment = "aligned" | "centered";
 
-export interface HorizontalFilmstripProps {
+export interface HorizontalGroupProps {
   body?: ReactNode;
-  cards: HorizontalFilmstripCard[];
-  alignment?: HorizontalFilmstripAlignment;
+  cards: HorizontalCard[];
+  alignment?: HorizontalCardAlignment;
   className?: string;
   bodyClassName?: string;
   cardClassName?: string;
@@ -43,15 +43,15 @@ export interface HorizontalFilmstripProps {
   hoverBorderOpacity?: number;
 }
 
-interface HorizontalFilmstripStyle extends CSSProperties {
-  "--filmstrip-card-width": string;
-  "--filmstrip-card-aspect-ratio"?: string;
-  "--filmstrip-card-height": string;
-  "--filmstrip-mobile-card-min-height": string;
-  "--filmstrip-sticky-top": string;
-  "--filmstrip-bottom-margin": string;
-  "--filmstrip-primary-color": string;
-  "--filmstrip-hover-color": string;
+interface HorizontalGroupStyle extends CSSProperties {
+  "--horizontal-card-width": string;
+  "--horizontal-card-aspect-ratio"?: string;
+  "--horizontal-card-height": string;
+  "--horizontal-mobile-card-min-height": string;
+  "--horizontal-sticky-top": string;
+  "--horizontal-bottom-margin": string;
+  "--horizontal-primary-color": string;
+  "--horizontal-hover-color": string;
 }
 
 interface HorizontalGestureState {
@@ -71,6 +71,76 @@ const INERTIA_MIN_VELOCITY_PX_PER_MS = 0.06;
 const INERTIA_STOP_VELOCITY_PX_PER_MS = 0.015;
 const INERTIA_MAX_VELOCITY_PX_PER_MS = 2.5;
 
+let nativeScrollSnapUsers = 0;
+let nativeScrollSnapSuspensions = 0;
+let previousScrollSnapType = "";
+let previousScrollSnapPriority = "";
+
+function updateNativeVerticalScrollSnap() {
+  if (nativeScrollSnapUsers === 0) return;
+
+  document.documentElement.style.setProperty(
+    "scroll-snap-type",
+    nativeScrollSnapSuspensions > 0 ? "none" : "y proximity",
+  );
+}
+
+function enableNativeVerticalScrollSnap() {
+  const scrollingElement = document.documentElement;
+
+  if (nativeScrollSnapUsers === 0) {
+    previousScrollSnapType =
+      scrollingElement.style.getPropertyValue("scroll-snap-type");
+    previousScrollSnapPriority =
+      scrollingElement.style.getPropertyPriority("scroll-snap-type");
+  }
+
+  nativeScrollSnapUsers += 1;
+  updateNativeVerticalScrollSnap();
+
+  return () => {
+    nativeScrollSnapUsers = Math.max(0, nativeScrollSnapUsers - 1);
+    if (nativeScrollSnapUsers > 0) {
+      updateNativeVerticalScrollSnap();
+      return;
+    }
+
+    nativeScrollSnapSuspensions = 0;
+
+    if (previousScrollSnapType) {
+      scrollingElement.style.setProperty(
+        "scroll-snap-type",
+        previousScrollSnapType,
+        previousScrollSnapPriority,
+      );
+    } else {
+      scrollingElement.style.removeProperty("scroll-snap-type");
+    }
+  };
+}
+
+function suspendNativeVerticalScrollSnap() {
+  nativeScrollSnapSuspensions += 1;
+  updateNativeVerticalScrollSnap();
+
+  let isReleased = false;
+
+  return (behavior: ScrollBehavior = "auto") => {
+    if (isReleased) return;
+    isReleased = true;
+    nativeScrollSnapSuspensions = Math.max(0, nativeScrollSnapSuspensions - 1);
+    updateNativeVerticalScrollSnap();
+
+    if (
+      behavior === "smooth" &&
+      nativeScrollSnapUsers > 0 &&
+      nativeScrollSnapSuspensions === 0
+    ) {
+      window.scrollTo({ top: window.scrollY, behavior: "smooth" });
+    }
+  };
+}
+
 function getDocumentOffsetTop(element: HTMLElement) {
   let offsetTop = 0;
   let current: HTMLElement | null = element;
@@ -83,14 +153,13 @@ function getDocumentOffsetTop(element: HTMLElement) {
   return offsetTop;
 }
 
-export default function HorizontalFilmstrip({
+export default function HorizontalGroup({
   body,
   cards,
   alignment = "aligned",
   className = "",
   bodyClassName = "",
-  cardClassName =
-    "rounded-1 md:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:md:rounded-4",
+  cardClassName = "rounded-1 md:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:md:rounded-4",
   cardWidth = "min(42vw, 30rem)",
   cardAspectRatio,
   cardHeight = "min(60svh, 36rem)",
@@ -100,7 +169,7 @@ export default function HorizontalFilmstrip({
   bottomMargin = "6rem",
   primaryColor,
   hoverBorderOpacity = 0.6,
-}: HorizontalFilmstripProps) {
+}: HorizontalGroupProps) {
   const targetRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -108,8 +177,11 @@ export default function HorizontalFilmstrip({
   const suppressCardClickRef = useRef(false);
   const suppressCardClickTimeoutRef = useRef<number | null>(null);
   const inertiaFrameRef = useRef<number | null>(null);
+  const releaseNativeSnapRef = useRef<(() => void) | null>(null);
+  const nativeSnapResumeTimeoutRef = useRef<number | null>(null);
   const [railStartX, setRailStartX] = useState(0);
   const [travel, setTravel] = useState(0);
+  const [snapOffsets, setSnapOffsets] = useState<number[]>([]);
   const [isEnabled, setIsEnabled] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
 
@@ -171,6 +243,35 @@ export default function HorizontalFilmstrip({
     updateActiveCard(x.get());
   }, [updateActiveCard, x]);
 
+  const resumeNativeSnap = useCallback(() => {
+    if (nativeSnapResumeTimeoutRef.current !== null) {
+      window.clearTimeout(nativeSnapResumeTimeoutRef.current);
+      nativeSnapResumeTimeoutRef.current = null;
+    }
+
+    releaseNativeSnapRef.current?.();
+    releaseNativeSnapRef.current = null;
+  }, []);
+
+  const suspendNativeSnap = useCallback(() => {
+    if (releaseNativeSnapRef.current) return;
+    releaseNativeSnapRef.current = suspendNativeVerticalScrollSnap();
+  }, []);
+
+  const scheduleNativeSnapResume = useCallback(
+    (delay: number) => {
+      if (nativeSnapResumeTimeoutRef.current !== null) {
+        window.clearTimeout(nativeSnapResumeTimeoutRef.current);
+      }
+
+      nativeSnapResumeTimeoutRef.current = window.setTimeout(() => {
+        nativeSnapResumeTimeoutRef.current = null;
+        resumeNativeSnap();
+      }, delay);
+    },
+    [resumeNativeSnap],
+  );
+
   const stopHorizontalInertia = useCallback(() => {
     if (inertiaFrameRef.current === null) return;
     window.cancelAnimationFrame(inertiaFrameRef.current);
@@ -185,6 +286,7 @@ export default function HorizontalFilmstrip({
         window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
         Math.abs(initialVelocity) < INERTIA_MIN_VELOCITY_PX_PER_MS
       ) {
+        resumeNativeSnap();
         return;
       }
 
@@ -202,6 +304,7 @@ export default function HorizontalFilmstrip({
 
         if (Math.abs(velocity) < INERTIA_STOP_VELOCITY_PX_PER_MS) {
           inertiaFrameRef.current = null;
+          resumeNativeSnap();
           return;
         }
 
@@ -213,20 +316,26 @@ export default function HorizontalFilmstrip({
 
       inertiaFrameRef.current = window.requestAnimationFrame(step);
     },
-    [stopHorizontalInertia],
+    [resumeNativeSnap, stopHorizontalInertia],
   );
 
   useEffect(() => {
-    window.addEventListener("touchstart", stopHorizontalInertia, {
+    const handleTouchStart = () => {
+      stopHorizontalInertia();
+      resumeNativeSnap();
+    };
+
+    window.addEventListener("touchstart", handleTouchStart, {
       capture: true,
       passive: true,
     });
 
     return () => {
-      window.removeEventListener("touchstart", stopHorizontalInertia, true);
+      window.removeEventListener("touchstart", handleTouchStart, true);
       stopHorizontalInertia();
+      resumeNativeSnap();
     };
-  }, [stopHorizontalInertia]);
+  }, [resumeNativeSnap, stopHorizontalInertia]);
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -289,6 +398,7 @@ export default function HorizontalFilmstrip({
 
         gesture.axis = "horizontal";
         suppressCardClickRef.current = true;
+        suspendNativeSnap();
       }
 
       if (event.cancelable) event.preventDefault();
@@ -321,6 +431,8 @@ export default function HorizontalFilmstrip({
       if (didDrag) {
         if (event.type === "touchend") {
           startHorizontalInertia(releaseVelocity);
+        } else {
+          resumeNativeSnap();
         }
 
         suppressCardClickTimeoutRef.current = window.setTimeout(() => {
@@ -352,8 +464,9 @@ export default function HorizontalFilmstrip({
         window.clearTimeout(suppressCardClickTimeoutRef.current);
         suppressCardClickTimeoutRef.current = null;
       }
+      resumeNativeSnap();
     };
-  }, [isEnabled, startHorizontalInertia]);
+  }, [isEnabled, resumeNativeSnap, startHorizontalInertia, suspendNativeSnap]);
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -383,6 +496,8 @@ export default function HorizontalFilmstrip({
 
       event.preventDefault();
       stopHorizontalInertia();
+      suspendNativeSnap();
+      scheduleNativeSnapResume(160);
 
       const nextScrollY = isMovingForward
         ? Math.min(sectionEndY, currentScrollY + event.deltaX)
@@ -392,8 +507,18 @@ export default function HorizontalFilmstrip({
 
     viewport.addEventListener("wheel", handleWheel, { passive: false });
 
-    return () => viewport.removeEventListener("wheel", handleWheel);
-  }, [isEnabled, stopHorizontalInertia, travel]);
+    return () => {
+      viewport.removeEventListener("wheel", handleWheel);
+      resumeNativeSnap();
+    };
+  }, [
+    isEnabled,
+    resumeNativeSnap,
+    scheduleNativeSnapResume,
+    stopHorizontalInertia,
+    suspendNativeSnap,
+    travel,
+  ]);
 
   const handleCardClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement>) => {
@@ -457,9 +582,16 @@ export default function HorizontalFilmstrip({
   }, []);
 
   useEffect(() => {
+    if (!isEnabled || snapOffsets.length === 0) return;
+
+    return enableNativeVerticalScrollSnap();
+  }, [isEnabled, snapOffsets.length]);
+
+  useEffect(() => {
     if (!isEnabled) {
       setRailStartX(0);
       setTravel(0);
+      setSnapOffsets([]);
       return;
     }
 
@@ -476,6 +608,7 @@ export default function HorizontalFilmstrip({
       if (!firstCard || !lastCard) {
         setRailStartX(0);
         setTravel(0);
+        setSnapOffsets([]);
         return;
       }
 
@@ -491,9 +624,23 @@ export default function HorizontalFilmstrip({
         alignment === "centered"
           ? viewportWidth / 2 - lastCardCenter
           : viewportWidth - lastCardRight;
+      const nextTravel = Math.max(0, nextStartX - nextEndX);
+      const nextSnapOffsets = cardElements.map((card, index) => {
+        if (alignment === "aligned" && index === 0) return 0;
+        if (alignment === "aligned" && index === cardElements.length - 1) {
+          return nextTravel;
+        }
+
+        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+        const centeredCardX = viewportWidth / 2 - cardCenter;
+        const targetX = Math.min(nextStartX, Math.max(nextEndX, centeredCardX));
+
+        return Math.min(nextTravel, Math.max(0, nextStartX - targetX));
+      });
 
       setRailStartX(nextStartX);
-      setTravel(Math.max(0, nextStartX - nextEndX));
+      setTravel(nextTravel);
+      setSnapOffsets(nextSnapOffsets);
     };
 
     updateTravel();
@@ -515,14 +662,14 @@ export default function HorizontalFilmstrip({
       className={`relative ${className}`}
       style={
         {
-          "--filmstrip-card-width": cardWidth,
-          "--filmstrip-card-aspect-ratio": cardAspectRatio,
-          "--filmstrip-card-height": cardHeight,
-          "--filmstrip-mobile-card-min-height": mobileCardMinHeight,
-          "--filmstrip-sticky-top": stickyTop,
-          "--filmstrip-bottom-margin": bottomMargin,
-          "--filmstrip-primary-color": primaryColor,
-          "--filmstrip-hover-color": hexToRgba(
+          "--horizontal-card-width": cardWidth,
+          "--horizontal-card-aspect-ratio": cardAspectRatio,
+          "--horizontal-card-height": cardHeight,
+          "--horizontal-mobile-card-min-height": mobileCardMinHeight,
+          "--horizontal-sticky-top": stickyTop,
+          "--horizontal-bottom-margin": bottomMargin,
+          "--horizontal-primary-color": primaryColor,
+          "--horizontal-hover-color": hexToRgba(
             primaryColor,
             hoverBorderOpacity,
           ),
@@ -531,11 +678,22 @@ export default function HorizontalFilmstrip({
               ? `calc(100svh + ${travel}px)`
               : "100svh"
             : undefined,
-        } as HorizontalFilmstripStyle
+        } as HorizontalGroupStyle
       }
     >
+      {isEnabled
+        ? snapOffsets.map((offset, index) => (
+            <span
+              key={cards[index]?.id ?? index}
+              aria-hidden="true"
+              data-horizontal-scroll-snap={index}
+              className="pointer-events-none absolute left-0 h-px w-px"
+              style={{ top: offset, scrollSnapAlign: "start" }}
+            />
+          ))
+        : null}
       <div
-        className={`flex flex-col md:sticky md:top-[var(--filmstrip-sticky-top)] ${fillAvailableHeight ? "md:h-[calc(100svh-var(--filmstrip-sticky-top)-var(--filmstrip-bottom-margin))]" : ""}`}
+        className={`flex flex-col md:sticky md:top-[var(--horizontal-sticky-top)] ${fillAvailableHeight ? "md:h-[calc(100svh-var(--horizontal-sticky-top)-var(--horizontal-bottom-margin))]" : ""}`}
       >
         {body !== undefined && body !== null ? (
           <div
@@ -545,7 +703,7 @@ export default function HorizontalFilmstrip({
           </div>
         ) : null}
         <div
-          className={`relative h-auto w-full [container-type:inline-size] ${fillAvailableHeight ? "md:mb-0 md:min-h-0 md:flex-1" : "md:h-[var(--filmstrip-card-height)]"}`}
+          className={`relative h-auto w-full [container-type:inline-size] ${fillAvailableHeight ? "md:mb-0 md:min-h-0 md:flex-1" : "md:h-[var(--horizontal-card-height)]"}`}
         >
           <div className="h-auto w-full overflow-visible md:absolute md:left-1/2 md:top-0 md:h-full md:w-screen md:-translate-x-1/2 md:overflow-x-clip md:overflow-y-visible">
             <div
@@ -561,7 +719,7 @@ export default function HorizontalFilmstrip({
                   <div
                     key={card.id ?? index}
                     onClick={handleCardClick}
-                    className={`flex min-h-[var(--filmstrip-mobile-card-min-height)] w-full shrink-0 flex-col overflow-auto border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800 md:h-full md:min-h-0 md:cursor-pointer md:transition-[border-color,filter] md:duration-300 md:hover:border-[var(--filmstrip-hover-color)] md:hover:brightness-105 motion-reduce:md:transition-none ${cardAspectRatio ? "md:aspect-[var(--filmstrip-card-aspect-ratio)] md:w-auto" : "md:w-[var(--filmstrip-card-width)]"} ${cardClassName} ${card.className ?? ""}`}
+                    className={`flex min-h-[var(--horizontal-mobile-card-min-height)] w-full shrink-0 flex-col overflow-auto border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800 md:h-full md:min-h-0 md:cursor-pointer md:transition-[border-color,filter] md:duration-300 md:hover:border-[var(--horizontal-hover-color)] md:hover:brightness-105 motion-reduce:md:transition-none ${cardAspectRatio ? "md:aspect-[var(--horizontal-card-aspect-ratio)] md:w-auto" : "md:w-[var(--horizontal-card-width)]"} ${cardClassName} ${card.className ?? ""}`}
                     style={{
                       borderColor:
                         isEnabled && activeCardIndex === index

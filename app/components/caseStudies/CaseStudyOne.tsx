@@ -81,15 +81,15 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       <section id="section-1" className="mb-8 w-full min-w-0 scroll-mt-24">
         {/*Section Header Block*/}
         <SectionContainer
-          animateHeadingReveal={false}
-          title="My Work"
-          icon={PathIcon}
-          showDivider={false}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          showHeadingSweep={false}
+          heading="My Work"
+          headingIcon={PathIcon}
+          headingBaseColorClassName={
+            "text-foreground dark:text-dark-foreground"
+          }
           borderColor={borderColor}
           exitOnScroll
-          revealOnScroll={false}
+          entryOnScroll={false}
         >
           <SubSection spacing="none">
             <p>
@@ -344,11 +344,11 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       {/*Section 2: Qualifications*/}
       <section id="section-2" className="mb-8 w-full min-w-0 scroll-mt-24">
         <SectionContainer
-          title="My Qualifications"
-          icon={CertificateIcon}
-          showDivider={false}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          heading="My Qualifications"
+          headingIcon={CertificateIcon}
+          headingBaseColorClassName={
+            "text-foreground dark:text-dark-foreground"
+          }
           borderColor={borderColor}
         >
           <SubSection spacing="none">
@@ -561,11 +561,11 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       {/*Section 3: My Skills*/}
       <section id="section-3" className="w-full min-w-0 scroll-mt-24">
         <SectionContainer
-          title="My Skills"
-          showDivider={false}
-          icon={PaperPlaneTiltIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          heading="My Skills"
+          headingIcon={PaperPlaneTiltIcon}
+          headingBaseColorClassName={
+            "text-foreground dark:text-dark-foreground"
+          }
           borderColor={borderColor}
         >
           <SubSection>
@@ -635,11 +635,11 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       {/*Section 4: Interests*/}
       <section id="section-4" className="w-full min-w-0 scroll-mt-24">
         <SectionContainer
-          title="My Interests"
-          showDivider={false}
-          icon={CameraIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          heading="My Interests"
+          headingIcon={CameraIcon}
+          headingBaseColorClassName={
+            "text-foreground dark:text-dark-foreground"
+          }
           borderColor={borderColor}
         >
           <SubSection spacing="none">
@@ -719,11 +719,11 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       {/*Section 5: Let's Chat!*/}
       <section id="section-5" className="w-full min-w-0 scroll-mt-24">
         <SectionContainer
-          title="Let's Chat!"
-          showDivider={false}
-          icon={PaperPlaneTiltIcon}
-          textColorClass={"text-foreground dark:text-dark-foreground"}
-          bgColorClass={"bg-foreground dark:bg-dark-foreground"}
+          heading="Let's Chat!"
+          headingIcon={PaperPlaneTiltIcon}
+          headingBaseColorClassName={
+            "text-foreground dark:text-dark-foreground"
+          }
           borderColor={borderColor}
         >
           <SubSection spacing="none">

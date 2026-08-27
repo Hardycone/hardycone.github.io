@@ -53,12 +53,12 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
     <article className="flex flex-col gap-12">
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
-          animateHeadingReveal={false}
-          title="The Product"
-          icon={PackageIcon}
+          showHeadingSweep={false}
+          heading="The Product"
+          headingIcon={PackageIcon}
           borderColor={borderColor}
           exitOnScroll
-          revealOnScroll={false}
+          entryOnScroll={false}
         >
           <p>
             <span className="font-bold text-fantail dark:text-dark-fantail">
@@ -119,7 +119,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
               </>
             ),
           }))}
-        />{" "}
+        />
         <SubSection>
           <p>
             Fantail was an AI-assisted story development startup I co-founded
@@ -160,10 +160,9 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
 
       <section id="section-2" className="scroll-mt-24">
         <SectionContainer
-          title="The Zero"
-          icon={SealQuestionIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="The Zero"
+          headingIcon={SealQuestionIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection number="1" heading="Starting with ambiguity">
@@ -193,10 +192,9 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
       </section>
       <section id="section-3" className="scroll-mt-24">
         <SectionContainer
-          title="The Messy Middle"
-          icon={PuzzlePieceIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="The Messy Middle"
+          headingIcon={PuzzlePieceIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection number="1" heading="Research refined the lens">
@@ -294,10 +292,9 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
       </section>
       <section id="section-4" className="scroll-mt-24">
         <SectionContainer
-          title="The One"
-          icon={RocketLaunchIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="The One"
+          headingIcon={RocketLaunchIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection number="1" heading="A script-agnostic start">
@@ -402,10 +399,9 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
       </section>
       <section id="section-5" className="scroll-mt-24">
         <SectionContainer
-          title="Outcome"
-          icon={PresentationChartIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="Outcome"
+          headingIcon={PresentationChartIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection number="1" heading="Product signal, business reality">
@@ -445,10 +441,9 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
       </section>
       <section id="section-6" className="scroll-mt-24">
         <SectionContainer
-          title="Reflection"
-          icon={BrainIcon}
-          textColorClass="text-foreground dark:text-dark-foreground"
-          bgColorClass="bg-foreground dark:bg-dark-foreground"
+          heading="Reflection"
+          headingIcon={BrainIcon}
+          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
           <SubSection number="1" heading="What I carried forward">
