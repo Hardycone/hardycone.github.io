@@ -17,7 +17,7 @@ import { hexToRgba } from "@/lib/palette";
 // import { useProjectTheme } from "@/hooks/useProjectTheme";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
-import SubSection from "../SubSection";
+import SubSectionContainer from "../SubSectionContainer";
 import FlourishName from "../FlourishName";
 import NarrativeAccordion from "../NarrativeAccordion";
 import BioContactForm from "../BioContactForm";
@@ -91,7 +91,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           exitOnScroll
           entryOnScroll={false}
         >
-          <SubSection spacing="none">
+          <SubSectionContainer className="gap-0">
             <p>
               I’m currently working on{" "}
               <FlourishName
@@ -337,7 +337,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
             </NarrativeAccordion>
 
             {/*Subsection 1: Experience*/}
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -351,7 +351,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           }
           borderColor={borderColor}
         >
-          <SubSection spacing="none">
+          <SubSectionContainer className="gap-0">
             <p>
               I’ve work on projects{" "}
               <FlourishName
@@ -554,7 +554,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               </div>
             </NarrativeAccordion>
             {/*Subsection 4: Skills*/}
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -568,7 +568,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           }
           borderColor={borderColor}
         >
-          <SubSection>
+          <SubSectionContainer>
             <div className="mb-8">
               {/*Skills List*/}
               <ul className="text-xl">
@@ -628,7 +628,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 </li>
               </ul>
             </div>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -642,7 +642,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           }
           borderColor={borderColor}
         >
-          <SubSection spacing="none">
+          <SubSectionContainer className="gap-0">
             <p>
               Outside of work, I enjoy hiking in the mountains, taking pictures
               with my faithful Sony a7iii, practicing barre chords on my
@@ -654,7 +654,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               probably find me exploring new trails, experimenting with a small
               hardware project, or chasing a new creative rabbit hole.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
         <div className="relative left-1/2 mb-8 w-[calc(100svw-2rem)] max-w-[1440px] -translate-x-1/2">
           {/*Image Grid*/}
@@ -726,9 +726,9 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           }
           borderColor={borderColor}
         >
-          <SubSection spacing="none">
+          <SubSectionContainer className="gap-0">
             <BioContactForm />
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
     </article>

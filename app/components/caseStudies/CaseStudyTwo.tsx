@@ -15,11 +15,12 @@ import {
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
-import HorizontalScrollGroup from "../HorizontalScrollGroup";
+import HorizontalCardGroup from "../HorizontalCardGroup";
 import LazyVideo from "../LazyVideo";
 import SectionContainer from "../SectionContainer";
-import SubSection from "../SubSection";
-import VerticalScrollGroup from "../VerticalScrollGroup";
+import SubHeading from "../SubHeading";
+import SubSectionContainer from "../SubSectionContainer";
+import VerticalCardGroup from "../VerticalCardGroup";
 
 interface CaseStudyTwoProps {
   scrollY: MotionValue<number>;
@@ -78,13 +79,13 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           containerClassName="mt-4"
           contentClassName=""
         >
-          <HorizontalScrollGroup
-            alignment="aligned"
-            fillAvailableHeight
-            bottomMargin="2rem"
-            cardAspectRatio="16/9"
-            primaryColor={theme.hex.primary}
-            stickyTop="5rem"
+          <HorizontalCardGroup
+            alignment="centered"
+            bottomMarginOnLarge="2rem"
+            setCardAspectRatioOnLarge
+            cardAspectRatioOnLarge="16/9"
+            highlightBorderColor={theme.hex.primary}
+            stickyTopOnLarge="5rem"
             cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
             cards={[
               [
@@ -144,7 +145,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             increasingly difficult to strike the right balance between speed and
             confidence.
           </p>
-          <SubSection heading="Spotting the gap">
+          <SubSectionContainer>
+            <SubHeading>Spotting the gap</SubHeading>
             <p>
               We took a look at existing research tools, and quickly noticed
               that they are overwhelmingly qualitative, which can be very useful
@@ -162,8 +164,9 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               speed faster than ever before, but there is no way to validate
               ideas with statistical confidence that can match this speed.
             </span>
-          </SubSection>
-          <SubSection heading="Research and discovery">
+          </SubSectionContainer>
+          <SubSectionContainer>
+            <SubHeading>Research and discovery</SubHeading>
             <p>
               My cofounder and I started with conversations with people in our
               network. We reached out to a mix of reseearchers, product
@@ -182,16 +185,17 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               word clickable to reveal full quotes. Might be too complicated
               though. Maybe some simple cards will suffice.
             </span>
-          </SubSection>
-          <SubSection>
-            <VerticalScrollGroup
-              highlightOnIntersect
-              sideWidth="max(10rem,40%)"
-              cardHeight="min(calc(100dvh - 5rem), 400px)"
+          </SubSectionContainer>
+          <SubSectionContainer>
+            <VerticalCardGroup
+              bodyWidthClassNameOnLarge="md:w-[max(10rem,40%)]"
+              cardHeightOnLarge="min(calc(100dvh - 5rem), 400px)"
+              cardHeightClassNameOnSmall="min-h-72"
               cardClassName="rounded-6 supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16"
-              primaryColor={theme.hex.primary}
-              sideContent={({ activeIndex: visibleCard }) => (
-                <SubSection heading="Framing the problem">
+              highlightBorderColor={theme.hex.primary}
+              body={({ activeIndex: visibleCard }) => (
+                <SubSectionContainer>
+                  <SubHeading>Framing the problem</SubHeading>
                   <p>
                     Our research insights led us directly to a clear problem
                     space:
@@ -223,13 +227,12 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                       </span>
                     ))}
                   </p>
-                </SubSection>
+                </SubSectionContainer>
               )}
               cards={[
                 {
                   id: "concepts",
-                  className:
-                    "flex h-auto min-h-72 flex-col justify-between p-6 md:h-full md:p-10",
+                  className: "flex flex-col justify-between p-6 md:p-10",
                   content: (
                     <>
                       <AtomIcon
@@ -251,8 +254,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 },
                 {
                   id: "traffic",
-                  className:
-                    "flex h-auto min-h-72 flex-col justify-between p-6 md:h-full md:p-10",
+                  className: "flex flex-col justify-between p-6 md:p-10",
                   content: (
                     <>
                       <HourglassMediumIcon
@@ -275,8 +277,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 },
                 {
                   id: "operation",
-                  className:
-                    "flex h-auto min-h-72 flex-col justify-between p-6 md:h-full md:p-10",
+                  className: "flex flex-col justify-between p-6 md:p-10",
                   content: (
                     <>
                       <StackIcon
@@ -299,7 +300,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 },
               ]}
             />
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -314,31 +315,119 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             Flux needed to be. Along the way, we encountered many interesting
             design challenges. I will elaborate on 3 of them.
           </p>
-          <HorizontalScrollGroup
+          <HorizontalCardGroup
+            showBody
             body={
-              <SubSection heading="Balancing rigor and usability">
-                <span
-                  className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-                  style={{ backgroundColor: theme.hex.soft }}
-                >
-                  [Placeholder] The central tension: how do we design a product
-                  that deals with highly scientific research methods in a way
-                  that is easy to understand?
-                </span>
-              </SubSection>
+              <SubSectionContainer>
+                <SubHeading>Balancing rigor and usability</SubHeading>
+              </SubSectionContainer>
             }
-            alignment="centered"
-            fillAvailableHeight
-            bottomMargin="2rem"
-            cardAspectRatio="16/9"
-            primaryColor={theme.hex.primary}
-            stickyTop="5rem"
+            alignment="aligned"
+            stickyTopOnLarge="5rem"
+            setCardAspectRatioOnLarge
+            cardAspectRatioOnLarge="16/9"
+            bottomMarginOnLarge="2rem"
+            highlightBorderColor={theme.hex.primary}
+            cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
+            cards={[
+              {
+                id: "tension",
+                content: (
+                  <div className="flex h-full flex-col">
+                    <span
+                      className={`text-sm font-bold ${theme.textColorClass}`}
+                    >
+                      Tension
+                    </span>
+                    <h4 className="mt-auto pt-8">Tension</h4>
+                    <p className="mt-3">
+                      [Placeholder] The central tension: how do we design a
+                      productthat deals with highly scientific research methods
+                      in a way that is easy to understand? An overarching theme
+                      is finding the balance between a product that inspires
+                      confidence in the results it delivers and a product that
+                      is easy and intuitive to use. Two moments repeatedly
+                      exposed the design tension. Teams had to choose a
+                      defensible participant count without necessarily
+                      understanding power analysis, and they had to configure an
+                      expensive study before seeing the report it would produce.
+                      In both cases, users needed guidance without losing
+                      visibility or control. Valid without a stat lesson How
+                      could teams run defensible studies without making setup
+                      feel like coursework? Guidance without restriction How
+                      could the default path protect newer users while
+                      preserving expert control?
+                    </p>
+                  </div>
+                ),
+              },
+              {
+                id: "iterations",
+                content: (
+                  <div className="flex h-full flex-col">
+                    <span
+                      className={`text-sm font-bold ${theme.textColorClass}`}
+                    >
+                      Iterations
+                    </span>
+                    <h4 className="mt-auto pt-8">Iterations</h4>
+                    <p className="mt-3">
+                      On example of this is power analysis. When comparing two
+                      variants, statisticians do a calculation called power
+                      analysis to determine what sample size they need to find
+                      potential statistical signifiance. In other words, how
+                      many people to recruit in order to know the results are
+                      real. This is a simple yet specialized matter. The
+                      confidence provided by doing quantitative analysis is what
+                      sets Flux apart. So we obviously want to make sure studies
+                      are legit. At the same time, we didn&rsquo;t want to res
+                    </p>
+                  </div>
+                ),
+              },
+              {
+                id: "solution",
+                content: (
+                  <div className="flex h-full flex-col">
+                    <span
+                      className={`text-sm font-bold ${theme.textColorClass}`}
+                    >
+                      My Solution
+                    </span>
+                    <h4 className="mt-auto pt-8">I solved it</h4>
+                    <p className="mt-3">
+                      Researchers can then set a goal for their experiment. Flux
+                      gives guidelines on how to set a sample size according to
+                      statistical best practices. Researchers also have the
+                      option to either generate a link to share with their own
+                      panel, or recreate with Flux by a click of a button.
+                    </p>
+                  </div>
+                ),
+              },
+            ]}
+          />{" "}
+          <HorizontalCardGroup
+            showBody
+            body={
+              <SubSectionContainer>
+                <SubHeading>
+                  Building for trust in underlying methodology
+                </SubHeading>
+              </SubSectionContainer>
+            }
+            alignment="aligned"
+            stickyTopOnLarge="5rem"
+            setCardAspectRatioOnLarge
+            cardAspectRatioOnLarge="16/9"
+            bottomMarginOnLarge="2rem"
+            highlightBorderColor={theme.hex.primary}
             cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
             cards={[
               [
                 "Import",
                 "Import design prototypes",
-                " An overarching theme is finding the balance between a product that inspires confidence in the results it delivers and a product that is easy and intuitive to use. Two moments                  repeatedly exposed the design tension. Teams had to choose a defensible participant count without necessarily understanding power analysis, and they had to configure an expensive study before seeing the report it would produce. In both cases, users needed guidance without losing visibility or control. Valid without a stat lesson How could teams run defensible studies without making setup feel like coursework? Guidance without restriction How could the default path protect newer users while preserving expert control?",
+                "[Placeholder] The central tension: how do we design a productthat deals with highly scientific research methods in a way that is easy to understand? An overarching theme is finding the balance between a product that inspires confidence in the results it delivers and a product that is easy and intuitive to use. Two moments                  repeatedly exposed the design tension. Teams had to choose a defensible participant count without necessarily understanding power analysis, and they had to configure an expensive study before seeing the report it would produce. In both cases, users needed guidance without losing visibility or control. Valid without a stat lesson How could teams run defensible studies without making setup feel like coursework? Guidance without restriction How could the default path protect newer users while preserving expert control?",
               ],
               [
                 "Configure",
@@ -373,32 +462,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               ),
             }))}
           />
-          <SubSection heading="Building for trust in underlying methodology">
-            <p>
-              An overarching theme is finding the balance between a product that
-              inspires confidence in the results it delivers and a product that
-              is easy and intuitive to use. Two moments repeatedly exposed the
-              design tension. Teams had to choose a defensible participant count
-              without necessarily understanding power analysis, and they had to
-              configure an expensive study before seeing the report it would
-              produce. In both cases, users needed guidance without losing
-              visibility or control.
-            </p>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] The central tension: how do we clearly signel to the
-              user what a study would produce before committing time and money
-              to run it?
-            </span>{" "}
-            <p>Trust before the outcome exists</p>
-            <p>
-              How could people understand what a study would produce before
-              spending time and money to run it?
-            </p>
-          </SubSection>{" "}
-          <SubSection heading="Eliminating uncertainty before commitment">
+          <SubSectionContainer>
+            <SubHeading>Eliminating uncertainty before commitment</SubHeading>
             <p>
               An overarching theme is finding the balance between a product that
               inspires confidence in the results it delivers and a product that
@@ -417,14 +482,14 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               user what a study would produce before committing time and money
               to run it?
             </span>
-          </SubSection>
-          <SubSection>
+          </SubSectionContainer>
+          <SubSectionContainer>
             <p className={contentNoteClass}>
               Content note: Show the early sample-size table as a brief sanity
               check, whiteboard sketches exploring how much statistics to
               expose, and notes or screenshots from practitioner check-ins.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -434,7 +499,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           headingIcon={RocketLaunchIcon}
           showBorder={false}
         >
-          <SubSection heading="Launch">
+          <SubSectionContainer>
+            <SubHeading>Launch</SubHeading>
             <p>
               Numerous iterations led us to Verion 1 of Flux which we launched
               to the public in April of 2026. Study setup created a different
@@ -456,8 +522,9 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               playsInline
               className="rounded-1 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4"
             />
-          </SubSection>
-          <SubSection heading="Reception">
+          </SubSectionContainer>
+          <SubSectionContainer>
+            <SubHeading>Reception</SubHeading>
             <p>
               Flux matured into an end-to-end platform for quantitative
               prototype testing. Teams can configure a study, recruit
@@ -514,7 +581,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               [Placeholder] “I really like how it looks. It&rsquo;s very easy to
               follow.” UX Manager - Big Tech
             </span>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -524,7 +591,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           headingIcon={BrainIcon}
           borderColor={borderColor}
         >
-          <SubSection heading="Leveraging AI">
+          <SubSectionContainer>
+            <SubHeading>Leveraging AI</SubHeading>
             <p>
               It has been an exciting learning experience to incorporate AI into
               my workflow. Everything is still new, but I experimented heavily
@@ -537,8 +605,9 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               a lot of slop. The designer&rsquo;s judgment is all the more
               important.
             </p>
-          </SubSection>
-          <SubSection heading="Navigating Ambiguity">
+          </SubSectionContainer>
+          <SubSectionContainer>
+            <SubHeading>Navigating Ambiguity</SubHeading>
             <p>
               My favorite part of this experience. It&rsquo;s a unique challenge
               that doesn&rsquo;t come along all the time. No matter how closely
@@ -547,7 +616,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               yet. Research can only get you so far. The rest comes down to
               intuition, vision, and ability to execute.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
     </article>

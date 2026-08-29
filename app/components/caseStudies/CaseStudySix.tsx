@@ -3,7 +3,7 @@ import { useTheme } from "next-themes";
 // import { useActiveProject } from "@/app/context/ActiveProjectContext";
 // import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
-import SubSection from "../SubSection";
+import SubSectionContainer from "../SubSectionContainer";
 import { ScrollIcon } from "@phosphor-icons/react";
 
 import { MotionValue, useTransform } from "framer-motion";
@@ -48,7 +48,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           exitOnScroll
           entryOnScroll={false}
         >
-          <SubSection spacing="none">
+          <SubSectionContainer className="gap-0">
             <p className="mb-6">
               Our team set out to solve a common but underexplored problem: how
               do product teams know which design works best—really know, with
@@ -61,7 +61,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
             <div
               className={`relative aspect-[16/9] w-full overflow-hidden rounded-1 md:rounded-2`}
             ></div>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
       <section id="section-2" className="scroll-mt-24">
@@ -73,7 +73,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           }
           borderColor={borderColor}
         >
-          <SubSection spacing="none">
+          <SubSectionContainer className="gap-0">
             <h2>Research</h2>
             <p>
               We worked with historians, artists, and Chinatown residents. Key
@@ -163,7 +163,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
               and oral history sessions that informed the site’s narrative
               anchors.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
       <section id="section-3" className="scroll-mt-24">
@@ -175,7 +175,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           }
           borderColor={borderColor}
         >
-          <SubSection spacing="none">
+          <SubSectionContainer className="gap-0">
             <h2>Design</h2>
             <p>
               The design included: A public plaza with inlaid poetry in multiple
@@ -257,7 +257,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
               Accessibility, maintenance, and placemaking were central. We
               balanced visual richness with practical durability.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
       <section id="section-4" className="scroll-mt-24">
@@ -269,7 +269,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           }
           borderColor={borderColor}
         >
-          <SubSection spacing="none">
+          <SubSectionContainer className="gap-0">
             <h2>Design</h2>
             <p>
               The project became a cultural landmark. Tourists and residents
@@ -418,7 +418,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
               sparked policy conversations around heritage zoning and
               community-led urbanism.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
       <section id="section-5" className="scroll-mt-24">
@@ -430,7 +430,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           }
           borderColor={borderColor}
         >
-          <SubSection spacing="none">
+          <SubSectionContainer className="gap-0">
             <h2>Design</h2>
             <p>
               The project became a cultural landmark. Tourists and residents
@@ -579,7 +579,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
               sparked policy conversations around heritage zoning and
               community-led urbanism.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
     </article>

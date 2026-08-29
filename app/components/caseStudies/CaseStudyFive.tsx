@@ -22,9 +22,10 @@ import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import CaseStudyFigure from "../CaseStudyFigure";
-import HorizontalScrollGroup from "../HorizontalScrollGroup";
+import HorizontalCardGroup from "../HorizontalCardGroup";
 import SectionContainer from "../SectionContainer";
-import SubSection from "../SubSection";
+import SubHeading from "../SubHeading";
+import SubSectionContainer from "../SubSectionContainer";
 
 interface CaseStudyFiveProps {
   scrollY: MotionValue<number>;
@@ -75,13 +76,13 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
         </SectionContainer>
       </section>
       <section>
-        <HorizontalScrollGroup
+        <HorizontalCardGroup
           alignment="centered"
-          fillAvailableHeight
-          bottomMargin="2rem"
-          cardAspectRatio="16/9"
-          primaryColor={theme.hex.primary}
-          stickyTop="5rem"
+          bottomMarginOnLarge="2rem"
+          setCardAspectRatioOnLarge
+          cardAspectRatioOnLarge="16/9"
+          highlightBorderColor={theme.hex.primary}
+          stickyTopOnLarge="5rem"
           cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
           cards={[
             [
@@ -131,7 +132,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           exitOnScroll
           entryOnScroll={false}
         >
-          <SubSection>
+          <SubSectionContainer>
             <p>
               For NASA&apos;s SUITS challenge, our multidisciplinary team
               designed and built an augmented-reality interface for a simulated
@@ -162,7 +163,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
                 className="h-full max-h-[34rem] w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4"
               />
             </CaseStudyFigure>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
       <section id="section-1" className="scroll-mt-24">
@@ -175,7 +176,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           exitOnScroll
           entryOnScroll={false}
         >
-          <SubSection>
+          <SubSectionContainer>
             <p>
               Wolcott Falls was a NOAA-funded effort to turn a valued but
               underused natural landmark into a catalyst for the village center.
@@ -206,7 +207,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
                 className="h-full max-h-[34rem] w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4"
               />
             </CaseStudyFigure>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -217,7 +218,10 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection number="1" heading="More than a beautification project">
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              More than a beautification project
+            </SubHeading>
             <p>
               The falls sat close to Main Street but felt disconnected from
               daily village life. Access, visibility, gathering space, and
@@ -264,7 +268,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
               The real design question was how to turn local pride into a
               shared, fundable sequence of projects.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -275,27 +279,31 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection
-            number="1"
-            heading="Five workshops, one continuous conversation"
-          >
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              Five workshops, one continuous conversation
+            </SubHeading>
             <p>
               Each workshop returned something tangible to residents. That made
               participation cumulative: stories became priorities, priorities
               became alternatives, and alternatives became commitments.
             </p>
-          </SubSection>
-          <SubSection spacing="none">
-            <HorizontalScrollGroup
-              primaryColor={theme.hex.primary}
+          </SubSectionContainer>
+          <SubSectionContainer className="gap-0">
+            <HorizontalCardGroup
+              showBody
+              highlightBorderColor={theme.hex.primary}
               body={
-                <SubSection number="2" heading="The co-design sequence">
+                <SubSectionContainer>
+                  <SubHeading showNumber number="2">
+                    The co-design sequence
+                  </SubHeading>
                   <p>
                     We used familiar language, maps, photographs, and trade-off
                     exercises rather than asking residents to react to a
                     finished plan.
                   </p>
-                </SubSection>
+                </SubSectionContainer>
               }
               cards={[
                 [
@@ -338,7 +346,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
                 ),
               }))}
             />
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -349,7 +357,10 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection number="1" heading="A framework that could be phased">
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              A framework that could be phased
+            </SubHeading>
             <p>
               The preferred concept was organized as a connected family of
               projects rather than one expensive intervention. That let the
@@ -384,15 +395,18 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
                 ))}
               </div>
             </CaseStudyFigure>
-          </SubSection>
-          <SubSection number="2" heading="Design packet to action plan">
+          </SubSectionContainer>
+          <SubSectionContainer>
+            <SubHeading showNumber number="2">
+              Design packet to action plan
+            </SubHeading>
             <p>
               The final package paired spatial concepts with priorities,
               responsibilities, funding logic, and concrete next steps—giving
               the community something it could continue using after our
               engagement ended.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -403,7 +417,10 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection number="1" heading="A plan that kept moving">
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              A plan that kept moving
+            </SubHeading>
             <p>
               The process produced a community-backed design packet and an
               implementable set of next steps. The same grant source continued
@@ -429,7 +446,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
                 </div>
               ))}
             </div>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -440,7 +457,10 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection number="1" heading="Designing for ownership">
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              Designing for ownership
+            </SubHeading>
             <div className="grid gap-8 md:grid-cols-3">
               {[
                 [
@@ -462,7 +482,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
                 </div>
               ))}
             </div>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
     </article>

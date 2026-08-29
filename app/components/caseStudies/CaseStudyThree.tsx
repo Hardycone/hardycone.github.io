@@ -16,9 +16,10 @@ import {
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
-import HorizontalScrollGroup from "../HorizontalScrollGroup";
+import HorizontalCardGroup from "../HorizontalCardGroup";
 import SectionContainer from "../SectionContainer";
-import SubSection from "../SubSection";
+import SubHeading from "../SubHeading";
+import SubSectionContainer from "../SubSectionContainer";
 
 interface CaseStudyThreeProps {
   scrollY: MotionValue<number>;
@@ -73,13 +74,13 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
         </SectionContainer>
       </section>
       <section>
-        <HorizontalScrollGroup
+        <HorizontalCardGroup
           alignment="centered"
-          fillAvailableHeight
-          bottomMargin="2rem"
-          cardAspectRatio="16/9"
-          primaryColor={theme.hex.primary}
-          stickyTop="5rem"
+          bottomMarginOnLarge="2rem"
+          setCardAspectRatioOnLarge
+          cardAspectRatioOnLarge="16/9"
+          highlightBorderColor={theme.hex.primary}
+          stickyTopOnLarge="5rem"
           cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
           cards={[
             [
@@ -120,7 +121,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
             ),
           }))}
         />
-        <SubSection>
+        <SubSectionContainer>
           <p>
             Fantail was an AI-assisted story development startup I co-founded
             with two teammates while completing my MHCID at the University of
@@ -155,7 +156,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           <p className={contentNoteClass}>
             Content note: Show a hero image of the main workspace.
           </p>
-        </SubSection>
+        </SubSectionContainer>
       </section>
 
       <section id="section-2" className="scroll-mt-24">
@@ -165,7 +166,10 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection number="1" heading="Starting with ambiguity">
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              Starting with ambiguity
+            </SubHeading>
             <p>
               We began with a wide problem space in indie filmmaking and,
               through twelve semi-structured interviews, narrowed to a clear
@@ -173,8 +177,11 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
               The research did not produce one dramatic pivot; it steadily
               sharpened the opportunity.
             </p>
-          </SubSection>
-          <SubSection number="2" heading="The problem">
+          </SubSectionContainer>
+          <SubSectionContainer>
+            <SubHeading showNumber number="2">
+              The problem
+            </SubHeading>
             <p
               className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
               style={{ backgroundColor: theme.hex.soft }}
@@ -187,7 +194,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
               Content note: Show one compact research artifact or
               problem-framing visual. Keep this section lean.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
       <section id="section-3" className="scroll-mt-24">
@@ -197,7 +204,10 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection number="1" heading="Research refined the lens">
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              Research refined the lens
+            </SubHeading>
             <p>
               I ran hour-long, semi-structured interviews with twelve
               independent filmmakers. Each session paired an interviewer with a
@@ -205,18 +215,22 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
               question. We then clustered the notes through affinity mapping to
               find patterns across very different creative practices.
             </p>
-          </SubSection>
-          <SubSection spacing="none">
-            <HorizontalScrollGroup
-              primaryColor={theme.hex.primary}
+          </SubSectionContainer>
+          <SubSectionContainer className="gap-0">
+            <HorizontalCardGroup
+              showBody
+              highlightBorderColor={theme.hex.primary}
               body={
-                <SubSection number="2" heading="Messy was the pattern">
+                <SubSectionContainer>
+                  <SubHeading showNumber number="2">
+                    Messy was the pattern
+                  </SubHeading>
                   <p>
                     The strongest finding was not a single preferred workflow.
                     It was that the process was deeply personal, organic, and
                     non-uniform.
                   </p>
-                </SubSection>
+                </SubSectionContainer>
               }
               cards={[
                 {
@@ -272,22 +286,25 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
                 },
               ]}
             />
-          </SubSection>
-          <SubSection>
+          </SubSectionContainer>
+          <SubSectionContainer>
             <p className={contentNoteClass}>
               Content note: Show a small affinity map or cluster of interview
               notes. The artifact should support the decision, not dominate the
               section.
             </p>
-          </SubSection>
-          <SubSection number="3" heading="The design principle">
+          </SubSectionContainer>
+          <SubSectionContainer>
+            <SubHeading showNumber number="3">
+              The design principle
+            </SubHeading>
             <p
               className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
               style={{ backgroundColor: theme.hex.soft }}
             >
               Support messy inputs first. Structure them over time.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
       <section id="section-4" className="scroll-mt-24">
@@ -297,7 +314,10 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection number="1" heading="A script-agnostic start">
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              A script-agnostic start
+            </SubHeading>
             <p>
               Fantail was designed around a simple bet. Instead of forcing
               filmmakers to begin with a rigid screenplay format, we let them
@@ -307,9 +327,12 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
             <p className={contentNoteClass}>
               Content note: Show a full screenshot of the workspace.
             </p>
-          </SubSection>
+          </SubSectionContainer>
 
-          <SubSection number="2" heading="Scenes without rigidity">
+          <SubSectionContainer>
+            <SubHeading showNumber number="2">
+              Scenes without rigidity
+            </SubHeading>
             <p>
               The core organizing unit was the scene. Our research showed that
               filmmaking processes vary widely, but all films are built out of
@@ -320,9 +343,12 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
               Content note: Show the add-scene interaction, an empty scene row,
               or the reorder view.
             </p>
-          </SubSection>
+          </SubSectionContainer>
 
-          <SubSection number="3" heading="Three connected areas">
+          <SubSectionContainer>
+            <SubHeading showNumber number="3">
+              Three connected areas
+            </SubHeading>
             <p>
               Each scene was divided into references, script, and storyboard.
               Together, the three areas connected raw inspiration to the written
@@ -364,9 +390,12 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
               Content note: Show an annotated screenshot of the three-column
               scene workspace.
             </p>
-          </SubSection>
+          </SubSectionContainer>
 
-          <SubSection number="4" heading="Start anywhere, build outward">
+          <SubSectionContainer>
+            <SubHeading showNumber number="4">
+              Start anywhere, build outward
+            </SubHeading>
             <p>
               A scene could start with a photo, a line of dialogue, a character
               note, or another fragment. From there, users could add context,
@@ -378,9 +407,12 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
               Content note: Show a step-by-step flow from reference to text to
               storyboard.
             </p>
-          </SubSection>
+          </SubSectionContainer>
 
-          <SubSection number="5" heading="Deliberate cuts">
+          <SubSectionContainer>
+            <SubHeading showNumber number="5">
+              Deliberate cuts
+            </SubHeading>
             <p>
               We explored AI table reads and permission-based collaboration, but
               held both back. Voice quality was not consistent enough, and
@@ -394,7 +426,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
               callout, followed by a polished MVP screen or a before-and-after
               flow.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
       <section id="section-5" className="scroll-mt-24">
@@ -404,7 +436,10 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection number="1" heading="Product signal, business reality">
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              Product signal, business reality
+            </SubHeading>
             <div className="grid gap-8 md:grid-cols-2">
               <div>
                 <h4 className={theme.textColorClass}>What we reached</h4>
@@ -436,7 +471,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
               Content note: Show final MVP screens and one short feedback quote,
               if a representative quote is available.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
       <section id="section-6" className="scroll-mt-24">
@@ -446,7 +481,10 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection number="1" heading="What I carried forward">
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              What I carried forward
+            </SubHeading>
             <p>
               Fantail taught me how to turn a messy creative process into a
               structured product system. It also taught me that a strong concept
@@ -479,7 +517,7 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
             <p className={contentNoteClass}>
               Content note: Show a simple closing reflection visual.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
     </article>

@@ -20,9 +20,10 @@ import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import CaseStudyFigure from "../CaseStudyFigure";
-import HorizontalScrollGroup from "../HorizontalScrollGroup";
+import HorizontalCardGroup from "../HorizontalCardGroup";
 import SectionContainer from "../SectionContainer";
-import SubSection from "../SubSection";
+import SubHeading from "../SubHeading";
+import SubSectionContainer from "../SubSectionContainer";
 
 interface CaseStudyFourProps {
   scrollY: MotionValue<number>;
@@ -77,13 +78,13 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
         </SectionContainer>
       </section>
       <section>
-        <HorizontalScrollGroup
+        <HorizontalCardGroup
           alignment="centered"
-          fillAvailableHeight
-          bottomMargin="2rem"
-          cardAspectRatio="16/9"
-          primaryColor={theme.hex.primary}
-          stickyTop="5rem"
+          bottomMarginOnLarge="2rem"
+          setCardAspectRatioOnLarge
+          cardAspectRatioOnLarge="16/9"
+          highlightBorderColor={theme.hex.primary}
+          stickyTopOnLarge="5rem"
           cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
           cards={[
             [
@@ -125,7 +126,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           }))}
         />
 
-        <SubSection>
+        <SubSectionContainer>
           <p>
             For NASA&apos;s SUITS challenge, our multidisciplinary team designed
             and built an augmented-reality interface for a simulated lunar EVA.
@@ -149,7 +150,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
               </div>
             ))}
           </div>
-        </SubSection>
+        </SubSectionContainer>
       </section>
 
       <section id="section-2" className="scroll-mt-24">
@@ -159,32 +160,35 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection
-            number="1"
-            heading="Designing the whole EVA, not isolated screens"
-          >
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              Designing the whole EVA, not isolated screens
+            </SubHeading>
             <p>
               NASA supplied a task list rather than a conventional product
               brief. We translated it into a continuous journey, including
               failure-prone handoffs between navigation, communication,
               telemetry, and science.
             </p>
-          </SubSection>
-          <SubSection spacing="none">
-            <HorizontalScrollGroup
-              fillAvailableHeight
-              bottomMargin="2rem"
-              cardWidth="80rem"
-              primaryColor={theme.hex.primary}
+          </SubSectionContainer>
+          <SubSectionContainer className="gap-0">
+            <HorizontalCardGroup
+              showBody
+              bottomMarginOnLarge="2rem"
+              cardWidthClassNameOnLarge="md:w-[80rem]"
+              highlightBorderColor={theme.hex.primary}
               body={
-                <SubSection number="2" heading="The simulated mission">
+                <SubSectionContainer>
+                  <SubHeading showNumber number="2">
+                    The simulated mission
+                  </SubHeading>
                   <p>
                     Each phase had different information needs, but the
                     interface still had to feel like one dependable system. Each
                     phase had different information needs, but the interface
                     still had to feel like one dependable system.
                   </p>
-                </SubSection>
+                </SubSectionContainer>
               }
               cards={[
                 {
@@ -256,7 +260,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
                 },
               ]}
             />
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -267,10 +271,10 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection
-            number="1"
-            heading="Make the right information glanceable"
-          >
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              Make the right information glanceable
+            </SubHeading>
             <p>
               A headset can display almost anything; that made restraint the
               core design problem. Persistent information was limited to mission
@@ -322,7 +326,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
                 </div>
               ))}
             </div>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -333,10 +337,10 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection
-            number="1"
-            heading="Testing behavior, not screen preference"
-          >
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              Testing behavior, not screen preference
+            </SubHeading>
             <p>
               We rehearsed the mission as a sequence of physical actions. Tests
               focused on whether participants noticed alerts, recovered their
@@ -370,7 +374,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
                 </div>
               ))}
             </div>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -381,7 +385,10 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection number="1" heading="NASA Rock Yard, after dark">
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              NASA Rock Yard, after dark
+            </SubHeading>
             <p>
               As a SUITS finalist, the team brought the prototype to Johnson
               Space Center. NASA engineers ran the simulated EVA in the Rock
@@ -396,7 +403,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
               watching a complete mission workflow survive contact with the
               environment it was designed for.
             </p>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -407,10 +414,10 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           headingBaseColorClassName="text-foreground dark:text-dark-foreground"
           borderColor={borderColor}
         >
-          <SubSection
-            number="1"
-            heading="Designing for consequential attention"
-          >
+          <SubSectionContainer>
+            <SubHeading showNumber number="1">
+              Designing for consequential attention
+            </SubHeading>
             <div className="grid gap-8 md:grid-cols-3">
               {[
                 [
@@ -432,7 +439,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
                 </div>
               ))}
             </div>
-          </SubSection>
+          </SubSectionContainer>
         </SectionContainer>
       </section>
     </article>

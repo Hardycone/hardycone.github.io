@@ -15,7 +15,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { hexToRgba } from "@/lib/palette";
+import { hexToRgba } from "../../lib/palette";
 
 export interface HorizontalCard {
   id?: string;
@@ -25,36 +25,56 @@ export interface HorizontalCard {
 
 export type HorizontalCardAlignment = "aligned" | "centered";
 
-export interface HorizontalGroupProps {
-  body?: ReactNode;
+interface HorizontalCardGroupBaseProps {
   cards: HorizontalCard[];
   alignment?: HorizontalCardAlignment;
-  className?: string;
-  bodyClassName?: string;
+  groupClassName?: string;
   cardClassName?: string;
-  cardWidth?: string;
-  cardAspectRatio?: string;
-  cardHeight?: string;
-  mobileCardMinHeight?: string;
-  fillAvailableHeight?: boolean;
-  stickyTop?: string;
-  bottomMargin?: string;
-  primaryColor: string;
+  cardHeightClassNameOnSmall?: string;
+  stickyTopOnLarge?: string;
+  bottomMarginOnLarge?: string;
+  highlightBorderColor: string;
   hoverBorderOpacity?: number;
 }
 
-interface HorizontalGroupStyle extends CSSProperties {
-  "--horizontal-card-width": string;
+type HorizontalCardGroupBodyProps =
+  | {
+      showBody: true;
+      body: ReactNode;
+      bodyClassName?: string;
+    }
+  | {
+      showBody?: false;
+      body?: never;
+      bodyClassName?: never;
+    };
+
+type HorizontalCardGroupSizingProps =
+  | {
+      setCardAspectRatioOnLarge: true;
+      cardAspectRatioOnLarge: string;
+      maxCardWidthClassNameOnLarge?: string;
+      cardWidthClassNameOnLarge?: never;
+    }
+  | {
+      setCardAspectRatioOnLarge?: false;
+      cardAspectRatioOnLarge?: never;
+      maxCardWidthClassNameOnLarge?: never;
+      cardWidthClassNameOnLarge?: string;
+    };
+
+export type HorizontalCardGroupProps = HorizontalCardGroupBaseProps &
+  HorizontalCardGroupBodyProps &
+  HorizontalCardGroupSizingProps;
+
+interface HorizontalCardGroupStyle extends CSSProperties {
   "--horizontal-card-aspect-ratio"?: string;
-  "--horizontal-card-height": string;
-  "--horizontal-mobile-card-min-height": string;
-  "--horizontal-sticky-top": string;
-  "--horizontal-bottom-margin": string;
-  "--horizontal-primary-color": string;
-  "--horizontal-hover-color": string;
+  "--horizontal-card-group-sticky-top": string;
+  "--horizontal-card-group-bottom-margin": string;
+  "--horizontal-card-hover-border-color": string;
 }
 
-interface HorizontalGestureState {
+interface HorizontalCardGestureState {
   touchId: number;
   startX: number;
   startY: number;
@@ -71,76 +91,6 @@ const INERTIA_MIN_VELOCITY_PX_PER_MS = 0.06;
 const INERTIA_STOP_VELOCITY_PX_PER_MS = 0.015;
 const INERTIA_MAX_VELOCITY_PX_PER_MS = 2.5;
 
-let nativeScrollSnapUsers = 0;
-let nativeScrollSnapSuspensions = 0;
-let previousScrollSnapType = "";
-let previousScrollSnapPriority = "";
-
-function updateNativeVerticalScrollSnap() {
-  if (nativeScrollSnapUsers === 0) return;
-
-  document.documentElement.style.setProperty(
-    "scroll-snap-type",
-    nativeScrollSnapSuspensions > 0 ? "none" : "y proximity",
-  );
-}
-
-function enableNativeVerticalScrollSnap() {
-  const scrollingElement = document.documentElement;
-
-  if (nativeScrollSnapUsers === 0) {
-    previousScrollSnapType =
-      scrollingElement.style.getPropertyValue("scroll-snap-type");
-    previousScrollSnapPriority =
-      scrollingElement.style.getPropertyPriority("scroll-snap-type");
-  }
-
-  nativeScrollSnapUsers += 1;
-  updateNativeVerticalScrollSnap();
-
-  return () => {
-    nativeScrollSnapUsers = Math.max(0, nativeScrollSnapUsers - 1);
-    if (nativeScrollSnapUsers > 0) {
-      updateNativeVerticalScrollSnap();
-      return;
-    }
-
-    nativeScrollSnapSuspensions = 0;
-
-    if (previousScrollSnapType) {
-      scrollingElement.style.setProperty(
-        "scroll-snap-type",
-        previousScrollSnapType,
-        previousScrollSnapPriority,
-      );
-    } else {
-      scrollingElement.style.removeProperty("scroll-snap-type");
-    }
-  };
-}
-
-function suspendNativeVerticalScrollSnap() {
-  nativeScrollSnapSuspensions += 1;
-  updateNativeVerticalScrollSnap();
-
-  let isReleased = false;
-
-  return (behavior: ScrollBehavior = "auto") => {
-    if (isReleased) return;
-    isReleased = true;
-    nativeScrollSnapSuspensions = Math.max(0, nativeScrollSnapSuspensions - 1);
-    updateNativeVerticalScrollSnap();
-
-    if (
-      behavior === "smooth" &&
-      nativeScrollSnapUsers > 0 &&
-      nativeScrollSnapSuspensions === 0
-    ) {
-      window.scrollTo({ top: window.scrollY, behavior: "smooth" });
-    }
-  };
-}
-
 function getDocumentOffsetTop(element: HTMLElement) {
   let offsetTop = 0;
   let current: HTMLElement | null = element;
@@ -153,67 +103,59 @@ function getDocumentOffsetTop(element: HTMLElement) {
   return offsetTop;
 }
 
-export default function HorizontalGroup({
-  body,
-  cards,
-  alignment = "aligned",
-  className = "",
-  bodyClassName = "",
-  cardClassName = "rounded-1 md:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:md:rounded-4",
-  cardWidth = "min(42vw, 30rem)",
-  cardAspectRatio,
-  cardHeight = "min(60svh, 36rem)",
-  mobileCardMinHeight = "20rem",
-  fillAvailableHeight = false,
-  stickyTop = "2rem",
-  bottomMargin = "6rem",
-  primaryColor,
-  hoverBorderOpacity = 0.6,
-}: HorizontalGroupProps) {
-  const targetRef = useRef<HTMLDivElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const horizontalGestureRef = useRef<HorizontalGestureState | null>(null);
+export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
+  const {
+    cards,
+    alignment = "aligned",
+    groupClassName = "gap-6 md:gap-4",
+    cardClassName = "rounded-1 md:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:md:rounded-4",
+    cardHeightClassNameOnSmall = "min-h-80",
+    stickyTopOnLarge = "2rem",
+    bottomMarginOnLarge = "6rem",
+    highlightBorderColor,
+    hoverBorderOpacity = 0.6,
+  } = props;
+  const groupRef = useRef<HTMLDivElement>(null);
+  const cardViewportRef = useRef<HTMLDivElement>(null);
+  const cardTrackRef = useRef<HTMLDivElement>(null);
+  const cardGestureRef = useRef<HorizontalCardGestureState | null>(null);
   const suppressCardClickRef = useRef(false);
   const suppressCardClickTimeoutRef = useRef<number | null>(null);
   const inertiaFrameRef = useRef<number | null>(null);
-  const releaseNativeSnapRef = useRef<(() => void) | null>(null);
-  const nativeSnapResumeTimeoutRef = useRef<number | null>(null);
-  const [railStartX, setRailStartX] = useState(0);
-  const [travel, setTravel] = useState(0);
-  const [snapOffsets, setSnapOffsets] = useState<number[]>([]);
+  const [cardTrackStartX, setCardTrackStartX] = useState(0);
+  const [horizontalTravel, setHorizontalTravel] = useState(0);
   const [isEnabled, setIsEnabled] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
 
   const { scrollYProgress } = useScroll({
-    target: targetRef,
+    target: groupRef,
     offset: ["start start", "end end"],
   });
-  const railEndX = railStartX - travel;
-  const x = useTransform(
+  const cardTrackEndX = cardTrackStartX - horizontalTravel;
+  const cardTrackX = useTransform(
     scrollYProgress,
     [0, 1],
-    isEnabled ? [railStartX, railEndX] : [0, 0],
+    isEnabled ? [cardTrackStartX, cardTrackEndX] : [0, 0],
   );
 
   const updateActiveCard = useCallback(
     (currentX: number) => {
-      const viewport = viewportRef.current;
-      const track = trackRef.current;
+      const viewport = cardViewportRef.current;
+      const track = cardTrackRef.current;
       if (!isEnabled || !viewport || !track || cards.length === 0) {
         setActiveCardIndex(null);
         return;
       }
 
       const currentTravel = Math.min(
-        travel,
-        Math.max(0, railStartX - currentX),
+        horizontalTravel,
+        Math.max(0, cardTrackStartX - currentX),
       );
-      if (currentTravel <= 1 || travel <= 0) {
+      if (currentTravel <= 1 || horizontalTravel <= 0) {
         setActiveCardIndex(0);
         return;
       }
-      if (currentTravel >= travel - 1) {
+      if (currentTravel >= horizontalTravel - 1) {
         setActiveCardIndex(cards.length - 1);
         return;
       }
@@ -234,43 +176,14 @@ export default function HorizontalGroup({
 
       setActiveCardIndex(closestIndex);
     },
-    [cards.length, isEnabled, railStartX, travel],
+    [cards.length, isEnabled, cardTrackStartX, horizontalTravel],
   );
 
-  useMotionValueEvent(x, "change", updateActiveCard);
+  useMotionValueEvent(cardTrackX, "change", updateActiveCard);
 
   useEffect(() => {
-    updateActiveCard(x.get());
-  }, [updateActiveCard, x]);
-
-  const resumeNativeSnap = useCallback(() => {
-    if (nativeSnapResumeTimeoutRef.current !== null) {
-      window.clearTimeout(nativeSnapResumeTimeoutRef.current);
-      nativeSnapResumeTimeoutRef.current = null;
-    }
-
-    releaseNativeSnapRef.current?.();
-    releaseNativeSnapRef.current = null;
-  }, []);
-
-  const suspendNativeSnap = useCallback(() => {
-    if (releaseNativeSnapRef.current) return;
-    releaseNativeSnapRef.current = suspendNativeVerticalScrollSnap();
-  }, []);
-
-  const scheduleNativeSnapResume = useCallback(
-    (delay: number) => {
-      if (nativeSnapResumeTimeoutRef.current !== null) {
-        window.clearTimeout(nativeSnapResumeTimeoutRef.current);
-      }
-
-      nativeSnapResumeTimeoutRef.current = window.setTimeout(() => {
-        nativeSnapResumeTimeoutRef.current = null;
-        resumeNativeSnap();
-      }, delay);
-    },
-    [resumeNativeSnap],
-  );
+    updateActiveCard(cardTrackX.get());
+  }, [cardTrackX, updateActiveCard]);
 
   const stopHorizontalInertia = useCallback(() => {
     if (inertiaFrameRef.current === null) return;
@@ -286,7 +199,6 @@ export default function HorizontalGroup({
         window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
         Math.abs(initialVelocity) < INERTIA_MIN_VELOCITY_PX_PER_MS
       ) {
-        resumeNativeSnap();
         return;
       }
 
@@ -304,7 +216,6 @@ export default function HorizontalGroup({
 
         if (Math.abs(velocity) < INERTIA_STOP_VELOCITY_PX_PER_MS) {
           inertiaFrameRef.current = null;
-          resumeNativeSnap();
           return;
         }
 
@@ -316,29 +227,23 @@ export default function HorizontalGroup({
 
       inertiaFrameRef.current = window.requestAnimationFrame(step);
     },
-    [resumeNativeSnap, stopHorizontalInertia],
+    [stopHorizontalInertia],
   );
 
   useEffect(() => {
-    const handleTouchStart = () => {
-      stopHorizontalInertia();
-      resumeNativeSnap();
-    };
-
-    window.addEventListener("touchstart", handleTouchStart, {
+    window.addEventListener("touchstart", stopHorizontalInertia, {
       capture: true,
       passive: true,
     });
 
     return () => {
-      window.removeEventListener("touchstart", handleTouchStart, true);
+      window.removeEventListener("touchstart", stopHorizontalInertia, true);
       stopHorizontalInertia();
-      resumeNativeSnap();
     };
-  }, [resumeNativeSnap, stopHorizontalInertia]);
+  }, [stopHorizontalInertia]);
 
   useEffect(() => {
-    const viewport = viewportRef.current;
+    const viewport = cardViewportRef.current;
     if (!isEnabled || !viewport) return;
 
     const findTouch = (touches: TouchList, touchId: number) =>
@@ -352,7 +257,7 @@ export default function HorizontalGroup({
       suppressCardClickRef.current = false;
 
       if (event.touches.length !== 1) {
-        horizontalGestureRef.current = null;
+        cardGestureRef.current = null;
         return;
       }
 
@@ -362,7 +267,7 @@ export default function HorizontalGroup({
       if (interactiveTarget) return;
 
       const touch = event.touches[0];
-      horizontalGestureRef.current = {
+      cardGestureRef.current = {
         touchId: touch.identifier,
         startX: touch.clientX,
         startY: touch.clientY,
@@ -374,9 +279,9 @@ export default function HorizontalGroup({
     };
 
     const handleTouchMove = (event: TouchEvent) => {
-      const gesture = horizontalGestureRef.current;
+      const gesture = cardGestureRef.current;
       if (!gesture || event.touches.length !== 1) {
-        horizontalGestureRef.current = null;
+        cardGestureRef.current = null;
         return;
       }
 
@@ -392,13 +297,12 @@ export default function HorizontalGroup({
         }
 
         if (distanceY >= distanceX) {
-          horizontalGestureRef.current = null;
+          cardGestureRef.current = null;
           return;
         }
 
         gesture.axis = "horizontal";
         suppressCardClickRef.current = true;
-        suspendNativeSnap();
       }
 
       if (event.cancelable) event.preventDefault();
@@ -419,20 +323,18 @@ export default function HorizontalGroup({
     };
 
     const finishTouchGesture = (event: TouchEvent) => {
-      const gesture = horizontalGestureRef.current;
+      const gesture = cardGestureRef.current;
       if (!gesture || !findTouch(event.changedTouches, gesture.touchId)) return;
 
       const didDrag = gesture.axis === "horizontal";
       const releaseDelay = Math.max(0, event.timeStamp - gesture.lastTime);
       const releaseVelocity =
         gesture.velocity * Math.exp(-releaseDelay / INERTIA_RELEASE_DECAY_MS);
-      horizontalGestureRef.current = null;
+      cardGestureRef.current = null;
 
       if (didDrag) {
         if (event.type === "touchend") {
           startHorizontalInertia(releaseVelocity);
-        } else {
-          resumeNativeSnap();
         }
 
         suppressCardClickTimeoutRef.current = window.setTimeout(() => {
@@ -464,13 +366,12 @@ export default function HorizontalGroup({
         window.clearTimeout(suppressCardClickTimeoutRef.current);
         suppressCardClickTimeoutRef.current = null;
       }
-      resumeNativeSnap();
     };
-  }, [isEnabled, resumeNativeSnap, startHorizontalInertia, suspendNativeSnap]);
+  }, [isEnabled, startHorizontalInertia]);
 
   useEffect(() => {
-    const viewport = viewportRef.current;
-    if (!isEnabled || travel <= 0 || !viewport) return;
+    const viewport = cardViewportRef.current;
+    if (!isEnabled || horizontalTravel <= 0 || !viewport) return;
 
     const handleWheel = (event: WheelEvent) => {
       if (
@@ -481,44 +382,32 @@ export default function HorizontalGroup({
         return;
       }
 
-      const target = targetRef.current;
+      const target = groupRef.current;
       if (!target) return;
 
-      const sectionStartY = getDocumentOffsetTop(target);
-      const sectionEndY = sectionStartY + travel;
+      const groupStartY = getDocumentOffsetTop(target);
+      const groupEndY = groupStartY + horizontalTravel;
       const currentScrollY = window.scrollY;
       const isMovingForward = event.deltaX > 0;
       const canMove = isMovingForward
-        ? currentScrollY < sectionEndY - 1
-        : currentScrollY > sectionStartY + 1;
+        ? currentScrollY < groupEndY - 1
+        : currentScrollY > groupStartY + 1;
 
       if (!canMove) return;
 
       event.preventDefault();
       stopHorizontalInertia();
-      suspendNativeSnap();
-      scheduleNativeSnapResume(160);
 
       const nextScrollY = isMovingForward
-        ? Math.min(sectionEndY, currentScrollY + event.deltaX)
-        : Math.max(sectionStartY, currentScrollY + event.deltaX);
+        ? Math.min(groupEndY, currentScrollY + event.deltaX)
+        : Math.max(groupStartY, currentScrollY + event.deltaX);
       window.scrollTo({ top: nextScrollY, behavior: "auto" });
     };
 
     viewport.addEventListener("wheel", handleWheel, { passive: false });
 
-    return () => {
-      viewport.removeEventListener("wheel", handleWheel);
-      resumeNativeSnap();
-    };
-  }, [
-    isEnabled,
-    resumeNativeSnap,
-    scheduleNativeSnapResume,
-    stopHorizontalInertia,
-    suspendNativeSnap,
-    travel,
-  ]);
+    return () => viewport.removeEventListener("wheel", handleWheel);
+  }, [isEnabled, stopHorizontalInertia, horizontalTravel]);
 
   const handleCardClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement>) => {
@@ -533,7 +422,7 @@ export default function HorizontalGroup({
         return;
       }
 
-      if (!isEnabled || travel <= 0) return;
+      if (!isEnabled || horizontalTravel <= 0) return;
 
       const interactiveTarget = (event.target as HTMLElement).closest(
         "a, button, input, select, textarea, [role='button']",
@@ -541,23 +430,26 @@ export default function HorizontalGroup({
       const selection = window.getSelection();
       if (interactiveTarget || (selection && !selection.isCollapsed)) return;
 
-      const target = targetRef.current;
-      const viewport = viewportRef.current;
+      const target = groupRef.current;
+      const viewport = cardViewportRef.current;
       if (!target || !viewport) return;
 
       const card = event.currentTarget;
-      const sectionStartY = getDocumentOffsetTop(target);
+      const groupStartY = getDocumentOffsetTop(target);
       const cardCenter = card.offsetLeft + card.offsetWidth / 2;
       const centeredCardX = viewport.clientWidth / 2 - cardCenter;
-      const targetX = Math.min(railStartX, Math.max(railEndX, centeredCardX));
+      const targetX = Math.min(
+        cardTrackStartX,
+        Math.max(cardTrackEndX, centeredCardX),
+      );
       // Center the selected card when possible while respecting the selected
       // alignment mode's measured first- and last-card endpoints.
-      const targetTravel = railStartX - targetX;
-      const targetScrollY = sectionStartY + targetTravel;
+      const targetTravel = cardTrackStartX - targetX;
+      const targetScrollY = groupStartY + targetTravel;
       const boundedTargetScrollY =
         targetTravel <= 0
           ? Math.floor(targetScrollY)
-          : targetTravel >= travel
+          : targetTravel >= horizontalTravel
             ? Math.ceil(targetScrollY)
             : targetScrollY;
 
@@ -568,7 +460,7 @@ export default function HorizontalGroup({
           : "smooth",
       });
     },
-    [isEnabled, railEndX, railStartX, travel],
+    [isEnabled, cardTrackEndX, cardTrackStartX, horizontalTravel],
   );
 
   useEffect(() => {
@@ -582,33 +474,25 @@ export default function HorizontalGroup({
   }, []);
 
   useEffect(() => {
-    if (!isEnabled || snapOffsets.length === 0) return;
-
-    return enableNativeVerticalScrollSnap();
-  }, [isEnabled, snapOffsets.length]);
-
-  useEffect(() => {
     if (!isEnabled) {
-      setRailStartX(0);
-      setTravel(0);
-      setSnapOffsets([]);
+      setCardTrackStartX(0);
+      setHorizontalTravel(0);
       return;
     }
 
-    const viewport = viewportRef.current;
-    const track = trackRef.current;
+    const viewport = cardViewportRef.current;
+    const track = cardTrackRef.current;
     if (!viewport || !track) return;
 
-    const updateTravel = () => {
+    const updateCardGeometry = () => {
       const viewportWidth = viewport.clientWidth;
       const cardElements = Array.from(track.children) as HTMLElement[];
       const firstCard = cardElements[0];
       const lastCard = cardElements.at(-1);
 
       if (!firstCard || !lastCard) {
-        setRailStartX(0);
-        setTravel(0);
-        setSnapOffsets([]);
+        setCardTrackStartX(0);
+        setHorizontalTravel(0);
         return;
       }
 
@@ -624,106 +508,78 @@ export default function HorizontalGroup({
         alignment === "centered"
           ? viewportWidth / 2 - lastCardCenter
           : viewportWidth - lastCardRight;
-      const nextTravel = Math.max(0, nextStartX - nextEndX);
-      const nextSnapOffsets = cardElements.map((card, index) => {
-        if (alignment === "aligned" && index === 0) return 0;
-        if (alignment === "aligned" && index === cardElements.length - 1) {
-          return nextTravel;
-        }
-
-        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-        const centeredCardX = viewportWidth / 2 - cardCenter;
-        const targetX = Math.min(nextStartX, Math.max(nextEndX, centeredCardX));
-
-        return Math.min(nextTravel, Math.max(0, nextStartX - targetX));
-      });
-
-      setRailStartX(nextStartX);
-      setTravel(nextTravel);
-      setSnapOffsets(nextSnapOffsets);
+      setCardTrackStartX(nextStartX);
+      setHorizontalTravel(Math.max(0, nextStartX - nextEndX));
     };
 
-    updateTravel();
+    updateCardGeometry();
 
-    const resizeObserver = new ResizeObserver(updateTravel);
+    const resizeObserver = new ResizeObserver(updateCardGeometry);
     resizeObserver.observe(viewport);
     resizeObserver.observe(track);
-    window.addEventListener("resize", updateTravel);
+    window.addEventListener("resize", updateCardGeometry);
 
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener("resize", updateTravel);
+      window.removeEventListener("resize", updateCardGeometry);
     };
   }, [alignment, cards.length, isEnabled]);
 
+  const cardSizingClassName = props.setCardAspectRatioOnLarge
+    ? `md:aspect-[var(--horizontal-card-aspect-ratio)] md:w-auto ${props.maxCardWidthClassNameOnLarge ?? ""}`
+    : (props.cardWidthClassNameOnLarge ?? "md:w-[min(42vw,30rem)]");
+
   return (
     <div
-      ref={targetRef}
-      className={`relative ${className}`}
+      ref={groupRef}
+      className="relative"
       style={
         {
-          "--horizontal-card-width": cardWidth,
-          "--horizontal-card-aspect-ratio": cardAspectRatio,
-          "--horizontal-card-height": cardHeight,
-          "--horizontal-mobile-card-min-height": mobileCardMinHeight,
-          "--horizontal-sticky-top": stickyTop,
-          "--horizontal-bottom-margin": bottomMargin,
-          "--horizontal-primary-color": primaryColor,
-          "--horizontal-hover-color": hexToRgba(
-            primaryColor,
+          "--horizontal-card-aspect-ratio": props.setCardAspectRatioOnLarge
+            ? props.cardAspectRatioOnLarge
+            : undefined,
+          "--horizontal-card-group-sticky-top": stickyTopOnLarge,
+          "--horizontal-card-group-bottom-margin": bottomMarginOnLarge,
+          "--horizontal-card-hover-border-color": hexToRgba(
+            highlightBorderColor,
             hoverBorderOpacity,
           ),
           height: isEnabled
-            ? travel > 0
-              ? `calc(100svh + ${travel}px)`
+            ? horizontalTravel > 0
+              ? `calc(100svh + ${horizontalTravel}px)`
               : "100svh"
             : undefined,
-        } as HorizontalGroupStyle
+        } as HorizontalCardGroupStyle
       }
     >
-      {isEnabled
-        ? snapOffsets.map((offset, index) => (
-            <span
-              key={cards[index]?.id ?? index}
-              aria-hidden="true"
-              data-horizontal-scroll-snap={index}
-              className="pointer-events-none absolute left-0 h-px w-px"
-              style={{ top: offset, scrollSnapAlign: "start" }}
-            />
-          ))
-        : null}
-      <div
-        className={`flex flex-col md:sticky md:top-[var(--horizontal-sticky-top)] ${fillAvailableHeight ? "md:h-[calc(100svh-var(--horizontal-sticky-top)-var(--horizontal-bottom-margin))]" : ""}`}
-      >
-        {body !== undefined && body !== null ? (
+      <div className="flex flex-col md:sticky md:top-[var(--horizontal-card-group-sticky-top)] md:h-[calc(100svh-var(--horizontal-card-group-sticky-top)-var(--horizontal-card-group-bottom-margin))]">
+        {props.showBody ? (
           <div
-            className={`relative z-10 mb-4 ${fillAvailableHeight ? "md:flex-none" : ""} ${bodyClassName}`}
+            className={`relative z-10 mb-4 md:flex-none ${props.bodyClassName ?? ""}`}
           >
-            {body}
+            {props.body}
           </div>
         ) : null}
-        <div
-          className={`relative h-auto w-full [container-type:inline-size] ${fillAvailableHeight ? "md:mb-0 md:min-h-0 md:flex-1" : "md:h-[var(--horizontal-card-height)]"}`}
-        >
+        <div className="relative h-auto w-full [container-type:inline-size] md:mb-0 md:min-h-0 md:flex-1">
           <div className="h-auto w-full overflow-visible md:absolute md:left-1/2 md:top-0 md:h-full md:w-screen md:-translate-x-1/2 md:overflow-x-clip md:overflow-y-visible">
             <div
-              ref={viewportRef}
+              ref={cardViewportRef}
               className="h-auto w-full md:relative md:left-1/2 md:h-full md:w-[100cqw] md:-translate-x-1/2 md:[touch-action:pan-y_pinch-zoom]"
             >
               <motion.div
-                ref={trackRef}
-                style={{ x }}
-                className="flex h-auto w-full flex-col gap-6 md:absolute md:left-0 md:top-0 md:h-full md:w-max md:flex-row md:gap-4 md:will-change-transform"
+                ref={cardTrackRef}
+                style={{ x: cardTrackX }}
+                className={`flex h-auto w-full flex-col md:absolute md:left-0 md:top-0 md:h-full md:w-max md:flex-row md:will-change-transform ${groupClassName}`}
               >
                 {cards.map((card, index) => (
                   <div
                     key={card.id ?? index}
                     onClick={handleCardClick}
-                    className={`flex min-h-[var(--horizontal-mobile-card-min-height)] w-full shrink-0 flex-col overflow-auto border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800 md:h-full md:min-h-0 md:cursor-pointer md:transition-[border-color,filter] md:duration-300 md:hover:border-[var(--horizontal-hover-color)] md:hover:brightness-105 motion-reduce:md:transition-none ${cardAspectRatio ? "md:aspect-[var(--horizontal-card-aspect-ratio)] md:w-auto" : "md:w-[var(--horizontal-card-width)]"} ${cardClassName} ${card.className ?? ""}`}
+                    className={`flex ${cardHeightClassNameOnSmall} w-full shrink-0 flex-col overflow-auto border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800 md:h-full md:min-h-0 md:cursor-pointer md:transition-[border-color,filter] md:duration-300 md:hover:border-[var(--horizontal-card-hover-border-color)] md:hover:brightness-105 motion-reduce:md:transition-none ${cardSizingClassName} ${cardClassName} ${card.className ?? ""}`}
                     style={{
                       borderColor:
                         isEnabled && activeCardIndex === index
-                          ? primaryColor
+                          ? highlightBorderColor
                           : undefined,
                     }}
                   >
