@@ -8,6 +8,7 @@ import { KeyboardHintsProvider } from "./context/KeyboardHintsContext";
 import { ThemeProvider } from "next-themes";
 
 import MainContent from "./components/MainContent";
+import { CursorEffectsProvider } from "./context/MouseShadowContext";
 
 const bricolageGrotesque = Bricolage_Grotesque({
   variable: "--font-bricolage-grotesque",
@@ -65,7 +66,9 @@ export default function RootLayout({
           <KeyboardHintsProvider>
             <ActiveProjectProvider>
               <ViewModeProvider>
-                <MainContent>{children}</MainContent>
+                <CursorEffectsProvider>
+                  <MainContent>{children}</MainContent>
+                </CursorEffectsProvider>
               </ViewModeProvider>
             </ActiveProjectProvider>
           </KeyboardHintsProvider>

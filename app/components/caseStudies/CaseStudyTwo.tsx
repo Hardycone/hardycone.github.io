@@ -11,6 +11,7 @@ import {
   PackageIcon,
   SealQuestionIcon,
   StackIcon,
+  LinkBreakIcon,
 } from "@phosphor-icons/react";
 import projects from "@/data/projects";
 import { useActiveProject } from "@/app/context/ActiveProjectContext";
@@ -21,6 +22,8 @@ import SectionContainer from "../SectionContainer";
 import SubHeading from "../SubHeading";
 import SubSectionContainer from "../SubSectionContainer";
 import VerticalCardGroup from "../VerticalCardGroup";
+import HighlightCard from "../HighlightCard";
+import { ROUNDED_SQUIRCLE_05, ROUNDED_SQUIRCLE_07_MD } from "@/lib/styleTokens";
 
 interface CaseStudyTwoProps {
   scrollY: MotionValue<number>;
@@ -59,7 +62,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           heading="The Product"
           headingIcon={PackageIcon}
           borderColor={borderColor}
-          exitOnScroll
+          exitOnScroll={false}
           entryOnScroll={false}
         >
           <p>
@@ -76,6 +79,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
         <SectionContainer
           showHeading={false}
           showBorder={false}
+          entryOnScroll={false}
           containerClassName="mt-4"
           contentClassName=""
         >
@@ -84,9 +88,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             bottomMarginOnLarge="2rem"
             setCardAspectRatioOnLarge
             cardAspectRatioOnLarge="16/9"
-            highlightBorderColor={theme.hex.primary}
             stickyTopOnLarge="5rem"
-            cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
             cards={[
               [
                 "Import",
@@ -113,18 +115,19 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 "Get report within hours",
                 "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
               ],
-            ].map(([number, title, copy]) => ({
-              id: title,
-              content: (
-                <>
-                  <span className={`text-sm font-bold ${theme.textColorClass}`}>
-                    {number}
-                  </span>
-                  <h4 className="mt-auto pt-8">{title}</h4>
-                  <p className="mt-3">{copy}</p>
-                </>
-              ),
-            }))}
+            ].map(([number, title, copy]) => (
+              <HighlightCard
+                key={title}
+                className="flex h-full min-h-[inherit] flex-col"
+                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
+              >
+                <span className={`text-sm font-bold ${theme.textColorClass}`}>
+                  {number}
+                </span>
+                <h4 className="mt-auto pt-8">{title}</h4>
+                <p className="mt-3">{copy}</p>
+              </HighlightCard>
+            ))}
           />
         </SectionContainer>
       </section>
@@ -156,14 +159,22 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               support it. There seemed to be a gap where an easy-to-use
               quantitative testing tool for prototypes could exist.
             </p>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
+            <HighlightCard
+              borderBaseColor={theme.hex.primary}
+              borderHighlightColor={`color-mix(in oklab, ${theme.hex.primary} 30%, white 70%)`}
+              activeBackgroundClassName="bg-flux bg-opacity-5 dark:bg-dark-flux dark:bg-opacity-5"
             >
-              [Placeholder] The gap: Product teams are prototyping with AI at a
-              speed faster than ever before, but there is no way to validate
-              ideas with statistical confidence that can match this speed.
-            </span>
+              <div className="flex flex-col p-4">
+                <h5 className="flex items-center gap-2 font-serif text-[1.5rem] font-semibold text-flux dark:text-dark-flux">
+                  <LinkBreakIcon size={28} /> The Gap
+                </h5>
+                <p className="pb-4 pl-24 pr-4 pt-24 font-serif text-[1.5rem] text-flux dark:text-dark-flux md:pb-10 md:pl-48 md:pr-10 md:pt-48 md:text-[2.25rem]">
+                  Product teams are prototyping with AI at a speed faster than
+                  ever before, but there is no way to validate ideas with
+                  statistical confidence that can match this speed.
+                </p>
+              </div>
+            </HighlightCard>
           </SubSectionContainer>
           <SubSectionContainer>
             <SubHeading>Research and discovery</SubHeading>
@@ -177,22 +188,24 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               and structured interviews. Once we sat down to compare notes, the
               emerging insights are illuminating.
             </p>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
+            <HighlightCard
+              borderBaseColor={theme.hex.primary}
+              borderHighlightColor={theme.hex.secondary}
+              activeBackgroundClassName="bg-flux bg-opacity-5 dark:bg-dark-flux dark:bg-opacity-5"
             >
-              [Placeholder] Research summary: Imagining a word cloud, with each
-              word clickable to reveal full quotes. Might be too complicated
-              though. Maybe some simple cards will suffice.
-            </span>
+              {" "}
+              <p className="pb-4 pl-24 pr-4 pt-24 font-serif text-[1.5rem] text-flux dark:text-dark-flux md:pb-10 md:pl-48 md:pr-10 md:pt-48 md:text-[2.25rem]">
+                Research summary: Imagining a word cloud, with each word
+                clickable to reveal full quotes. Might be too complicated
+                though. Maybe some simple cards will suffice.
+              </p>
+            </HighlightCard>
           </SubSectionContainer>
           <SubSectionContainer>
             <VerticalCardGroup
               bodyWidthClassNameOnLarge="md:w-[max(10rem,40%)]"
               cardHeightOnLarge="min(calc(100dvh - 5rem), 400px)"
               cardHeightClassNameOnSmall="min-h-72"
-              cardClassName="rounded-6 supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16"
-              highlightBorderColor={theme.hex.primary}
               body={({ activeIndex: visibleCard }) => (
                 <SubSectionContainer>
                   <SubHeading>Framing the problem</SubHeading>
@@ -232,7 +245,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               cards={[
                 {
                   id: "concepts",
-                  className: "flex flex-col justify-between p-6 md:p-10",
+                  contentClassName:
+                    "flex h-full flex-col justify-between overflow-auto p-6 md:p-10",
                   content: (
                     <>
                       <AtomIcon
@@ -254,7 +268,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 },
                 {
                   id: "traffic",
-                  className: "flex flex-col justify-between p-6 md:p-10",
+                  contentClassName:
+                    "flex h-full flex-col justify-between overflow-auto p-6 md:p-10",
                   content: (
                     <>
                       <HourglassMediumIcon
@@ -277,7 +292,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 },
                 {
                   id: "operation",
-                  className: "flex flex-col justify-between p-6 md:p-10",
+                  contentClassName:
+                    "flex h-full flex-col justify-between overflow-auto p-6 md:p-10",
                   content: (
                     <>
                       <StackIcon
@@ -298,7 +314,15 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                     </>
                   ),
                 },
-              ]}
+              ].map(({ id, content, contentClassName }) => (
+                <HighlightCard
+                  key={id}
+                  className="flex h-full min-h-[inherit] flex-col"
+                  contentClassName={contentClassName}
+                >
+                  {content}
+                </HighlightCard>
+              ))}
             />
           </SubSectionContainer>
         </SectionContainer>
@@ -327,8 +351,6 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             setCardAspectRatioOnLarge
             cardAspectRatioOnLarge="16/9"
             bottomMarginOnLarge="2rem"
-            highlightBorderColor={theme.hex.primary}
-            cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
             cards={[
               {
                 id: "tension",
@@ -337,7 +359,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                     <span
                       className={`text-sm font-bold ${theme.textColorClass}`}
                     >
-                      Tension
+                      The tension
                     </span>
                     <h4 className="mt-auto pt-8">Tension</h4>
                     <p className="mt-3">
@@ -368,9 +390,9 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                     <span
                       className={`text-sm font-bold ${theme.textColorClass}`}
                     >
-                      Iterations
+                      Exploration
                     </span>
-                    <h4 className="mt-auto pt-8">Iterations</h4>
+                    <h4 className="mt-auto pt-8">Exploration</h4>
                     <p className="mt-3">
                       On example of this is power analysis. When comparing two
                       variants, statisticians do a calculation called power
@@ -405,8 +427,16 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                   </div>
                 ),
               },
-            ]}
-          />{" "}
+            ].map(({ id, content }) => (
+              <HighlightCard
+                key={id}
+                className="flex h-full min-h-[inherit] flex-col"
+                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
+              >
+                {content}
+              </HighlightCard>
+            ))}
+          />
           <HorizontalCardGroup
             showBody
             body={
@@ -421,75 +451,178 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             setCardAspectRatioOnLarge
             cardAspectRatioOnLarge="16/9"
             bottomMarginOnLarge="2rem"
-            highlightBorderColor={theme.hex.primary}
-            cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
             cards={[
-              [
-                "Import",
-                "Import design prototypes",
-                "[Placeholder] The central tension: how do we design a productthat deals with highly scientific research methods in a way that is easy to understand? An overarching theme is finding the balance between a product that inspires confidence in the results it delivers and a product that is easy and intuitive to use. Two moments                  repeatedly exposed the design tension. Teams had to choose a defensible participant count without necessarily understanding power analysis, and they had to configure an expensive study before seeing the report it would produce. In both cases, users needed guidance without losing visibility or control. Valid without a stat lesson How could teams run defensible studies without making setup feel like coursework? Guidance without restriction How could the default path protect newer users while preserving expert control?",
-              ],
-              [
-                "Configure",
-                "Configure the experiment",
-                "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
-              ],
-              [
-                "Recruit",
-                "Set a recruit goal and choose participant source",
-                "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
-              ],
-              [
-                "Test",
-                "Once the experiment is launched, participant results immediately start being recorded",
-                "There is not much to do other than wait",
-              ],
-              [
-                "Report",
-                "Get report within hours",
-                "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
-              ],
-            ].map(([number, title, copy]) => ({
-              id: title,
-              content: (
-                <>
-                  <span className={`text-sm font-bold ${theme.textColorClass}`}>
-                    {number}
-                  </span>
-                  <h4 className="mt-auto pt-8">{title}</h4>
-                  <p className="mt-3">{copy}</p>
-                </>
-              ),
-            }))}
+              {
+                id: "tension",
+                content: (
+                  <div className="flex h-full flex-col">
+                    <span
+                      className={`text-sm font-bold ${theme.textColorClass}`}
+                    >
+                      Tension
+                    </span>
+                    <h4 className="mt-auto pt-8">Tension</h4>
+                    <p className="mt-3">
+                      Users, especially those who aren&rsquo;t well-versed in
+                      quantitative methods, might start feeling lost as they go
+                      through the preocess of setting up an experiment. The
+                      whole point of quantitative research is to produce
+                      measurable confidence in the results. But what if what
+                      they are doing is not &lsquo;valid science?&rsquo;? Will
+                      they be able to defend the findings in a meeting?
+                    </p>
+                  </div>
+                ),
+              },
+              {
+                id: "iterations",
+                content: (
+                  <div className="flex h-full flex-col">
+                    <span
+                      className={`text-sm font-bold ${theme.textColorClass}`}
+                    >
+                      Exploration
+                    </span>
+                    <h4 className="mt-auto pt-8">Exploration</h4>
+                    <p className="mt-3">
+                      I tackled this from several different angles. First, I
+                      explroed the idea of a &lsquo;statistics crush
+                      course&rsquo;. I quicklly realized it
+                    </p>
+                  </div>
+                ),
+              },
+              {
+                id: "solution",
+                content: (
+                  <div className="flex h-full flex-col">
+                    <span
+                      className={`text-sm font-bold ${theme.textColorClass}`}
+                    >
+                      My Solution
+                    </span>
+                    <h4 className="mt-auto pt-8">I solved it</h4>
+                    <p className="mt-3">
+                      Researchers can then set a goal for their experiment. Flux
+                      gives guidelines on how to set a sample size according to
+                      statistical best practices. Researchers also have the
+                      option to either generate a link to share with their own
+                      panel, or recreate with Flux by a click of a button.
+                    </p>
+                  </div>
+                ),
+              },
+            ].map(({ id, content }) => (
+              <HighlightCard
+                key={id}
+                className="flex h-full min-h-[inherit] flex-col"
+                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
+              >
+                {content}
+              </HighlightCard>
+            ))}
+          />{" "}
+          <HorizontalCardGroup
+            showBody
+            body={
+              <SubSectionContainer>
+                <SubHeading>
+                  Addressing uncertainty before commitment
+                </SubHeading>
+              </SubSectionContainer>
+            }
+            alignment="aligned"
+            stickyTopOnLarge="5rem"
+            setCardAspectRatioOnLarge
+            cardAspectRatioOnLarge="16/9"
+            bottomMarginOnLarge="2rem"
+            cards={[
+              {
+                id: "tension",
+                content: (
+                  <div className="flex h-full flex-col">
+                    <span
+                      className={`text-sm font-bold ${theme.textColorClass}`}
+                    >
+                      Tension
+                    </span>
+                    <h4 className="mt-auto pt-8">Tension</h4>
+                    <p className="mt-3">
+                      The central tension: how do we clearly signel to the user
+                      what a study would produce before committing time and
+                      money to run it?
+                    </p>
+                  </div>
+                ),
+              },
+              {
+                id: "iterations",
+                content: (
+                  <div className="flex h-full flex-col">
+                    <span
+                      className={`text-sm font-bold ${theme.textColorClass}`}
+                    >
+                      Exploration
+                    </span>
+                    <h4 className="mt-auto pt-8">Exploration</h4>
+                    <p className="mt-3">
+                      Uncertainty comes from two distinct sources: 1.
+                      Quantitative studies usually involves hundreds, sometimes
+                      even thousands, of participants, which is expensive both
+                      financially and operationally. 2. How do users know if
+                      they are doing "real" science? They sometimes feel
+                      uncertain about the validity of the results. We addressed
+                      this from 2 different angles. for 1, we built a feature
+                      that allows users to preview a mock report that contains
+                      fictitious data. This report updates in real time based on
+                      the experiment setup, and offers an one-to-one look at the
+                      shape of the data they will receive at the end of the
+                      study. Seeing this before launching reduces a great deal
+                      of uncertainty. This also serves as an opportunity for
+                      users to spot potential erros in their setup, eliminating
+                      doubts around the process. For 2, our approach is much
+                      subtler. I made sure to expose the science behind the
+                      calculations as much as possible without being intruisive.
+                      I also added many explainers throughout the process to
+                      help users understand what they are doing. This gives
+                      users a good idea of the methodology behind the
+                      experiment. I also added a summary feature to help users
+                      draw conclusions in the results, allowing them to have
+                      confidence in presenting the results to stakeholders.
+                    </p>
+                  </div>
+                ),
+              },
+              {
+                id: "solution",
+                content: (
+                  <div className="flex h-full flex-col">
+                    <span
+                      className={`text-sm font-bold ${theme.textColorClass}`}
+                    >
+                      My Solution
+                    </span>
+                    <h4 className="mt-auto pt-8">I solved it</h4>
+                    <p className="mt-3">
+                      Researchers can then set a goal for their experiment. Flux
+                      gives guidelines on how to set a sample size according to
+                      statistical best practices. Researchers also have the
+                      option to either generate a link to share with their own
+                      panel, or recreate with Flux by a click of a button.
+                    </p>
+                  </div>
+                ),
+              },
+            ].map(({ id, content }) => (
+              <HighlightCard
+                key={id}
+                className="flex h-full min-h-[inherit] flex-col"
+                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
+              >
+                {content}
+              </HighlightCard>
+            ))}
           />
-          <SubSectionContainer>
-            <SubHeading>Eliminating uncertainty before commitment</SubHeading>
-            <p>
-              An overarching theme is finding the balance between a product that
-              inspires confidence in the results it delivers and a product that
-              is easy and intuitive to use. Two moments repeatedly exposed the
-              design tension. Teams had to choose a defensible participant count
-              without necessarily understanding power analysis, and they had to
-              configure an expensive study before seeing the report it would
-              produce. In both cases, users needed guidance without losing
-              visibility or control.
-            </p>
-            <span
-              className="rounded-1 p-6 transition-[background-color] supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] The central tension: how do we clearly signel to the
-              user what a study would produce before committing time and money
-              to run it?
-            </span>
-          </SubSectionContainer>
-          <SubSectionContainer>
-            <p className={contentNoteClass}>
-              Content note: Show the early sample-size table as a brief sanity
-              check, whiteboard sketches exploring how much statistics to
-              expose, and notes or screenshots from practitioner check-ins.
-            </p>
-          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -503,84 +636,153 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             <SubHeading>Launch</SubHeading>
             <p>
               Numerous iterations led us to Verion 1 of Flux which we launched
-              to the public in April of 2026. Study setup created a different
-              kind of uncertainty. Teams selected report components and wrote
-              questions long before any data existed, yet a study could require
-              recruiting hundreds of participants. I introduced a live sample
-              report populated with fictitious data. As the study changed, the
-              preview reflected those choices, letting teams see the shape of
-              the outcome before launching.
+              to the public in April of 2026. Flux has since matured into an
+              end-to-end platform for quantitative prototype testing. Teams can
+              configure a study, recruit participants, run tests, and review
+              decision-ready results in one product, and my role has expanded
+              into customer development, sales, and product strategy.
             </p>
-            <p className={contentNoteClass}>
-              Content note: Show setup and the sample report side by side, plus
-              a short clip of report components appearing as they are enabled.
-            </p>{" "}
             <LazyVideo
               src="https://assets.haichaowang.com/promo-export-01.mp4"
               poster="/images/promo-export-01-poster.jpg"
               controls
               playsInline
-              className="rounded-1 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4"
+              className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD}`}
             />
           </SubSectionContainer>
           <SubSectionContainer>
-            <SubHeading>Reception</SubHeading>
-            <p>
-              Flux matured into an end-to-end platform for quantitative
-              prototype testing. Teams can configure a study, recruit
-              participants, run tests, and review decision-ready results in one
-              product. It is fully functional and publicly available, and my
-              role has expanded into customer development, sales, and product
-              strategy.
-            </p>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] “Great for more ambiguous testing where we want to
-              get a quant pulse on key changes without building extensively.”
-              Product Manager - Consumer App
-            </span>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] “Good tool for designers in a team that wants to
-              democratize sound research.” UX Researcher - Consumer App
-            </span>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] “Flux helps when we have prototypes but no bandwidth
-              to fully build something to test with confidence.” UX Research
-              Manager - Consumer App
-            </span>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] “After doing interviews with a dozen users and
-              identifying a promising direction, this can be a way to elevate
-              the confidence of the insights with more tangible evidence.” UX
-              Researcher - Big Tech
-            </span>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] “Being able to reduce the number of design variants
-              before developing them further is a great advantage. It&rsquo;s a
-              way of doing no-code A/B testing.” Engineering Manager - Consumer
-              App
-            </span>
-            <span
-              className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
-              style={{ backgroundColor: theme.hex.soft }}
-            >
-              [Placeholder] “I really like how it looks. It&rsquo;s very easy to
-              follow.” UX Manager - Big Tech
-            </span>
+            <HorizontalCardGroup
+              showBody
+              body={
+                <SubSectionContainer>
+                  <SubHeading>Reception</SubHeading>
+                  <p>
+                    We put Flux in front of dozens of UXers and the feedback was
+                    overwhelming positive.
+                  </p>
+                </SubSectionContainer>
+              }
+              stickyTopOnLarge="5rem"
+              bottomMarginOnLarge="2rem"
+              setCardAspectRatioOnLarge
+              cardAspectRatioOnLarge="16/9"
+              alignment="aligned"
+              groupClassName="gap-2 "
+              cards={[
+                {
+                  id: "1",
+                  content: (
+                    <div className="flex h-full w-full flex-col gap-2">
+                      <div className="flex size-full gap-2">
+                        <HighlightCard
+                          className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+                        >
+                          <blockquote className="text-[1.75rem]">
+                            “Great for more ambiguous testing where we want to
+                            get a{" "}
+                            <span className="text-[2.25rem] font-bold">
+                              quant pulse
+                            </span>{" "}
+                            on key changes without building extensively.”
+                          </blockquote>
+                          <figcaption className="mt-6 text-end text-[1.25rem]">
+                            — Product manager, consumer app
+                          </figcaption>
+                        </HighlightCard>
+                        <HighlightCard
+                          className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+                        >
+                          <blockquote className="text-[1.75rem]">
+                            “Good tool for designers in a team that wants to{" "}
+                            <span className="text-[2.25rem] font-bold">
+                              democratize sound research
+                            </span>
+                            .”
+                          </blockquote>
+                          <figcaption className="mt-6 text-end text-[1.25rem]">
+                            — UX researcher, consumer app
+                          </figcaption>
+                        </HighlightCard>
+                      </div>
+                      <HighlightCard
+                        className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+                      >
+                        <blockquote className="text-[1.75rem]">
+                          “Being able to reduce the number of design variants
+                          before developing them further is a great advantage.
+                          It&rsquo;s a way of doing{" "}
+                          <span className="text-[2.25rem] font-bold">
+                            no-code A/B testing
+                          </span>
+                          .”
+                        </blockquote>
+                        <figcaption className="mt-6 text-end text-[1.25rem]">
+                          — Engineering manager, consumer app
+                        </figcaption>
+                      </HighlightCard>
+                    </div>
+                  ),
+                },
+                {
+                  id: "2",
+                  content: (
+                    <div className="flex h-full w-full flex-col gap-2">
+                      <HighlightCard
+                        className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+                      >
+                        <blockquote className="text-[1.75rem]">
+                          “After doing interviews with a dozen users and
+                          identifying a promising direction, this can be a way
+                          to elevate the confidence of the insights with{" "}
+                          <span className="text-[2.25rem] font-bold">
+                            more tangible evidence
+                          </span>
+                          .”
+                        </blockquote>
+                        <figcaption className="mt-6 text-end text-[1.25rem]">
+                          — UX researcher, Big Tech
+                        </figcaption>
+                      </HighlightCard>
+                      <div className="flex size-full gap-2">
+                        <HighlightCard
+                          className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+                        >
+                          <blockquote className="text-[1.75rem]">
+                            “Flux helps when we have prototypes but no bandwidth
+                            to fully build something to{" "}
+                            <span className="text-[2.25rem] font-bold">
+                              test with confidence
+                            </span>
+                            .”
+                          </blockquote>
+                          <figcaption className="mt-6 text-end text-[1.25rem]">
+                            — UX research manager, consumer app
+                          </figcaption>
+                        </HighlightCard>
+                        <HighlightCard
+                          className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+                        >
+                          <blockquote className="text-[1.75rem]">
+                            “I really like how it looks. It&rsquo;s very{" "}
+                            <span className="text-[2.25rem] font-bold">
+                              easy to follow
+                            </span>
+                            .”
+                          </blockquote>
+                          <figcaption className="mt-6 text-end text-[1.25rem]">
+                            — UX manager, Big Tech
+                          </figcaption>
+                        </HighlightCard>{" "}
+                      </div>
+                    </div>
+                  ),
+                },
+              ].map(({ id, content }) => (
+                <div key={id} className="h-full w-full">
+                  {content}
+                </div>
+              ))}
+            ></HorizontalCardGroup>
           </SubSectionContainer>
         </SectionContainer>
       </section>
@@ -596,11 +798,16 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             <p>
               It has been an exciting learning experience to incorporate AI into
               my workflow. Everything is still new, but I experimented heavily
-              and found my own way of using AI. Of course, everything is still
-              subject to change as things evolve rapidly. 1. AI is allowing me
-              to design much closer to the code. 2. Efficiency comes with a
-              basic understanding of the code. 3. AI design has its pitfalls.
-              The almost instantaneous code generation is a superpower. It helps
+              with agentic workflows and found my own way of using AI. Of
+              course, everything is still subject to change as things evolve
+              rapidly. 1. AI is allowing me to design much closer to the code.
+              2. Efficiency comes with a basic understanding of the code. I
+              enjoy vibecoding tremendously, but I discovered that I worked a
+              lot more efficiently when I could prompt with a higher level of
+              specificity. And this cannot happen without a basic level of
+              understanding of the code. So I dove into the frontend framework
+              of Flux, specifically node.js. 3. AI design has its pitfalls. The
+              almost instantaneous code generation is a superpower. It helps
               visualize ideas much more easily. But at the same time, it can be
               a lot of slop. The designer&rsquo;s judgment is all the more
               important.

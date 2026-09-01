@@ -33,6 +33,7 @@ import {
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
   HEADER_PANE_NAV_MORPH_MS,
   HEADER_PANE_NAV_MORPH_PROGRESS,
+  HEADER_HERO_FOCUS_PROGRESS,
   HEADER_IMAGE_FADE_START_PROGRESS,
 } from "@/lib/caseStudyTransitions";
 // import DebugViewport from "./DebugViewport";
@@ -971,12 +972,27 @@ export default function MainContent({ children }: { children: ReactNode }) {
         onInstantHomeNavigationStart={handleInstantHomeNavigationStart}
       />
       {viewMode === "case-study" && (
-        <div
-          ref={headerIntroEndRef}
-          aria-hidden="true"
-          className="pointer-events-none absolute left-0 h-px w-px"
-          style={{ top: `${HEADER_INTRO_DISTANCE_SVH}svh` }}
-        />
+        <>
+          <div
+            data-header-start-snap
+            aria-hidden="true"
+            className="pointer-events-none absolute left-0 top-0 h-px w-full snap-start"
+          />
+          <div
+            data-header-hero-focus-snap
+            aria-hidden="true"
+            className="pointer-events-none absolute left-0 h-px w-full snap-start"
+            style={{
+              top: `${HEADER_INTRO_DISTANCE_SVH * HEADER_HERO_FOCUS_PROGRESS}svh`,
+            }}
+          />
+          <div
+            ref={headerIntroEndRef}
+            aria-hidden="true"
+            className="pointer-events-none absolute left-0 h-px w-px"
+            style={{ top: `${HEADER_INTRO_DISTANCE_SVH}svh` }}
+          />
+        </>
       )}
 
       {/* <DebugViewport /> */}

@@ -29,7 +29,14 @@
 html {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
+  scroll-snap-type: y proximity;
   /* overscroll-behavior: none; */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-snap-type: none;
+  }
 }
 body {
   /* overscroll-behavior: none; */

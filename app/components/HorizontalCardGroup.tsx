@@ -15,26 +15,18 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { hexToRgba } from "../../lib/palette";
-
-export interface HorizontalCard {
-  id?: string;
-  content: ReactNode;
-  className?: string;
-}
+import { CardGroupActiveProvider } from "@/app/context/CardGroupContext";
 
 export type HorizontalCardAlignment = "aligned" | "centered";
 
 interface HorizontalCardGroupBaseProps {
-  cards: HorizontalCard[];
+  cards: ReactNode[];
   alignment?: HorizontalCardAlignment;
   groupClassName?: string;
-  cardClassName?: string;
+  cardSlotClassName?: string;
   cardHeightClassNameOnSmall?: string;
   stickyTopOnLarge?: string;
   bottomMarginOnLarge?: string;
-  highlightBorderColor: string;
-  hoverBorderOpacity?: number;
 }
 
 type HorizontalCardGroupBodyProps =
@@ -71,7 +63,6 @@ interface HorizontalCardGroupStyle extends CSSProperties {
   "--horizontal-card-aspect-ratio"?: string;
   "--horizontal-card-group-sticky-top": string;
   "--horizontal-card-group-bottom-margin": string;
-  "--horizontal-card-hover-border-color": string;
 }
 
 interface HorizontalCardGestureState {
@@ -108,12 +99,10 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
     cards,
     alignment = "aligned",
     groupClassName = "gap-6 md:gap-4",
-    cardClassName = "rounded-1 md:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:md:rounded-4",
-    cardHeightClassNameOnSmall = "min-h-80",
+    cardSlotClassName = "",
+    cardHeightClassNameOnSmall = "min-h-[100svh]",
     stickyTopOnLarge = "2rem",
     bottomMarginOnLarge = "6rem",
-    highlightBorderColor,
-    hoverBorderOpacity = 0.6,
   } = props;
   const groupRef = useRef<HTMLDivElement>(null);
   const cardViewportRef = useRef<HTMLDivElement>(null);
@@ -540,10 +529,6 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
             : undefined,
           "--horizontal-card-group-sticky-top": stickyTopOnLarge,
           "--horizontal-card-group-bottom-margin": bottomMarginOnLarge,
-          "--horizontal-card-hover-border-color": hexToRgba(
-            highlightBorderColor,
-            hoverBorderOpacity,
-          ),
           height: isEnabled
             ? horizontalTravel > 0
               ? `calc(100svh + ${horizontalTravel}px)`
@@ -573,17 +558,15 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
               >
                 {cards.map((card, index) => (
                   <div
-                    key={card.id ?? index}
+                    key={index}
                     onClick={handleCardClick}
-                    className={`flex ${cardHeightClassNameOnSmall} w-full shrink-0 flex-col overflow-auto border border-white bg-zinc-50 p-8 shadow dark:border-white/25 dark:bg-zinc-800 md:h-full md:min-h-0 md:cursor-pointer md:transition-[border-color,filter] md:duration-300 md:hover:border-[var(--horizontal-card-hover-border-color)] md:hover:brightness-105 motion-reduce:md:transition-none ${cardSizingClassName} ${cardClassName} ${card.className ?? ""}`}
-                    style={{
-                      borderColor:
-                        isEnabled && activeCardIndex === index
-                          ? highlightBorderColor
-                          : undefined,
-                    }}
+                    className={`flex ${cardHeightClassNameOnSmall} w-full shrink-0 flex-col md:h-full md:min-h-0 md:cursor-pointer ${cardSizingClassName} ${cardSlotClassName}`}
                   >
-                    {card.content}
+                    <CardGroupActiveProvider
+                      isActive={isEnabled && activeCardIndex === index}
+                    >
+                      {card}
+                    </CardGroupActiveProvider>
                   </div>
                 ))}
               </motion.div>

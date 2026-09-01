@@ -146,12 +146,12 @@ export default function LazyVideo({
           type="button"
           aria-label={playButtonLabel}
           onClick={handlePlay}
-          className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-background/90 text-foreground shadow-xl backdrop-blur transition hover:scale-105 hover:bg-background focus:outline-none focus-visible:ring-4 focus-visible:ring-foreground/40 dark:bg-dark-background/90 dark:text-dark-foreground dark:hover:bg-dark-background md:h-24 md:w-24"
+          className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white bg-background/80 text-foreground backdrop-blur transition hover:scale-105 hover:bg-background focus:outline-none focus-visible:ring-4 focus-visible:ring-foreground/40 dark:bg-dark-background/90 dark:text-dark-foreground dark:hover:bg-dark-background md:h-24 md:w-24"
         >
           <svg
             aria-hidden="true"
             viewBox="0 0 24 24"
-            className="ml-1 h-9 w-9 fill-current md:h-11 md:w-11"
+            className="ml-1 h-9 w-9 fill-current md:h-14 md:w-14"
           >
             <path d="M8 5.14v13.72L18.5 12 8 5.14Z" />
           </svg>

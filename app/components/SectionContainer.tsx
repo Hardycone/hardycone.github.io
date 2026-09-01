@@ -191,7 +191,7 @@ export default function SectionContainer(props: SectionContainerProps) {
           ) : null}
         </>
       ) : null}
-      <div className={`flex flex-col gap-8 ${contentClassName}`}>
+      <div className={`flex flex-col gap-24 ${contentClassName}`}>
         {children}
       </div>
     </motion.div>

@@ -21,6 +21,7 @@ import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import CaseStudyFigure from "../CaseStudyFigure";
 import HorizontalCardGroup from "../HorizontalCardGroup";
+import HighlightCard from "../HighlightCard";
 import SectionContainer from "../SectionContainer";
 import SubHeading from "../SubHeading";
 import SubSectionContainer from "../SubSectionContainer";
@@ -83,9 +84,7 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
           bottomMarginOnLarge="2rem"
           setCardAspectRatioOnLarge
           cardAspectRatioOnLarge="16/9"
-          highlightBorderColor={theme.hex.primary}
           stickyTopOnLarge="5rem"
-          cardClassName="rounded-6 md:rounded-8 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:md:rounded-16"
           cards={[
             [
               "Import",
@@ -112,18 +111,19 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
               "Get report within hours",
               "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
             ],
-          ].map(([number, title, copy]) => ({
-            id: title,
-            content: (
-              <>
-                <span className={`text-sm font-bold ${theme.textColorClass}`}>
-                  {number}
-                </span>
-                <h4 className="mt-auto pt-8">{title}</h4>
-                <p className="mt-3">{copy}</p>
-              </>
-            ),
-          }))}
+          ].map(([number, title, copy]) => (
+            <HighlightCard
+              key={title}
+              className="flex h-full min-h-[inherit] flex-col"
+              contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
+            >
+              <span className={`text-sm font-bold ${theme.textColorClass}`}>
+                {number}
+              </span>
+              <h4 className="mt-auto pt-8">{title}</h4>
+              <p className="mt-3">{copy}</p>
+            </HighlightCard>
+          ))}
         />
 
         <SubSectionContainer>
@@ -176,7 +176,6 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
               showBody
               bottomMarginOnLarge="2rem"
               cardWidthClassNameOnLarge="md:w-[80rem]"
-              highlightBorderColor={theme.hex.primary}
               body={
                 <SubSectionContainer>
                   <SubHeading showNumber number="2">
@@ -258,7 +257,15 @@ export default function CaseStudyFour({ scrollY }: CaseStudyFourProps) {
                     </>
                   ),
                 },
-              ]}
+              ].map(({ id, content }) => (
+                <HighlightCard
+                  key={id}
+                  className="flex h-full min-h-[inherit] flex-col"
+                  contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
+                >
+                  {content}
+                </HighlightCard>
+              ))}
             />
           </SubSectionContainer>
         </SectionContainer>

@@ -10,26 +10,18 @@ import {
   type MouseEvent as ReactMouseEvent,
 } from "react";
 import { useIsMdUp } from "../../hooks/useIsMdUp";
-import { hexToRgba } from "../../lib/palette";
-
-export interface VerticalCard {
-  id?: string;
-  content: ReactNode;
-  className?: string;
-}
+import { CardGroupActiveProvider } from "@/app/context/CardGroupContext";
 
 export interface VerticalCardGroupProps {
   body: ReactNode | ((state: { activeIndex: number | null }) => ReactNode);
-  cards: VerticalCard[];
+  cards: ReactNode[];
   bodyClassName?: string;
   bodyWidthClassNameOnLarge?: string;
   groupClassName?: string;
-  cardClassName?: string;
+  cardSlotClassName?: string;
   cardHeightOnLarge?: string;
   cardHeightClassNameOnSmall?: string;
   stickyTopOnLarge?: string;
-  highlightBorderColor: string;
-  hoverBorderOpacity?: number;
   activeRangeStartOnLarge?: number;
   activeRangeEndOnLarge?: number;
 }
@@ -37,7 +29,6 @@ export interface VerticalCardGroupProps {
 interface VerticalCardGroupStyle extends CSSProperties {
   "--vertical-card-height-on-large": string;
   "--vertical-card-group-sticky-top": string;
-  "--vertical-card-hover-border-color": string;
 }
 
 export default function VerticalCardGroup({
@@ -46,12 +37,10 @@ export default function VerticalCardGroup({
   bodyClassName = "",
   bodyWidthClassNameOnLarge = "md:w-96",
   groupClassName = "gap-4",
-  cardClassName = "rounded-1 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4",
+  cardSlotClassName = "",
   cardHeightOnLarge = "min(calc(100dvh - var(--vertical-card-group-sticky-top)), 800px)",
   cardHeightClassNameOnSmall = "h-auto",
   stickyTopOnLarge = "5rem",
-  highlightBorderColor,
-  hoverBorderOpacity = 0.6,
   activeRangeStartOnLarge = 80,
   activeRangeEndOnLarge = 240,
 }: VerticalCardGroupProps) {
@@ -176,10 +165,6 @@ export default function VerticalCardGroup({
         {
           "--vertical-card-height-on-large": cardHeightOnLarge,
           "--vertical-card-group-sticky-top": stickyTopOnLarge,
-          "--vertical-card-hover-border-color": hexToRgba(
-            highlightBorderColor,
-            hoverBorderOpacity,
-          ),
         } as VerticalCardGroupStyle
       }
     >
@@ -198,25 +183,17 @@ export default function VerticalCardGroup({
       >
         {cards.map((card, index) => (
           <div
-            key={card.id ?? index}
+            key={index}
             ref={(node) => {
               cardContainerRefs.current[index] = node;
             }}
             data-card-index={index}
             onClick={handleCardClick}
-            className="h-auto scroll-mt-[var(--vertical-card-group-sticky-top)] text-lg md:h-[var(--vertical-card-height-on-large)] md:cursor-pointer"
+            className={`${cardHeightClassNameOnSmall} scroll-mt-[var(--vertical-card-group-sticky-top)] text-lg md:h-[var(--vertical-card-height-on-large)] md:cursor-pointer ${cardSlotClassName}`}
           >
-            <div
-              className={`overflow-clip border border-white shadow dark:border-white/25 md:h-full md:transition-[border-color,filter] md:duration-300 md:hover:border-[var(--vertical-card-hover-border-color)] md:hover:brightness-105 motion-reduce:md:transition-none ${cardHeightClassNameOnSmall} ${cardClassName} ${card.className ?? ""}`}
-              style={{
-                borderColor:
-                  isMdUp && activeIndex === index
-                    ? highlightBorderColor
-                    : undefined,
-              }}
-            >
-              {card.content}
-            </div>
+            <CardGroupActiveProvider isActive={isMdUp && activeIndex === index}>
+              {card}
+            </CardGroupActiveProvider>
           </div>
         ))}
         <div className="absolute bottom-0 h-0 w-full" />
