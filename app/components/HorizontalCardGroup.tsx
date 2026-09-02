@@ -94,6 +94,32 @@ function getDocumentOffsetTop(element: HTMLElement) {
   return offsetTop;
 }
 
+function getCardTargetX(
+  card: HTMLElement,
+  viewportWidth: number,
+  trackStartX: number,
+  trackEndX: number,
+) {
+  const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+  const centeredCardX = viewportWidth / 2 - cardCenter;
+
+  return Math.min(trackStartX, Math.max(trackEndX, centeredCardX));
+}
+
+function getCardTargetScrollY(
+  groupStartY: number,
+  targetTravel: number,
+  horizontalTravel: number,
+) {
+  const targetScrollY = groupStartY + targetTravel;
+
+  return targetTravel <= 0
+    ? Math.floor(targetScrollY)
+    : targetTravel >= horizontalTravel
+      ? Math.ceil(targetScrollY)
+      : targetScrollY;
+}
+
 export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
   const {
     cards,
@@ -115,8 +141,11 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
   const [horizontalTravel, setHorizontalTravel] = useState(0);
   const [isEnabled, setIsEnabled] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
+  const [positionedCardIndex, setPositionedCardIndex] = useState<number | null>(
+    null,
+  );
 
-  const { scrollYProgress } = useScroll({
+  const { scrollY, scrollYProgress } = useScroll({
     target: groupRef,
     offset: ["start start", "end end"],
   });
@@ -131,44 +160,72 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
     (currentX: number) => {
       const viewport = cardViewportRef.current;
       const track = cardTrackRef.current;
-      if (!isEnabled || !viewport || !track || cards.length === 0) {
+      const group = groupRef.current;
+      if (!isEnabled || !group || !viewport || !track || cards.length === 0) {
         setActiveCardIndex(null);
+        setPositionedCardIndex(null);
         return;
       }
 
+      const cardElements = Array.from(track.children) as HTMLElement[];
       const currentTravel = Math.min(
         horizontalTravel,
         Math.max(0, cardTrackStartX - currentX),
       );
-      if (currentTravel <= 1 || horizontalTravel <= 0) {
-        setActiveCardIndex(0);
-        return;
-      }
-      if (currentTravel >= horizontalTravel - 1) {
-        setActiveCardIndex(cards.length - 1);
-        return;
-      }
-
-      const viewportCenter = viewport.clientWidth / 2 - currentX;
-      const cardElements = Array.from(track.children) as HTMLElement[];
       let closestIndex = 0;
-      let closestDistance = Number.POSITIVE_INFINITY;
 
-      cardElements.forEach((card, index) => {
-        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-        const distance = Math.abs(cardCenter - viewportCenter);
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = index;
-        }
-      });
+      if (horizontalTravel <= 0 || currentTravel <= 1) {
+        closestIndex = 0;
+      } else if (currentTravel >= horizontalTravel - 1) {
+        closestIndex = cards.length - 1;
+      } else {
+        const viewportCenter = viewport.clientWidth / 2 - currentX;
+        let closestDistance = Number.POSITIVE_INFINITY;
+
+        cardElements.forEach((card, index) => {
+          const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+          const distance = Math.abs(cardCenter - viewportCenter);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = index;
+          }
+        });
+      }
 
       setActiveCardIndex(closestIndex);
+
+      const closestCard = cardElements[closestIndex];
+      if (!closestCard || horizontalTravel <= 0) {
+        setPositionedCardIndex(closestCard ? closestIndex : null);
+        return;
+      }
+
+      const targetX = getCardTargetX(
+        closestCard,
+        viewport.clientWidth,
+        cardTrackStartX,
+        cardTrackEndX,
+      );
+      const targetTravel = cardTrackStartX - targetX;
+      const targetScrollY = getCardTargetScrollY(
+        getDocumentOffsetTop(group),
+        targetTravel,
+        horizontalTravel,
+      );
+      setPositionedCardIndex(
+        Math.abs(currentX - targetX) <= 1 &&
+          Math.abs(window.scrollY - targetScrollY) <= 1
+          ? closestIndex
+          : null,
+      );
     },
-    [cards.length, isEnabled, cardTrackStartX, horizontalTravel],
+    [cards.length, isEnabled, cardTrackEndX, cardTrackStartX, horizontalTravel],
   );
 
   useMotionValueEvent(cardTrackX, "change", updateActiveCard);
+  useMotionValueEvent(scrollY, "change", () => {
+    updateActiveCard(cardTrackX.get());
+  });
 
   useEffect(() => {
     updateActiveCard(cardTrackX.get());
@@ -425,22 +482,20 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
 
       const card = event.currentTarget;
       const groupStartY = getDocumentOffsetTop(target);
-      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-      const centeredCardX = viewport.clientWidth / 2 - cardCenter;
-      const targetX = Math.min(
+      const targetX = getCardTargetX(
+        card,
+        viewport.clientWidth,
         cardTrackStartX,
-        Math.max(cardTrackEndX, centeredCardX),
+        cardTrackEndX,
       );
       // Center the selected card when possible while respecting the selected
       // alignment mode's measured first- and last-card endpoints.
       const targetTravel = cardTrackStartX - targetX;
-      const targetScrollY = groupStartY + targetTravel;
-      const boundedTargetScrollY =
-        targetTravel <= 0
-          ? Math.floor(targetScrollY)
-          : targetTravel >= horizontalTravel
-            ? Math.ceil(targetScrollY)
-            : targetScrollY;
+      const boundedTargetScrollY = getCardTargetScrollY(
+        groupStartY,
+        targetTravel,
+        horizontalTravel,
+      );
 
       window.scrollTo({
         top: boundedTargetScrollY,
@@ -564,6 +619,11 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
                   >
                     <CardGroupActiveProvider
                       isActive={isEnabled && activeCardIndex === index}
+                      prioritizeCardClick={
+                        isEnabled &&
+                        horizontalTravel > 0 &&
+                        positionedCardIndex !== index
+                      }
                     >
                       {card}
                     </CardGroupActiveProvider>

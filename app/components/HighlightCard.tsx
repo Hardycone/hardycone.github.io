@@ -1,26 +1,31 @@
-import { CSSProperties, ReactNode, useLayoutEffect, useRef } from "react";
-import {
-  AnimatePresence,
-  motion,
-  MotionStyle,
-  useMotionValue,
-  useTransform,
-} from "framer-motion";
-import { useActiveProject } from "@/app/context/ActiveProjectContext";
-import { useCursorEffects } from "@/hooks/useCursorEffects";
-import { useProjectTheme } from "@/hooks/useProjectTheme";
-import projects from "@/data/projects";
+import { ReactNode } from "react";
+import { motion } from "framer-motion";
 import { ROUNDED_SQUIRCLE_05, ROUNDED_SQUIRCLE_07_MD } from "@/lib/styleTokens";
 import { useMouseShadow } from "../context/MouseShadowContext";
 import { useTheme } from "next-themes";
-import { hexToRgba } from "@/lib/palette";
 import { useCardGroupActive } from "@/app/context/CardGroupContext";
+
+// Cursor-following border imports retained for easy restoration:
+// import { CSSProperties, useLayoutEffect, useRef } from "react";
+// import {
+//   AnimatePresence,
+//   MotionStyle,
+//   useMotionValue,
+//   useTransform,
+// } from "framer-motion";
+// import { useActiveProject } from "@/app/context/ActiveProjectContext";
+// import { useCursorEffects } from "@/hooks/useCursorEffects";
+// import { useProjectTheme } from "@/hooks/useProjectTheme";
+// import projects from "@/data/projects";
+// import { hexToRgba } from "@/lib/palette";
 
 export interface HighlightCardProps {
   children: ReactNode;
   className?: string;
   contentClassName?: string;
   isActive?: boolean;
+  highlightOnHover?: boolean;
+  // Previous appearance controls retained while the conic border is disabled.
   activeBackgroundClassName?: string;
   inactiveBackgroundClassName?: string;
   inactiveHoverBackgroundClassName?: string;
@@ -29,6 +34,7 @@ export interface HighlightCardProps {
   inactiveBorderColor?: string;
 }
 
+/*
 type HighlightCardStyle = MotionStyle & {
   "--highlight-card-active-background": string;
   "--highlight-card-inactive-background": string;
@@ -43,26 +49,35 @@ const borderMaskStyle: CSSProperties = {
 };
 
 const borderLayerClassName = `${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} pointer-events-none absolute inset-0 box-border p-px`;
+*/
 
 export default function HighlightCard({
   children,
   className = "",
   contentClassName,
   isActive,
-  activeBackgroundClassName = "bg-[var(--highlight-card-active-background)]",
-  inactiveBackgroundClassName = "bg-[var(--highlight-card-inactive-background)]",
-  inactiveHoverBackgroundClassName = "md:hover:bg-[var(--highlight-card-active-background)]",
-  borderBaseColor,
-  borderHighlightColor,
-  inactiveBorderColor = "rgba(255, 255, 255, 1)",
+  highlightOnHover = true,
 }: HighlightCardProps) {
+  const groupIsActive = useCardGroupActive();
+  const resolvedIsActive = isActive ?? groupIsActive ?? false;
+  const canHighlightOnHover = highlightOnHover && !resolvedIsActive;
+  const { cardLightSmallShadow, cardDarkSmallShadow } = useMouseShadow();
+  const { resolvedTheme } = useTheme();
+  const cardSmallShadow =
+    resolvedTheme === "dark" ? cardDarkSmallShadow : cardLightSmallShadow;
+
+  /*
+  const groupIsActive = useCardGroupActive();
+  const resolvedIsActive = isActive ?? groupIsActive ?? true;
+
+  Previous active overlay class:
+  ${resolvedIsActive ? "opacity-25" : "opacity-0"}
+
   const cardRef = useRef<HTMLDivElement>(null);
   const cardAspectRatio = useMotionValue(1);
   const { activeIndex } = useActiveProject();
   const theme = useProjectTheme(projects[activeIndex].id);
   const { cursorAngle } = useCursorEffects();
-  const groupIsActive = useCardGroupActive();
-  const resolvedIsActive = isActive ?? groupIsActive ?? true;
   const resolvedBorderBaseColor = borderBaseColor ?? theme.hex.primary;
   const resolvedBorderHighlightColor =
     borderHighlightColor ??
@@ -70,10 +85,6 @@ export default function HighlightCard({
   const backgroundClassName = resolvedIsActive
     ? activeBackgroundClassName
     : `${inactiveBackgroundClassName} ${inactiveHoverBackgroundClassName}`;
-  const { cardLightSmallShadow, cardDarkSmallShadow } = useMouseShadow();
-  const { resolvedTheme } = useTheme();
-  const cardSmallShadow =
-    resolvedTheme === "dark" ? cardDarkSmallShadow : cardLightSmallShadow;
 
   useLayoutEffect(() => {
     const card = cardRef.current;
@@ -118,27 +129,23 @@ export default function HighlightCard({
     ${resolvedBorderBaseColor} 260deg,
     ${resolvedBorderBaseColor} 360deg
   )`;
+  */
 
   return (
     <motion.div
-      ref={cardRef}
-      className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} ${backgroundClassName} ${className} relative w-full transition-colors duration-300 motion-reduce:transition-none`}
-      style={
-        {
-          boxShadow: cardSmallShadow,
-          "--highlight-card-active-background": hexToRgba(
-            theme.hex.primary,
-            0.05,
-          ),
-          "--highlight-card-inactive-background": theme.hex.background,
-        } as HighlightCardStyle
-      }
+      className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} group/card relative isolate w-full border border-white bg-background dark:border-white/25 dark:bg-dark-background ${className}`}
+      style={{ boxShadow: cardSmallShadow }}
     >
+      <div
+        aria-hidden="true"
+        className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} pointer-events-none absolute inset-0 -z-10 bg-white opacity-0 transition-opacity duration-300 motion-reduce:transition-none dark:bg-black ${canHighlightOnHover ? "md:group-hover/card:opacity-25" : ""}`}
+      />
       {contentClassName ? (
         <div className={contentClassName}>{children}</div>
       ) : (
         children
       )}
+      {/*
       <div
         aria-hidden="true"
         className={borderLayerClassName}
@@ -172,6 +179,7 @@ export default function HighlightCard({
           </motion.div>
         ) : null}
       </AnimatePresence>
+      */}
     </motion.div>
   );
 }

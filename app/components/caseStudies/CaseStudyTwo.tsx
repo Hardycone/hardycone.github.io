@@ -23,14 +23,19 @@ import SubHeading from "../SubHeading";
 import SubSectionContainer from "../SubSectionContainer";
 import VerticalCardGroup from "../VerticalCardGroup";
 import HighlightCard from "../HighlightCard";
-import { ROUNDED_SQUIRCLE_05, ROUNDED_SQUIRCLE_07_MD } from "@/lib/styleTokens";
+import ZoomableImage from "../ZoomableImage";
+import {
+  ROUNDED_SQUIRCLE_02,
+  ROUNDED_SQUIRCLE_03,
+  ROUNDED_SQUIRCLE_05,
+  ROUNDED_SQUIRCLE_04_MD,
+  ROUNDED_SQUIRCLE_05_MD,
+  ROUNDED_SQUIRCLE_07_MD,
+} from "@/lib/styleTokens";
 
 interface CaseStudyTwoProps {
   scrollY: MotionValue<number>;
 }
-
-const contentNoteClass =
-  "rounded-1 border border-dashed border-foreground/20 px-4 py-3 italic text-foreground/60 dark:border-dark-foreground/20 dark:text-dark-foreground/60 md:rounded-2";
 
 export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
   const { resolvedTheme } = useTheme();
@@ -46,7 +51,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
       document.body.scrollHeight - window.innerHeight * 1.2,
       document.body.scrollHeight - window.innerHeight,
     ],
-    resolvedTheme === "dark" ? [0.25, 0, 0, 0.25, 0] : [1, 0, 0, 1, 0],
+    resolvedTheme === "dark" ? [0.4, 0, 0, 0.4, 0] : [1, 0, 0, 1, 0],
   );
 
   const borderColor = useTransform(
@@ -90,42 +95,79 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             cardAspectRatioOnLarge="16/9"
             stickyTopOnLarge="5rem"
             cards={[
-              [
-                "Import",
-                "Import design prototypes",
-                "Researchers can bring in interactive prototypes created in Figma, or live hosted prototypes.",
-              ],
-              [
-                "Configure",
-                "Configure the experiment",
-                "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
-              ],
-              [
-                "Recruit",
-                "Set a recruit goal and choose participant source",
-                "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
-              ],
-              [
-                "Test",
-                "Once the experiment is launched, participant results immediately start being recorded",
-                "There is not much to do other than wait",
-              ],
-              [
-                "Report",
-                "Get report within hours",
-                "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
-              ],
-            ].map(([number, title, copy]) => (
+              {
+                id: "import",
+                content: (
+                  <div className="flex h-full w-full">
+                    <div className={`w-[80%]`}>
+                      <ZoomableImage
+                        src="/images/flux-01.png"
+                        alt="Flux prototype import interface"
+                        roundedClassName={`${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                        imageRoundedClassName={`${ROUNDED_SQUIRCLE_02} ${ROUNDED_SQUIRCLE_04_MD}`}
+                      />
+                    </div>
+                    <div className={`w-[30%] p-6`}>
+                      <h4 className="">Import</h4>
+                      <p className="mt-3">
+                        Flux lets users import interactive design prototypes
+                        from Figma or live prototypes from any hosting service.
+                      </p>
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                id: "configuration",
+                content: (
+                  <div className="flex h-full flex-col">
+                    <span
+                      className={`text-sm font-bold ${theme.textColorClass}`}
+                    >
+                      Exploration
+                    </span>
+                    <h4 className="mt-auto pt-8">Configuration</h4>
+                    <p className="mt-3">
+                      On example of this is power analysis. When comparing two
+                      variants, statisticians do a calculation called power
+                      analysis to determine what sample size they need to find
+                      potential statistical signifiance. In other words, how
+                      many people to recruit in order to know the results are
+                      real. This is a simple yet specialized matter. The
+                      confidence provided by doing quantitative analysis is what
+                      sets Flux apart. So we obviously want to make sure studies
+                      are legit. At the same time, we didn&rsquo;t want to res
+                    </p>
+                  </div>
+                ),
+              },
+              {
+                id: "solution",
+                content: (
+                  <div className="flex h-full flex-col">
+                    <span
+                      className={`text-sm font-bold ${theme.textColorClass}`}
+                    >
+                      My Solution
+                    </span>
+                    <h4 className="mt-auto pt-8">I solved it</h4>
+                    <p className="mt-3">
+                      Researchers can then set a goal for their experiment. Flux
+                      gives guidelines on how to set a sample size according to
+                      statistical best practices. Researchers also have the
+                      option to either generate a link to share with their own
+                      panel, or recreate with Flux by a click of a button.
+                    </p>
+                  </div>
+                ),
+              },
+            ].map(({ id, content }) => (
               <HighlightCard
-                key={title}
+                key={id}
                 className="flex h-full min-h-[inherit] flex-col"
-                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
+                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-2"
               >
-                <span className={`text-sm font-bold ${theme.textColorClass}`}>
-                  {number}
-                </span>
-                <h4 className="mt-auto pt-8">{title}</h4>
-                <p className="mt-3">{copy}</p>
+                {content}
               </HighlightCard>
             ))}
           />
@@ -163,6 +205,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               borderBaseColor={theme.hex.primary}
               borderHighlightColor={`color-mix(in oklab, ${theme.hex.primary} 30%, white 70%)`}
               activeBackgroundClassName="bg-flux bg-opacity-5 dark:bg-dark-flux dark:bg-opacity-5"
+              highlightOnHover={false}
             >
               <div className="flex flex-col p-4">
                 <h5 className="flex items-center gap-2 font-serif text-[1.5rem] font-semibold text-flux dark:text-dark-flux">
@@ -570,22 +613,22 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                       Quantitative studies usually involves hundreds, sometimes
                       even thousands, of participants, which is expensive both
                       financially and operationally. 2. How do users know if
-                      they are doing "real" science? They sometimes feel
-                      uncertain about the validity of the results. We addressed
-                      this from 2 different angles. for 1, we built a feature
-                      that allows users to preview a mock report that contains
-                      fictitious data. This report updates in real time based on
-                      the experiment setup, and offers an one-to-one look at the
-                      shape of the data they will receive at the end of the
-                      study. Seeing this before launching reduces a great deal
-                      of uncertainty. This also serves as an opportunity for
-                      users to spot potential erros in their setup, eliminating
-                      doubts around the process. For 2, our approach is much
-                      subtler. I made sure to expose the science behind the
-                      calculations as much as possible without being intruisive.
-                      I also added many explainers throughout the process to
-                      help users understand what they are doing. This gives
-                      users a good idea of the methodology behind the
+                      they are doing &lsquo;real&rsquo; science? They sometimes
+                      feel uncertain about the validity of the results. We
+                      addressed this from 2 different angles. for 1, we built a
+                      feature that allows users to preview a mock report that
+                      contains fictitious data. This report updates in real time
+                      based on the experiment setup, and offers an one-to-one
+                      look at the shape of the data they will receive at the end
+                      of the study. Seeing this before launching reduces a great
+                      deal of uncertainty. This also serves as an opportunity
+                      for users to spot potential erros in their setup,
+                      eliminating doubts around the process. For 2, our approach
+                      is much subtler. I made sure to expose the science behind
+                      the calculations as much as possible without being
+                      intruisive. I also added many explainers throughout the
+                      process to help users understand what they are doing. This
+                      gives users a good idea of the methodology behind the
                       experiment. I also added a summary feature to help users
                       draw conclusions in the results, allowing them to have
                       confidence in presenting the results to stakeholders.
@@ -675,6 +718,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                     <div className="flex h-full w-full flex-col gap-2">
                       <div className="flex size-full gap-2">
                         <HighlightCard
+                          highlightOnHover={false}
                           className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
                         >
                           <blockquote className="text-[1.75rem]">
@@ -690,6 +734,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                           </figcaption>
                         </HighlightCard>
                         <HighlightCard
+                          highlightOnHover={false}
                           className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
                         >
                           <blockquote className="text-[1.75rem]">
@@ -705,6 +750,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                         </HighlightCard>
                       </div>
                       <HighlightCard
+                        highlightOnHover={false}
                         className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
                       >
                         <blockquote className="text-[1.75rem]">
@@ -728,6 +774,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                   content: (
                     <div className="flex h-full w-full flex-col gap-2">
                       <HighlightCard
+                        highlightOnHover={false}
                         className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
                       >
                         <blockquote className="text-[1.75rem]">
@@ -745,6 +792,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                       </HighlightCard>
                       <div className="flex size-full gap-2">
                         <HighlightCard
+                          highlightOnHover={false}
                           className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
                         >
                           <blockquote className="text-[1.75rem]">
@@ -760,6 +808,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                           </figcaption>
                         </HighlightCard>
                         <HighlightCard
+                          highlightOnHover={false}
                           className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
                         >
                           <blockquote className="text-[1.75rem]">

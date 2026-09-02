@@ -7,7 +7,7 @@ interface SubSectionContainerProps {
 
 export default function SubSectionContainer({
   children,
-  className = "gap-12",
+  className = "gap-6",
 }: SubSectionContainerProps) {
   return <div className={`flex flex-col ${className}`}>{children}</div>;
 }

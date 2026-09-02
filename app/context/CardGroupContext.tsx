@@ -2,24 +2,35 @@
 
 import { createContext, ReactNode, useContext } from "react";
 
-const CardGroupActiveContext = createContext<boolean | null>(null);
+interface CardGroupContextValue {
+  isActive: boolean;
+  prioritizeCardClick: boolean;
+}
+
+const CardGroupContext = createContext<CardGroupContextValue | null>(null);
 
 interface CardGroupActiveProviderProps {
   children: ReactNode;
   isActive: boolean;
+  prioritizeCardClick?: boolean;
 }
 
 export function CardGroupActiveProvider({
   children,
   isActive,
+  prioritizeCardClick = false,
 }: CardGroupActiveProviderProps) {
   return (
-    <CardGroupActiveContext.Provider value={isActive}>
+    <CardGroupContext.Provider value={{ isActive, prioritizeCardClick }}>
       {children}
-    </CardGroupActiveContext.Provider>
+    </CardGroupContext.Provider>
   );
 }
 
 export function useCardGroupActive() {
-  return useContext(CardGroupActiveContext);
+  return useContext(CardGroupContext)?.isActive ?? null;
+}
+
+export function useCardGroupContext() {
+  return useContext(CardGroupContext);
 }
