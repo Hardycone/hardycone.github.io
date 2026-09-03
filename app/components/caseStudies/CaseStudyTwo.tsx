@@ -24,11 +24,14 @@ import SubSectionContainer from "../SubSectionContainer";
 import VerticalCardGroup from "../VerticalCardGroup";
 import HighlightCard from "../HighlightCard";
 import ZoomableImage from "../ZoomableImage";
+import ResearchThemeCanvas, {
+  type ResearchTheme,
+} from "../ResearchThemeCanvas";
 import {
-  ROUNDED_SQUIRCLE_02,
+  ROUNDED_SQUIRCLE_01,
   ROUNDED_SQUIRCLE_03,
   ROUNDED_SQUIRCLE_05,
-  ROUNDED_SQUIRCLE_04_MD,
+  ROUNDED_SQUIRCLE_03_MD,
   ROUNDED_SQUIRCLE_05_MD,
   ROUNDED_SQUIRCLE_07_MD,
 } from "@/lib/styleTokens";
@@ -36,6 +39,164 @@ import {
 interface CaseStudyTwoProps {
   scrollY: MotionValue<number>;
 }
+
+const researchThemes: ResearchTheme[] = [
+  {
+    id: "research-time",
+    label: "Research takes too long",
+    quotes: [
+      {
+        id: "take-two-weeks",
+        compactPosition: {
+          x: "-25%",
+          y: "-20%",
+        },
+        before:
+          "Sometimes I have two conflicting design directions, and I just want to do a quick test to estimate how users would use and react to them with some level of confidence, but then I talk to a researcher, and I'm told that would ",
+        highlight: "take 2 weeks",
+        after: ".",
+      },
+      {
+        id: "rapid-dev-cycles",
+        compactPosition: {
+          x: "15%",
+          y: "-25%",
+        },
+        before: "Our org is constantly pushing for more ",
+        highlight: "rapid dev cycles",
+        after:
+          ". A lot of times the concepts I want to explore could already be irrelevant by the time I figure out how to test.",
+      },
+      {
+        id: "big-study",
+        compactPosition: {
+          x: "7%",
+          y: "24%",
+        },
+        before:
+          "Occasionally I have something like 10 variants I want to test and that's ",
+        highlight: "a big study",
+        after: " to set up.",
+      },
+    ],
+  },
+  {
+    id: "quant-value",
+    label: "Quant research is a value add",
+    quotes: [
+      {
+        id: "quant-stakeholders",
+        compactPosition: {
+          x: "-2%",
+          y: "-22%",
+        },
+        before:
+          "As a qual researcher, sometimes I feel it's difficult to get buy-in from more ",
+        highlight: "quant focused stakeholders",
+        after: ", and I'm not really specially trained in that area.",
+      },
+      {
+        id: "heavy-quant",
+        compactPosition: {
+          x: "5%",
+          y: "32%",
+        },
+        before: "I think it's always helpful to have a ",
+        highlight: "heavy quant portion",
+        after:
+          " and a light qual portion when testing high-risk, more complex changes.",
+      },
+      {
+        id: "quant-value-add",
+        compactPosition: {
+          x: "-25%",
+          y: "20%",
+        },
+        before:
+          "We have a couple mixed method researchers but we're mostly qual. I can definitely see the ",
+        highlight: "value add",
+        after: " on the quant side.",
+      },
+    ],
+  },
+  {
+    id: "prototype-value",
+    label: "Prototype testing is valuable",
+    quotes: [
+      {
+        id: "prototype-ab-test",
+        compactPosition: {
+          x: "-15%",
+          y: "-23%",
+        },
+        before:
+          "There are things we definitely want to validate with in-product with a/b testing. But that's not always the case. For earlier in the cycle, we don't really have a good tool to ",
+        highlight: "a/b test prototypes quickly",
+        after: ".",
+      },
+      {
+        id: "cannot-ship-everything",
+        compactPosition: {
+          x: "6%",
+          y: "-39%",
+        },
+        before: "Building is much fasters now, but you still ",
+        highlight: "can't ship everything",
+        after:
+          ". Prototyping is still necessary. And that's much faster now too.",
+      },
+      {
+        id: "building-too-much",
+        compactPosition: {
+          x: "-8%",
+          y: "30%",
+        },
+        before:
+          "There's a lot going on. Designers and PMs are all vibecoding. We're ",
+        highlight: "building too much",
+        after: " stuff too fast. Sometimes without any sort of validation.",
+      },
+    ],
+  },
+  {
+    id: "research-democratization",
+    label: "Research is being democratized",
+    quotes: [
+      {
+        id: "democratizing",
+        compactPosition: {
+          x: "25%",
+          y: "-31%",
+        },
+        before: "We have 20 designers on our team running research. There is ",
+        highlight: "this democratizing",
+        after: " that's happening.",
+      },
+      {
+        id: "designer-led-research",
+        compactPosition: {
+          x: "-28%",
+          y: "-24%",
+        },
+        before: "Our company is experimenting with ",
+        highlight: "designer-led research",
+        after:
+          ". Templatized tools are good. We usually have this report format we follow when we share out.",
+      },
+      {
+        id: "bit-of-everything",
+        compactPosition: {
+          x: "-20%",
+          y: "26%",
+        },
+        before:
+          "Obviously AI tooling is a big thing and there is just so much going on. But one thing is that it's letting everyone be able to do ",
+        highlight: "a bit of everything",
+        after: ".",
+      },
+    ],
+  },
+];
 
 export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
   const { resolvedTheme } = useTheme();
@@ -91,73 +252,93 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           <HorizontalCardGroup
             alignment="centered"
             bottomMarginOnLarge="2rem"
-            setCardAspectRatioOnLarge
-            cardAspectRatioOnLarge="16/9"
+            cardWidthClassNameOnLarge="md:w-screen"
+            maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
             stickyTopOnLarge="5rem"
             cards={[
               {
                 id: "import",
                 content: (
                   <div className="flex h-full w-full">
-                    <div className={`w-[80%]`}>
+                    <div
+                      className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                    >
                       <ZoomableImage
                         src="/images/flux-01.png"
                         alt="Flux prototype import interface"
-                        roundedClassName={`${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
-                        imageRoundedClassName={`${ROUNDED_SQUIRCLE_02} ${ROUNDED_SQUIRCLE_04_MD}`}
+                        imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                        unzoomedPadding="2rem"
                       />
                     </div>
                     <div className={`w-[30%] p-6`}>
-                      <h4 className="">Import</h4>
-                      <p className="mt-3">
-                        Flux lets users import interactive design prototypes
-                        from Figma or live prototypes from any hosting service.
+                      <h5 className="font-serif text-[1.5rem] font-bold">
+                        Import
+                      </h5>
+                      <p className="mt-3 !font-serif">
+                        Users can import their interactive design prototypes
+                        from Figma or live prototypes hosted anywhere into Flux.
+                        For Figma prototypes, Flux can parse the nodes in each
+                        flow and render a flow map matching the interactions
+                        that exist in the Figma file.
                       </p>
                     </div>
                   </div>
                 ),
               },
               {
-                id: "configuration",
+                id: "configure",
                 content: (
-                  <div className="flex h-full flex-col">
-                    <span
-                      className={`text-sm font-bold ${theme.textColorClass}`}
+                  <div className="flex h-full w-full">
+                    <div
+                      className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
                     >
-                      Exploration
-                    </span>
-                    <h4 className="mt-auto pt-8">Configuration</h4>
-                    <p className="mt-3">
-                      On example of this is power analysis. When comparing two
-                      variants, statisticians do a calculation called power
-                      analysis to determine what sample size they need to find
-                      potential statistical signifiance. In other words, how
-                      many people to recruit in order to know the results are
-                      real. This is a simple yet specialized matter. The
-                      confidence provided by doing quantitative analysis is what
-                      sets Flux apart. So we obviously want to make sure studies
-                      are legit. At the same time, we didn&rsquo;t want to res
-                    </p>
+                      <ZoomableImage
+                        src="/images/flux-01.png"
+                        alt="Flux prototype import interface"
+                        imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                        unzoomedPadding="2rem"
+                      />
+                    </div>
+                    <div className={`w-[30%] p-6`}>
+                      <h5 className="font-serif text-[1.5rem] font-bold">
+                        Configure
+                      </h5>
+                      <p className="mt-3 !font-serif">
+                        Configuring an experiment in Flux is designed to be
+                        approachable. Users can follow a guided wizard style
+                        process to define the hotspots to track, followup
+                        questions, and a recruiting plan.
+                      </p>
+                    </div>
                   </div>
                 ),
               },
               {
-                id: "solution",
+                id: "report",
                 content: (
-                  <div className="flex h-full flex-col">
-                    <span
-                      className={`text-sm font-bold ${theme.textColorClass}`}
+                  <div className="flex h-full w-full">
+                    <div
+                      className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
                     >
-                      My Solution
-                    </span>
-                    <h4 className="mt-auto pt-8">I solved it</h4>
-                    <p className="mt-3">
-                      Researchers can then set a goal for their experiment. Flux
-                      gives guidelines on how to set a sample size according to
-                      statistical best practices. Researchers also have the
-                      option to either generate a link to share with their own
-                      panel, or recreate with Flux by a click of a button.
-                    </p>
+                      <ZoomableImage
+                        src="/images/flux-01.png"
+                        alt="Flux prototype import interface"
+                        imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                        unzoomedPadding="2rem"
+                      />
+                    </div>
+                    <div className={`w-[30%] p-6`}>
+                      <h5 className="font-serif text-[1.5rem] font-bold">
+                        Report
+                      </h5>
+                      <p className="mt-3 !font-serif">
+                        The comprehensive research report offers quantitative
+                        insights into user behavior and sentiment, as well as
+                        qualitative data to compliment the quantitative
+                        analysis. The statistical tested results offer
+                        measurable confidence that guides product decisions.
+                      </p>
+                    </div>
                   </div>
                 ),
               },
@@ -211,10 +392,10 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 <h5 className="flex items-center gap-2 font-serif text-[1.5rem] font-semibold text-flux dark:text-dark-flux">
                   <LinkBreakIcon size={28} /> The Gap
                 </h5>
-                <p className="pb-4 pl-24 pr-4 pt-24 font-serif text-[1.5rem] text-flux dark:text-dark-flux md:pb-10 md:pl-48 md:pr-10 md:pt-48 md:text-[2.25rem]">
-                  Product teams are prototyping with AI at a speed faster than
-                  ever before, but there is no way to validate ideas with
-                  statistical confidence that can match this speed.
+                <p className="pb-4 pl-24 pr-4 pt-24 indent-[4.5rem] font-serif text-[1.5rem] text-flux dark:text-dark-flux md:pb-10 md:pl-48 md:pr-10 md:pt-48 md:text-[2.25rem]">
+                  Product teams are prototyping with AI faster than ever before,
+                  but there is no easy way to validate ideas with statistical
+                  confidence that can match this speed.
                 </p>
               </div>
             </HighlightCard>
@@ -223,26 +404,82 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             <SubHeading>Research and discovery</SubHeading>
             <p>
               My cofounder and I started with conversations with people in our
-              network. We reached out to a mix of reseearchers, product
-              managers, and designers to learn about their existing workflows
-              and their thoughts on a potential new solution that offers speed
-              and rigor at the same time. This research process took the shape
-              of casual and quick conversations and as well as more intentional
-              and structured interviews. Once we sat down to compare notes, the
-              emerging insights are illuminating.
+              network. We reached out to a mix of researchers, product managers,
+              and designers to learn about their existing workflows, their pain
+              points, and their thoughts on a potential new solution. This
+              research process took the shape of casual 5-minute conversations
+              as well as more intentional and structured hour-long interviews.
+              Once we sat down to compare notes, the emerging insights are
+              illuminating.
             </p>
-            <HighlightCard
-              borderBaseColor={theme.hex.primary}
-              borderHighlightColor={theme.hex.secondary}
-              activeBackgroundClassName="bg-flux bg-opacity-5 dark:bg-dark-flux dark:bg-opacity-5"
-            >
-              {" "}
-              <p className="pb-4 pl-24 pr-4 pt-24 font-serif text-[1.5rem] text-flux dark:text-dark-flux md:pb-10 md:pl-48 md:pr-10 md:pt-48 md:text-[2.25rem]">
-                Research summary: Imagining a word cloud, with each word
-                clickable to reveal full quotes. Might be too complicated
-                though. Maybe some simple cards will suffice.
-              </p>
-            </HighlightCard>
+            <p>
+              1.Sometimes I have two conflicting design directions, and I just
+              want to do a quick test to estimate how users would use and react
+              to them with some level of confidence, but then I talk to a
+              researcher, and I&rsquo;m told that would [take 2 weeks].
+              (research takes too long 1)
+            </p>
+            <p>
+              2. As a qual researcher, sometimes I feel it&rsquo;s difficult to
+              get buy-in from more [quant focused stakeholders], and I&rsquo;m
+              not really specially trained in that area. (quant research is a
+              value add 1)
+            </p>
+            <p>
+              3. Our org is constantly pushing for more [rapid dev cycles]. A
+              lot of times the concepts I want to explore could already be
+              irrelevant by the time I figure out how to test. (research takes
+              too long 2)
+            </p>
+            <p>
+              4. There are things we definitely want to validate with in-product
+              with a/b testing. But that&rsquo;s not always the case. For
+              earlier in the cycle, we don&rsquo;t really have a good tool to
+              [a/b test prototypes quickly]. (prototype testing is valuable 1)
+            </p>
+            <p>
+              5. We have 20 designers on our team running research. There is
+              [this democratizing] that&rsquo;s happening. (research is being
+              democratized 1)
+            </p>
+            <p>
+              6. Occasionally I have something like 10 variants I want to test
+              and that&rsquo;s [a big study] to set up. (research takes too long
+              3)
+            </p>
+            <p>
+              7. Our company is experimenting with [designer-led research].
+              Templatized tools are good. We usually have this report format we
+              follow when we share out. (research is being democratized 2)
+            </p>
+            <p>
+              8.I think it&rsquo;s always helpful to have a [heavy quant
+              portion] and a light qual portion when testing high-risk, more
+              complex changes. (quant research is a value add 2)
+            </p>
+            <p>
+              9.Obviously AI tooling is a big thing and there is just so much
+              going on. But one thing is that it&rsquo;s letting everyone be
+              able to do [a bit of everything]. (research is being democratized
+              3)
+            </p>
+            <p>
+              10.Building is much fasters now, but you still [can&rsquo;t ship
+              everything]. Prototyping is still necessary. And that&rsquo;s much
+              faster now too. (prototype testing is valuable 2)
+            </p>
+            <p>
+              11.There&rsquo;s a lot going on. Designers and PMs are all
+              vibecoding. We&rsquo;re [building too much] stuff too fast.
+              Sometimes without any sort of validation. (prototype testing is
+              valuable 3)
+            </p>
+            <p>
+              12.We have a couple mixed method researchers but we&rsquo;re
+              mostly qual. I can definitely see the [value add] on the quant
+              side. (quant research is a value add 3)
+            </p>
+            <ResearchThemeCanvas themes={researchThemes} />
           </SubSectionContainer>
           <SubSectionContainer>
             <VerticalCardGroup
@@ -259,7 +496,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                   <p>
                     Existing quantitativ UX research workflows are{" "}
                     {[
-                      { label: "intimidating", after: ", " },
+                      { label: "specialized", after: ", " },
                       { label: "time-consuming", after: ", and " },
                       {
                         label: "fragmented",
@@ -298,10 +535,10 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                         className={theme.textColorClass}
                       />
                       <div>
-                        <h5 className="text-pretty font-sans text-3xl">
+                        <h5 className="text-pretty font-serif text-[1.875rem]">
                           Statistics is inherently scientific.
                         </h5>
-                        <p className="mt-3">
+                        <p className="mt-3 !font-serif">
                           To get results that are statistically sound, expertise
                           is required.
                         </p>
@@ -321,10 +558,10 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                         className={theme.textColorClass}
                       />
                       <div>
-                        <h5 className="text-pretty font-sans text-3xl">
+                        <h5 className="text-pretty font-serif text-[1.875rem]">
                           Quantitative research takes time.
                         </h5>
-                        <p className="mt-3">
+                        <p className="mt-3 !font-serif">
                           Experiment design, sourcing, and reporting all take
                           time. It is not uncommon for an end-to-end process to
                           takes weeks.
@@ -345,10 +582,10 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                         className={theme.textColorClass}
                       />
                       <div>
-                        <h5 className="text-pretty font-sans text-3xl">
+                        <h5 className="text-pretty font-serif text-[1.875rem]">
                           Rigor is operationally heavy.
                         </h5>
-                        <p className="mt-3">
+                        <p className="mt-3 !font-serif">
                           Experiment design, recruitment, data collection,
                           analysis, and reporting often span multiple tools and
                           skillsets.
@@ -391,8 +628,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             }
             alignment="aligned"
             stickyTopOnLarge="5rem"
-            setCardAspectRatioOnLarge
-            cardAspectRatioOnLarge="16/9"
+            cardWidthClassNameOnLarge="md:w-[80rem]"
+            maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
             bottomMarginOnLarge="2rem"
             cards={[
               {
@@ -491,8 +728,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             }
             alignment="aligned"
             stickyTopOnLarge="5rem"
-            setCardAspectRatioOnLarge
-            cardAspectRatioOnLarge="16/9"
+            cardWidthClassNameOnLarge="md:w-[80rem]"
+            maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
             bottomMarginOnLarge="2rem"
             cards={[
               {
@@ -576,8 +813,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             }
             alignment="aligned"
             stickyTopOnLarge="5rem"
-            setCardAspectRatioOnLarge
-            cardAspectRatioOnLarge="16/9"
+            cardWidthClassNameOnLarge="md:w-[80rem]"
+            maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
             bottomMarginOnLarge="2rem"
             cards={[
               {
@@ -700,15 +937,15 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                 <SubSectionContainer>
                   <SubHeading>Reception</SubHeading>
                   <p>
-                    We put Flux in front of dozens of UXers and the feedback was
-                    overwhelming positive.
+                    We put Flux in front of dozens of UXers to use and the
+                    feedback was overwhelming positive.
                   </p>
                 </SubSectionContainer>
               }
               stickyTopOnLarge="5rem"
               bottomMarginOnLarge="2rem"
-              setCardAspectRatioOnLarge
-              cardAspectRatioOnLarge="16/9"
+              cardWidthClassNameOnLarge="md:w-[80rem]"
+              maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
               alignment="aligned"
               groupClassName="gap-2 "
               cards={[

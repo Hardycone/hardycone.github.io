@@ -2,7 +2,6 @@
 
 import {
   ImgHTMLAttributes,
-  KeyboardEvent,
   SyntheticEvent,
   useEffect,
   useLayoutEffect,
@@ -11,7 +10,6 @@ import {
   useState,
 } from "react";
 import { animate, motion, useMotionValue } from "framer-motion";
-import { ROUNDED_SQUIRCLE_01, ROUNDED_SQUIRCLE_02_MD } from "@/lib/styleTokens";
 import { useCardGroupContext } from "@/app/context/CardGroupContext";
 
 interface ImageSize {
@@ -29,7 +27,7 @@ export interface ZoomableImageProps
   className?: string;
   imageClassName?: string;
   imageRoundedClassName?: string;
-  roundedClassName?: string;
+  unzoomedPadding?: string | number;
   onZoomChange?: (isZoomed: boolean) => void;
 }
 
@@ -48,16 +46,20 @@ export default function ZoomableImage({
   className = "",
   imageClassName = "",
   imageRoundedClassName = "",
-  roundedClassName = `${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_02_MD}`,
+  unzoomedPadding = 0,
   onLoad,
   onZoomChange,
   ...imageProps
 }: ZoomableImageProps) {
   const frameRef = useRef<HTMLDivElement>(null);
+  const unzoomedContentRef = useRef<HTMLDivElement>(null);
   const onZoomChangeRef = useRef(onZoomChange);
   const [frameSize, setFrameSize] = useState<ImageSize | null>(null);
+  const [unzoomedContentSize, setUnzoomedContentSize] =
+    useState<ImageSize | null>(null);
   const [imageSize, setImageSize] = useState<ImageSize | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [roundImageSurface, setRoundImageSurface] = useState(true);
   const cardGroupContext = useCardGroupContext();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -69,24 +71,46 @@ export default function ZoomableImage({
 
   useLayoutEffect(() => {
     const frame = frameRef.current;
-    if (!frame) return;
+    const unzoomedContent = unzoomedContentRef.current;
+    if (!frame || !unzoomedContent) return;
 
-    const updateFrameSize = () => {
-      const { width, height } = frame.getBoundingClientRect();
-      setFrameSize({ width, height });
+    const updateImageGeometry = () => {
+      const nextFrameSize = {
+        width: frame.clientWidth,
+        height: frame.clientHeight,
+      };
+      const nextUnzoomedContentSize = {
+        width: unzoomedContent.clientWidth,
+        height: unzoomedContent.clientHeight,
+      };
+
+      setFrameSize((currentSize) =>
+        currentSize?.width === nextFrameSize.width &&
+        currentSize.height === nextFrameSize.height
+          ? currentSize
+          : nextFrameSize,
+      );
+      setUnzoomedContentSize((currentSize) =>
+        currentSize?.width === nextUnzoomedContentSize.width &&
+        currentSize.height === nextUnzoomedContentSize.height
+          ? currentSize
+          : nextUnzoomedContentSize,
+      );
     };
 
-    updateFrameSize();
+    updateImageGeometry();
 
-    const resizeObserver = new ResizeObserver(updateFrameSize);
+    const resizeObserver = new ResizeObserver(updateImageGeometry);
     resizeObserver.observe(frame);
+    resizeObserver.observe(unzoomedContent);
 
     return () => resizeObserver.disconnect();
-  }, []);
+  }, [unzoomedPadding]);
 
   useEffect(() => {
     setImageSize(null);
     setIsZoomed(false);
+    setRoundImageSurface(true);
     x.set(0);
     y.set(0);
     scale.set(1);
@@ -95,9 +119,12 @@ export default function ZoomableImage({
   const zoomGeometry = useMemo(() => {
     if (
       !frameSize ||
+      !unzoomedContentSize ||
       !imageSize ||
       frameSize.width <= 0 ||
       frameSize.height <= 0 ||
+      unzoomedContentSize.width <= 0 ||
+      unzoomedContentSize.height <= 0 ||
       imageSize.width <= 0 ||
       imageSize.height <= 0
     ) {
@@ -112,16 +139,16 @@ export default function ZoomableImage({
     }
 
     const containScale = Math.min(
-      frameSize.width / imageSize.width,
-      frameSize.height / imageSize.height,
+      unzoomedContentSize.width / imageSize.width,
+      unzoomedContentSize.height / imageSize.height,
     );
-    const coverScale = Math.max(
-      frameSize.width / imageSize.width,
-      frameSize.height / imageSize.height,
-    );
-    const nextScale = Math.max(1, coverScale / containScale);
     const containWidth = imageSize.width * containScale;
     const containHeight = imageSize.height * containScale;
+    const nextScale = Math.max(
+      1,
+      frameSize.width / containWidth,
+      frameSize.height / containHeight,
+    );
     const zoomedWidth = containWidth * nextScale;
     const zoomedHeight = containHeight * nextScale;
     const maxX = Math.max(0, (zoomedWidth - frameSize.width) / 2);
@@ -135,13 +162,14 @@ export default function ZoomableImage({
       containHeight,
       canZoom: nextScale > 1.001,
     };
-  }, [frameSize, imageSize]);
+  }, [frameSize, imageSize, unzoomedContentSize]);
 
   const canUseZoom =
     zoomGeometry.canZoom && !cardGroupContext?.prioritizeCardClick;
 
   useEffect(() => {
     if (!canUseZoom && isZoomed) {
+      setRoundImageSurface(true);
       setIsZoomed(false);
       onZoomChangeRef.current?.(false);
     }
@@ -149,6 +177,7 @@ export default function ZoomableImage({
 
   useEffect(() => {
     if (!zoomGeometry.canZoom && isZoomed) {
+      setRoundImageSurface(true);
       setIsZoomed(false);
       onZoomChangeRef.current?.(false);
     }
@@ -165,22 +194,27 @@ export default function ZoomableImage({
       animate(x, nextX, ZOOM_TRANSITION),
       animate(y, nextY, ZOOM_TRANSITION),
     ];
+    let isCancelled = false;
 
-    return () => animations.forEach((animation) => animation.stop());
+    if (isZoomed) {
+      Promise.all(animations).then(() => {
+        if (!isCancelled) setRoundImageSurface(false);
+      });
+    }
+
+    return () => {
+      isCancelled = true;
+      animations.forEach((animation) => animation.stop());
+    };
   }, [isZoomed, scale, x, y, zoomGeometry]);
 
   const toggleZoom = () => {
     if (!canUseZoom) return;
 
     const nextIsZoomed = !isZoomed;
+    if (!nextIsZoomed) setRoundImageSurface(true);
     setIsZoomed(nextIsZoomed);
     onZoomChangeRef.current?.(nextIsZoomed);
-  };
-
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    event.preventDefault();
-    toggleZoom();
   };
 
   const handleLoad = (event: SyntheticEvent<HTMLImageElement>) => {
@@ -195,17 +229,16 @@ export default function ZoomableImage({
   return (
     <div
       ref={frameRef}
-      role={canUseZoom ? "button" : undefined}
-      tabIndex={canUseZoom ? 0 : undefined}
-      aria-pressed={canUseZoom ? isZoomed : undefined}
-      aria-label={
-        canUseZoom
-          ? `${isZoomed ? "Zoom out" : "Zoom in"}: ${alt || "image"}`
-          : undefined
-      }
-      onKeyDown={handleKeyDown}
-      className={`${roundedClassName} relative size-full overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-foreground/60 dark:focus-visible:ring-dark-foreground/60 ${canUseZoom ? (isZoomed ? "cursor-grab touch-none active:cursor-grabbing" : "cursor-zoom-in touch-pan-y") : ""} ${className}`}
+      data-card-group-interactive={canUseZoom ? "true" : undefined}
+      className={`relative size-full overflow-hidden ${canUseZoom ? (isZoomed ? "cursor-grab touch-none active:cursor-grabbing" : "cursor-zoom-in touch-pan-y") : ""} ${className}`}
     >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none invisible absolute inset-0"
+        style={{ padding: unzoomedPadding }}
+      >
+        <div ref={unzoomedContentRef} className="size-full" />
+      </div>
       <motion.div
         className={`size-full origin-center ${isZoomed ? "will-change-transform" : ""}`}
         style={{ x, y, scale }}
@@ -222,7 +255,11 @@ export default function ZoomableImage({
       >
         <div className="flex size-full items-center justify-center">
           <div
-            className={`${imageRoundedClassName} overflow-hidden`}
+            className={
+              roundImageSurface
+                ? `${imageRoundedClassName} overflow-hidden`
+                : ""
+            }
             style={
               zoomGeometry.containWidth > 0 && zoomGeometry.containHeight > 0
                 ? {

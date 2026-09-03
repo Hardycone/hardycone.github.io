@@ -80,8 +80,8 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
         <HorizontalCardGroup
           alignment="centered"
           bottomMarginOnLarge="2rem"
-          setCardAspectRatioOnLarge
-          cardAspectRatioOnLarge="16/9"
+          cardWidthClassNameOnLarge="md:w-[80rem]"
+          maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
           stickyTopOnLarge="5rem"
           cards={[
             [

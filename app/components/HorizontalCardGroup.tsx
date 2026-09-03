@@ -24,6 +24,8 @@ interface HorizontalCardGroupBaseProps {
   alignment?: HorizontalCardAlignment;
   groupClassName?: string;
   cardSlotClassName?: string;
+  cardWidthClassNameOnLarge?: string;
+  maxCardWidthClassNameOnLarge?: string;
   cardHeightClassNameOnSmall?: string;
   stickyTopOnLarge?: string;
   bottomMarginOnLarge?: string;
@@ -41,26 +43,10 @@ type HorizontalCardGroupBodyProps =
       bodyClassName?: never;
     };
 
-type HorizontalCardGroupSizingProps =
-  | {
-      setCardAspectRatioOnLarge: true;
-      cardAspectRatioOnLarge: string;
-      maxCardWidthClassNameOnLarge?: string;
-      cardWidthClassNameOnLarge?: never;
-    }
-  | {
-      setCardAspectRatioOnLarge?: false;
-      cardAspectRatioOnLarge?: never;
-      maxCardWidthClassNameOnLarge?: never;
-      cardWidthClassNameOnLarge?: string;
-    };
-
 export type HorizontalCardGroupProps = HorizontalCardGroupBaseProps &
-  HorizontalCardGroupBodyProps &
-  HorizontalCardGroupSizingProps;
+  HorizontalCardGroupBodyProps;
 
 interface HorizontalCardGroupStyle extends CSSProperties {
-  "--horizontal-card-aspect-ratio"?: string;
   "--horizontal-card-group-sticky-top": string;
   "--horizontal-card-group-bottom-margin": string;
 }
@@ -308,7 +294,7 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
       }
 
       const interactiveTarget = (event.target as HTMLElement).closest(
-        "a, button, input, select, textarea, [role='button']",
+        "a, button, input, select, textarea, [role='button'], [data-card-group-interactive='true']",
       );
       if (interactiveTarget) return;
 
@@ -471,7 +457,7 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
       if (!isEnabled || horizontalTravel <= 0) return;
 
       const interactiveTarget = (event.target as HTMLElement).closest(
-        "a, button, input, select, textarea, [role='button']",
+        "a, button, input, select, textarea, [role='button'], [data-card-group-interactive='true']",
       );
       const selection = window.getSelection();
       if (interactiveTarget || (selection && !selection.isCollapsed)) return;
@@ -569,9 +555,9 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
     };
   }, [alignment, cards.length, isEnabled]);
 
-  const cardSizingClassName = props.setCardAspectRatioOnLarge
-    ? `md:aspect-[var(--horizontal-card-aspect-ratio)] md:w-auto ${props.maxCardWidthClassNameOnLarge ?? ""}`
-    : (props.cardWidthClassNameOnLarge ?? "md:w-[min(42vw,30rem)]");
+  const cardSizingClassName = `${
+    props.cardWidthClassNameOnLarge ?? "md:w-[min(42vw,30rem)]"
+  } ${props.maxCardWidthClassNameOnLarge ?? ""}`;
 
   return (
     <div
@@ -579,9 +565,6 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
       className="relative"
       style={
         {
-          "--horizontal-card-aspect-ratio": props.setCardAspectRatioOnLarge
-            ? props.cardAspectRatioOnLarge
-            : undefined,
           "--horizontal-card-group-sticky-top": stickyTopOnLarge,
           "--horizontal-card-group-bottom-margin": bottomMarginOnLarge,
           height: isEnabled
@@ -600,7 +583,7 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
             {props.body}
           </div>
         ) : null}
-        <div className="relative h-auto w-full [container-type:inline-size] md:mb-0 md:min-h-0 md:flex-1">
+        <div className="relative h-auto w-full [container-type:inline-size] md:mb-0 md:min-h-0 md:flex-1 md:[container-type:size]">
           <div className="h-auto w-full overflow-visible md:absolute md:left-1/2 md:top-0 md:h-full md:w-screen md:-translate-x-1/2 md:overflow-x-clip md:overflow-y-visible">
             <div
               ref={cardViewportRef}
