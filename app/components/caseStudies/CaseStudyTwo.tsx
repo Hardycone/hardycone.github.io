@@ -81,101 +81,24 @@ const researchThemes: ResearchTheme[] = [
     ],
   },
   {
-    id: "quant-value",
-    label: "Quant research is a value add",
-    quotes: [
-      {
-        id: "quant-stakeholders",
-        compactPosition: {
-          x: "-2%",
-          y: "-22%",
-        },
-        before:
-          "As a qual researcher, sometimes I feel it's difficult to get buy-in from more ",
-        highlight: "quant focused stakeholders",
-        after: ", and I'm not really specially trained in that area.",
-      },
-      {
-        id: "heavy-quant",
-        compactPosition: {
-          x: "5%",
-          y: "32%",
-        },
-        before: "I think it's always helpful to have a ",
-        highlight: "heavy quant portion",
-        after:
-          " and a light qual portion when testing high-risk, more complex changes.",
-      },
-      {
-        id: "quant-value-add",
-        compactPosition: {
-          x: "-25%",
-          y: "20%",
-        },
-        before:
-          "We have a couple mixed method researchers but we're mostly qual. I can definitely see the ",
-        highlight: "value add",
-        after: " on the quant side.",
-      },
-    ],
-  },
-  {
-    id: "prototype-value",
-    label: "Prototype testing is valuable",
-    quotes: [
-      {
-        id: "prototype-ab-test",
-        compactPosition: {
-          x: "-15%",
-          y: "-23%",
-        },
-        before:
-          "There are things we definitely want to validate with in-product with a/b testing. But that's not always the case. For earlier in the cycle, we don't really have a good tool to ",
-        highlight: "a/b test prototypes quickly",
-        after: ".",
-      },
-      {
-        id: "cannot-ship-everything",
-        compactPosition: {
-          x: "6%",
-          y: "-39%",
-        },
-        before: "Building is much fasters now, but you still ",
-        highlight: "can't ship everything",
-        after:
-          ". Prototyping is still necessary. And that's much faster now too.",
-      },
-      {
-        id: "building-too-much",
-        compactPosition: {
-          x: "-8%",
-          y: "30%",
-        },
-        before:
-          "There's a lot going on. Designers and PMs are all vibecoding. We're ",
-        highlight: "building too much",
-        after: " stuff too fast. Sometimes without any sort of validation.",
-      },
-    ],
-  },
-  {
     id: "research-democratization",
-    label: "Research is being democratized",
+    label: "Everyone is doing research",
     quotes: [
       {
         id: "democratizing",
         compactPosition: {
-          x: "25%",
+          x: "-25%",
           y: "-31%",
         },
-        before: "We have 20 designers on our team running research. There is ",
-        highlight: "this democratizing",
+        before:
+          "We have 20 designers on our team running research. There is this ",
+        highlight: "democratizing",
         after: " that's happening.",
       },
       {
         id: "designer-led-research",
         compactPosition: {
-          x: "-28%",
+          x: "28%",
           y: "-24%",
         },
         before: "Our company is experimenting with ",
@@ -186,13 +109,85 @@ const researchThemes: ResearchTheme[] = [
       {
         id: "bit-of-everything",
         compactPosition: {
-          x: "-20%",
+          x: "-7%",
           y: "26%",
         },
         before:
           "Obviously AI tooling is a big thing and there is just so much going on. But one thing is that it's letting everyone be able to do ",
         highlight: "a bit of everything",
         after: ".",
+      },
+    ],
+  },
+  {
+    id: "quant-value",
+    label: "Quant research is desirable",
+    quotes: [
+      {
+        id: "quant-stakeholders",
+        compactPosition: {
+          x: "-2%",
+          y: "-22%",
+        },
+        before: "As a qual researcher, sometimes I feel it's difficult to ",
+        highlight: "get buy-in",
+        after:
+          " from more quant focused stakeholders, and I'm not really specially trained in that area.",
+      },
+      {
+        id: "heavy-quant",
+        compactPosition: {
+          x: "23%",
+          y: "39%",
+        },
+        before:
+          "I think it's always helpful to have a heavy quant portion and a light qual portion when testing more complex changes in order to ",
+        highlight: "mitigate risk",
+        after: ".",
+      },
+      {
+        id: "value-add",
+        compactPosition: {
+          x: "-34%",
+          y: "12%",
+        },
+        before:
+          "We have a couple mixed method researchers but we're mostly qual. I can definitely see the ",
+        highlight: "value add",
+        after: " on the quant side.",
+      },
+      {
+        id: "ab-test",
+        compactPosition: {
+          x: "-35%",
+          y: "-33%",
+        },
+        before:
+          "There are things we definitely want to validate with in-product with a/b testing. But that's not always the case. For earlier in the cycle, we don't really have a good tool to ",
+        highlight: "a/b test prototypes",
+        after: " quickly.",
+      },
+      {
+        id: "ship-everything",
+        compactPosition: {
+          x: "16%",
+          y: "-39%",
+        },
+        before: "Building is much fasters now, but you still ",
+        highlight: "can't ship everything",
+        after:
+          ". Prototyping is still necessary. And that's much faster now too.",
+      },
+      {
+        id: "too-much",
+        compactPosition: {
+          x: "-8%",
+          y: "30%",
+        },
+        before:
+          "There's a lot going on. Designers and PMs are all vibecoding. We're ",
+        highlight: "building too much",
+        after: " stuff too fast. Sometimes without any sort of validation.",
       },
     ],
   },
@@ -412,73 +407,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               Once we sat down to compare notes, the emerging insights are
               illuminating.
             </p>
-            <p>
-              1.Sometimes I have two conflicting design directions, and I just
-              want to do a quick test to estimate how users would use and react
-              to them with some level of confidence, but then I talk to a
-              researcher, and I&rsquo;m told that would [take 2 weeks].
-              (research takes too long 1)
-            </p>
-            <p>
-              2. As a qual researcher, sometimes I feel it&rsquo;s difficult to
-              get buy-in from more [quant focused stakeholders], and I&rsquo;m
-              not really specially trained in that area. (quant research is a
-              value add 1)
-            </p>
-            <p>
-              3. Our org is constantly pushing for more [rapid dev cycles]. A
-              lot of times the concepts I want to explore could already be
-              irrelevant by the time I figure out how to test. (research takes
-              too long 2)
-            </p>
-            <p>
-              4. There are things we definitely want to validate with in-product
-              with a/b testing. But that&rsquo;s not always the case. For
-              earlier in the cycle, we don&rsquo;t really have a good tool to
-              [a/b test prototypes quickly]. (prototype testing is valuable 1)
-            </p>
-            <p>
-              5. We have 20 designers on our team running research. There is
-              [this democratizing] that&rsquo;s happening. (research is being
-              democratized 1)
-            </p>
-            <p>
-              6. Occasionally I have something like 10 variants I want to test
-              and that&rsquo;s [a big study] to set up. (research takes too long
-              3)
-            </p>
-            <p>
-              7. Our company is experimenting with [designer-led research].
-              Templatized tools are good. We usually have this report format we
-              follow when we share out. (research is being democratized 2)
-            </p>
-            <p>
-              8.I think it&rsquo;s always helpful to have a [heavy quant
-              portion] and a light qual portion when testing high-risk, more
-              complex changes. (quant research is a value add 2)
-            </p>
-            <p>
-              9.Obviously AI tooling is a big thing and there is just so much
-              going on. But one thing is that it&rsquo;s letting everyone be
-              able to do [a bit of everything]. (research is being democratized
-              3)
-            </p>
-            <p>
-              10.Building is much fasters now, but you still [can&rsquo;t ship
-              everything]. Prototyping is still necessary. And that&rsquo;s much
-              faster now too. (prototype testing is valuable 2)
-            </p>
-            <p>
-              11.There&rsquo;s a lot going on. Designers and PMs are all
-              vibecoding. We&rsquo;re [building too much] stuff too fast.
-              Sometimes without any sort of validation. (prototype testing is
-              valuable 3)
-            </p>
-            <p>
-              12.We have a couple mixed method researchers but we&rsquo;re
-              mostly qual. I can definitely see the [value add] on the quant
-              side. (quant research is a value add 3)
-            </p>
+
             <ResearchThemeCanvas themes={researchThemes} />
           </SubSectionContainer>
           <SubSectionContainer>

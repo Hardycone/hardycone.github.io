@@ -97,6 +97,7 @@ interface ProjectSummaryProps {
   floatingPaneRef?: React.RefObject<HTMLDivElement | null>;
   isFloatingPaneVisible?: boolean;
   isTransitionLocked?: boolean;
+  onHeaderBackgroundClick?: () => void;
   onLayoutAnimationComplete?: () => void;
   onBottomNavigationStart?: (slug: string) => void;
 }
@@ -114,6 +115,7 @@ export default function ProjectSummary({
   floatingPaneRef,
   isFloatingPaneVisible = true,
   isTransitionLocked = false,
+  onHeaderBackgroundClick,
   onLayoutAnimationComplete,
   onBottomNavigationStart,
 }: ProjectSummaryProps) {
@@ -453,6 +455,17 @@ export default function ProjectSummary({
         ? 1
         : 0
       : 1;
+  const floatingPanePointerEvents =
+    variant === "header" && !isTransitionLocked && !transitioningToNext
+      ? isFloatingPaneVisible
+        ? "auto"
+        : "none"
+      : "auto";
+  const isHeaderBackgroundInteractive =
+    variant === "header" &&
+    Boolean(onHeaderBackgroundClick) &&
+    !isTransitionLocked &&
+    !transitioningToNext;
 
   // --- Framer Motion variants
   const motionVariants = {
@@ -616,7 +629,12 @@ export default function ProjectSummary({
         {/* Image as background */}
         {displayedProject.image && (
           <motion.div
-            className="pointer-events-none absolute overflow-hidden supports-[corner-shape:squircle]:[corner-shape:squircle]"
+            onClick={
+              isHeaderBackgroundInteractive
+                ? onHeaderBackgroundClick
+                : undefined
+            }
+            className={`${isHeaderBackgroundInteractive ? "cursor-default" : "pointer-events-none"} absolute overflow-hidden supports-[corner-shape:squircle]:[corner-shape:squircle]`}
             style={backgroundImageStyle}
           >
             <img
@@ -649,6 +667,7 @@ export default function ProjectSummary({
           layout
           layoutDependency={layoutDependency}
           className={`z-50 flex h-fit max-h-full min-h-0 flex-col ${floatingPaneLayoutClasses}`}
+          style={{ pointerEvents: floatingPanePointerEvents }}
         >
           <motion.div
             ref={floatingPaneRef}
@@ -667,14 +686,7 @@ export default function ProjectSummary({
             className={`project-summary-scrollbar flex h-fit max-h-full min-h-0 w-full flex-col ${floatingPaneContentClasses} ${floatingPaneOverflowY} overflow-x-hidden rounded-5 supports-[corner-shape:squircle]:rounded-10 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-6 supports-[corner-shape:squircle]:md:rounded-12 ${theme.bgSoftColorClass} bg-opacity-90 ${variant === "preview" ? "backdrop-blur-md" : ""} dark:bg-opacity-90`}
             style={{
               ...mainFloatingStyle,
-              pointerEvents:
-                variant === "header" &&
-                !isTransitionLocked &&
-                !transitioningToNext
-                  ? isFloatingPaneVisible
-                    ? "auto"
-                    : "none"
-                  : "auto",
+              pointerEvents: floatingPanePointerEvents,
             }}
           >
             {/* Title text */}

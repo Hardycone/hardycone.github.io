@@ -58,11 +58,18 @@ interface ActiveCard {
   quoteId: string;
   position: CardPosition;
   origin: CardBox;
+  restingOrigin: CardBox;
   target: CardBox;
   phraseTarget: {
     left: number;
     top: number;
   };
+  openingPhraseOrigin: {
+    left: number;
+    top: number;
+  };
+  openingFontSize: number;
+  openingLineHeight: number;
   compactFontSize: number;
   compactLineHeight: number;
   expandedFontSize: number;
@@ -118,6 +125,26 @@ function measureBox(element: HTMLDivElement): CardBox {
     top: bounds.top,
     width: bounds.width,
     height: bounds.height,
+  };
+}
+
+function getElementScale(element: HTMLElement) {
+  const transform = window.getComputedStyle(element).transform;
+  if (!transform || transform === "none") return 1;
+
+  const matrix = new DOMMatrixReadOnly(transform);
+  return Math.hypot(matrix.a, matrix.b) || 1;
+}
+
+function removeScaleFromBox(box: CardBox, scale: number): CardBox {
+  const width = box.width / scale;
+  const height = box.height / scale;
+
+  return {
+    left: box.left + (box.width - width) / 2,
+    top: box.top + (box.height - height) / 2,
+    width,
+    height,
   };
 }
 
@@ -282,6 +309,11 @@ export default function ResearchThemeCanvas({
       const expandedFontSize = getExpandedFontSize();
       const position = getCardPosition();
       const measuredOrigin = measureBox(element);
+      const openingScale = getElementScale(element);
+      const measuredRestingOrigin = removeScaleFromBox(
+        measuredOrigin,
+        openingScale,
+      );
       const canvas = canvasRef.current;
       const positioningParent =
         position === "absolute" && element.offsetParent instanceof HTMLElement
@@ -291,6 +323,10 @@ export default function ResearchThemeCanvas({
         position === "absolute" && positioningParent
           ? getBoxRelativeToParent(measuredOrigin, positioningParent)
           : measuredOrigin;
+      const restingOrigin =
+        position === "absolute" && positioningParent
+          ? getBoxRelativeToParent(measuredRestingOrigin, positioningParent)
+          : measuredRestingOrigin;
       const canvasTarget = getTargetBox(position);
       const target =
         position === "absolute" && canvas && positioningParent
@@ -305,8 +341,15 @@ export default function ResearchThemeCanvas({
         quoteId,
         position,
         origin,
+        restingOrigin,
         target,
         phraseTarget: { left: 12, top: 8 },
+        openingPhraseOrigin: {
+          left: 12 * openingScale,
+          top: 8 * openingScale,
+        },
+        openingFontSize: compactFontSize * openingScale,
+        openingLineHeight: compactLineHeight * openingScale,
         compactFontSize,
         compactLineHeight,
         expandedFontSize,
@@ -478,7 +521,7 @@ export default function ResearchThemeCanvas({
           placeholder?.offsetParent instanceof HTMLElement
             ? placeholder.offsetParent
             : null;
-        const origin = placeholderBounds
+        const restingOrigin = placeholderBounds
           ? position === "absolute" && positioningParent
             ? getBoxRelativeToParent(
                 {
@@ -495,7 +538,7 @@ export default function ResearchThemeCanvas({
                 width: placeholderBounds.width,
                 height: placeholderBounds.height,
               }
-          : current.origin;
+          : current.restingOrigin;
         const canvasTarget = getTargetBox(position);
         const target =
           position === "absolute" && canvas && positioningParent
@@ -511,7 +554,7 @@ export default function ResearchThemeCanvas({
         return {
           ...current,
           position,
-          origin,
+          restingOrigin,
           target,
           expandedFontSize,
           expandedLineHeight: expandedFontSize * 1.375,
@@ -534,6 +577,12 @@ export default function ResearchThemeCanvas({
     };
   }, [activeQuoteId, getTargetBox]);
 
+  const leftColumnThemeCount = Math.ceil(themes.length / 2);
+  const themeColumns = [
+    themes.slice(0, leftColumnThemeCount),
+    themes.slice(leftColumnThemeCount),
+  ];
+
   return (
     <>
       <HighlightCard className="overflow-hidden" highlightOnHover={false}>
@@ -541,334 +590,369 @@ export default function ResearchThemeCanvas({
           ref={canvasRef}
           className="relative isolate overflow-hidden p-3 md:p-8"
         >
-          <div className="grid auto-rows-[16rem] grid-cols-1 md:auto-rows-[19rem] md:grid-cols-2">
-            {themes.map((theme, themeIndex) => {
-              const tone = themeTones[themeIndex % themeTones.length];
-              const splitIndex = Math.ceil(theme.quotes.length / 2);
-              const topQuotes = theme.quotes.slice(0, splitIndex);
-              const bottomQuotes = theme.quotes.slice(splitIndex);
+          <div className="flex flex-col md:grid md:grid-cols-2">
+            {themeColumns.map((columnThemes, columnIndex) => (
+              <div
+                key={columnIndex === 0 ? "left-column" : "right-column"}
+                className="contents md:flex md:flex-col"
+              >
+                {columnThemes.map((theme, columnThemeIndex) => {
+                  const themeIndex =
+                    columnIndex === 0
+                      ? columnThemeIndex
+                      : leftColumnThemeCount + columnThemeIndex;
+                  const tone = themeTones[themeIndex % themeTones.length];
+                  const splitIndex = Math.ceil(theme.quotes.length / 2);
+                  const topQuotes = theme.quotes.slice(0, splitIndex);
+                  const bottomQuotes = theme.quotes.slice(splitIndex);
 
-              const renderQuoteTrigger = (quote: ResearchQuote) => {
-                const compactPositionStyle = getCompactPositionStyle(
-                  quote.compactPosition,
-                );
-                const isActive = activeCard?.quoteId === quote.id;
-                const usesMobileModal =
-                  isActive && activeCard.position === "fixed";
-                const showsSupportingText =
-                  isActive && activeCard.phase === "open";
-                const usesExpandedGeometry =
-                  isActive &&
-                  (activeCard.phase === "opening" ||
-                    activeCard.phase === "open" ||
-                    activeCard.phase === "closing-content");
-                const geometry =
-                  isActive && usesExpandedGeometry
-                    ? activeCard.target
-                    : activeCard?.origin;
-                const phraseGeometry =
-                  isActive && usesExpandedGeometry
-                    ? activeCard.phraseTarget
-                    : { left: 12, top: 8 };
-                const activeGeometryTransition =
-                  isActive &&
-                  (activeCard.phase === "positioning" ||
-                    activeCard.phase === "opening")
-                    ? openingGeometryTransition
-                    : geometryTransition;
+                  const renderQuoteTrigger = (quote: ResearchQuote) => {
+                    const compactPositionStyle = getCompactPositionStyle(
+                      quote.compactPosition,
+                    );
+                    const isActive = activeCard?.quoteId === quote.id;
+                    const usesMobileModal =
+                      isActive && activeCard.position === "fixed";
+                    const showsSupportingText =
+                      isActive && activeCard.phase === "open";
+                    const usesExpandedGeometry =
+                      isActive &&
+                      (activeCard.phase === "opening" ||
+                        activeCard.phase === "open" ||
+                        activeCard.phase === "closing-content");
+                    const geometry =
+                      isActive && usesExpandedGeometry
+                        ? activeCard.target
+                        : isActive && activeCard.phase === "closing"
+                          ? activeCard.restingOrigin
+                          : activeCard?.origin;
+                    const phraseGeometry =
+                      isActive && usesExpandedGeometry
+                        ? activeCard.phraseTarget
+                        : isActive && activeCard.phase === "closing"
+                          ? { left: 12, top: 8 }
+                          : (activeCard?.openingPhraseOrigin ?? {
+                              left: 12,
+                              top: 8,
+                            });
+                    const activeGeometryTransition =
+                      isActive &&
+                      (activeCard.phase === "positioning" ||
+                        activeCard.phase === "opening")
+                        ? openingGeometryTransition
+                        : geometryTransition;
 
-                return (
-                  <Fragment key={quote.id}>
-                    {isActive ? (
-                      <div
-                        key="placeholder"
-                        ref={(element) => {
-                          if (element) {
-                            placeholderRefs.current.set(quote.id, element);
-                          } else {
-                            placeholderRefs.current.delete(quote.id);
-                          }
-                        }}
-                        aria-hidden="true"
-                        className="pointer-events-none shrink-0"
-                        style={{
-                          ...compactPositionStyle,
-                          width: activeCard.origin.width,
-                          height: activeCard.origin.height,
-                        }}
-                      />
-                    ) : null}
-
-                    {!usesMobileModal ? (
-                      <motion.div
-                        key={`card-${cardVersions[quote.id] ?? 0}`}
-                        ref={(element) => {
-                          if (element) {
-                            triggerRefs.current.set(quote.id, element);
-                          } else {
-                            triggerRefs.current.delete(quote.id);
-                          }
-                        }}
-                        role={isActive ? "dialog" : "button"}
-                        aria-modal={isActive ? true : undefined}
-                        aria-expanded={!isActive ? false : undefined}
-                        aria-label={
-                          isActive
-                            ? `“${quote.before}${quote.highlight}${quote.after}” — ${theme.label}`
-                            : `Read the full quote containing “${quote.highlight}”`
-                        }
-                        tabIndex={isActive ? -1 : 0}
-                        onClick={(event) => {
-                          if (isActive) {
-                            closeQuote();
-                          } else {
-                            openQuote(quote.id, event.currentTarget);
-                          }
-                        }}
-                        onKeyDown={(event) => {
-                          if (
-                            !isActive &&
-                            (event.key === "Enter" || event.key === " ")
-                          ) {
-                            event.preventDefault();
-                            openQuote(quote.id, event.currentTarget);
-                          }
-                        }}
-                        className={`${isActive ? "z-30 max-w-none cursor-pointer overflow-hidden" : `${compactPositionStyle ? "z-10" : "relative"} max-w-[48%] cursor-pointer hover:brightness-[0.98] focus-visible:ring-2 focus-visible:ring-zinc-700 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:focus-visible:ring-offset-dark-background`} ${tone.note} rounded-none text-left font-serif text-xs font-semibold leading-tight outline-none transition-[filter] md:text-sm`}
-                        style={
-                          isActive
-                            ? {
-                                position: activeCard.position,
-                                left: activeCard.origin.left,
-                                top: activeCard.origin.top,
-                                width: activeCard.origin.width,
-                                height: activeCard.origin.height,
-                                maxWidth: "none",
-                                padding: 0,
-                              }
-                            : {
-                                ...compactPositionStyle,
-                                position:
-                                  compactPositionStyle?.position ?? "relative",
-                                left: compactPositionStyle?.left ?? "auto",
-                                top: compactPositionStyle?.top ?? "auto",
-                                width: "auto",
-                                height: "auto",
-                                maxWidth: "48%",
-                                padding: "8px 12px",
-                                translate:
-                                  compactPositionStyle?.translate ?? "none",
-                              }
-                        }
-                        animate={
-                          isActive && geometry
-                            ? {
-                                left: geometry.left,
-                                top: geometry.top,
-                                width: geometry.width,
-                                height: geometry.height,
-                              }
-                            : undefined
-                        }
-                        transition={
-                          isActive ? activeGeometryTransition : undefined
-                        }
-                        onAnimationComplete={() => {
-                          if (!isActive) return;
-
-                          if (activeCard.phase === "opening") {
-                            setActiveCard((current) =>
-                              current?.quoteId === quote.id &&
-                              current.phase === "opening"
-                                ? { ...current, phase: "open" }
-                                : current,
-                            );
-                          }
-
-                          if (activeCard.phase === "closing") {
-                            setCardVersions((current) => ({
-                              ...current,
-                              [quote.id]: (current[quote.id] ?? 0) + 1,
-                            }));
-                            setActiveCard(null);
-                            if (restoreFocusRef.current) {
-                              window.requestAnimationFrame(() =>
-                                triggerRefs.current
-                                  .get(quote.id)
-                                  ?.focus({ preventScroll: true }),
-                              );
-                            }
-                            restoreFocusRef.current = false;
-                          }
-                        }}
-                      >
-                        <motion.span
-                          key="phrase"
-                          ref={(element) => {
-                            if (element) {
-                              phraseRefs.current.set(quote.id, element);
-                            } else {
-                              phraseRefs.current.delete(quote.id);
-                            }
-                          }}
-                          aria-hidden={isActive ? true : undefined}
-                          className={`${isActive ? "absolute" : "relative"} z-20 inline-block whitespace-nowrap font-semibold`}
-                          style={
-                            isActive
-                              ? {
-                                  left: 12,
-                                  top: 8,
-                                  fontSize: `${activeCard.compactFontSize}px`,
-                                  lineHeight: `${activeCard.compactLineHeight}px`,
-                                }
-                              : {
-                                  left: "auto",
-                                  top: "auto",
-                                  fontSize: "inherit",
-                                  lineHeight: "inherit",
-                                }
-                          }
-                          animate={
-                            isActive
-                              ? {
-                                  left: phraseGeometry.left,
-                                  top: phraseGeometry.top,
-                                  fontSize: `${
-                                    usesExpandedGeometry
-                                      ? activeCard.expandedFontSize
-                                      : activeCard.compactFontSize
-                                  }px`,
-                                  lineHeight: `${
-                                    usesExpandedGeometry
-                                      ? activeCard.expandedLineHeight
-                                      : activeCard.compactLineHeight
-                                  }px`,
-                                }
-                              : undefined
-                          }
-                          transition={
-                            isActive ? activeGeometryTransition : undefined
-                          }
-                        >
-                          {quote.highlight}
-                        </motion.span>
-
+                    return (
+                      <Fragment key={quote.id}>
                         {isActive ? (
                           <div
-                            key="expanded-content"
-                            aria-hidden={!showsSupportingText}
-                            className="absolute left-0 top-0 z-10 flex flex-col justify-start overflow-y-auto text-zinc-800"
+                            key="placeholder"
+                            ref={(element) => {
+                              if (element) {
+                                placeholderRefs.current.set(quote.id, element);
+                              } else {
+                                placeholderRefs.current.delete(quote.id);
+                              }
+                            }}
+                            aria-hidden="true"
+                            className="pointer-events-none shrink-0"
                             style={{
-                              width: activeCard.target.width,
-                              height: activeCard.target.height,
-                              padding: activeCard.notePadding,
+                              ...compactPositionStyle,
+                              width: activeCard.restingOrigin.width,
+                              height: activeCard.restingOrigin.height,
                             }}
-                          >
-                            <blockquote
-                              className="text-pretty font-serif font-normal text-foreground-light dark:text-dark-foreground-light"
-                              style={{
-                                fontSize: activeCard.expandedFontSize,
-                                lineHeight: `${activeCard.expandedLineHeight}px`,
-                              }}
-                            >
-                              <motion.span
-                                className="inline"
-                                initial={{ opacity: 0 }}
-                                animate={{
-                                  opacity: showsSupportingText ? 1 : 0,
-                                }}
-                                transition={{
-                                  duration: slow(0.22),
-                                  ease: "easeOut",
-                                }}
-                                onAnimationComplete={() => {
-                                  if (activeCard.phase === "closing-content") {
-                                    setActiveCard((current) =>
-                                      current?.quoteId === quote.id &&
-                                      current.phase === "closing-content"
-                                        ? { ...current, phase: "closing" }
-                                        : current,
-                                    );
-                                  }
-                                }}
-                              >
-                                “{quote.before}
-                              </motion.span>
-                              <span
-                                ref={phraseTargetRef}
-                                aria-hidden="true"
-                                className="invisible inline-block whitespace-nowrap font-semibold"
-                              >
-                                {quote.highlight}
-                              </span>
-                              <motion.span
-                                className="inline"
-                                initial={{ opacity: 0 }}
-                                animate={{
-                                  opacity: showsSupportingText ? 1 : 0,
-                                }}
-                                transition={{
-                                  duration: slow(0.22),
-                                  ease: "easeOut",
-                                }}
-                              >
-                                {quote.after}”
-                              </motion.span>
-                            </blockquote>
-                          </div>
+                          />
                         ) : null}
 
-                        {isActive ? (
-                          <motion.button
-                            ref={closeButtonRef}
-                            type="button"
-                            aria-label="Close quote"
+                        {!usesMobileModal ? (
+                          <motion.div
+                            key={`card-${cardVersions[quote.id] ?? 0}`}
+                            ref={(element) => {
+                              if (element) {
+                                triggerRefs.current.set(quote.id, element);
+                              } else {
+                                triggerRefs.current.delete(quote.id);
+                              }
+                            }}
+                            role={isActive ? "dialog" : "button"}
+                            aria-modal={isActive ? true : undefined}
+                            aria-expanded={!isActive ? false : undefined}
+                            aria-label={
+                              isActive
+                                ? `“${quote.before}${quote.highlight}${quote.after}” — ${theme.label}`
+                                : `Read the full quote containing “${quote.highlight}”`
+                            }
+                            tabIndex={isActive ? -1 : 0}
                             onClick={(event) => {
-                              event.stopPropagation();
-                              closeQuote(event.detail === 0);
+                              if (isActive) {
+                                closeQuote();
+                              } else {
+                                openQuote(quote.id, event.currentTarget);
+                              }
                             }}
-                            className={`${showsSupportingText ? "pointer-events-auto" : "pointer-events-none"} absolute right-3 top-3 z-30 flex size-9 items-center justify-center transition-transform hover:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current`}
-                            initial={false}
-                            animate={{
-                              opacity: showsSupportingText ? 1 : 0,
-                              scale: showsSupportingText ? 1 : 0.8,
+                            onKeyDown={(event) => {
+                              if (
+                                !isActive &&
+                                (event.key === "Enter" || event.key === " ")
+                              ) {
+                                event.preventDefault();
+                                openQuote(quote.id, event.currentTarget);
+                              }
                             }}
-                            transition={{
-                              duration: slow(0.18),
-                              ease: "easeOut",
+                            className={`${isActive ? "z-30 max-w-none cursor-pointer overflow-hidden" : `${compactPositionStyle ? "z-10" : "relative"} min-w-max shrink-0 cursor-pointer transition-[filter,transform] hover:brightness-[0.98] focus-visible:ring-2 focus-visible:ring-zinc-700 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:focus-visible:ring-offset-dark-background md:hover:z-[15] md:hover:scale-[1.08]`} ${tone.note} rounded-none text-left font-serif text-xs font-semibold leading-tight shadow-sm outline-none md:text-sm`}
+                            style={
+                              isActive
+                                ? {
+                                    position: activeCard.position,
+                                    left: activeCard.origin.left,
+                                    top: activeCard.origin.top,
+                                    width: activeCard.origin.width,
+                                    height: activeCard.origin.height,
+                                    maxWidth: "none",
+                                    padding: 0,
+                                  }
+                                : {
+                                    ...compactPositionStyle,
+                                    position:
+                                      compactPositionStyle?.position ??
+                                      "relative",
+                                    left: compactPositionStyle?.left ?? "auto",
+                                    top: compactPositionStyle?.top ?? "auto",
+                                    width: "auto",
+                                    height: "auto",
+                                    maxWidth: "none",
+                                    padding: "8px 12px",
+                                    translate:
+                                      compactPositionStyle?.translate ?? "none",
+                                  }
+                            }
+                            animate={
+                              isActive && geometry
+                                ? {
+                                    left: geometry.left,
+                                    top: geometry.top,
+                                    width: geometry.width,
+                                    height: geometry.height,
+                                  }
+                                : undefined
+                            }
+                            transition={
+                              isActive ? activeGeometryTransition : undefined
+                            }
+                            onAnimationComplete={() => {
+                              if (!isActive) return;
+
+                              if (activeCard.phase === "opening") {
+                                setActiveCard((current) =>
+                                  current?.quoteId === quote.id &&
+                                  current.phase === "opening"
+                                    ? { ...current, phase: "open" }
+                                    : current,
+                                );
+                              }
+
+                              if (activeCard.phase === "closing") {
+                                setCardVersions((current) => ({
+                                  ...current,
+                                  [quote.id]: (current[quote.id] ?? 0) + 1,
+                                }));
+                                setActiveCard(null);
+                                if (restoreFocusRef.current) {
+                                  window.requestAnimationFrame(() =>
+                                    triggerRefs.current
+                                      .get(quote.id)
+                                      ?.focus({ preventScroll: true }),
+                                  );
+                                }
+                                restoreFocusRef.current = false;
+                              }
                             }}
                           >
-                            <XIcon size={18} weight="bold" />
-                          </motion.button>
+                            <motion.span
+                              key="phrase"
+                              ref={(element) => {
+                                if (element) {
+                                  phraseRefs.current.set(quote.id, element);
+                                } else {
+                                  phraseRefs.current.delete(quote.id);
+                                }
+                              }}
+                              aria-hidden={isActive ? true : undefined}
+                              className={`${isActive ? "absolute" : "relative"} z-20 inline-block whitespace-nowrap font-semibold`}
+                              style={
+                                isActive
+                                  ? {
+                                      left: activeCard.openingPhraseOrigin.left,
+                                      top: activeCard.openingPhraseOrigin.top,
+                                      fontSize: `${activeCard.openingFontSize}px`,
+                                      lineHeight: `${activeCard.openingLineHeight}px`,
+                                    }
+                                  : {
+                                      left: "auto",
+                                      top: "auto",
+                                      fontSize: "inherit",
+                                      lineHeight: "inherit",
+                                    }
+                              }
+                              animate={
+                                isActive
+                                  ? {
+                                      left: phraseGeometry.left,
+                                      top: phraseGeometry.top,
+                                      fontSize: `${
+                                        usesExpandedGeometry
+                                          ? activeCard.expandedFontSize
+                                          : activeCard.phase === "closing"
+                                            ? activeCard.compactFontSize
+                                            : activeCard.openingFontSize
+                                      }px`,
+                                      lineHeight: `${
+                                        usesExpandedGeometry
+                                          ? activeCard.expandedLineHeight
+                                          : activeCard.phase === "closing"
+                                            ? activeCard.compactLineHeight
+                                            : activeCard.openingLineHeight
+                                      }px`,
+                                    }
+                                  : undefined
+                              }
+                              transition={
+                                isActive ? activeGeometryTransition : undefined
+                              }
+                            >
+                              {quote.highlight}
+                            </motion.span>
+
+                            {isActive ? (
+                              <div
+                                key="expanded-content"
+                                aria-hidden={!showsSupportingText}
+                                className="absolute left-0 top-0 z-10 flex flex-col justify-start overflow-y-auto text-zinc-800"
+                                style={{
+                                  width: activeCard.target.width,
+                                  height: activeCard.target.height,
+                                  padding: activeCard.notePadding,
+                                }}
+                              >
+                                <blockquote
+                                  className="text-pretty font-serif font-normal text-foreground-light dark:text-dark-foreground-light"
+                                  style={{
+                                    fontSize: activeCard.expandedFontSize,
+                                    lineHeight: `${activeCard.expandedLineHeight}px`,
+                                  }}
+                                >
+                                  <motion.span
+                                    className="inline"
+                                    initial={{ opacity: 0 }}
+                                    animate={{
+                                      opacity: showsSupportingText ? 1 : 0,
+                                    }}
+                                    transition={{
+                                      duration: slow(0.22),
+                                      ease: "easeOut",
+                                    }}
+                                    onAnimationComplete={() => {
+                                      if (
+                                        activeCard.phase === "closing-content"
+                                      ) {
+                                        setActiveCard((current) =>
+                                          current?.quoteId === quote.id &&
+                                          current.phase === "closing-content"
+                                            ? { ...current, phase: "closing" }
+                                            : current,
+                                        );
+                                      }
+                                    }}
+                                  >
+                                    “{quote.before}
+                                  </motion.span>
+                                  <span
+                                    ref={phraseTargetRef}
+                                    aria-hidden="true"
+                                    className="invisible inline-block whitespace-nowrap font-semibold"
+                                  >
+                                    {quote.highlight}
+                                  </span>
+                                  <motion.span
+                                    className="inline"
+                                    initial={{ opacity: 0 }}
+                                    animate={{
+                                      opacity: showsSupportingText ? 1 : 0,
+                                    }}
+                                    transition={{
+                                      duration: slow(0.22),
+                                      ease: "easeOut",
+                                    }}
+                                  >
+                                    {quote.after}”
+                                  </motion.span>
+                                </blockquote>
+                              </div>
+                            ) : null}
+
+                            {isActive ? (
+                              <motion.button
+                                ref={closeButtonRef}
+                                type="button"
+                                aria-label="Close quote"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  closeQuote(event.detail === 0);
+                                }}
+                                className={`${showsSupportingText ? "pointer-events-auto" : "pointer-events-none"} absolute right-3 top-3 z-30 flex size-9 items-center justify-center transition-transform hover:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current`}
+                                initial={false}
+                                animate={{
+                                  opacity: showsSupportingText ? 1 : 0,
+                                  scale: showsSupportingText ? 1 : 0.8,
+                                }}
+                                transition={{
+                                  duration: slow(0.18),
+                                  ease: "easeOut",
+                                }}
+                              >
+                                <XIcon size={18} weight="bold" />
+                              </motion.button>
+                            ) : null}
+                          </motion.div>
                         ) : null}
-                      </motion.div>
-                    ) : null}
-                  </Fragment>
-                );
-              };
+                      </Fragment>
+                    );
+                  };
 
-              return (
-                <section
-                  key={theme.id}
-                  aria-label={`${theme.label} theme`}
-                  className="relative flex min-h-0 flex-col justify-between gap-3 p-2 md:p-3"
-                >
-                  <div className="flex min-h-12 items-start justify-between gap-2">
-                    {topQuotes.map((quote) => renderQuoteTrigger(quote))}
-                  </div>
+                  return (
+                    <div
+                      key={theme.id}
+                      className={
+                        columnIndex === 0
+                          ? "contents md:block"
+                          : "contents md:flex md:flex-1 md:items-center"
+                      }
+                    >
+                      <section
+                        aria-label={`${theme.label} theme`}
+                        className="relative flex h-[16rem] min-h-0 flex-col justify-between gap-3 p-2 md:h-[19rem] md:w-full md:flex-none md:p-3"
+                      >
+                        <div className="flex min-h-12 items-start justify-between gap-2">
+                          {topQuotes.map((quote) => renderQuoteTrigger(quote))}
+                        </div>
 
-                  <div
-                    className={`pointer-events-none mx-auto max-w-[14ch] text-balance text-center font-serif text-[1.75rem] font-extrabold leading-[0.95] md:text-[2.25rem] ${tone.label} ${themeOffsets[themeIndex % themeOffsets.length]}`}
-                  >
-                    {theme.label}
-                  </div>
+                        <div
+                          className={`pointer-events-none mx-auto max-w-[14ch] text-balance text-center font-serif text-[1.75rem] font-semibold leading-tight md:text-[2rem] ${tone.label} ${themeOffsets[themeIndex % themeOffsets.length]}`}
+                        >
+                          {theme.label}
+                        </div>
 
-                  <div className="flex min-h-12 items-end justify-around gap-2">
-                    {bottomQuotes.map((quote) => renderQuoteTrigger(quote))}
-                  </div>
-                </section>
-              );
-            })}
+                        <div className="flex min-h-12 items-end justify-around gap-2">
+                          {bottomQuotes.map((quote) =>
+                            renderQuoteTrigger(quote),
+                          )}
+                        </div>
+                      </section>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
 
           {activeCard?.position === "absolute" ? (
@@ -907,7 +991,7 @@ export default function ResearchThemeCanvas({
                 aria-modal="true"
                 aria-label={`“${activeMobileQuote.quote.before}${activeMobileQuote.quote.highlight}${activeMobileQuote.quote.after}” — ${activeMobileQuote.theme.label}`}
                 onClick={() => closeQuote()}
-                className={`${themeTones[activeMobileQuote.themeIndex % themeTones.length].note} relative z-10 flex max-h-[calc(100dvh-2rem)] w-full max-w-lg cursor-pointer flex-col justify-start overflow-y-auto overscroll-contain p-12 font-serif text-base leading-[1.375]`}
+                className={`${themeTones[activeMobileQuote.themeIndex % themeTones.length].note} relative z-10 flex max-h-[calc(100dvh-2rem)] w-full max-w-lg cursor-pointer flex-col justify-start overflow-y-auto overscroll-contain p-12 font-serif text-base leading-[1.375] shadow-sm`}
                 style={{
                   width: "min(calc(100vw - 2rem), calc(100dvh - 2rem), 32rem)",
                   height: "min(calc(100vw - 2rem), calc(100dvh - 2rem), 32rem)",

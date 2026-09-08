@@ -94,6 +94,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     restDelta: 0.001,
     restSpeed: 0.01,
   });
+  const headerHeroFocusRef = useRef<HTMLDivElement>(null);
   const headerIntroEndRef = useRef<HTMLDivElement>(null);
   const bottomRevealProgress = useMotionValue(0);
   const smoothBottomRevealProgress = useSpring(bottomRevealProgress, {
@@ -193,6 +194,18 @@ export default function MainContent({ children }: { children: ReactNode }) {
       viewMode,
     ],
   );
+
+  const scrollToHeaderHeroFocus = useCallback(() => {
+    const target = headerHeroFocusRef.current;
+    if (!target) return;
+
+    target.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+      block: "start",
+    });
+  }, []);
 
   const updateBottomRevealProgress = useCallback(() => {
     const anchor = bottomRevealAnchorRef.current;
@@ -974,14 +987,10 @@ export default function MainContent({ children }: { children: ReactNode }) {
       {viewMode === "case-study" && (
         <>
           <div
-            data-header-start-snap
+            ref={headerHeroFocusRef}
+            data-header-hero-focus-target
             aria-hidden="true"
-            className="pointer-events-none absolute left-0 top-0 h-px w-full snap-start"
-          />
-          <div
-            data-header-hero-focus-snap
-            aria-hidden="true"
-            className="pointer-events-none absolute left-0 h-px w-full snap-start"
+            className="pointer-events-none absolute left-0 h-px w-full"
             style={{
               top: `${HEADER_INTRO_DISTANCE_SVH * HEADER_HERO_FOCUS_PROGRESS}svh`,
             }}
@@ -1072,6 +1081,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
                 (paneNavSurface === "pane" && !isPaneNavMorphing)
               }
               isTransitionLocked={isBottomNavigationActive}
+              onHeaderBackgroundClick={
+                caseStudyContentReady && !transitioningToNext
+                  ? scrollToHeaderHeroFocus
+                  : undefined
+              }
               onLayoutAnimationComplete={handleSummaryLayoutComplete}
               onBottomNavigationStart={handleBottomNavigationStart}
             />
