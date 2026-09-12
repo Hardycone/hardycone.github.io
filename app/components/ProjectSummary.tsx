@@ -1,7 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useCallback, useEffect, useState, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useRef,
+} from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
@@ -11,7 +17,6 @@ import {
   AnimatePresence,
   motion,
   MotionValue,
-  useMotionValue,
   useMotionValueEvent,
   useTransform,
   type MotionStyle,
@@ -34,7 +39,6 @@ import {
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
 } from "@/lib/caseStudyTransitions";
 import projects from "../../data/projects";
-import type { Project } from "../../data/projects";
 import {
   PenNibIcon,
   MagnifyingGlassIcon,
@@ -69,12 +73,6 @@ const tagIconRegistry: Record<string, React.ElementType> = {
   BuildingsIcon,
 };
 
-function useHasMounted() {
-  const [hasMounted, setHasMounted] = useState(false);
-  useEffect(() => setHasMounted(true), []);
-  return hasMounted;
-}
-
 function hexToRgbChannels(hex: string) {
   const normalized = hex.replace("#", "");
   const expanded =
@@ -91,15 +89,31 @@ function hexToRgbChannels(hex: string) {
 
 interface ProjectSummaryProps {
   variant: "preview" | "header" | "bottom";
+  projectIndex: number;
   headerIntroProgress: MotionValue<number>;
   headerVisualProgress: MotionValue<number>;
   bottomVisualProgress: MotionValue<number>;
   floatingPaneRef?: React.RefObject<HTMLDivElement | null>;
   isFloatingPaneVisible?: boolean;
   isTransitionLocked?: boolean;
+  isHandoffSourceHidden?: boolean;
+  transitionRect?: SummaryTransitionRect | null;
   onHeaderBackgroundClick?: () => void;
   onLayoutAnimationComplete?: () => void;
-  onBottomNavigationStart?: (slug: string) => void;
+  onPreviewNavigationStart?: (
+    sourceRect: SummaryTransitionRect | null,
+  ) => void;
+  onBottomNavigationStart?: (
+    slug: string,
+    sourceRect: SummaryTransitionRect | null,
+  ) => void;
+}
+
+export interface SummaryTransitionRect {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
 }
 
 type MainFloatingStyle = MotionStyle & {
@@ -109,26 +123,27 @@ type MainFloatingStyle = MotionStyle & {
 
 export default function ProjectSummary({
   variant,
+  projectIndex,
   headerIntroProgress,
   headerVisualProgress,
   bottomVisualProgress,
   floatingPaneRef,
   isFloatingPaneVisible = true,
   isTransitionLocked = false,
+  isHandoffSourceHidden = false,
+  transitionRect,
   onHeaderBackgroundClick,
   onLayoutAnimationComplete,
+  onPreviewNavigationStart,
   onBottomNavigationStart,
 }: ProjectSummaryProps) {
-  const { transitioningToNext, activeIndex, previousIndex } =
-    useActiveProject();
-  const hasMounted = useHasMounted();
+  const { transitioningToNext } = useActiveProject();
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
   const isMdUp = useIsMdUp();
   const supportsSquircle = useSupportsSquircle();
-  const bottomCardHeight = useMotionValue(200);
   const [hasBottomRevealCompleted, setHasBottomRevealCompleted] = useState(
     () => bottomVisualProgress.get() >= 0.9,
   );
@@ -139,41 +154,7 @@ export default function ProjectSummary({
     );
   });
   const isSummaryInteractionEnabled =
-    variant !== "bottom" || hasBottomRevealCompleted;
-  const bottomCardResizeCleanupRef = useRef<(() => void) | null>(null);
-  const setBottomCardRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      bottomCardResizeCleanupRef.current?.();
-      bottomCardResizeCleanupRef.current = null;
-
-      if (!node || variant !== "bottom") return;
-
-      let measurementFrame: number | null = null;
-      const measure = () => {
-        const height = node.offsetHeight;
-        if (height > 0) bottomCardHeight.set(height);
-      };
-      const scheduleMeasurement = () => {
-        if (measurementFrame !== null) return;
-        measurementFrame = window.requestAnimationFrame(() => {
-          measurementFrame = null;
-          measure();
-        });
-      };
-
-      measure();
-      const resizeObserver = new ResizeObserver(scheduleMeasurement);
-      resizeObserver.observe(node);
-
-      bottomCardResizeCleanupRef.current = () => {
-        resizeObserver.disconnect();
-        if (measurementFrame !== null) {
-          window.cancelAnimationFrame(measurementFrame);
-        }
-      };
-    },
-    [bottomCardHeight, variant],
-  );
+    variant !== "bottom" || (hasBottomRevealCompleted && !isTransitionLocked);
   const headerImageRadiusMultiplier = supportsSquircle ? 2 : 1;
 
   const headerImageBaseInset = isMdUp ? 16 : 8;
@@ -283,14 +264,6 @@ export default function ProjectSummary({
 
   const bottomScale = useTransform(bottomVisualProgress, [0, 1], [0.8, 1]);
 
-  const bottomY = useTransform(
-    [bottomVisualProgress, bottomCardHeight],
-    (latest) => {
-      const [progress, cardHeight] = latest as number[];
-      return cardHeight * (1 - progress);
-    },
-  );
-
   const {
     cardLightShadow,
     cardDarkShadow,
@@ -314,21 +287,33 @@ export default function ProjectSummary({
   const frameShadow =
     resolvedTheme === "dark" ? frameDarkShadow : frameLightShadow;
 
-  const project =
-    variant === "bottom"
-      ? projects[(activeIndex + 1) % projects.length]
-      : projects[activeIndex];
+  const project = projects[projectIndex];
 
-  const direction =
-    previousIndex !== undefined && activeIndex < previousIndex ? "down" : "up";
-
-  const [key, setKey] = useState(`project-${project.id}`);
-  const [displayedProject, setdisplayedProject] = useState(project);
+  const displayedProject = project;
   const theme = useProjectTheme(displayedProject.id);
+  const floatingPaneNodeRef = useRef<HTMLDivElement>(null);
 
-  // near the top of ProjectSummary component
-  const isMorphingRef = useRef(false);
-  const morphTargetRef = useRef<Project | null>(null);
+  const setFloatingPaneNode = useCallback((node: HTMLDivElement | null) => {
+    floatingPaneNodeRef.current = node;
+  }, []);
+
+  useLayoutEffect(() => {
+    const node = floatingPaneNodeRef.current;
+
+    if (variant !== "header") {
+      node?.style.removeProperty("translate");
+    }
+
+    if (!floatingPaneRef || variant !== "header") return;
+
+    floatingPaneRef.current = node;
+
+    return () => {
+      if (floatingPaneRef.current === node) {
+        floatingPaneRef.current = null;
+      }
+    };
+  }, [displayedProject.id, floatingPaneRef, variant]);
 
   const [isNavigating, setIsNavigating] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -341,17 +326,26 @@ export default function ProjectSummary({
   }, []);
 
   const handleClick = useCallback(() => {
-    if (variant === "header" || !isSummaryInteractionEnabled) return;
-    setIsNavigating(true);
-    if (variant === "bottom") {
-      // mark that a click-initiated morph started
-      isMorphingRef.current = true;
-      morphTargetRef.current = project;
-      setKey(`project-${project.id}`);
-      setdisplayedProject(project);
-      onBottomNavigationStart?.(project.slug);
+    if (variant === "header" || !isSummaryInteractionEnabled || isNavigating) {
       return;
     }
+    setIsNavigating(true);
+    const sourceRect = ref.current?.getBoundingClientRect();
+    const measuredSourceRect = sourceRect
+      ? {
+          top: sourceRect.top,
+          left: sourceRect.left,
+          width: sourceRect.width,
+          height: sourceRect.height,
+        }
+      : null;
+
+    if (variant === "bottom") {
+      onBottomNavigationStart?.(project.slug, measuredSourceRect);
+      return;
+    }
+
+    onPreviewNavigationStart?.(measuredSourceRect);
     const navigationDelay = 200;
     timerRef.current = setTimeout(() => {
       router.push(`/${project.slug}`);
@@ -359,8 +353,10 @@ export default function ProjectSummary({
       // the useEffect above will handle it when the page/props change.
     }, navigationDelay);
   }, [
+    isNavigating,
     isSummaryInteractionEnabled,
     onBottomNavigationStart,
+    onPreviewNavigationStart,
     project,
     router,
     variant,
@@ -395,27 +391,21 @@ export default function ProjectSummary({
     setIsNavigating(false);
   }, [project.id, variant]);
 
-  useEffect(() => {
-    // Only avoid updating displayedProject if a click-initiated morph is in progress.
-    if (!isMorphingRef.current && !isTransitionLocked) {
-      setKey(`project-${project.id}`);
-      setdisplayedProject(project);
-    }
-  }, [isTransitionLocked, project, variant]);
-
-  if (!hasMounted) return null;
-
   // Use this to style Intro separately
   // const isIntroPreview = variant === "preview" && displayedProject.id === "intro";
 
   const layoutDependency = `${variant}-${displayedProject.id}`;
+  const layoutIdPrefix = `project-summary-${displayedProject.id}`;
+  const participatesInSharedHandoff =
+    variant === "bottom" || isTransitionLocked;
   const mainFloatingStyle = {
     boxShadow: frameShadow,
     "--summary-scrollbar-thumb": theme.hex.primary,
     "--summary-scrollbar-thumb-rgb": hexToRgbChannels(theme.hex.primary),
   } satisfies MainFloatingStyle;
-  const summaryOpacity =
-    isTransitionLocked || transitioningToNext
+  const summaryOpacity = isHandoffSourceHidden
+    ? 0
+    : isTransitionLocked || transitioningToNext
       ? 1
       : variant === "header"
         ? headerOpacity
@@ -439,12 +429,6 @@ export default function ProjectSummary({
         : variant === "bottom"
           ? bottomBlur
           : "blur(0px)";
-  const summaryY =
-    isTransitionLocked || transitioningToNext
-      ? 0
-      : variant === "bottom"
-        ? bottomY
-        : 0;
   const floatingPaneOverflowY =
     isTransitionLocked || transitioningToNext
       ? "overflow-y-hidden"
@@ -470,13 +454,7 @@ export default function ProjectSummary({
   // --- Framer Motion variants
   const motionVariants = {
     preview: {
-      initial: (dir: "up" | "down") => ({
-        y:
-          dir === "up"
-            ? window.innerHeight / 2 - 240
-            : -window.innerHeight / 2 + 240,
-        opacity: 0,
-      }),
+      initial: {},
       animate: {
         y: 0,
         opacity: 1,
@@ -485,14 +463,7 @@ export default function ProjectSummary({
           boxShadow: { duration: 0.1, ease: "easeInOut" },
         },
       },
-      exit: (dir: "up" | "down") => ({
-        y:
-          dir === "up"
-            ? -window.innerHeight / 2 + 240
-            : window.innerHeight / 2 - 240,
-        opacity: 0,
-        transition: { duration: 0.1, ease: "easeOut" },
-      }),
+      exit: {},
     },
     header: {
       initial: {},
@@ -524,10 +495,14 @@ export default function ProjectSummary({
 
   const containerClasses =
     variant === "header"
-      ? "fixed inset-0 w-full h-[100svh] items-center justify-center "
+      ? "relative h-[100svh] w-full items-center justify-center"
       : variant === "preview"
         ? "relative h-[100svh] w-full max-w-5xl justify-center [container-type:inline-size]"
-        : "fixed inset-x-0 bottom-0 mx-auto h-[max(60svh,300px)] w-full max-w-6xl items-center justify-end p-2 ";
+        : isTransitionLocked
+          ? transitionRect
+            ? "fixed max-w-none items-center justify-end p-2"
+            : "fixed inset-x-0 bottom-0 mx-auto h-[max(60svh,300px)] w-full max-w-6xl items-center justify-end p-2"
+          : "relative h-[max(60svh,300px)] w-full items-center justify-end p-2";
 
   const cardClasses =
     variant === "header"
@@ -583,26 +558,41 @@ export default function ProjectSummary({
       ref={ref}
       style={{
         opacity: summaryOpacity,
+        visibility: isHandoffSourceHidden ? "hidden" : undefined,
         originX: variant === "bottom" ? 0.5 : undefined,
         originY: variant === "bottom" ? 0 : undefined,
         scale: summaryScale,
-        y: summaryY,
         filter: summaryFilter,
+        ...(variant === "bottom" && isTransitionLocked && transitionRect
+          ? transitionRect
+          : null),
+        pointerEvents: isHandoffSourceHidden ? "none" : undefined,
         willChange: variant === "header" ? "filter, opacity" : undefined,
       }}
+      aria-hidden={isHandoffSourceHidden || undefined}
       className={`z-10 flex flex-col ${containerClasses}`}
     >
       {/* Bottom variant title bar */}
       {variant === "bottom" && (
-        <h3 className="relative mb-6 items-start">Next Up</h3>
+        <motion.h3
+          initial={false}
+          animate={
+            transitioningToNext ? { y: -120, opacity: 0 } : { y: 0, opacity: 1 }
+          }
+          transition={{ duration: 0.2, ease: "easeInOut" }}
+          className="relative mb-6 items-start"
+        >
+          Next Up
+        </motion.h3>
       )}
       {/* Card */}
       <motion.div
-        ref={setBottomCardRef}
         layout
+        layoutId={
+          participatesInSharedHandoff ? `${layoutIdPrefix}-card` : undefined
+        }
         layoutDependency={layoutDependency}
-        key={key}
-        custom={variant === "preview" ? direction : undefined}
+        key={`project-${project.id}`}
         variants={motionVariants[variant]}
         initial="initial"
         animate="animate"
@@ -614,21 +604,21 @@ export default function ProjectSummary({
         }
         onLayoutAnimationComplete={() => {
           onLayoutAnimationComplete?.();
-
-          // If we were morphing (click), commit the latest project once the layout animation finished.
-          if (isMorphingRef.current) {
-            isMorphingRef.current = false;
-            const targetProject = morphTargetRef.current ?? project;
-            morphTargetRef.current = null;
-            setKey(`project-${targetProject.id}`);
-            setdisplayedProject(targetProject);
-          }
         }}
         className={`group relative flex w-full flex-col rounded-8 bg-background supports-[corner-shape:squircle]:rounded-16 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-background md:rounded-12 supports-[corner-shape:squircle]:md:rounded-24 ${cardClasses}`}
       >
         {/* Image as background */}
         {displayedProject.image && (
           <motion.div
+            key={participatesInSharedHandoff ? "shared-image" : "local-image"}
+            layoutId={
+              participatesInSharedHandoff
+                ? `${layoutIdPrefix}-image`
+                : undefined
+            }
+            layoutDependency={
+              participatesInSharedHandoff ? layoutDependency : undefined
+            }
             onClick={
               isHeaderBackgroundInteractive
                 ? onHeaderBackgroundClick
@@ -665,12 +655,17 @@ export default function ProjectSummary({
 
         <motion.div
           layout
+          layoutId={
+            participatesInSharedHandoff
+              ? `${layoutIdPrefix}-pane-shell`
+              : undefined
+          }
           layoutDependency={layoutDependency}
           className={`z-50 flex h-fit max-h-full min-h-0 flex-col ${floatingPaneLayoutClasses}`}
           style={{ pointerEvents: floatingPanePointerEvents }}
         >
           <motion.div
-            ref={floatingPaneRef}
+            ref={setFloatingPaneNode}
             initial={false}
             animate={{ opacity: floatingPaneOpacity }}
             transition={{
@@ -692,6 +687,11 @@ export default function ProjectSummary({
             {/* Title text */}
             <motion.h1
               layout="position"
+              layoutId={
+                participatesInSharedHandoff
+                  ? `${layoutIdPrefix}-title`
+                  : undefined
+              }
               layoutDependency={layoutDependency}
               className={`flex ${theme.textColorClass} ${variant === "header" ? "" : ""}`}
             >
@@ -702,6 +702,11 @@ export default function ProjectSummary({
             {displayedProject.tags && (
               <motion.div
                 layout="position"
+                layoutId={
+                  participatesInSharedHandoff
+                    ? `${layoutIdPrefix}-tags`
+                    : undefined
+                }
                 layoutDependency={layoutDependency}
                 className={`mb-2 flex flex-wrap gap-1 md:mb-4 lg:mb-5 xl:mb-6 2xl:mb-7`}
               >
@@ -728,6 +733,11 @@ export default function ProjectSummary({
             {/* Tagline */}
             <motion.h2
               layout="position"
+              layoutId={
+                participatesInSharedHandoff
+                  ? `${layoutIdPrefix}-tagline`
+                  : undefined
+              }
               layoutDependency={layoutDependency}
               className={`extremelywide:hidden`}
             >
@@ -738,6 +748,11 @@ export default function ProjectSummary({
 
             <motion.h5
               layout
+              layoutId={
+                participatesInSharedHandoff
+                  ? `${layoutIdPrefix}-description`
+                  : undefined
+              }
               layoutDependency={layoutDependency}
               className={`mt-2 text-pretty font-sans text-[0.875rem] leading-snug md:mt-4 md:text-[1rem] lg:mt-5 xl:mt-6 2xl:mt-7 ${
                 variant === "header"

@@ -16,7 +16,6 @@ import { isTextEntryKeyboardTarget } from "@/lib/keyboard";
 export default function GlyphCarousel() {
   const { activeIndex, setActiveIndex } = useActiveProject();
   const { viewMode } = useViewMode();
-  const [hasMounted, setHasMounted] = useState(false);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
   const { resolvedTheme } = useTheme();
@@ -36,10 +35,6 @@ export default function GlyphCarousel() {
 
   const SCROLL_THRESHOLD = 10;
   const SCROLL_COOLDOWN = 500;
-
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
 
   useEffect(() => {
     if (!isInteractive) return;
@@ -137,7 +132,7 @@ export default function GlyphCarousel() {
   const isMdUp = useIsMdUp();
   const yOffset = isMdUp ? -80 - activeIndex * 200 : -24 - activeIndex * 64;
 
-  if (!hasMounted || viewMode === "not-found") return null;
+  if (viewMode === "not-found") return null;
 
   return (
     <motion.div

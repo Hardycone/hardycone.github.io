@@ -2,11 +2,17 @@
 
 import { useEffect, useState } from "react";
 
+const MD_QUERY = "(min-width: 768px)";
+
+function getIsMdUp() {
+  return typeof window !== "undefined" && window.matchMedia(MD_QUERY).matches;
+}
+
 export function useIsMdUp() {
-  const [isMdUp, setIsMdUp] = useState(false);
+  const [isMdUp, setIsMdUp] = useState(getIsMdUp);
 
   useEffect(() => {
-    const media = window.matchMedia("(min-width: 768px)");
+    const media = window.matchMedia(MD_QUERY);
     const updateIsMdUp = () => setIsMdUp(media.matches);
 
     updateIsMdUp();
