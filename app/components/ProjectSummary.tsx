@@ -33,8 +33,6 @@ import { useActiveProject } from "../context/ActiveProjectContext";
 import { useKeyboardHints } from "../context/KeyboardHintsContext";
 import { isInteractiveKeyboardTarget } from "@/lib/keyboard";
 import {
-  HEADER_IMAGE_FADE_START_PROGRESS,
-  HEADER_PANE_NAV_MORPH_PROGRESS,
   HEADER_PANE_NAV_CONTENT_FADE_MS,
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
 } from "@/lib/caseStudyTransitions";
@@ -90,8 +88,8 @@ function hexToRgbChannels(hex: string) {
 interface ProjectSummaryProps {
   variant: "preview" | "header" | "bottom";
   projectIndex: number;
-  headerIntroProgress: MotionValue<number>;
   headerVisualProgress: MotionValue<number>;
+  headerExitVisualProgress: MotionValue<number>;
   bottomVisualProgress: MotionValue<number>;
   floatingPaneRef?: React.RefObject<HTMLDivElement | null>;
   isFloatingPaneVisible?: boolean;
@@ -124,8 +122,8 @@ type MainFloatingStyle = MotionStyle & {
 export default function ProjectSummary({
   variant,
   projectIndex,
-  headerIntroProgress,
   headerVisualProgress,
+  headerExitVisualProgress,
   bottomVisualProgress,
   floatingPaneRef,
   isFloatingPaneVisible = true,
@@ -160,100 +158,46 @@ export default function ProjectSummary({
   const headerImageBaseInset = isMdUp ? 16 : 8;
   const headerImageTargetXInset = isMdUp ? 26 : 14;
   const headerImageTargetTopInset = isMdUp ? 86 : 58;
-  const headerImageTargetBottomInset = isMdUp ? 96 : 64;
   const headerImageBaseRadius =
     (isMdUp ? 32 : 24) * headerImageRadiusMultiplier;
   const headerImageTargetRadius =
     (isMdUp ? 22 : 18) * headerImageRadiusMultiplier;
-  const headerImageProgressStops = [
-    0,
-    HEADER_PANE_NAV_MORPH_PROGRESS,
-    HEADER_IMAGE_FADE_START_PROGRESS,
-    1,
-  ];
   const headerImageXInset = useTransform(
     headerVisualProgress,
-    headerImageProgressStops,
-    [
-      headerImageBaseInset,
-      headerImageTargetXInset,
-      headerImageTargetXInset,
-      headerImageTargetXInset,
-    ],
+    [0, 1],
+    [headerImageBaseInset, headerImageTargetXInset],
   );
   const headerImageTopInset = useTransform(
     headerVisualProgress,
-    headerImageProgressStops,
-    [
-      headerImageBaseInset,
-      headerImageTargetTopInset,
-      headerImageTargetTopInset,
-      headerImageTargetTopInset,
-    ],
+    [0, 1],
+    [headerImageBaseInset, headerImageTargetTopInset],
   );
   const headerImageBottomInset = useTransform(
     headerVisualProgress,
-    headerImageProgressStops,
-    [
-      headerImageBaseInset,
-      headerImageTargetBottomInset,
-      headerImageTargetBottomInset,
-      headerImageTargetBottomInset,
-    ],
+    [0, 1],
+    [headerImageBaseInset, headerImageTargetTopInset],
   );
   const headerImageRadius = useTransform(
     headerVisualProgress,
-    headerImageProgressStops,
-    [
-      headerImageBaseRadius,
-      headerImageTargetRadius,
-      headerImageTargetRadius,
-      headerImageTargetRadius,
-    ],
+    [0, 1],
+    [headerImageBaseRadius, headerImageTargetRadius],
   );
   const holdExpandedHeaderImage = isTransitionLocked || transitioningToNext;
 
-  const headerOpacity = useTransform(
-    [headerIntroProgress, headerVisualProgress],
-    (latest) => {
-      const [rawProgress, visualProgress] = latest as number[];
-
-      return rawProgress < HEADER_IMAGE_FADE_START_PROGRESS
-        ? 1
-        : visualProgress < HEADER_IMAGE_FADE_START_PROGRESS
-          ? 1
-          : 1 -
-            (visualProgress - HEADER_IMAGE_FADE_START_PROGRESS) /
-              (1 - HEADER_IMAGE_FADE_START_PROGRESS);
-    },
-  );
+  const headerOpacity = headerExitVisualProgress;
 
   const bottomOpacity = useTransform(bottomVisualProgress, [0, 1], [0, 1]);
 
   const headerScale = useTransform(
-    headerVisualProgress,
-    [0, HEADER_IMAGE_FADE_START_PROGRESS, 1],
-    [1, 1, 0.95],
+    headerExitVisualProgress,
+    [0, 1],
+    [0.9, 1],
   );
 
   const headerBlur = useTransform(
-    [headerIntroProgress, headerVisualProgress],
-    (latest) => {
-      const [rawProgress, visualProgress] = latest as number[];
-
-      if (
-        rawProgress < HEADER_IMAGE_FADE_START_PROGRESS ||
-        visualProgress < HEADER_IMAGE_FADE_START_PROGRESS
-      ) {
-        return "blur(0px)";
-      }
-
-      const blurProgress =
-        (visualProgress - HEADER_IMAGE_FADE_START_PROGRESS) /
-        (1 - HEADER_IMAGE_FADE_START_PROGRESS);
-
-      return `blur(${Math.min(10, Math.max(0, blurProgress * 10))}px)`;
-    },
+    headerExitVisualProgress,
+    [0, 1],
+    ["blur(4px)", "blur(0px)"],
   );
 
   const bottomBlur = useTransform(
@@ -559,15 +503,18 @@ export default function ProjectSummary({
       style={{
         opacity: summaryOpacity,
         visibility: isHandoffSourceHidden ? "hidden" : undefined,
-        originX: variant === "bottom" ? 0.5 : undefined,
-        originY: variant === "bottom" ? 0 : undefined,
+        originX:
+          variant === "header" || variant === "bottom" ? 0.5 : undefined,
+        originY:
+          variant === "header" ? 1 : variant === "bottom" ? 0 : undefined,
         scale: summaryScale,
         filter: summaryFilter,
         ...(variant === "bottom" && isTransitionLocked && transitionRect
           ? transitionRect
           : null),
         pointerEvents: isHandoffSourceHidden ? "none" : undefined,
-        willChange: variant === "header" ? "filter, opacity" : undefined,
+        willChange:
+          variant === "header" ? "filter, opacity, transform" : undefined,
       }}
       aria-hidden={isHandoffSourceHidden || undefined}
       className={`z-10 flex flex-col ${containerClasses}`}

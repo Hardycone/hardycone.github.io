@@ -7,6 +7,7 @@ import {
   useMotionValueEvent,
   useMotionValue,
   useSpring,
+  useTransform,
   LayoutGroup,
   type Variants,
 } from "framer-motion";
@@ -31,13 +32,12 @@ import CaseStudyContent from "./CaseStudyContent";
 import MyName from "./MyName";
 import HomeSymbolBackdrop from "./HomeSymbolBackdrop";
 import {
-  HEADER_INTRO_DISTANCE_SVH,
   HEADER_PANE_NAV_CONTENT_FADE_MS,
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
   HEADER_PANE_NAV_MORPH_MS,
-  HEADER_PANE_NAV_MORPH_PROGRESS,
-  HEADER_HERO_FOCUS_PROGRESS,
-  HEADER_IMAGE_FADE_START_PROGRESS,
+  HEADER_PANE_NAV_MORPH_TRIGGER_PX,
+  HEADER_PANE_NAV_REVERSE_OFFSET_PX,
+  HEADER_STICKY_RUNWAY_PX,
 } from "@/lib/caseStudyTransitions";
 // import DebugViewport from "./DebugViewport";
 import BottomBar from "./BottomBar";
@@ -169,8 +169,21 @@ export default function MainContent({ children }: { children: ReactNode }) {
     restDelta: 0.001,
     restSpeed: 0.01,
   });
-  const headerHeroFocusRef = useRef<HTMLDivElement>(null);
   const headerIntroEndRef = useRef<HTMLDivElement>(null);
+  const stickyHeaderRef = useRef<HTMLDivElement>(null);
+  const headerExitProgress = useMotionValue(0);
+  const headerVisibleProgress = useTransform(
+    headerExitProgress,
+    [0, 1],
+    [1, 0],
+  );
+  const smoothHeaderVisibleProgress = useSpring(headerVisibleProgress, {
+    stiffness: 300,
+    damping: 30,
+    mass: 0.5,
+    restDelta: 0.001,
+    restSpeed: 0.01,
+  });
   const bottomRevealProgress = useMotionValue(0);
   const smoothBottomRevealProgress = useSpring(bottomRevealProgress, {
     stiffness: 300,
@@ -183,6 +196,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
   const floatingPaneRef = useRef<HTMLDivElement>(null);
   const centerNavRef = useRef<HTMLDivElement>(null);
   const paneNavSurfaceRef = useRef<PaneNavSurface>("pane");
+  const desiredPaneNavSurfaceRef = useRef<PaneNavSurface>("pane");
+  const previousHeaderIntroProgressRef = useRef(0);
   const paneNavMorphingRef = useRef(false);
   const paneNavCloneRef = useRef<HTMLElement | null>(null);
   const paneNavAnimationRef = useRef<Animation | null>(null);
@@ -216,39 +231,50 @@ export default function MainContent({ children }: { children: ReactNode }) {
   const updateHeaderIntroProgress = useCallback(
     (scrollPosition = scrollY.get()) => {
       const anchor = headerIntroEndRef.current;
-      if (!anchor || viewMode !== "case-study") {
+      const stickyHeader = stickyHeaderRef.current;
+      if (!anchor || !stickyHeader || viewMode !== "case-study") {
         floatingPaneRef.current?.style.removeProperty("translate");
         headerIntroProgress.set(0);
+        headerExitProgress.set(0);
         updateSectionHighlightEnabled(false);
         return 0;
       }
 
       const anchorRect = anchor.getBoundingClientRect();
       const introDistance = scrollPosition + anchorRect.top;
-      const paneScrollCompensation = Math.min(
-        Math.max(0, scrollPosition),
-        Math.max(0, introDistance),
-      );
       const progress =
         introDistance > 0
           ? Math.min(1, Math.max(0, scrollPosition / introDistance))
           : 1;
 
-      floatingPaneRef.current?.style.setProperty(
-        "translate",
-        `0 ${paneScrollCompensation}px`,
+      const viewportTop = window.visualViewport?.offsetTop ?? 0;
+      const viewportHeight =
+        window.visualViewport?.height ?? window.innerHeight;
+      const exitStart = viewportTop + viewportHeight * 0.3;
+      const exitDistance = Math.max(1, exitStart - viewportTop);
+      const stickyHeaderBottom = stickyHeader.getBoundingClientRect().bottom;
+      const exitProgress = Math.min(
+        1,
+        Math.max(0, (exitStart - stickyHeaderBottom) / exitDistance),
       );
+
+      floatingPaneRef.current?.style.removeProperty("translate");
       headerIntroProgress.set(progress);
-      updateSectionHighlightEnabled(
-        progress >= HEADER_IMAGE_FADE_START_PROGRESS,
-      );
+      headerExitProgress.set(exitProgress);
+      updateSectionHighlightEnabled(progress >= 1);
       return progress;
     },
-    [headerIntroProgress, scrollY, updateSectionHighlightEnabled, viewMode],
+    [
+      headerExitProgress,
+      headerIntroProgress,
+      scrollY,
+      updateSectionHighlightEnabled,
+      viewMode,
+    ],
   );
 
   const scrollToHeaderHeroFocus = useCallback(() => {
-    const target = headerHeroFocusRef.current;
+    const target = headerIntroEndRef.current;
     if (!target) return;
 
     target.scrollIntoView({
@@ -510,10 +536,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
           paneNavCloneRef.current = null;
           paneNavMorphingRef.current = false;
 
-          const desiredSurface =
-            headerIntroProgress.get() >= HEADER_PANE_NAV_MORPH_PROGRESS
-              ? "nav"
-              : "pane";
+          const desiredSurface = desiredPaneNavSurfaceRef.current;
 
           if (desiredSurface !== paneNavSurfaceRef.current) {
             paneNavMorphStarterRef.current?.(desiredSurface);
@@ -526,12 +549,15 @@ export default function MainContent({ children }: { children: ReactNode }) {
         animation.oncancel = null;
       };
     },
-    [headerIntroProgress, setPaneNavSurfaceImmediately],
+    [setPaneNavSurfaceImmediately],
   );
 
   paneNavMorphStarterRef.current = startPaneNavMorph;
 
   useMotionValueEvent(headerIntroProgress, "change", (progress) => {
+    const previousProgress = previousHeaderIntroProgressRef.current;
+    previousHeaderIntroProgressRef.current = progress;
+
     if (
       instantHomeNavigationRef.current ||
       viewMode !== "case-study" ||
@@ -540,8 +566,27 @@ export default function MainContent({ children }: { children: ReactNode }) {
       return;
     }
 
-    const destination =
-      progress >= HEADER_PANE_NAV_MORPH_PROGRESS ? "nav" : "pane";
+    const progressInPixels = progress * HEADER_STICKY_RUNWAY_PX;
+    const previousProgressInPixels =
+      previousProgress * HEADER_STICKY_RUNWAY_PX;
+    let destination = desiredPaneNavSurfaceRef.current;
+
+    if (
+      progressInPixels > previousProgressInPixels &&
+      progressInPixels >= HEADER_PANE_NAV_MORPH_TRIGGER_PX
+    ) {
+      destination = "nav";
+    } else if (
+      progressInPixels < previousProgressInPixels &&
+      progressInPixels <=
+        HEADER_STICKY_RUNWAY_PX - HEADER_PANE_NAV_REVERSE_OFFSET_PX
+    ) {
+      destination = "pane";
+    } else if (progressInPixels <= 0) {
+      destination = "pane";
+    }
+
+    desiredPaneNavSurfaceRef.current = destination;
 
     if (
       !paneNavMorphingRef.current &&
@@ -554,6 +599,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
   useEffect(() => {
     instantHomeNavigationRef.current = false;
     cleanupPaneNavMorph();
+    desiredPaneNavSurfaceRef.current = "pane";
+    previousHeaderIntroProgressRef.current = 0;
     setPaneNavSurfaceImmediately("pane");
   }, [
     activeIndex,
@@ -641,14 +688,18 @@ export default function MainContent({ children }: { children: ReactNode }) {
     scrollY.set(0);
     headerIntroProgress.set(0);
     smoothHeaderIntroProgress.jump(0);
+    headerExitProgress.set(0);
+    smoothHeaderVisibleProgress.jump(1);
     bottomRevealProgress.set(0);
     smoothBottomRevealProgress.jump(0);
   }, [
     bottomRevealProgress,
+    headerExitProgress,
     headerIntroProgress,
     scrollY,
     smoothBottomRevealProgress,
     smoothHeaderIntroProgress,
+    smoothHeaderVisibleProgress,
   ]);
 
   useEffect(() => {
@@ -949,6 +1000,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
             style={
               viewMode === "case-study"
                 ? {
+                    height: `calc(100svh + ${HEADER_STICKY_RUNWAY_PX}px)`,
                     width: "100vw",
                     marginLeft: `calc((100% - 100vw) / 2 + ${-(homeToCaseTransition?.viewportCenterOffset ?? 0)}px)`,
                   }
@@ -956,73 +1008,70 @@ export default function MainContent({ children }: { children: ReactNode }) {
             }
           >
             {viewMode === "case-study" && (
-              <>
-                <div
-                  ref={headerHeroFocusRef}
-                  data-header-hero-focus-target
-                  aria-hidden="true"
-                  className="pointer-events-none absolute left-0 z-20 h-px w-full"
-                  style={{
-                    top: `${HEADER_INTRO_DISTANCE_SVH * HEADER_HERO_FOCUS_PROGRESS}svh`,
-                  }}
-                />
-                <div
-                  ref={headerIntroEndRef}
-                  aria-hidden="true"
-                  className="pointer-events-none absolute left-0 z-20 h-px w-px"
-                  style={{ top: `${HEADER_INTRO_DISTANCE_SVH}svh` }}
-                />
-              </>
+              <div
+                ref={headerIntroEndRef}
+                data-header-hero-focus-target
+                aria-hidden="true"
+                className="pointer-events-none absolute left-0 z-20 h-px w-px"
+                style={{ top: `${HEADER_STICKY_RUNWAY_PX}px` }}
+              />
             )}
-            <AnimatePresence
-              initial={false}
-              custom={topSummaryTransitionState}
-              mode="popLayout"
+            <div
+              ref={stickyHeaderRef}
+              className={`h-[100svh] w-full ${viewMode === "case-study" ? "sticky top-0" : "relative"}`}
             >
-              {showTopSummary && (
-                <motion.div
-                  key={`top-summary-${projects[topSummaryIndex].id}`}
-                  custom={topSummaryTransitionState}
-                  variants={topSummaryProjectVariants}
-                  initial="initial"
-                  animate="center"
-                  exit="exit"
-                  className="absolute inset-0 w-full"
-                >
-                  <ProjectSummary
-                    variant={topSummaryVariant}
-                    projectIndex={topSummaryIndex}
-                    headerIntroProgress={headerIntroProgress}
-                    headerVisualProgress={smoothHeaderIntroProgress}
-                    bottomVisualProgress={smoothBottomRevealProgress}
-                    floatingPaneRef={
-                      viewMode === "case-study" ? floatingPaneRef : undefined
-                    }
-                    isFloatingPaneVisible={
-                      viewMode !== "case-study" ||
-                      (paneNavSurface === "pane" && !isPaneNavMorphing)
-                    }
-                    isTransitionLocked={
-                      viewMode === "case-study" && isBottomNavigationActive
-                    }
-                    isHandoffSourceHidden={
-                      viewMode === "case-study" && isOutgoingHeaderHidden
-                    }
-                    onHeaderBackgroundClick={
-                      viewMode === "case-study" && !transitioningToNext
-                        ? scrollToHeaderHeroFocus
-                        : undefined
-                    }
-                    onLayoutAnimationComplete={
-                      viewMode === "case-study"
-                        ? handleSummaryLayoutComplete
-                        : undefined
-                    }
-                    onPreviewNavigationStart={handlePreviewNavigationStart}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+              <AnimatePresence
+                initial={false}
+                custom={topSummaryTransitionState}
+                mode="popLayout"
+              >
+                {showTopSummary && (
+                  <motion.div
+                    key={`top-summary-${projects[topSummaryIndex].id}`}
+                    custom={topSummaryTransitionState}
+                    variants={topSummaryProjectVariants}
+                    initial="initial"
+                    animate="center"
+                    exit="exit"
+                    className="absolute inset-0 w-full"
+                  >
+                    <ProjectSummary
+                      variant={topSummaryVariant}
+                      projectIndex={topSummaryIndex}
+                      headerVisualProgress={smoothHeaderIntroProgress}
+                      headerExitVisualProgress={
+                        smoothHeaderVisibleProgress
+                      }
+                      bottomVisualProgress={smoothBottomRevealProgress}
+                      floatingPaneRef={
+                        viewMode === "case-study" ? floatingPaneRef : undefined
+                      }
+                      isFloatingPaneVisible={
+                        viewMode !== "case-study" ||
+                        (paneNavSurface === "pane" && !isPaneNavMorphing)
+                      }
+                      isTransitionLocked={
+                        viewMode === "case-study" && isBottomNavigationActive
+                      }
+                      isHandoffSourceHidden={
+                        viewMode === "case-study" && isOutgoingHeaderHidden
+                      }
+                      onHeaderBackgroundClick={
+                        viewMode === "case-study" && !transitioningToNext
+                          ? scrollToHeaderHeroFocus
+                          : undefined
+                      }
+                      onLayoutAnimationComplete={
+                        viewMode === "case-study"
+                          ? handleSummaryLayoutComplete
+                          : undefined
+                      }
+                      onPreviewNavigationStart={handlePreviewNavigationStart}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {viewMode === "case-study" && (
@@ -1048,8 +1097,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
                 key={`bottom-${projects[renderedBottomProjectIndex].id}`}
                 variant="bottom"
                 projectIndex={renderedBottomProjectIndex}
-                headerIntroProgress={headerIntroProgress}
                 headerVisualProgress={smoothHeaderIntroProgress}
+                headerExitVisualProgress={smoothHeaderVisibleProgress}
                 bottomVisualProgress={smoothBottomRevealProgress}
                 isTransitionLocked={isBottomNavigationActive}
                 isHandoffSourceHidden={bottomNavigation?.phase === "route"}
