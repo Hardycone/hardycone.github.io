@@ -33,6 +33,7 @@ import { useActiveProject } from "../context/ActiveProjectContext";
 import { useKeyboardHints } from "../context/KeyboardHintsContext";
 import { isInteractiveKeyboardTarget } from "@/lib/keyboard";
 import {
+  HEADER_IMAGE_BOTTOM_GAP_PX,
   HEADER_PANE_NAV_CONTENT_FADE_MS,
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
 } from "@/lib/caseStudyTransitions";
@@ -138,6 +139,10 @@ export default function ProjectSummary({
   const { transitioningToNext } = useActiveProject();
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const backgroundImageFrameRef = useRef<HTMLDivElement>(null);
+  const backgroundImageRef = useRef<HTMLImageElement>(null);
+  const buttonAnchorRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
   const isMdUp = useIsMdUp();
@@ -175,7 +180,7 @@ export default function ProjectSummary({
   const headerImageBottomInset = useTransform(
     headerVisualProgress,
     [0, 1],
-    [headerImageBaseInset, headerImageTargetTopInset],
+    [headerImageBaseInset, HEADER_IMAGE_BOTTOM_GAP_PX],
   );
   const headerImageRadius = useTransform(
     headerVisualProgress,
@@ -183,6 +188,134 @@ export default function ProjectSummary({
     [headerImageBaseRadius, headerImageTargetRadius],
   );
   const holdExpandedHeaderImage = isTransitionLocked || transitioningToNext;
+
+  // Motion projects the bottom frame into the header with independent X/Y
+  // scales. Counter-scale the bitmap so it keeps a true object-cover crop.
+  useLayoutEffect(() => {
+    const frame = backgroundImageFrameRef.current;
+    const image = backgroundImageRef.current;
+
+    if (
+      !frame ||
+      !image ||
+      !isTransitionLocked ||
+      (variant !== "bottom" && variant !== "header")
+    ) {
+      return;
+    }
+
+    let animationFrame: number | null = null;
+
+    const updateImageCover = () => {
+      const frameRect = frame.getBoundingClientRect();
+      const frameStyle = window.getComputedStyle(frame);
+      const frameLayoutWidth = Number.parseFloat(frameStyle.width);
+      const frameLayoutHeight = Number.parseFloat(frameStyle.height);
+      const naturalWidth = image.naturalWidth;
+      const naturalHeight = image.naturalHeight;
+
+      if (
+        frameRect.width > 0 &&
+        frameRect.height > 0 &&
+        frameLayoutWidth > 0 &&
+        frameLayoutHeight > 0 &&
+        naturalWidth > 0 &&
+        naturalHeight > 0
+      ) {
+        const projectedScaleX = frameRect.width / frameLayoutWidth;
+        const projectedScaleY = frameRect.height / frameLayoutHeight;
+        const coverScale = Math.max(
+          frameRect.width / naturalWidth,
+          frameRect.height / naturalHeight,
+        );
+
+        Object.assign(image.style, {
+          left: "50%",
+          top: "50%",
+          right: "auto",
+          bottom: "auto",
+          width: `${naturalWidth}px`,
+          height: `${naturalHeight}px`,
+          maxWidth: "none",
+          objectFit: "fill",
+          transform: `translate(-50%, -50%) scale(${coverScale / projectedScaleX}, ${coverScale / projectedScaleY})`,
+          transformOrigin: "center",
+          willChange: "transform",
+        });
+      }
+
+      animationFrame = window.requestAnimationFrame(updateImageCover);
+    };
+
+    updateImageCover();
+
+    return () => {
+      if (animationFrame !== null) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+
+      for (const property of [
+        "left",
+        "top",
+        "right",
+        "bottom",
+        "width",
+        "height",
+        "max-width",
+        "object-fit",
+        "transform",
+        "transform-origin",
+        "will-change",
+      ]) {
+        image.style.removeProperty(property);
+      }
+    };
+  }, [isTransitionLocked, projectIndex, variant]);
+
+  // Keep the CTA attached to the card's lower-left corner while cancelling the
+  // card projection's independent X/Y scale. Giving the CTA its own layout
+  // projection makes Motion calculate a separate path, so it can fly in from
+  // the wrong edge or remain behind during a shared handoff.
+  useLayoutEffect(() => {
+    const card = cardRef.current;
+    const initialButtonAnchor = buttonAnchorRef.current;
+
+    if (!card) return;
+
+    const updateButtonScale = () => {
+      const buttonAnchor = buttonAnchorRef.current;
+
+      if (!buttonAnchor) return;
+
+      const cardTransform = window.getComputedStyle(card).transform;
+      const matrix = new DOMMatrixReadOnly(
+        cardTransform === "none" ? undefined : cardTransform,
+      );
+      const projectedScaleX = Math.hypot(matrix.a, matrix.b);
+      const projectedScaleY = Math.hypot(matrix.c, matrix.d);
+      const leftInset = buttonAnchor.offsetLeft;
+      const bottomInset =
+        card.clientHeight -
+        buttonAnchor.offsetTop -
+        buttonAnchor.offsetHeight;
+      const insetCorrectionX = leftInset * (1 / projectedScaleX - 1);
+      const insetCorrectionY = bottomInset * (1 - 1 / projectedScaleY);
+
+      buttonAnchor.style.transform = `translate(${insetCorrectionX}px, ${insetCorrectionY}px) scale(${1 / projectedScaleX}, ${1 / projectedScaleY})`;
+    };
+
+    updateButtonScale();
+    const observer = new MutationObserver(updateButtonScale);
+    observer.observe(card, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+
+    return () => {
+      observer.disconnect();
+      initialButtonAnchor?.style.removeProperty("transform");
+    };
+  }, [isTransitionLocked, projectIndex, variant]);
 
   const headerOpacity = headerExitVisualProgress;
 
@@ -439,7 +572,7 @@ export default function ProjectSummary({
 
   const containerClasses =
     variant === "header"
-      ? "relative h-[100svh] w-full items-center justify-center"
+      ? "relative h-full w-full items-center justify-center"
       : variant === "preview"
         ? "relative h-[100svh] w-full max-w-5xl justify-center [container-type:inline-size]"
         : isTransitionLocked
@@ -534,6 +667,7 @@ export default function ProjectSummary({
       )}
       {/* Card */}
       <motion.div
+        ref={cardRef}
         layout
         layoutId={
           participatesInSharedHandoff ? `${layoutIdPrefix}-card` : undefined
@@ -557,6 +691,7 @@ export default function ProjectSummary({
         {/* Image as background */}
         {displayedProject.image && (
           <motion.div
+            ref={backgroundImageFrameRef}
             key={participatesInSharedHandoff ? "shared-image" : "local-image"}
             layoutId={
               participatesInSharedHandoff
@@ -575,6 +710,7 @@ export default function ProjectSummary({
             style={backgroundImageStyle}
           >
             <img
+              ref={backgroundImageRef}
               src={displayedProject.image}
               alt=""
               className="absolute inset-0 h-full w-full object-cover"
@@ -694,7 +830,7 @@ export default function ProjectSummary({
             {/* Description */}
 
             <motion.h5
-              layout
+              layout="position"
               layoutId={
                 participatesInSharedHandoff
                   ? `${layoutIdPrefix}-description`
@@ -744,8 +880,10 @@ export default function ProjectSummary({
         <AnimatePresence>
           {variant !== "header" && (
             <motion.div
+              ref={buttonAnchorRef}
               key="preview-button"
               className={`absolute bottom-3 left-3 md:bottom-6 md:left-6 wide:hidden lg:wide:block lg:superwide:hidden`}
+              style={{ transformOrigin: "left bottom", willChange: "transform" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, transition: { delay: 0.4, ease: "easeOut" } }}

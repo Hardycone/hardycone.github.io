@@ -29,10 +29,10 @@
 html {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
-  /* overscroll-behavior: none; */
+  overscroll-behavior-y: none;
 }
 body {
-  /* overscroll-behavior: none; */
+  overscroll-behavior-y: none;
 }
 
 @layer components {

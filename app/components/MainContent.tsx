@@ -23,6 +23,7 @@ import projects from "@/data/projects";
 
 import { useViewMode } from "../context/ViewModeContext";
 import { useActiveProject } from "../context/ActiveProjectContext";
+import { useIsMdUp } from "@/hooks/useIsMdUp";
 
 import GlyphCarousel from "./GlyphCarousel";
 import TopBar from "./TopBar";
@@ -35,9 +36,12 @@ import {
   HEADER_PANE_NAV_CONTENT_FADE_MS,
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
   HEADER_PANE_NAV_MORPH_MS,
+  HEADER_PANE_NAV_REVERSE_DELAY_MS,
   HEADER_PANE_NAV_MORPH_TRIGGER_PX,
   HEADER_PANE_NAV_REVERSE_OFFSET_PX,
   HEADER_STICKY_RUNWAY_PX,
+  HEADER_BOTTOM_CLEARANCE_MOBILE_PX,
+  HEADER_BOTTOM_CLEARANCE_DESKTOP_PX,
 } from "@/lib/caseStudyTransitions";
 // import DebugViewport from "./DebugViewport";
 import BottomBar from "./BottomBar";
@@ -49,7 +53,8 @@ type BottomNavigationState = {
 };
 
 type HomeToCaseTransitionState = {
-  viewportCenterOffset: number;
+  sourcePageLeft: number;
+  pageWidth: number;
 };
 
 type PaneNavSurface = "pane" | "nav";
@@ -147,6 +152,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     setTransitioningToNext,
   } = useActiveProject();
   const { viewMode } = useViewMode();
+  const isMdUp = useIsMdUp();
   const router = useRouter();
 
   const [showPrompt, setShowPrompt] = useState(false);
@@ -171,6 +177,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
   });
   const headerIntroEndRef = useRef<HTMLDivElement>(null);
   const stickyHeaderRef = useRef<HTMLDivElement>(null);
+  const stickyHeaderHeight = useMotionValue("100svh");
   const headerExitProgress = useMotionValue(0);
   const headerVisibleProgress = useTransform(
     headerExitProgress,
@@ -201,6 +208,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
   const paneNavMorphingRef = useRef(false);
   const paneNavCloneRef = useRef<HTMLElement | null>(null);
   const paneNavAnimationRef = useRef<Animation | null>(null);
+  const paneNavTrackingFrameRef = useRef<number | null>(null);
+  const paneNavReverseDelayRef = useRef<number | null>(null);
   const paneNavMorphStarterRef = useRef<
     ((destination: PaneNavSurface) => void) | null
   >(null);
@@ -218,6 +227,9 @@ export default function MainContent({ children }: { children: ReactNode }) {
   const isBottomNavigationActive = bottomNavigation !== null;
   const shouldReserveGlyphRail =
     viewMode === "home" || homeToCaseTransition !== null;
+  const headerBottomClearance = isMdUp
+    ? HEADER_BOTTOM_CLEARANCE_DESKTOP_PX
+    : HEADER_BOTTOM_CLEARANCE_MOBILE_PX;
 
   const updateSectionHighlightEnabled = useCallback((enabled: boolean) => {
     if (sectionHighlightEnabledRef.current === enabled) {
@@ -234,6 +246,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       const stickyHeader = stickyHeaderRef.current;
       if (!anchor || !stickyHeader || viewMode !== "case-study") {
         floatingPaneRef.current?.style.removeProperty("translate");
+        stickyHeaderHeight.set("100svh");
         headerIntroProgress.set(0);
         headerExitProgress.set(0);
         updateSectionHighlightEnabled(false);
@@ -246,6 +259,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
         introDistance > 0
           ? Math.min(1, Math.max(0, scrollPosition / introDistance))
           : 1;
+      const collapseDistance = progress * headerBottomClearance;
 
       const viewportTop = window.visualViewport?.offsetTop ?? 0;
       const viewportHeight =
@@ -259,6 +273,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
       );
 
       floatingPaneRef.current?.style.removeProperty("translate");
+      stickyHeaderHeight.set(
+        collapseDistance > 0
+          ? `calc(100svh - ${collapseDistance}px)`
+          : "100svh",
+      );
       headerIntroProgress.set(progress);
       headerExitProgress.set(exitProgress);
       updateSectionHighlightEnabled(progress >= 1);
@@ -266,8 +285,10 @@ export default function MainContent({ children }: { children: ReactNode }) {
     },
     [
       headerExitProgress,
+      headerBottomClearance,
       headerIntroProgress,
       scrollY,
+      stickyHeaderHeight,
       updateSectionHighlightEnabled,
       viewMode,
     ],
@@ -307,13 +328,25 @@ export default function MainContent({ children }: { children: ReactNode }) {
     return progress;
   }, [bottomRevealProgress, viewMode]);
 
+  const cancelPaneNavReverseDelay = useCallback(() => {
+    if (paneNavReverseDelayRef.current === null) return;
+
+    window.clearTimeout(paneNavReverseDelayRef.current);
+    paneNavReverseDelayRef.current = null;
+  }, []);
+
   const cleanupPaneNavMorph = useCallback(() => {
+    cancelPaneNavReverseDelay();
+    if (paneNavTrackingFrameRef.current !== null) {
+      window.cancelAnimationFrame(paneNavTrackingFrameRef.current);
+      paneNavTrackingFrameRef.current = null;
+    }
     paneNavAnimationRef.current?.cancel();
     paneNavAnimationRef.current = null;
     paneNavCloneRef.current?.remove();
     paneNavCloneRef.current = null;
     paneNavMorphingRef.current = false;
-  }, []);
+  }, [cancelPaneNavReverseDelay]);
 
   const setPaneNavSurfaceImmediately = useCallback(
     (surface: PaneNavSurface) => {
@@ -462,37 +495,37 @@ export default function MainContent({ children }: { children: ReactNode }) {
           HEADER_PANE_NAV_MORPH_MS * cornerShapeSwitchOffset,
       );
 
+      const sourceKeyframe: Keyframe = {
+        offset: 0,
+        left: `${sourceRect.left}px`,
+        top: `${sourceRect.top}px`,
+        width: `${sourceRect.width}px`,
+        height: `${sourceRect.height}px`,
+        borderRadius: sourceBorderRadius,
+        backgroundColor: travelerSourceBackground,
+        boxShadow: "none",
+        paddingTop: sourceStyle.paddingTop,
+        paddingRight: sourceStyle.paddingRight,
+        paddingBottom: sourceStyle.paddingBottom,
+        paddingLeft: sourceStyle.paddingLeft,
+      };
+      const targetKeyframe = (rect: DOMRect): Keyframe => ({
+        offset: 1,
+        left: `${rect.left}px`,
+        top: `${rect.top}px`,
+        width: `${rect.width}px`,
+        height: `${rect.height}px`,
+        borderRadius: targetBorderRadius,
+        backgroundColor: travelerTargetBackground,
+        boxShadow: "none",
+        paddingTop: targetStyle.paddingTop,
+        paddingRight: targetStyle.paddingRight,
+        paddingBottom: targetStyle.paddingBottom,
+        paddingLeft: targetStyle.paddingLeft,
+      });
+
       const animation = clone.animate(
-        [
-          {
-            offset: 0,
-            left: `${sourceRect.left}px`,
-            top: `${sourceRect.top}px`,
-            width: `${sourceRect.width}px`,
-            height: `${sourceRect.height}px`,
-            borderRadius: sourceBorderRadius,
-            backgroundColor: travelerSourceBackground,
-            boxShadow: "none",
-            paddingTop: sourceStyle.paddingTop,
-            paddingRight: sourceStyle.paddingRight,
-            paddingBottom: sourceStyle.paddingBottom,
-            paddingLeft: sourceStyle.paddingLeft,
-          },
-          {
-            offset: 1,
-            left: `${targetRect.left}px`,
-            top: `${targetRect.top}px`,
-            width: `${targetRect.width}px`,
-            height: `${targetRect.height}px`,
-            borderRadius: targetBorderRadius,
-            backgroundColor: travelerTargetBackground,
-            boxShadow: "none",
-            paddingTop: targetStyle.paddingTop,
-            paddingRight: targetStyle.paddingRight,
-            paddingBottom: targetStyle.paddingBottom,
-            paddingLeft: targetStyle.paddingLeft,
-          },
-        ],
+        [sourceKeyframe, targetKeyframe(targetRect)],
         {
           duration: HEADER_PANE_NAV_MORPH_MS,
           delay: HEADER_PANE_NAV_CONTENT_FADE_MS,
@@ -501,6 +534,52 @@ export default function MainContent({ children }: { children: ReactNode }) {
         },
       );
 
+      const syncCloneToTarget = (rect: DOMRect) => {
+        Object.assign(clone.style, {
+          left: `${rect.left}px`,
+          top: `${rect.top}px`,
+          width: `${rect.width}px`,
+          height: `${rect.height}px`,
+          borderRadius: targetBorderRadius,
+          backgroundColor: travelerTargetBackground,
+          boxShadow: "none",
+          paddingTop: targetStyle.paddingTop,
+          paddingRight: targetStyle.paddingRight,
+          paddingBottom: targetStyle.paddingBottom,
+          paddingLeft: targetStyle.paddingLeft,
+        });
+      };
+
+      let isMorphComplete = false;
+      const trackTarget = () => {
+        if (paneNavCloneRef.current !== clone) {
+          paneNavTrackingFrameRef.current = null;
+          return;
+        }
+
+        const liveTargetRect = target.getBoundingClientRect();
+        if (
+          liveTargetRect.width > 0 &&
+          liveTargetRect.height > 0
+        ) {
+          if (isMorphComplete) {
+            syncCloneToTarget(liveTargetRect);
+          } else {
+            const effect = animation.effect as KeyframeEffect | null;
+            effect?.setKeyframes([
+              sourceKeyframe,
+              targetKeyframe(liveTargetRect),
+            ]);
+          }
+        }
+
+        paneNavTrackingFrameRef.current =
+          window.requestAnimationFrame(trackTarget);
+      };
+
+      paneNavTrackingFrameRef.current =
+        window.requestAnimationFrame(trackTarget);
+
       paneNavAnimationRef.current = animation;
       animation.onfinish = () => {
         window.clearTimeout(cornerShapeSwitchTimeout);
@@ -508,8 +587,9 @@ export default function MainContent({ children }: { children: ReactNode }) {
         animation.oncancel = null;
         paneNavAnimationRef.current = null;
 
-        clone.style.backgroundColor = travelerTargetBackground;
-        clone.style.boxShadow = "none";
+        animation.cancel();
+        isMorphComplete = true;
+        syncCloneToTarget(target.getBoundingClientRect());
         if (destination === "pane") {
           clone.style.zIndex = "9";
         }
@@ -532,6 +612,10 @@ export default function MainContent({ children }: { children: ReactNode }) {
         handoffAnimation.onfinish = () => {
           handoffAnimation.onfinish = null;
           paneNavAnimationRef.current = null;
+          if (paneNavTrackingFrameRef.current !== null) {
+            window.cancelAnimationFrame(paneNavTrackingFrameRef.current);
+            paneNavTrackingFrameRef.current = null;
+          }
           clone.remove();
           paneNavCloneRef.current = null;
           paneNavMorphingRef.current = false;
@@ -547,12 +631,49 @@ export default function MainContent({ children }: { children: ReactNode }) {
         window.clearTimeout(cornerShapeSwitchTimeout);
         animation.onfinish = null;
         animation.oncancel = null;
+        if (paneNavTrackingFrameRef.current !== null) {
+          window.cancelAnimationFrame(paneNavTrackingFrameRef.current);
+          paneNavTrackingFrameRef.current = null;
+        }
       };
     },
     [setPaneNavSurfaceImmediately],
   );
 
-  paneNavMorphStarterRef.current = startPaneNavMorph;
+  const schedulePaneNavMorph = useCallback(
+    (destination: PaneNavSurface) => {
+      if (destination === "nav") {
+        cancelPaneNavReverseDelay();
+        startPaneNavMorph(destination);
+        return;
+      }
+
+      if (
+        paneNavReverseDelayRef.current !== null ||
+        paneNavMorphingRef.current ||
+        paneNavSurfaceRef.current === destination
+      ) {
+        return;
+      }
+
+      paneNavReverseDelayRef.current = window.setTimeout(() => {
+        paneNavReverseDelayRef.current = null;
+
+        if (
+          desiredPaneNavSurfaceRef.current !== destination ||
+          paneNavMorphingRef.current ||
+          paneNavSurfaceRef.current === destination
+        ) {
+          return;
+        }
+
+        startPaneNavMorph(destination);
+      }, HEADER_PANE_NAV_REVERSE_DELAY_MS);
+    },
+    [cancelPaneNavReverseDelay, startPaneNavMorph],
+  );
+
+  paneNavMorphStarterRef.current = schedulePaneNavMorph;
 
   useMotionValueEvent(headerIntroProgress, "change", (progress) => {
     const previousProgress = previousHeaderIntroProgressRef.current;
@@ -563,6 +684,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       viewMode !== "case-study" ||
       bottomNavigation
     ) {
+      cancelPaneNavReverseDelay();
       return;
     }
 
@@ -592,7 +714,9 @@ export default function MainContent({ children }: { children: ReactNode }) {
       !paneNavMorphingRef.current &&
       paneNavSurfaceRef.current !== destination
     ) {
-      startPaneNavMorph(destination);
+      schedulePaneNavMorph(destination);
+    } else if (destination === "nav") {
+      cancelPaneNavReverseDelay();
     }
   });
 
@@ -688,6 +812,10 @@ export default function MainContent({ children }: { children: ReactNode }) {
     scrollY.set(0);
     headerIntroProgress.set(0);
     smoothHeaderIntroProgress.jump(0);
+    stickyHeaderHeight.set("100svh");
+    // Shared-layout measurement runs in the next React layout phase, before a
+    // scheduled MotionValue render is guaranteed to reach the DOM.
+    stickyHeaderRef.current?.style.setProperty("height", "100svh");
     headerExitProgress.set(0);
     smoothHeaderVisibleProgress.jump(1);
     bottomRevealProgress.set(0);
@@ -700,6 +828,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
     smoothBottomRevealProgress,
     smoothHeaderIntroProgress,
     smoothHeaderVisibleProgress,
+    stickyHeaderHeight,
   ]);
 
   useEffect(() => {
@@ -735,11 +864,15 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   const handlePreviewNavigationStart = useCallback(
     (sourceRect: SummaryTransitionRect | null) => {
-      const viewportCenterOffset = sourceRect
-        ? sourceRect.left + sourceRect.width / 2 - window.innerWidth / 2
+      const pageRect = document.body.getBoundingClientRect();
+      const sourcePageLeft = sourceRect
+        ? sourceRect.left - pageRect.left
         : 0;
 
-      setHomeToCaseTransition({ viewportCenterOffset });
+      setHomeToCaseTransition({
+        sourcePageLeft,
+        pageWidth: pageRect.width,
+      });
     },
     [],
   );
@@ -1000,9 +1133,13 @@ export default function MainContent({ children }: { children: ReactNode }) {
             style={
               viewMode === "case-study"
                 ? {
-                    height: `calc(100svh + ${HEADER_STICKY_RUNWAY_PX}px)`,
-                    width: "100vw",
-                    marginLeft: `calc((100% - 100vw) / 2 + ${-(homeToCaseTransition?.viewportCenterOffset ?? 0)}px)`,
+                    height: `calc(100svh + ${HEADER_STICKY_RUNWAY_PX - headerBottomClearance}px)`,
+                    width: homeToCaseTransition
+                      ? `${homeToCaseTransition.pageWidth}px`
+                      : "100vw",
+                    marginLeft: homeToCaseTransition
+                      ? `${-homeToCaseTransition.sourcePageLeft}px`
+                      : "calc((100% - 100vw) / 2)",
                   }
                 : undefined
             }
@@ -1016,9 +1153,14 @@ export default function MainContent({ children }: { children: ReactNode }) {
                 style={{ top: `${HEADER_STICKY_RUNWAY_PX}px` }}
               />
             )}
-            <div
+            <motion.div
               ref={stickyHeaderRef}
               className={`h-[100svh] w-full ${viewMode === "case-study" ? "sticky top-0" : "relative"}`}
+              style={
+                viewMode === "case-study"
+                  ? { height: stickyHeaderHeight }
+                  : undefined
+              }
             >
               <AnimatePresence
                 initial={false}
@@ -1071,7 +1213,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
           </div>
 
           {viewMode === "case-study" && (
