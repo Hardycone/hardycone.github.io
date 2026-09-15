@@ -577,9 +577,9 @@ export default function ProjectSummary({
         ? "relative h-[100svh] w-full max-w-5xl justify-center [container-type:inline-size]"
         : isTransitionLocked
           ? transitionRect
-            ? "fixed max-w-none items-center justify-end p-2"
-            : "fixed inset-x-0 bottom-0 mx-auto h-[max(60svh,300px)] w-full max-w-6xl items-center justify-end p-2"
-          : "relative h-[max(60svh,300px)] w-full items-center justify-end p-2";
+            ? "fixed max-w-none items-center justify-end px-0 pb-3.5 pt-2 md:pb-[1.625rem]"
+            : "fixed inset-x-0 bottom-0 mx-auto h-[max(60svh,300px)] w-full max-w-6xl items-center justify-end px-0 pb-3.5 pt-2 md:pb-[1.625rem]"
+          : "relative h-[max(60svh,300px)] w-full items-center justify-end px-0 pb-3.5 pt-2 md:pb-[1.625rem]";
 
   const cardClasses =
     variant === "header"
