@@ -5,7 +5,6 @@
 import { useState } from "react";
 import { useTheme } from "next-themes";
 // import projects from "@/data/projects";
-// import { useActiveProject } from "@/app/context/ActiveProjectContext";
 import { useTransform, MotionValue } from "framer-motion";
 import {
   CertificateIcon,
@@ -81,12 +80,12 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
       <section id="section-1" className="mb-8 w-full min-w-0 scroll-mt-24">
         {/*Section Header Block*/}
         <SectionContainer
-          showHeadingSweep={false}
           heading="My Work"
           headingIcon={PathIcon}
           headingBaseColorClassName={
             "text-foreground dark:text-dark-foreground"
           }
+          headingSweepAt={100}
           borderColor={borderColor}
           exitOnScroll
           entryOnScroll={false}

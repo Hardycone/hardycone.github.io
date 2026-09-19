@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import projects from "../../data/projects";
-import { useActiveProject, wrapIndex } from "../context/ActiveProjectContext";
-import { useViewMode } from "../context/ViewModeContext";
+import { useSiteNavigation, wrapIndex } from "../context/SiteNavigationContext";
 import { useTheme } from "next-themes";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
 import { useIsMdUp } from "@/hooks/useIsMdUp";
@@ -13,14 +12,27 @@ import KeyboardHint from "./KeyboardHint";
 import { useKeyboardHints } from "../context/KeyboardHintsContext";
 import { isTextEntryKeyboardTarget } from "@/lib/keyboard";
 
-export default function GlyphCarousel() {
-  const { activeIndex, setActiveIndex } = useActiveProject();
-  const { viewMode } = useViewMode();
+type NavigationDirection = -1 | 1;
+type NavigationSource = "keyboard" | "touch" | "wheel";
+type BufferedNavigation = {
+  direction: NavigationDirection;
+  source: NavigationSource;
+};
+
+export default function GlyphCarousel({
+  navigationLocked = false,
+  onProjectTransitionStart,
+}: {
+  navigationLocked?: boolean;
+  onProjectTransitionStart: () => void;
+}) {
+  const { activeIndex, setActiveIndex, viewMode } = useSiteNavigation();
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
   const { resolvedTheme } = useTheme();
 
-  const isInteractive = viewMode === "home";
+  const isVisible = viewMode === "home";
+  const isInteractive = isVisible && !navigationLocked;
 
   const { glyphLightShadow, glyphDarkShadow } = useMouseShadow();
 
@@ -28,25 +40,100 @@ export default function GlyphCarousel() {
     resolvedTheme === "dark" ? glyphDarkShadow : glyphLightShadow;
 
   const touchStartY = useRef<number | null>(null);
-  const keyboardLocked = useRef(false);
+  const projectTransitionStarting = useRef(false);
+  const bufferedNavigation = useRef<BufferedNavigation | null>(null);
   const lastScrollTime = useRef(0);
+  const lastWheelEventTime = useRef(0);
+  const wheelGestureCanBuffer = useRef(false);
   const wheelAccum = useRef(0);
   const ticking = useRef(false);
 
   const SCROLL_THRESHOLD = 10;
   const SCROLL_COOLDOWN = 500;
+  const WHEEL_NEW_GESTURE_GAP = 120;
+
+  const performProjectNavigation = useCallback(
+    (direction: NavigationDirection, source: NavigationSource) => {
+      projectTransitionStarting.current = true;
+      onProjectTransitionStart();
+
+      if (source === "keyboard") {
+        flashShortcutHint(direction > 0 ? "down" : "up");
+      }
+
+      setActiveIndex((previousIndex) =>
+        wrapIndex(previousIndex + direction, projects.length),
+      );
+      setPreviewIndex(null);
+
+      if (source === "wheel") {
+        lastScrollTime.current = Date.now();
+      }
+    },
+    [flashShortcutHint, onProjectTransitionStart, setActiveIndex],
+  );
+
+  const requestProjectNavigation = useCallback(
+    (direction: NavigationDirection, source: NavigationSource) => {
+      if (!isVisible) return;
+
+      if (!isInteractive || projectTransitionStarting.current) {
+        // Keep only the latest intent. This makes controls feel responsive
+        // without allowing multiple AnimatePresence exits to overlap.
+        bufferedNavigation.current = { direction, source };
+        return;
+      }
+
+      performProjectNavigation(direction, source);
+    },
+    [isInteractive, isVisible, performProjectNavigation],
+  );
 
   useEffect(() => {
-    if (!isInteractive) return;
+    if (navigationLocked) return;
+
+    const buffered = bufferedNavigation.current;
+    if (!isVisible || !buffered) {
+      projectTransitionStarting.current = false;
+      if (!isVisible) bufferedNavigation.current = null;
+      return;
+    }
+
+    bufferedNavigation.current = null;
+    projectTransitionStarting.current = true;
+
+    // Reserve the next transition immediately, then begin it on the next
+    // frame after AnimatePresence has finished removing the outgoing card.
+    const frame = window.requestAnimationFrame(() => {
+      performProjectNavigation(buffered.direction, buffered.source);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [isVisible, navigationLocked, performProjectNavigation]);
+
+  useEffect(() => {
+    if (!isVisible) return;
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
       const now = Date.now();
-      if (now - lastScrollTime.current < SCROLL_COOLDOWN) return;
+      const startsNewGesture =
+        now - lastWheelEventTime.current > WHEEL_NEW_GESTURE_GAP;
+      const inputIsLocked = !isInteractive || projectTransitionStarting.current;
+
+      if (startsNewGesture) {
+        wheelAccum.current = 0;
+        wheelGestureCanBuffer.current = inputIsLocked;
+      }
+      lastWheelEventTime.current = now;
+
+      if (!inputIsLocked && now - lastScrollTime.current < SCROLL_COOLDOWN) {
+        return;
+      }
 
       wheelAccum.current += e.deltaY;
-      const direction = wheelAccum.current > 0 ? 1 : -1;
+      const direction: NavigationDirection = wheelAccum.current > 0 ? 1 : -1;
       const candidateIndex = wrapIndex(
         activeIndex + direction,
         projects.length,
@@ -57,10 +144,11 @@ export default function GlyphCarousel() {
 
         requestAnimationFrame(() => {
           if (Math.abs(wheelAccum.current) >= SCROLL_THRESHOLD) {
-            setActiveIndex(candidateIndex);
-            setPreviewIndex(null);
-            lastScrollTime.current = Date.now(); // only cool down after committing
-          } else {
+            if (!inputIsLocked || wheelGestureCanBuffer.current) {
+              requestProjectNavigation(direction, "wheel");
+            }
+            wheelGestureCanBuffer.current = false;
+          } else if (!inputIsLocked) {
             setPreviewIndex(candidateIndex);
           }
 
@@ -72,7 +160,6 @@ export default function GlyphCarousel() {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
-        keyboardLocked.current ||
         e.repeat ||
         e.altKey ||
         e.ctrlKey ||
@@ -86,14 +173,7 @@ export default function GlyphCarousel() {
         e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
       if (!direction) return;
 
-      flashShortcutHint(direction > 0 ? "down" : "up");
-      setActiveIndex((prev) => wrapIndex(prev + direction, projects.length));
-      setPreviewIndex(null);
-
-      keyboardLocked.current = true;
-      setTimeout(() => {
-        keyboardLocked.current = false;
-      }, 300);
+      requestProjectNavigation(direction, "keyboard");
     };
 
     const handleTouchStart = (e: TouchEvent) => {
@@ -108,9 +188,8 @@ export default function GlyphCarousel() {
       const threshold = 20;
 
       if (Math.abs(deltaY) > threshold) {
-        const direction = deltaY > 0 ? -1 : 1;
-        setActiveIndex((prev) => wrapIndex(prev + direction, projects.length));
-        setPreviewIndex(null);
+        const direction: NavigationDirection = deltaY > 0 ? -1 : 1;
+        requestProjectNavigation(direction, "touch");
       }
 
       touchStartY.current = null;
@@ -127,7 +206,7 @@ export default function GlyphCarousel() {
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [isInteractive, activeIndex, setActiveIndex, flashShortcutHint]);
+  }, [activeIndex, isInteractive, isVisible, requestProjectNavigation]);
 
   const isMdUp = useIsMdUp();
   const yOffset = isMdUp ? -80 - activeIndex * 200 : -24 - activeIndex * 64;
@@ -140,8 +219,8 @@ export default function GlyphCarousel() {
       initial={false}
       animate={{
         y: yOffset,
-        x: isInteractive ? 0 : -300,
-        opacity: isInteractive ? 1 : 0,
+        x: isVisible ? 0 : -300,
+        opacity: isVisible ? 1 : 0,
       }}
       transition={{ duration: 0.2, ease: "easeInOut" }}
       style={{ pointerEvents: isInteractive ? "auto" : "none" }}
@@ -178,7 +257,18 @@ export default function GlyphCarousel() {
               disabled={!isInteractive}
               aria-hidden={!isInteractive}
               className={`relative h-full w-full cursor-pointer touch-manipulation select-none overflow-hidden rounded-full bg-background p-0.5 dark:bg-dark-background md:p-0 ${index === 0 ? "glyph-one" : index === 2 ? "glyph-three" : ""}`}
-              onClick={() => isInteractive && setActiveIndex(index)}
+              onClick={() => {
+                if (
+                  isInteractive &&
+                  index !== activeIndex &&
+                  !projectTransitionStarting.current
+                ) {
+                  projectTransitionStarting.current = true;
+                  onProjectTransitionStart();
+                  setActiveIndex(index);
+                  setPreviewIndex(null);
+                }
+              }}
             >
               <AnimatedGlyph
                 animationData={project.glyphAnimation}

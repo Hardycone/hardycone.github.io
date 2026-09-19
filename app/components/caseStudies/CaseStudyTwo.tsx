@@ -14,7 +14,7 @@ import {
   LinkBreakIcon,
 } from "@phosphor-icons/react";
 import projects from "@/data/projects";
-import { useActiveProject } from "@/app/context/ActiveProjectContext";
+import { useSiteNavigation } from "@/app/context/SiteNavigationContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import HorizontalCardGroup from "../HorizontalCardGroup";
 import LazyVideo from "../LazyVideo";
@@ -195,7 +195,7 @@ const researchThemes: ResearchTheme[] = [
 
 export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
   const { resolvedTheme } = useTheme();
-  const { activeIndex } = useActiveProject();
+  const { activeIndex } = useSiteNavigation();
   const theme = useProjectTheme(projects[activeIndex].id);
 
   const borderOpacity = useTransform(
@@ -219,9 +219,9 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
     <article className="flex flex-col gap-8">
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
-          showHeadingSweep={false}
           heading="The Product"
           headingIcon={PackageIcon}
+          headingSweepAt={100}
           borderColor={borderColor}
           exitOnScroll={false}
           entryOnScroll={false}
@@ -245,8 +245,9 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           contentClassName=""
         >
           <HorizontalCardGroup
-            alignment="centered"
-            bottomMarginOnLarge="2rem"
+            alignment="aligned"
+            cardSlotClassName="tall:!h-[100svh]"
+            bottomMarginOnLarge="1rem"
             cardWidthClassNameOnLarge="md:w-screen"
             maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
             stickyTopOnLarge="5rem"
@@ -254,18 +255,19 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               {
                 id: "import",
                 content: (
-                  <div className="flex h-full w-full">
+                  <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
                     <div
-                      className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
                     >
                       <ZoomableImage
                         src="/images/flux-01.png"
                         alt="Flux prototype import interface"
+                        className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
                         imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
-                        unzoomedPadding="2rem"
+                        unzoomedPadding="var(--zoom-preview-padding)"
                       />
                     </div>
-                    <div className={`w-[30%] p-6`}>
+                    <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
                       <h5 className="font-serif text-[1.5rem] font-bold">
                         Import
                       </h5>
@@ -283,18 +285,19 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               {
                 id: "configure",
                 content: (
-                  <div className="flex h-full w-full">
+                  <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
                     <div
-                      className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
                     >
                       <ZoomableImage
                         src="/images/flux-01.png"
                         alt="Flux prototype import interface"
+                        className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
                         imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
-                        unzoomedPadding="2rem"
+                        unzoomedPadding="var(--zoom-preview-padding)"
                       />
                     </div>
-                    <div className={`w-[30%] p-6`}>
+                    <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
                       <h5 className="font-serif text-[1.5rem] font-bold">
                         Configure
                       </h5>
@@ -311,18 +314,19 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               {
                 id: "report",
                 content: (
-                  <div className="flex h-full w-full">
+                  <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
                     <div
-                      className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
                     >
                       <ZoomableImage
                         src="/images/flux-01.png"
                         alt="Flux prototype import interface"
+                        className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
                         imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
-                        unzoomedPadding="2rem"
+                        unzoomedPadding="var(--zoom-preview-padding)"
                       />
                     </div>
-                    <div className={`w-[30%] p-6`}>
+                    <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
                       <h5 className="font-serif text-[1.5rem] font-bold">
                         Report
                       </h5>
@@ -341,7 +345,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               <HighlightCard
                 key={id}
                 className="flex h-full min-h-[inherit] flex-col"
-                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-2"
+                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-2 tall:overflow-hidden"
               >
                 {content}
               </HighlightCard>

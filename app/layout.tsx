@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Domine, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 
-import { ViewModeProvider } from "./context/ViewModeContext";
-import { ActiveProjectProvider } from "./context/ActiveProjectContext";
+import { SiteNavigationProvider } from "./context/SiteNavigationContext";
 import { KeyboardHintsProvider } from "./context/KeyboardHintsContext";
 import { ThemeProvider } from "next-themes";
 
@@ -45,6 +44,13 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${domine.variable} ${bricolageGrotesque.variable}`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: 'history.scrollRestoration = "manual";',
+          }}
+        />
+      </head>
       <body className="overflow-x-hidden bg-background font-serif text-foreground antialiased transition-colors dark:bg-dark-background dark:text-dark-foreground">
         {/* <svg
           viewBox="0 0 2000 2000"
@@ -64,13 +70,11 @@ export default function RootLayout({
         </svg> */}
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <KeyboardHintsProvider>
-            <ActiveProjectProvider>
-              <ViewModeProvider>
-                <CursorEffectsProvider>
-                  <MainContent>{children}</MainContent>
-                </CursorEffectsProvider>
-              </ViewModeProvider>
-            </ActiveProjectProvider>
+            <SiteNavigationProvider>
+              <CursorEffectsProvider>
+                <MainContent>{children}</MainContent>
+              </CursorEffectsProvider>
+            </SiteNavigationProvider>
           </KeyboardHintsProvider>
         </ThemeProvider>
       </body>

@@ -36,9 +36,34 @@ body {
 }
 
 @layer components {
-  @media (hover: none) and (pointer: coarse) {
-    .section-container-scroll-reveal {
+  @media (pointer: coarse) {
+    /* Keep the motion, but skip blur compositing on touch-primary devices. */
+    .section-container-scroll-reveal,
+    .project-summary-scroll-reveal {
       filter: none !important;
+    }
+
+    .project-summary-scroll-reveal[data-summary-variant="header"] {
+      will-change: opacity, transform !important;
+    }
+
+    /* Also covers overlays and the floating pane's cloned morph surface. */
+    [class*="backdrop-blur"] {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+  }
+
+  /* iOS Safari can use different projection coordinate spaces for fixed and
+     in-flow elements while its portrait toolbar is collapsed. During the
+     bottom-to-header handoff, keep both ProjectSummary instances viewport-
+     anchored; the header returns to its reserved in-flow slot afterward. */
+  @media (pointer: coarse) and (orientation: portrait) {
+    .project-summary-scroll-reveal[data-summary-variant="header"][data-summary-transition-locked="true"] {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100svh;
     }
   }
 

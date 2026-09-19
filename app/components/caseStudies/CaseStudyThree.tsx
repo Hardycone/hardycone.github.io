@@ -14,7 +14,7 @@ import {
   SealQuestionIcon,
 } from "@phosphor-icons/react";
 import projects from "@/data/projects";
-import { useActiveProject } from "@/app/context/ActiveProjectContext";
+import { useSiteNavigation } from "@/app/context/SiteNavigationContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import HorizontalCardGroup from "../HorizontalCardGroup";
 import HighlightCard from "../HighlightCard";
@@ -31,7 +31,7 @@ const contentNoteClass =
 
 export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
   const { resolvedTheme } = useTheme();
-  const { activeIndex } = useActiveProject();
+  const { activeIndex } = useSiteNavigation();
   const theme = useProjectTheme(projects[activeIndex].id);
 
   const borderOpacity = useTransform(
@@ -55,11 +55,11 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
     <article className="flex flex-col gap-12">
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
-          showHeadingSweep={false}
           heading="The Product"
           headingIcon={PackageIcon}
+          headingSweepAt={100}
           borderColor={borderColor}
-          exitOnScroll
+          exitOnScroll={false}
           entryOnScroll={false}
         >
           <p>
@@ -73,90 +73,97 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
             Our aim was to support that moment without forcing a rigid process.
           </p>
         </SectionContainer>
-      </section>
-      <section>
-        <HorizontalCardGroup
-          alignment="centered"
-          bottomMarginOnLarge="2rem"
-          cardWidthClassNameOnLarge="md:w-[80rem]"
-          maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
-          stickyTopOnLarge="5rem"
-          cards={[
-            [
-              "Import",
-              "Import design prototypes",
-              "Researchers can bring in interactive prototypes created in Figma, or live hosted prototypes.",
-            ],
-            [
-              "Configure",
-              "Configure the experiment",
-              "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
-            ],
-            [
-              "Recruit",
-              "Set a recruit goal and choose participant source",
-              "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
-            ],
-            [
-              "Test",
-              "Once the experiment is launched, participant results immediately start being recorded",
-              "There is not much to do other than wait",
-            ],
-            [
-              "Report",
-              "Get report within hours",
-              "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
-            ],
-          ].map(([number, title, copy]) => (
-            <HighlightCard
-              key={title}
-              className="flex h-full min-h-[inherit] flex-col"
-              contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
-            >
-              <span className={`text-sm font-bold ${theme.textColorClass}`}>
-                {number}
-              </span>
-              <h4 className="mt-auto pt-8">{title}</h4>
-              <p className="mt-3">{copy}</p>
-            </HighlightCard>
-          ))}
-        />
-        <SubSectionContainer>
-          <p>
-            Fantail was an AI-assisted story development startup I co-founded
-            with two teammates while completing my MHCID at the University of
-            Washington. We focused on the messy early phase where a film idea is
-            still a mood, an image, or a fragment of dialogue. Our aim was to
-            support that moment without forcing a rigid, script-first process.
-          </p>
-          <p>
-            Over six months, we moved from discovery research to a functional
-            MVP that let indie filmmakers start with any creative input and
-            shape it into a structured story. We heard encouraging early
-            reactions, especially to the flexible, scene-based approach, but we
-            did not secure funding and chose not to continue bootstrapping.
-          </p>
-          <div className="grid gap-px overflow-hidden rounded-1 bg-foreground/10 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-foreground/15 md:grid-cols-3 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4">
-            {[
-              ["Role", "Co-founder · Product design"],
-              ["Research", "12 in-depth filmmaker interviews"],
-              ["Outcome", "Functional MVP · Early positive feedback"],
-            ].map(([label, value]) => (
-              <div
-                key={label}
-                className="bg-background p-5 dark:bg-dark-background"
+        <SectionContainer
+          showHeading={false}
+          showBorder={false}
+          entryOnScroll={false}
+          containerClassName="mt-4"
+          contentClassName=""
+        >
+          <HorizontalCardGroup
+            alignment="aligned"
+            bottomMarginOnLarge="2rem"
+            cardWidthClassNameOnLarge="md:w-[80rem]"
+            maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
+            stickyTopOnLarge="5rem"
+            cards={[
+              [
+                "Import",
+                "Import design prototypes",
+                "Researchers can bring in interactive prototypes created in Figma, or live hosted prototypes.",
+              ],
+              [
+                "Configure",
+                "Configure the experiment",
+                "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
+              ],
+              [
+                "Recruit",
+                "Set a recruit goal and choose participant source",
+                "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
+              ],
+              [
+                "Test",
+                "Once the experiment is launched, participant results immediately start being recorded",
+                "There is not much to do other than wait",
+              ],
+              [
+                "Report",
+                "Get report within hours",
+                "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
+              ],
+            ].map(([number, title, copy]) => (
+              <HighlightCard
+                key={title}
+                className="flex h-full min-h-[inherit] flex-col"
+                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
               >
-                <p className={`mb-1 font-semibold ${theme.textColorClass}`}>
-                  {label}
-                </p>
-                <p>{value}</p>
-              </div>
+                <span className={`text-sm font-bold ${theme.textColorClass}`}>
+                  {number}
+                </span>
+                <h4 className="mt-auto pt-8">{title}</h4>
+                <p className="mt-3">{copy}</p>
+              </HighlightCard>
             ))}
-          </div>
-          <p className={contentNoteClass}>
-            Content note: Show a hero image of the main workspace.
-          </p>
-        </SubSectionContainer>
+          />
+          <SubSectionContainer>
+            <p>
+              Fantail was an AI-assisted story development startup I co-founded
+              with two teammates while completing my MHCID at the University of
+              Washington. We focused on the messy early phase where a film idea
+              is still a mood, an image, or a fragment of dialogue. Our aim was
+              to support that moment without forcing a rigid, script-first
+              process.
+            </p>
+            <p>
+              Over six months, we moved from discovery research to a functional
+              MVP that let indie filmmakers start with any creative input and
+              shape it into a structured story. We heard encouraging early
+              reactions, especially to the flexible, scene-based approach, but
+              we did not secure funding and chose not to continue bootstrapping.
+            </p>
+            <div className="grid gap-px overflow-hidden rounded-1 bg-foreground/10 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-foreground/15 md:grid-cols-3 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4">
+              {[
+                ["Role", "Co-founder · Product design"],
+                ["Research", "12 in-depth filmmaker interviews"],
+                ["Outcome", "Functional MVP · Early positive feedback"],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  className="bg-background p-5 dark:bg-dark-background"
+                >
+                  <p className={`mb-1 font-semibold ${theme.textColorClass}`}>
+                    {label}
+                  </p>
+                  <p>{value}</p>
+                </div>
+              ))}
+            </div>
+            <p className={contentNoteClass}>
+              Content note: Show a hero image of the main workspace.
+            </p>
+          </SubSectionContainer>
+        </SectionContainer>
       </section>
 
       <section id="section-2" className="scroll-mt-24">

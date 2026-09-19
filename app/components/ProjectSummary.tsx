@@ -29,8 +29,8 @@ import KeyboardHint from "./KeyboardHint";
 
 // import Kbd from "./Kbd";
 
-import { useActiveProject } from "../context/ActiveProjectContext";
 import { useKeyboardHints } from "../context/KeyboardHintsContext";
+import { useSiteNavigation } from "../context/SiteNavigationContext";
 import { isInteractiveKeyboardTarget } from "@/lib/keyboard";
 import {
   HEADER_IMAGE_BOTTOM_GAP_PX,
@@ -94,14 +94,14 @@ interface ProjectSummaryProps {
   bottomVisualProgress: MotionValue<number>;
   floatingPaneRef?: React.RefObject<HTMLDivElement | null>;
   isFloatingPaneVisible?: boolean;
+  isInteractionLocked?: boolean;
   isTransitionLocked?: boolean;
+  transitioningToNext?: boolean;
   isHandoffSourceHidden?: boolean;
   transitionRect?: SummaryTransitionRect | null;
   onHeaderBackgroundClick?: () => void;
   onLayoutAnimationComplete?: () => void;
-  onPreviewNavigationStart?: (
-    sourceRect: SummaryTransitionRect | null,
-  ) => void;
+  onPreviewNavigationStart?: (sourceRect: SummaryTransitionRect | null) => void;
   onBottomNavigationStart?: (
     slug: string,
     sourceRect: SummaryTransitionRect | null,
@@ -128,7 +128,9 @@ export default function ProjectSummary({
   bottomVisualProgress,
   floatingPaneRef,
   isFloatingPaneVisible = true,
+  isInteractionLocked = false,
   isTransitionLocked = false,
+  transitioningToNext = false,
   isHandoffSourceHidden = false,
   transitionRect,
   onHeaderBackgroundClick,
@@ -136,7 +138,6 @@ export default function ProjectSummary({
   onPreviewNavigationStart,
   onBottomNavigationStart,
 }: ProjectSummaryProps) {
-  const { transitioningToNext } = useActiveProject();
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -145,6 +146,7 @@ export default function ProjectSummary({
   const buttonAnchorRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
+  const { activeIndex, viewMode } = useSiteNavigation();
   const isMdUp = useIsMdUp();
   const supportsSquircle = useSupportsSquircle();
   const [hasBottomRevealCompleted, setHasBottomRevealCompleted] = useState(
@@ -156,8 +158,13 @@ export default function ProjectSummary({
       previous === hasCompleted ? previous : hasCompleted,
     );
   });
+  const isCanonicalPreview =
+    variant !== "preview" ||
+    (viewMode === "home" && projectIndex === activeIndex);
   const isSummaryInteractionEnabled =
-    variant !== "bottom" || (hasBottomRevealCompleted && !isTransitionLocked);
+    !isInteractionLocked &&
+    isCanonicalPreview &&
+    (variant !== "bottom" || (hasBottomRevealCompleted && !isTransitionLocked));
   const headerImageRadiusMultiplier = supportsSquircle ? 2 : 1;
 
   const headerImageBaseInset = isMdUp ? 16 : 8;
@@ -204,13 +211,13 @@ export default function ProjectSummary({
       return;
     }
 
-    let animationFrame: number | null = null;
+    let imageStylesApplied = false;
+    const frameStyle = window.getComputedStyle(frame);
+    const frameLayoutWidth = Number.parseFloat(frameStyle.width);
+    const frameLayoutHeight = Number.parseFloat(frameStyle.height);
 
     const updateImageCover = () => {
       const frameRect = frame.getBoundingClientRect();
-      const frameStyle = window.getComputedStyle(frame);
-      const frameLayoutWidth = Number.parseFloat(frameStyle.width);
-      const frameLayoutHeight = Number.parseFloat(frameStyle.height);
       const naturalWidth = image.naturalWidth;
       const naturalHeight = image.naturalHeight;
 
@@ -229,30 +236,44 @@ export default function ProjectSummary({
           frameRect.height / naturalHeight,
         );
 
-        Object.assign(image.style, {
-          left: "50%",
-          top: "50%",
-          right: "auto",
-          bottom: "auto",
-          width: `${naturalWidth}px`,
-          height: `${naturalHeight}px`,
-          maxWidth: "none",
-          objectFit: "fill",
-          transform: `translate(-50%, -50%) scale(${coverScale / projectedScaleX}, ${coverScale / projectedScaleY})`,
-          transformOrigin: "center",
-          willChange: "transform",
-        });
-      }
+        if (!imageStylesApplied) {
+          Object.assign(image.style, {
+            left: "50%",
+            top: "50%",
+            right: "auto",
+            bottom: "auto",
+            width: `${naturalWidth}px`,
+            height: `${naturalHeight}px`,
+            maxWidth: "none",
+            objectFit: "fill",
+            transformOrigin: "center",
+            willChange: "transform",
+          });
+          imageStylesApplied = true;
+        }
 
-      animationFrame = window.requestAnimationFrame(updateImageCover);
+        image.style.transform = `translate(-50%, -50%) scale(${coverScale / projectedScaleX}, ${coverScale / projectedScaleY})`;
+      }
     };
 
+    // Motion writes projection transforms to the card and image frame. React
+    // to those writes instead of polling layout continuously while the mobile
+    // handoff is waiting for the outgoing case content to leave.
+    const observer = new MutationObserver(updateImageCover);
+    observer.observe(cardRef.current ?? frame, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+    observer.observe(frame, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+    image.addEventListener("load", updateImageCover);
     updateImageCover();
 
     return () => {
-      if (animationFrame !== null) {
-        window.cancelAnimationFrame(animationFrame);
-      }
+      observer.disconnect();
+      image.removeEventListener("load", updateImageCover);
 
       for (const property of [
         "left",
@@ -295,9 +316,7 @@ export default function ProjectSummary({
       const projectedScaleY = Math.hypot(matrix.c, matrix.d);
       const leftInset = buttonAnchor.offsetLeft;
       const bottomInset =
-        card.clientHeight -
-        buttonAnchor.offsetTop -
-        buttonAnchor.offsetHeight;
+        card.clientHeight - buttonAnchor.offsetTop - buttonAnchor.offsetHeight;
       const insetCorrectionX = leftInset * (1 / projectedScaleX - 1);
       const insetCorrectionY = bottomInset * (1 - 1 / projectedScaleY);
 
@@ -321,11 +340,7 @@ export default function ProjectSummary({
 
   const bottomOpacity = useTransform(bottomVisualProgress, [0, 1], [0, 1]);
 
-  const headerScale = useTransform(
-    headerExitVisualProgress,
-    [0, 1],
-    [0.9, 1],
-  );
+  const headerScale = useTransform(headerExitVisualProgress, [0, 1], [0.9, 1]);
 
   const headerBlur = useTransform(
     headerExitVisualProgress,
@@ -440,7 +455,7 @@ export default function ProjectSummary({
   ]);
 
   useEffect(() => {
-    if (variant === "header") return;
+    if (variant === "header" || !isSummaryInteractionEnabled) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
@@ -462,7 +477,7 @@ export default function ProjectSummary({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [flashShortcutHint, handleClick, variant]);
+  }, [flashShortcutHint, handleClick, isSummaryInteractionEnabled, variant]);
 
   useEffect(() => {
     setIsNavigating(false);
@@ -636,8 +651,7 @@ export default function ProjectSummary({
       style={{
         opacity: summaryOpacity,
         visibility: isHandoffSourceHidden ? "hidden" : undefined,
-        originX:
-          variant === "header" || variant === "bottom" ? 0.5 : undefined,
+        originX: variant === "header" || variant === "bottom" ? 0.5 : undefined,
         originY:
           variant === "header" ? 1 : variant === "bottom" ? 0 : undefined,
         scale: summaryScale,
@@ -650,7 +664,9 @@ export default function ProjectSummary({
           variant === "header" ? "filter, opacity, transform" : undefined,
       }}
       aria-hidden={isHandoffSourceHidden || undefined}
-      className={`z-10 flex flex-col ${containerClasses}`}
+      data-summary-variant={variant}
+      data-summary-transition-locked={isTransitionLocked || undefined}
+      className={`project-summary-scroll-reveal z-10 flex flex-col ${containerClasses}`}
     >
       {/* Bottom variant title bar */}
       {variant === "bottom" && (
@@ -686,6 +702,7 @@ export default function ProjectSummary({
         onLayoutAnimationComplete={() => {
           onLayoutAnimationComplete?.();
         }}
+        style={{ willChange: isTransitionLocked ? "transform" : undefined }}
         className={`group relative flex w-full flex-col rounded-8 bg-background supports-[corner-shape:squircle]:rounded-16 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-background md:rounded-12 supports-[corner-shape:squircle]:md:rounded-24 ${cardClasses}`}
       >
         {/* Image as background */}
@@ -707,7 +724,10 @@ export default function ProjectSummary({
                 : undefined
             }
             className={`${isHeaderBackgroundInteractive ? "cursor-default" : "pointer-events-none"} absolute overflow-hidden supports-[corner-shape:squircle]:[corner-shape:squircle]`}
-            style={backgroundImageStyle}
+            style={{
+              ...backgroundImageStyle,
+              willChange: isTransitionLocked ? "transform" : undefined,
+            }}
           >
             <img
               ref={backgroundImageRef}
@@ -745,7 +765,10 @@ export default function ProjectSummary({
           }
           layoutDependency={layoutDependency}
           className={`z-50 flex h-fit max-h-full min-h-0 flex-col ${floatingPaneLayoutClasses}`}
-          style={{ pointerEvents: floatingPanePointerEvents }}
+          style={{
+            pointerEvents: floatingPanePointerEvents,
+            willChange: isTransitionLocked ? "transform" : undefined,
+          }}
         >
           <motion.div
             ref={setFloatingPaneNode}
@@ -883,7 +906,10 @@ export default function ProjectSummary({
               ref={buttonAnchorRef}
               key="preview-button"
               className={`absolute bottom-3 left-3 md:bottom-6 md:left-6 wide:hidden lg:wide:block lg:superwide:hidden`}
-              style={{ transformOrigin: "left bottom", willChange: "transform" }}
+              style={{
+                transformOrigin: "left bottom",
+                willChange: "transform",
+              }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, transition: { delay: 0.4, ease: "easeOut" } }}

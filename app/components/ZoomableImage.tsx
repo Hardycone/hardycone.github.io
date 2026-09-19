@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { animate, motion, useMotionValue } from "framer-motion";
+import { animate, motion, useMotionValue, useTransform } from "framer-motion";
 import { useCardGroupContext } from "@/app/context/CardGroupContext";
 
 interface ImageSize {
@@ -59,11 +59,12 @@ export default function ZoomableImage({
     useState<ImageSize | null>(null);
   const [imageSize, setImageSize] = useState<ImageSize | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [isZoomAnimating, setIsZoomAnimating] = useState(false);
   const [roundImageSurface, setRoundImageSurface] = useState(true);
   const cardGroupContext = useCardGroupContext();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const scale = useMotionValue(1);
+  const zoomProgress = useMotionValue(0);
 
   useEffect(() => {
     onZoomChangeRef.current = onZoomChange;
@@ -110,11 +111,12 @@ export default function ZoomableImage({
   useEffect(() => {
     setImageSize(null);
     setIsZoomed(false);
+    setIsZoomAnimating(false);
     setRoundImageSurface(true);
     x.set(0);
     y.set(0);
-    scale.set(1);
-  }, [scale, src, x, y]);
+    zoomProgress.set(0);
+  }, [src, x, y, zoomProgress]);
 
   const zoomGeometry = useMemo(() => {
     if (
@@ -134,6 +136,8 @@ export default function ZoomableImage({
         maxY: 0,
         containWidth: 0,
         containHeight: 0,
+        zoomedWidth: 0,
+        zoomedHeight: 0,
         canZoom: false,
       };
     }
@@ -160,9 +164,29 @@ export default function ZoomableImage({
       maxY,
       containWidth,
       containHeight,
+      zoomedWidth,
+      zoomedHeight,
       canZoom: nextScale > 1.001,
     };
   }, [frameSize, imageSize, unzoomedContentSize]);
+
+  const surfaceWidth = useTransform(
+    zoomProgress,
+    [0, 1],
+    [zoomGeometry.containWidth, zoomGeometry.zoomedWidth],
+  );
+  const surfaceHeight = useTransform(
+    zoomProgress,
+    [0, 1],
+    [zoomGeometry.containHeight, zoomGeometry.zoomedHeight],
+  );
+  // Paint at the final media size and scale down for the preview, never up.
+  // At full zoom the bitmap is untransformed, rather than an enlarged thumbnail.
+  const mediaScale = useTransform(
+    zoomProgress,
+    [0, 1],
+    [1 / zoomGeometry.scale, 1],
+  );
 
   const canUseZoom =
     zoomGeometry.canZoom && !cardGroupContext?.prioritizeCardClick;
@@ -182,31 +206,44 @@ export default function ZoomableImage({
       onZoomChangeRef.current?.(false);
     }
 
-    const nextScale = isZoomed ? zoomGeometry.scale : 1;
+    const nextProgress = isZoomed ? 1 : 0;
     const nextX = isZoomed
       ? clamp(x.get(), -zoomGeometry.maxX, zoomGeometry.maxX)
       : 0;
     const nextY = isZoomed
       ? clamp(y.get(), -zoomGeometry.maxY, zoomGeometry.maxY)
       : 0;
+
+    // Mounting or measuring an unzoomed image needs no animation work.
+    if (
+      zoomProgress.get() === nextProgress &&
+      x.get() === nextX &&
+      y.get() === nextY
+    ) {
+      setIsZoomAnimating(false);
+      if (isZoomed) setRoundImageSurface(false);
+      return;
+    }
+
+    setIsZoomAnimating(true);
     const animations = [
-      animate(scale, nextScale, ZOOM_TRANSITION),
+      animate(zoomProgress, nextProgress, ZOOM_TRANSITION),
       animate(x, nextX, ZOOM_TRANSITION),
       animate(y, nextY, ZOOM_TRANSITION),
     ];
     let isCancelled = false;
 
-    if (isZoomed) {
-      Promise.all(animations).then(() => {
-        if (!isCancelled) setRoundImageSurface(false);
-      });
-    }
+    Promise.all(animations).then(() => {
+      if (isCancelled) return;
+      setIsZoomAnimating(false);
+      if (isZoomed) setRoundImageSurface(false);
+    });
 
     return () => {
       isCancelled = true;
       animations.forEach((animation) => animation.stop());
     };
-  }, [isZoomed, scale, x, y, zoomGeometry]);
+  }, [isZoomed, x, y, zoomGeometry, zoomProgress]);
 
   const toggleZoom = () => {
     if (!canUseZoom) return;
@@ -230,7 +267,7 @@ export default function ZoomableImage({
     <div
       ref={frameRef}
       data-card-group-interactive={canUseZoom ? "true" : undefined}
-      className={`relative size-full overflow-hidden ${canUseZoom ? (isZoomed ? "cursor-grab touch-none active:cursor-grabbing" : "cursor-zoom-in touch-pan-y") : ""} ${className}`}
+      className={`relative size-full overflow-hidden ${canUseZoom ? (isZoomed ? "cursor-grab touch-pan-y active:cursor-grabbing" : "cursor-zoom-in touch-pan-y") : ""} ${className}`}
     >
       <div
         aria-hidden="true"
@@ -240,9 +277,9 @@ export default function ZoomableImage({
         <div ref={unzoomedContentRef} className="size-full" />
       </div>
       <motion.div
-        className={`size-full origin-center ${isZoomed ? "will-change-transform" : ""}`}
-        style={{ x, y, scale }}
-        drag={isZoomed}
+        className="size-full"
+        style={{ x, y }}
+        drag={isZoomed ? "x" : false}
         dragConstraints={{
           left: -zoomGeometry.maxX,
           right: zoomGeometry.maxX,
@@ -254,30 +291,44 @@ export default function ZoomableImage({
         onTap={toggleZoom}
       >
         <div className="flex size-full items-center justify-center">
-          <div
-            className={
+          <motion.div
+            className={`relative shrink-0 ${
               roundImageSurface
                 ? `${imageRoundedClassName} overflow-hidden`
                 : ""
-            }
+            }`}
             style={
               zoomGeometry.containWidth > 0 && zoomGeometry.containHeight > 0
                 ? {
-                    width: zoomGeometry.containWidth,
-                    height: zoomGeometry.containHeight,
+                    width: surfaceWidth,
+                    height: surfaceHeight,
                   }
                 : { width: "100%", height: "100%" }
             }
           >
-            <img
-              {...imageProps}
-              src={src}
-              alt={alt}
-              draggable={false}
-              onLoad={handleLoad}
-              className={`pointer-events-none block size-full max-w-none select-none object-contain ${imageClassName}`}
-            />
-          </div>
+            <motion.div
+              className="absolute origin-center"
+              style={{
+                width: zoomGeometry.zoomedWidth || "100%",
+                height: zoomGeometry.zoomedHeight || "100%",
+                left: zoomGeometry.zoomedWidth > 0 ? "50%" : 0,
+                top: zoomGeometry.zoomedHeight > 0 ? "50%" : 0,
+                marginLeft: -zoomGeometry.zoomedWidth / 2,
+                marginTop: -zoomGeometry.zoomedHeight / 2,
+                scale: mediaScale,
+                willChange: isZoomAnimating ? "transform" : undefined,
+              }}
+            >
+              <img
+                {...imageProps}
+                src={src}
+                alt={alt}
+                draggable={false}
+                onLoad={handleLoad}
+                className={`pointer-events-none block size-full max-w-none select-none object-contain ${imageClassName}`}
+              />
+            </motion.div>
+          </motion.div>
         </div>
       </motion.div>
     </div>

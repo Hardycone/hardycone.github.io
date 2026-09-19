@@ -3,8 +3,7 @@ import { motion, AnimatePresence, MotionValue } from "framer-motion";
 
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useTheme } from "next-themes";
-import { useViewMode } from "../context/ViewModeContext";
-import { useActiveProject } from "../context/ActiveProjectContext";
+import { useSiteNavigation } from "../context/SiteNavigationContext";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
 import {
   GithubLogoIcon,
@@ -124,8 +123,7 @@ function LinkItem({
 }
 
 export default function CaseStudyFab() {
-  const { viewMode } = useViewMode();
-  const { activeIndex } = useActiveProject();
+  const { activeIndex, viewMode } = useSiteNavigation();
   const { resolvedTheme } = useTheme();
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
   const { barLightShadow, barDarkShadow } = useMouseShadow();

@@ -1,6 +1,5 @@
 import { useTheme } from "next-themes";
 // import projects from "@/data/projects";
-// import { useActiveProject } from "@/app/context/ActiveProjectContext";
 // import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
 import SubSectionContainer from "../SubSectionContainer";
@@ -14,7 +13,6 @@ interface CaseStudySixProps {
 
 export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
   const { resolvedTheme } = useTheme();
-  // const { activeIndex } = useActiveProject();
   // const theme = useProjectTheme(projects[activeIndex].id);
 
   const borderOpacity = useTransform(

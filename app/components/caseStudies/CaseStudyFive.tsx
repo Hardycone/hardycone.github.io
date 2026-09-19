@@ -19,7 +19,7 @@ import {
   WavesIcon,
 } from "@phosphor-icons/react";
 import projects from "@/data/projects";
-import { useActiveProject } from "@/app/context/ActiveProjectContext";
+import { useSiteNavigation } from "@/app/context/SiteNavigationContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import CaseStudyFigure from "../CaseStudyFigure";
 import HorizontalCardGroup from "../HorizontalCardGroup";
@@ -34,7 +34,7 @@ interface CaseStudyFiveProps {
 
 export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
   const { resolvedTheme } = useTheme();
-  const { activeIndex } = useActiveProject();
+  const { activeIndex } = useSiteNavigation();
   const theme = useProjectTheme(projects[activeIndex].id);
 
   const borderOpacity = useTransform(
@@ -58,11 +58,11 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
     <article className="flex flex-col gap-12">
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
-          showHeadingSweep={false}
           heading="The Product"
           headingIcon={PackageIcon}
+          headingSweepAt={100}
           borderColor={borderColor}
-          exitOnScroll
+          exitOnScroll={false}
           entryOnScroll={false}
         >
           <p>
@@ -74,64 +74,61 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
             on the lunar surface. The system guided an astronaut from suit
             disconnect through field science and a safe return route.{" "}
           </p>
-        </SectionContainer>
-      </section>
-      <section>
-        <HorizontalCardGroup
-          alignment="centered"
-          bottomMarginOnLarge="2rem"
-          cardWidthClassNameOnLarge="md:w-[80rem]"
-          maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
-          stickyTopOnLarge="5rem"
-          cards={[
-            [
-              "Import",
-              "Import design prototypes",
-              "Researchers can bring in interactive prototypes created in Figma, or live hosted prototypes.",
-            ],
-            [
-              "Configure",
-              "Configure the experiment",
-              "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
-            ],
-            [
-              "Recruit",
-              "Set a recruit goal and choose participant source",
-              "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
-            ],
-            [
-              "Test",
-              "Once the experiment is launched, participant results immediately start being recorded",
-              "There is not much to do other than wait",
-            ],
-            [
-              "Report",
-              "Get report within hours",
-              "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
-            ],
-          ].map(([number, title, copy]) => (
-            <HighlightCard
-              key={title}
-              className="flex h-full min-h-[inherit] flex-col"
-              contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
-            >
-              <span className={`text-sm font-bold ${theme.textColorClass}`}>
-                {number}
-              </span>
-              <h4 className="mt-auto pt-8">{title}</h4>
-              <p className="mt-3">{copy}</p>
-            </HighlightCard>
-          ))}
-        />
+        </SectionContainer>{" "}
         <SectionContainer
-          showHeadingSweep={false}
-          heading="Quick Take"
-          headingIcon={ScrollIcon}
-          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
-          borderColor={borderColor}
-          exitOnScroll
+          showHeading={false}
+          showBorder={false}
           entryOnScroll={false}
+          containerClassName="mt-4"
+          contentClassName=""
         >
+          <HorizontalCardGroup
+            alignment="aligned"
+            bottomMarginOnLarge="2rem"
+            cardWidthClassNameOnLarge="md:w-[80rem]"
+            maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
+            stickyTopOnLarge="5rem"
+            cards={[
+              [
+                "Import",
+                "Import design prototypes",
+                "Researchers can bring in interactive prototypes created in Figma, or live hosted prototypes.",
+              ],
+              [
+                "Configure",
+                "Configure the experiment",
+                "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
+              ],
+              [
+                "Recruit",
+                "Set a recruit goal and choose participant source",
+                "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
+              ],
+              [
+                "Test",
+                "Once the experiment is launched, participant results immediately start being recorded",
+                "There is not much to do other than wait",
+              ],
+              [
+                "Report",
+                "Get report within hours",
+                "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
+              ],
+            ].map(([number, title, copy]) => (
+              <HighlightCard
+                key={title}
+                className="flex h-full min-h-[inherit] flex-col"
+                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
+              >
+                <span className={`text-sm font-bold ${theme.textColorClass}`}>
+                  {number}
+                </span>
+                <h4 className="mt-auto pt-8">{title}</h4>
+                <p className="mt-3">{copy}</p>
+              </HighlightCard>
+            ))}
+          />
+
           <SubSectionContainer>
             <p>
               For NASA&apos;s SUITS challenge, our multidisciplinary team
@@ -166,6 +163,7 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
           </SubSectionContainer>
         </SectionContainer>
       </section>
+
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
           showHeadingSweep={false}

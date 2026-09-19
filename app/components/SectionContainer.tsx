@@ -17,7 +17,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
-import { useActiveProject } from "@/app/context/ActiveProjectContext";
+import { useSiteNavigation } from "@/app/context/SiteNavigationContext";
 import projects from "@/data/projects";
 import SectionContainerHeading from "./SectionContainerHeading";
 
@@ -158,7 +158,7 @@ export default function SectionContainer(props: SectionContainerProps) {
     revealOriginY.set(0);
   });
 
-  const { activeIndex } = useActiveProject();
+  const { activeIndex } = useSiteNavigation();
   const theme = useProjectTheme(projects[activeIndex].id);
 
   return (
@@ -179,7 +179,7 @@ export default function SectionContainer(props: SectionContainerProps) {
           <SectionContainerHeading
             showHeadingSweep={props.showHeadingSweep ?? true}
             headingIcon={props.headingIcon}
-            isRevealed={!shouldAnimateEntry || hasHeadingEnteredSweepZone}
+            isRevealed={hasHeadingEnteredSweepZone}
             headingSweepColor={props.headingSweepColor ?? theme.hex.primary}
             headingBaseColorClassName={props.headingBaseColorClassName}
             heading={props.heading}

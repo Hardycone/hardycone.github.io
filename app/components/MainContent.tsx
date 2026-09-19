@@ -11,7 +11,14 @@ import {
   LayoutGroup,
   type Variants,
 } from "framer-motion";
-import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { flushSync } from "react-dom";
 import { useRouter } from "next/navigation";
 import {
@@ -21,8 +28,7 @@ import {
 } from "@phosphor-icons/react";
 import projects from "@/data/projects";
 
-import { useViewMode } from "../context/ViewModeContext";
-import { useActiveProject } from "../context/ActiveProjectContext";
+import { useSiteNavigation } from "../context/SiteNavigationContext";
 import { useIsMdUp } from "@/hooks/useIsMdUp";
 
 import GlyphCarousel from "./GlyphCarousel";
@@ -47,12 +53,15 @@ import {
 import BottomBar from "./BottomBar";
 type BottomNavigationState = {
   slug: string;
+  sourceIndex: number;
   targetIndex: number;
   sourceRect: SummaryTransitionRect | null;
-  phase: "nav-exit" | "exit" | "morph" | "route";
+  usesViewportAnchoredHandoff: boolean;
+  phase: "nav-exit" | "exit" | "prepare" | "morph" | "route" | "settle";
 };
 
 type HomeToCaseTransitionState = {
+  targetIndex: number;
   sourcePageLeft: number;
   pageWidth: number;
 };
@@ -60,11 +69,19 @@ type HomeToCaseTransitionState = {
 type PaneNavSurface = "pane" | "nav";
 
 const CENTER_NAV_EXIT_DURATION = 180;
+const HANDOFF_VIEWPORT_QUIET_MS = 120;
+const HANDOFF_VIEWPORT_SETTLE_TIMEOUT_MS = 900;
+const HANDOFF_VIEWPORT_STABLE_FRAMES = 3;
+const HANDOFF_RELEASE_MIN_MS = 350;
+const HISTORY_LANDING_MIN_MS = 700;
+const HISTORY_LANDING_TIMEOUT_MS = 1400;
+const HISTORY_LANDING_QUIET_MS = 160;
 const PANE_NAV_TRAVELER_BACKGROUND_OPACITY = 0.6;
 const HOME_PROJECT_TRANSITION = {
   duration: 0.36,
   ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
 };
+const HOME_RETURN_INPUT_LOCK_TIMEOUT_MS = 900;
 
 type HomeProjectDirection = "up" | "down";
 
@@ -105,21 +122,25 @@ const topSummaryProjectVariants: Variants = {
       opacity: HOME_PROJECT_TRANSITION,
     },
   },
-  exit: ({ isHome, direction }: TopSummaryTransitionState) => ({
-    y: isHome
-      ? direction === "up"
-        ? -homeProjectTravelDistance()
-        : homeProjectTravelDistance()
-      : 0,
-    opacity: isHome ? 0 : 1,
-    transitionEnd: isHome ? { visibility: "hidden" } : undefined,
-    transition: isHome
+  exit: ({ isHome, direction }: TopSummaryTransitionState) =>
+    isHome
       ? {
-          y: HOME_PROJECT_TRANSITION,
-          opacity: HOME_PROJECT_TRANSITION,
+          y:
+            direction === "up"
+              ? -homeProjectTravelDistance()
+              : homeProjectTravelDistance(),
+          opacity: 0,
+          transition: {
+            y: HOME_PROJECT_TRANSITION,
+            opacity: HOME_PROJECT_TRANSITION,
+          },
         }
-      : { duration: 0 },
-  }),
+      : {
+          y: 0,
+          opacity: 0,
+          visibility: "hidden",
+          transition: { duration: 0 },
+        },
 };
 
 function withAlpha(color: string, alpha: number) {
@@ -145,13 +166,8 @@ function visibleCornerShape(style: CSSStyleDeclaration) {
 }
 
 export default function MainContent({ children }: { children: ReactNode }) {
-  const {
-    activeIndex,
-    previousIndex,
-    transitioningToNext,
-    setTransitioningToNext,
-  } = useActiveProject();
-  const { viewMode } = useViewMode();
+  const { activeIndex, previousIndex, setActiveIndex, viewMode } =
+    useSiteNavigation();
   const isMdUp = useIsMdUp();
   const router = useRouter();
 
@@ -164,7 +180,46 @@ export default function MainContent({ children }: { children: ReactNode }) {
     useState<BottomNavigationState | null>(null);
   const [homeToCaseTransition, setHomeToCaseTransition] =
     useState<HomeToCaseTransitionState | null>(null);
+  const [isHomeProjectTransitioning, setIsHomeProjectTransitioning] =
+    useState(false);
+  const [isHomeReturnMorphing, setIsHomeReturnMorphing] = useState(false);
   const [caseStudyIndex, setCaseStudyIndex] = useState(activeIndex);
+  const [suppressedCaseStudyHeaderIndex, setSuppressedCaseStudyHeaderIndex] =
+    useState<number | null>(null);
+  const [projectSummaryLayoutVersion, setProjectSummaryLayoutVersion] =
+    useState(0);
+  const historyLandingRequestRef = useRef(0);
+  const historyLandingPathRef = useRef<string | null>(null);
+  const previousViewModeRef = useRef(viewMode);
+  const [historyLandingVersion, setHistoryLandingVersion] = useState(0);
+  const transitioningToNext =
+    bottomNavigation !== null && bottomNavigation.phase !== "nav-exit";
+
+  const handleHomeProjectTransitionStart = useCallback(() => {
+    setIsHomeProjectTransitioning(true);
+  }, []);
+
+  const handleHomeProjectTransitionComplete = useCallback(() => {
+    setIsHomeProjectTransitioning(false);
+  }, []);
+
+  const handleHomeReturnMorphComplete = useCallback(() => {
+    setIsHomeReturnMorphing(false);
+  }, []);
+
+  useEffect(() => {
+    if (viewMode !== "home" || !isHomeReturnMorphing) return;
+
+    // Motion can omit layout-complete on mobile when the case header and home
+    // preview resolve to the same measured layout during the route commit.
+    // Never let that missing callback leave Home permanently non-interactive.
+    const timeout = window.setTimeout(
+      handleHomeReturnMorphComplete,
+      HOME_RETURN_INPUT_LOCK_TIMEOUT_MS,
+    );
+
+    return () => window.clearTimeout(timeout);
+  }, [handleHomeReturnMorphComplete, isHomeReturnMorphing, viewMode]);
 
   const { scrollY } = useScroll();
   const headerIntroProgress = useMotionValue(0);
@@ -213,15 +268,20 @@ export default function MainContent({ children }: { children: ReactNode }) {
   const paneNavMorphStarterRef = useRef<
     ((destination: PaneNavSurface) => void) | null
   >(null);
-  const instantHomeNavigationRef = useRef(false);
+  const homeNavigationRequestedRef = useRef(false);
   const [paneNavSurface, setPaneNavSurface] = useState<PaneNavSurface>("pane");
   const [isPaneNavMorphing, setIsPaneNavMorphing] = useState(false);
   const [sectionHighlightEnabled, setSectionHighlightEnabled] = useState(false);
   const sectionHighlightEnabledRef = useRef(false);
   const caseStudyExitDirection = transitioningToNext ? "up" : "down";
+  const isResettingBottomNavigationScroll =
+    bottomNavigation?.phase === "settle" ||
+    (bottomNavigation?.phase === "prepare" &&
+      !bottomNavigation.usesViewportAnchoredHandoff);
   const isCaseStudyScrollLocked =
     viewMode === "case-study" &&
-    (transitioningToNext || homeToCaseTransition !== null);
+    ((transitioningToNext && !isResettingBottomNavigationScroll) ||
+      homeToCaseTransition !== null);
   const isHomeScrollLocked = viewMode === "home";
   const isPageScrollLocked = isHomeScrollLocked || isCaseStudyScrollLocked;
   const isBottomNavigationActive = bottomNavigation !== null;
@@ -358,9 +418,29 @@ export default function MainContent({ children }: { children: ReactNode }) {
     [],
   );
 
-  const handleInstantHomeNavigationStart = useCallback(() => {
-    instantHomeNavigationRef.current = true;
-  }, []);
+  const handleHomeNavigationStart = useCallback(() => {
+    homeNavigationRequestedRef.current = true;
+    setHomeToCaseTransition(null);
+    setIsHomeReturnMorphing(true);
+
+    const homeIndex = bottomNavigation?.targetIndex ?? activeIndex;
+    setActiveIndex(homeIndex);
+    setCaseStudyIndex(homeIndex);
+
+    if (!bottomNavigation) return;
+
+    // An interrupted shared-layout handoff can leave Motion's lead/follow
+    // projection pair attached to the surviving home summary. Recreate only
+    // this layout group so the preview cannot inherit a hidden or projected
+    // card from the aborted transaction.
+    setProjectSummaryLayoutVersion((version) => version + 1);
+
+    // Keep the outgoing case header suppressed through this render. If
+    // it becomes visible once before Home mounts, AnimatePresence can retain
+    // that stale visual node into the next home-to-case handoff.
+    setSuppressedCaseStudyHeaderIndex(bottomNavigation.sourceIndex);
+    setBottomNavigation(null);
+  }, [activeIndex, bottomNavigation, setActiveIndex]);
 
   const startPaneNavMorph = useCallback(
     (destination: PaneNavSurface) => {
@@ -558,10 +638,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
         }
 
         const liveTargetRect = target.getBoundingClientRect();
-        if (
-          liveTargetRect.width > 0 &&
-          liveTargetRect.height > 0
-        ) {
+        if (liveTargetRect.width > 0 && liveTargetRect.height > 0) {
           if (isMorphComplete) {
             syncCloneToTarget(liveTargetRect);
           } else {
@@ -679,18 +756,13 @@ export default function MainContent({ children }: { children: ReactNode }) {
     const previousProgress = previousHeaderIntroProgressRef.current;
     previousHeaderIntroProgressRef.current = progress;
 
-    if (
-      instantHomeNavigationRef.current ||
-      viewMode !== "case-study" ||
-      bottomNavigation
-    ) {
+    if (viewMode !== "case-study" || bottomNavigation) {
       cancelPaneNavReverseDelay();
       return;
     }
 
     const progressInPixels = progress * HEADER_STICKY_RUNWAY_PX;
-    const previousProgressInPixels =
-      previousProgress * HEADER_STICKY_RUNWAY_PX;
+    const previousProgressInPixels = previousProgress * HEADER_STICKY_RUNWAY_PX;
     let destination = desiredPaneNavSurfaceRef.current;
 
     if (
@@ -721,7 +793,6 @@ export default function MainContent({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    instantHomeNavigationRef.current = false;
     cleanupPaneNavMorph();
     desiredPaneNavSurfaceRef.current = "pane";
     previousHeaderIntroProgressRef.current = 0;
@@ -737,10 +808,6 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const handleGeometryChange = () => {
-      if (instantHomeNavigationRef.current) {
-        return;
-      }
-
       updateHeaderIntroProgress();
       updateBottomRevealProgress();
     };
@@ -779,7 +846,6 @@ export default function MainContent({ children }: { children: ReactNode }) {
   ]);
 
   useMotionValueEvent(scrollY, "change", (y) => {
-    if (instantHomeNavigationRef.current) return;
     if (bottomNavigation) return;
     if (viewMode !== "case-study") return;
 
@@ -789,6 +855,30 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    const handleHistoryNavigation = () => {
+      // Safari can restore a history entry's document position after popstate
+      // and after React's route commit. Record the destination so the route-
+      // keyed landing guard below can own the scroll position until the visual
+      // viewport has finished changing.
+      window.history.scrollRestoration = "manual";
+      historyLandingPathRef.current = window.location.pathname;
+      historyLandingRequestRef.current += 1;
+      setHistoryLandingVersion(historyLandingRequestRef.current);
+      window.scrollTo({ top: 0, behavior: "auto" });
+    };
+
+    window.addEventListener("popstate", handleHistoryNavigation);
+
+    return () => {
+      window.removeEventListener("popstate", handleHistoryNavigation);
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
   }, []);
 
   // useEffect(() => {
@@ -808,6 +898,10 @@ export default function MainContent({ children }: { children: ReactNode }) {
   //   };
   // }, [viewMode]);
   const resetCaseStudyScroll = useCallback(() => {
+    cleanupPaneNavMorph();
+    desiredPaneNavSurfaceRef.current = "pane";
+    previousHeaderIntroProgressRef.current = 0;
+    setPaneNavSurfaceImmediately("pane");
     window.scrollTo({ top: 0, behavior: "auto" });
     scrollY.set(0);
     headerIntroProgress.set(0);
@@ -822,25 +916,141 @@ export default function MainContent({ children }: { children: ReactNode }) {
     smoothBottomRevealProgress.jump(0);
   }, [
     bottomRevealProgress,
+    cleanupPaneNavMorph,
     headerExitProgress,
     headerIntroProgress,
     scrollY,
+    setPaneNavSurfaceImmediately,
     smoothBottomRevealProgress,
     smoothHeaderIntroProgress,
     smoothHeaderVisibleProgress,
     stickyHeaderHeight,
   ]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (bottomNavigation || viewMode !== "case-study") {
       return;
     }
 
-    const timeout = setTimeout(resetCaseStudyScroll, 0);
-    return () => clearTimeout(timeout);
+    // Case-study history entries always open at their hero. Reset before paint
+    // and once more on the next frame so iOS cannot restore the previous
+    // document position after React has committed the route.
+    resetCaseStudyScroll();
+    const frame = window.requestAnimationFrame(resetCaseStudyScroll);
+    return () => window.cancelAnimationFrame(frame);
     // A handoff owns project identity until its shared layout animation ends.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIndex, viewMode, resetCaseStudyScroll]);
+
+  useLayoutEffect(() => {
+    const landingPath = historyLandingPathRef.current;
+    if (!landingPath || window.location.pathname !== landingPath) return;
+
+    if (viewMode !== "case-study") {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      historyLandingPathRef.current = null;
+      return;
+    }
+
+    // A bottom-card handoff owns its own scroll lifecycle. Normal case-study
+    // history navigation reaches this branch only after that transaction has
+    // completed or been cancelled.
+    if (bottomNavigation) return;
+
+    const requestId = historyLandingRequestRef.current;
+    const startedAt = performance.now();
+    let lastViewportChangeAt = startedAt;
+    let frame: number | null = null;
+    let previousGeometry = {
+      width: window.visualViewport?.width ?? window.innerWidth,
+      height: window.visualViewport?.height ?? window.innerHeight,
+      offsetTop: window.visualViewport?.offsetTop ?? 0,
+      offsetLeft: window.visualViewport?.offsetLeft ?? 0,
+    };
+
+    const requestIsCurrent = () =>
+      historyLandingRequestRef.current === requestId &&
+      historyLandingPathRef.current === landingPath;
+
+    const removeInputListeners = () => {
+      window.removeEventListener("touchstart", handleUserInput);
+      window.removeEventListener("pointerdown", handleUserInput);
+      window.removeEventListener("wheel", handleUserInput);
+      window.removeEventListener("keydown", handleUserInput);
+    };
+
+    const finishLanding = () => {
+      if (!requestIsCurrent()) return;
+      resetCaseStudyScroll();
+      historyLandingPathRef.current = null;
+      removeInputListeners();
+    };
+
+    const handleUserInput = () => {
+      finishLanding();
+      if (frame !== null) {
+        window.cancelAnimationFrame(frame);
+        frame = null;
+      }
+    };
+
+    const enforceLanding = (now: number) => {
+      if (!requestIsCurrent()) return;
+
+      // This deliberately runs beyond the route commit. In portrait Safari,
+      // native history restoration and toolbar expansion can both happen a few
+      // frames later than popstate.
+      resetCaseStudyScroll();
+
+      const geometry = {
+        width: window.visualViewport?.width ?? window.innerWidth,
+        height: window.visualViewport?.height ?? window.innerHeight,
+        offsetTop: window.visualViewport?.offsetTop ?? 0,
+        offsetLeft: window.visualViewport?.offsetLeft ?? 0,
+      };
+      const geometryChanged = Object.keys(geometry).some((key) => {
+        const geometryKey = key as keyof typeof geometry;
+        return (
+          Math.abs(geometry[geometryKey] - previousGeometry[geometryKey]) > 0.5
+        );
+      });
+
+      if (geometryChanged) {
+        previousGeometry = geometry;
+        lastViewportChangeAt = now;
+      }
+
+      const minimumHoldFinished = now - startedAt >= HISTORY_LANDING_MIN_MS;
+      const viewportIsQuiet =
+        now - lastViewportChangeAt >= HISTORY_LANDING_QUIET_MS;
+      const hasTimedOut = now - startedAt >= HISTORY_LANDING_TIMEOUT_MS;
+
+      if ((minimumHoldFinished && viewportIsQuiet) || hasTimedOut) {
+        finishLanding();
+        return;
+      }
+
+      frame = window.requestAnimationFrame(enforceLanding);
+    };
+
+    resetCaseStudyScroll();
+    window.addEventListener("touchstart", handleUserInput, { passive: true });
+    window.addEventListener("pointerdown", handleUserInput, { passive: true });
+    window.addEventListener("wheel", handleUserInput, { passive: true });
+    window.addEventListener("keydown", handleUserInput);
+    frame = window.requestAnimationFrame(enforceLanding);
+
+    return () => {
+      if (frame !== null) window.cancelAnimationFrame(frame);
+      removeInputListeners();
+    };
+  }, [
+    activeIndex,
+    bottomNavigation,
+    historyLandingVersion,
+    resetCaseStudyScroll,
+    viewMode,
+  ]);
 
   const handleBottomNavigationStart = useCallback(
     (slug: string, sourceRect: SummaryTransitionRect | null) => {
@@ -851,30 +1061,38 @@ export default function MainContent({ children }: { children: ReactNode }) {
       );
       if (targetIndex < 0) return;
 
+      homeNavigationRequestedRef.current = false;
+      setSuppressedCaseStudyHeaderIndex(null);
+      setActiveIndex(targetIndex);
       setCaseStudyIndex(activeIndex);
       setBottomNavigation({
         slug,
+        sourceIndex: activeIndex,
         targetIndex,
         sourceRect,
+        usesViewportAnchoredHandoff: window.matchMedia(
+          "(pointer: coarse) and (orientation: portrait)",
+        ).matches,
         phase: "nav-exit",
       });
     },
-    [activeIndex, bottomNavigation],
+    [activeIndex, bottomNavigation, setActiveIndex],
   );
 
   const handlePreviewNavigationStart = useCallback(
     (sourceRect: SummaryTransitionRect | null) => {
+      homeNavigationRequestedRef.current = false;
+      setSuppressedCaseStudyHeaderIndex(null);
       const pageRect = document.body.getBoundingClientRect();
-      const sourcePageLeft = sourceRect
-        ? sourceRect.left - pageRect.left
-        : 0;
+      const sourcePageLeft = sourceRect ? sourceRect.left - pageRect.left : 0;
 
       setHomeToCaseTransition({
+        targetIndex: activeIndex,
         sourcePageLeft,
         pageWidth: pageRect.width,
       });
     },
-    [],
+    [activeIndex],
   );
 
   useEffect(() => {
@@ -883,7 +1101,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
     }
 
     const timeout = window.setTimeout(() => {
-      setTransitioningToNext(true);
+      if (homeNavigationRequestedRef.current) return;
+
       setBottomNavigation((navigation) =>
         navigation?.phase === "nav-exit"
           ? { ...navigation, phase: "exit" }
@@ -892,11 +1111,37 @@ export default function MainContent({ children }: { children: ReactNode }) {
     }, CENTER_NAV_EXIT_DURATION);
 
     return () => window.clearTimeout(timeout);
-  }, [bottomNavigation, setTransitioningToNext]);
+  }, [bottomNavigation]);
 
-  const beginProjectHandoff = useCallback(
+  const prepareProjectHandoff = useCallback(
     (navigation: BottomNavigationState) => {
-      resetCaseStudyScroll();
+      if (homeNavigationRequestedRef.current) return;
+
+      if (!navigation.usesViewportAnchoredHandoff) {
+        resetCaseStudyScroll();
+
+        // Some browsers can ignore scrollTo(0) while body scrolling is locked.
+        // Temporarily unlock only when the first reset was rejected.
+        if (Math.abs(window.scrollY) > 0.5) {
+          document.body.style.overflow = "auto";
+          resetCaseStudyScroll();
+        }
+      }
+
+      flushSync(() => {
+        setBottomNavigation({ ...navigation, phase: "prepare" });
+      });
+    },
+    [resetCaseStudyScroll],
+  );
+
+  const beginProjectMorph = useCallback(
+    (navigation: BottomNavigationState) => {
+      if (homeNavigationRequestedRef.current) return;
+
+      // The failed iOS scroll reset may have required a brief unlock. Restore
+      // the transition lock before mounting the shared-layout destination.
+      document.body.style.overflow = "hidden";
 
       flushSync(() => {
         setCaseStudyIndex(navigation.targetIndex);
@@ -905,30 +1150,127 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
       router.push(`/${navigation.slug}`);
     },
-    [resetCaseStudyScroll, router],
+    [router],
   );
 
   const handleCaseStudyExitComplete = useCallback(() => {
+    if (homeNavigationRequestedRef.current) return;
     if (bottomNavigation?.phase !== "exit") return;
-    beginProjectHandoff(bottomNavigation);
-  }, [beginProjectHandoff, bottomNavigation]);
+    prepareProjectHandoff(bottomNavigation);
+  }, [bottomNavigation, prepareProjectHandoff]);
+
+  useEffect(() => {
+    if (bottomNavigation?.phase !== "prepare") return;
+
+    const navigation = bottomNavigation;
+
+    // On portrait touch browsers, do not scroll yet: that is what expands
+    // Safari's collapsed toolbar. The source and destination are both fixed
+    // during the morph, so the document can remain at the bottom until the
+    // shared-layout animation has completed.
+    if (navigation.usesViewportAnchoredHandoff) {
+      const frame = window.requestAnimationFrame(() => {
+        beginProjectMorph(navigation);
+      });
+      return () => window.cancelAnimationFrame(frame);
+    }
+
+    const startedAt = performance.now();
+    let lastGeometryChangeAt = startedAt;
+    let stableFrames = 0;
+    let frame: number | null = null;
+    let hasStartedMorph = false;
+    let previousGeometry = {
+      width: window.visualViewport?.width ?? window.innerWidth,
+      height: window.visualViewport?.height ?? window.innerHeight,
+      offsetTop: window.visualViewport?.offsetTop ?? 0,
+      offsetLeft: window.visualViewport?.offsetLeft ?? 0,
+      scale: window.visualViewport?.scale ?? 1,
+      scrollY: window.scrollY,
+    };
+
+    const startMorph = () => {
+      if (hasStartedMorph || homeNavigationRequestedRef.current) return;
+      hasStartedMorph = true;
+      beginProjectMorph(navigation);
+    };
+
+    const checkViewport = (now: number) => {
+      if (Math.abs(window.scrollY) > 0.5) {
+        // Do not let the timeout advance a broken handoff. Once overflow is
+        // unlocked this succeeds synchronously in normal browsers and on iOS
+        // as soon as Safari releases its collapsed-toolbar scroll state.
+        document.body.style.overflow = "auto";
+        resetCaseStudyScroll();
+      }
+
+      const geometry = {
+        width: window.visualViewport?.width ?? window.innerWidth,
+        height: window.visualViewport?.height ?? window.innerHeight,
+        offsetTop: window.visualViewport?.offsetTop ?? 0,
+        offsetLeft: window.visualViewport?.offsetLeft ?? 0,
+        scale: window.visualViewport?.scale ?? 1,
+        scrollY: window.scrollY,
+      };
+      const geometryChanged = Object.keys(geometry).some((key) => {
+        const geometryKey = key as keyof typeof geometry;
+        return (
+          Math.abs(geometry[geometryKey] - previousGeometry[geometryKey]) > 0.5
+        );
+      });
+
+      if (geometryChanged) {
+        previousGeometry = geometry;
+        lastGeometryChangeAt = now;
+        stableFrames = 0;
+      } else {
+        stableFrames += 1;
+      }
+
+      const hasSettled =
+        Math.abs(geometry.scrollY) <= 0.5 &&
+        stableFrames >= HANDOFF_VIEWPORT_STABLE_FRAMES &&
+        now - lastGeometryChangeAt >= HANDOFF_VIEWPORT_QUIET_MS;
+      const hasTimedOut =
+        Math.abs(geometry.scrollY) <= 0.5 &&
+        now - startedAt >= HANDOFF_VIEWPORT_SETTLE_TIMEOUT_MS;
+
+      if (hasSettled || hasTimedOut) {
+        startMorph();
+        return;
+      }
+
+      frame = window.requestAnimationFrame(checkViewport);
+    };
+
+    frame = window.requestAnimationFrame(checkViewport);
+
+    return () => {
+      if (frame !== null) {
+        window.cancelAnimationFrame(frame);
+      }
+    };
+  }, [beginProjectMorph, bottomNavigation, resetCaseStudyScroll]);
 
   useEffect(() => {
     if (
       !bottomNavigation ||
+      bottomNavigation.phase === "prepare" ||
       bottomNavigation.phase === "morph" ||
-      bottomNavigation.phase === "route"
+      bottomNavigation.phase === "route" ||
+      bottomNavigation.phase === "settle"
     ) {
       return;
     }
 
     const timeout = setTimeout(() => {
-      setTransitioningToNext(true);
-      beginProjectHandoff(bottomNavigation);
+      if (homeNavigationRequestedRef.current) return;
+
+      prepareProjectHandoff(bottomNavigation);
     }, 1800);
 
     return () => clearTimeout(timeout);
-  }, [bottomNavigation, beginProjectHandoff, setTransitioningToNext]);
+  }, [bottomNavigation, prepareProjectHandoff]);
 
   const handleSummaryLayoutComplete = useCallback(() => {
     if (viewMode === "case-study" && homeToCaseTransition) {
@@ -960,9 +1302,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   const finishProjectHandoff = useCallback(() => {
     resetCaseStudyScroll();
-    setTransitioningToNext(false);
     setBottomNavigation(null);
-  }, [resetCaseStudyScroll, setTransitioningToNext]);
+  }, [resetCaseStudyScroll]);
 
   useEffect(() => {
     if (
@@ -972,9 +1313,81 @@ export default function MainContent({ children }: { children: ReactNode }) {
       return;
     }
 
+    if (bottomNavigation.usesViewportAnchoredHandoff) {
+      document.body.style.overflow = "auto";
+      resetCaseStudyScroll();
+      setBottomNavigation({ ...bottomNavigation, phase: "settle" });
+      return;
+    }
+
     const frame = requestAnimationFrame(finishProjectHandoff);
     return () => cancelAnimationFrame(frame);
-  }, [activeIndex, bottomNavigation, finishProjectHandoff]);
+  }, [
+    activeIndex,
+    bottomNavigation,
+    finishProjectHandoff,
+    resetCaseStudyScroll,
+  ]);
+
+  useEffect(() => {
+    if (bottomNavigation?.phase !== "settle") return;
+
+    const startedAt = performance.now();
+    let lastGeometryChangeAt = startedAt;
+    let frame: number | null = null;
+    let previousGeometry = {
+      width: window.visualViewport?.width ?? window.innerWidth,
+      height: window.visualViewport?.height ?? window.innerHeight,
+      offsetTop: window.visualViewport?.offsetTop ?? 0,
+      offsetLeft: window.visualViewport?.offsetLeft ?? 0,
+      scrollY: window.scrollY,
+    };
+
+    const checkRelease = (now: number) => {
+      if (Math.abs(window.scrollY) > 0.5) {
+        document.body.style.overflow = "auto";
+        resetCaseStudyScroll();
+      }
+
+      const geometry = {
+        width: window.visualViewport?.width ?? window.innerWidth,
+        height: window.visualViewport?.height ?? window.innerHeight,
+        offsetTop: window.visualViewport?.offsetTop ?? 0,
+        offsetLeft: window.visualViewport?.offsetLeft ?? 0,
+        scrollY: window.scrollY,
+      };
+      const geometryChanged = Object.keys(geometry).some((key) => {
+        const geometryKey = key as keyof typeof geometry;
+        return (
+          Math.abs(geometry[geometryKey] - previousGeometry[geometryKey]) > 0.5
+        );
+      });
+
+      if (geometryChanged) {
+        previousGeometry = geometry;
+        lastGeometryChangeAt = now;
+      }
+
+      const isAtTop = Math.abs(geometry.scrollY) <= 0.5;
+      const minimumHoldFinished = now - startedAt >= HANDOFF_RELEASE_MIN_MS;
+      const viewportIsQuiet =
+        now - lastGeometryChangeAt >= HANDOFF_VIEWPORT_QUIET_MS;
+      const hasTimedOut = now - startedAt >= HANDOFF_VIEWPORT_SETTLE_TIMEOUT_MS;
+
+      if (isAtTop && minimumHoldFinished && (viewportIsQuiet || hasTimedOut)) {
+        finishProjectHandoff();
+        return;
+      }
+
+      frame = window.requestAnimationFrame(checkRelease);
+    };
+
+    frame = window.requestAnimationFrame(checkRelease);
+
+    return () => {
+      if (frame !== null) window.cancelAnimationFrame(frame);
+    };
+  }, [bottomNavigation, finishProjectHandoff, resetCaseStudyScroll]);
 
   // Inactivity prompt logic
   useEffect(() => {
@@ -1030,16 +1443,55 @@ export default function MainContent({ children }: { children: ReactNode }) {
     return () => clearTimeout(timeout);
   }, [bottomNavigation]);
 
+  useLayoutEffect(() => {
+    const previousViewMode = previousViewModeRef.current;
+    previousViewModeRef.current = viewMode;
+
+    // Browser Back can reach Home without going through TopBar. Apply the
+    // same cancellation contract before that home state is painted.
+    if (viewMode === "home" && bottomNavigation) {
+      handleHomeNavigationStart();
+      return;
+    }
+
+    if (viewMode === "home" && previousViewMode !== "home") {
+      setIsHomeReturnMorphing(true);
+      if (homeToCaseTransition) {
+        setHomeToCaseTransition(null);
+      }
+    }
+  }, [
+    bottomNavigation,
+    handleHomeNavigationStart,
+    homeToCaseTransition,
+    viewMode,
+  ]);
+
+  useEffect(() => {
+    if (viewMode !== "home" || suppressedCaseStudyHeaderIndex === null) return;
+
+    // The outgoing presence node has already captured its hidden state. Do
+    // not let that suppression become persistent identity state if browser
+    // history later returns directly to the source case study.
+    const frame = window.requestAnimationFrame(() => {
+      setSuppressedCaseStudyHeaderIndex(null);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [suppressedCaseStudyHeaderIndex, viewMode]);
+
   if (!mounted) return null;
 
   const renderedCaseStudyIndex = bottomNavigation
     ? caseStudyIndex
     : activeIndex;
+  const homeProjectIndex = activeIndex;
+  const canonicalTopSummaryIndex =
+    viewMode === "case-study" ? renderedCaseStudyIndex : homeProjectIndex;
   const topSummaryIndex =
-    viewMode === "case-study" ? renderedCaseStudyIndex : activeIndex;
+    homeToCaseTransition?.targetIndex ?? canonicalTopSummaryIndex;
   const topSummaryVariant = viewMode === "case-study" ? "header" : "preview";
   const homeProjectDirection = getHomeProjectDirection(
-    activeIndex,
+    homeProjectIndex,
     previousIndex,
   );
   const topSummaryTransitionState: TopSummaryTransitionState = {
@@ -1050,21 +1502,31 @@ export default function MainContent({ children }: { children: ReactNode }) {
   const nextProjectIndex = (renderedCaseStudyIndex + 1) % projects.length;
   const renderedBottomProjectIndex =
     bottomNavigation?.targetIndex ?? nextProjectIndex;
+  const isBottomHandoffSourceHidden =
+    bottomNavigation?.phase === "route" ||
+    bottomNavigation?.phase === "settle" ||
+    (bottomNavigation?.usesViewportAnchoredHandoff === true &&
+      bottomNavigation.phase === "morph");
   const isOutgoingHeaderHidden =
-    bottomNavigation?.phase === "nav-exit" ||
-    bottomNavigation?.phase === "exit";
+    (bottomNavigation !== null &&
+      topSummaryIndex === bottomNavigation.sourceIndex &&
+      bottomNavigation.sourceIndex !== bottomNavigation.targetIndex) ||
+    (viewMode === "case-study" &&
+      suppressedCaseStudyHeaderIndex === topSummaryIndex);
 
   return (
     <main
+      data-view-mode={viewMode}
+      data-active-project-index={activeIndex}
       className={`relative isolate flex w-full overflow-x-clip bg-background transition-colors dark:bg-dark-background ${
         isHomeScrollLocked
           ? "h-[100svh] touch-none overflow-y-hidden"
-          : isCaseStudyScrollLocked
-            ? "touch-none"
-            : "touch-auto"
+          : "touch-auto"
       }`}
     >
-      {viewMode === "home" && <HomeSymbolBackdrop activeIndex={activeIndex} />}
+      {viewMode === "home" && (
+        <HomeSymbolBackdrop activeIndex={homeProjectIndex} />
+      )}
       <TopBar
         centerNavRef={centerNavRef}
         showCenterNav={
@@ -1074,7 +1536,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
         }
         retractCenterNav={isBottomNavigationActive}
         sectionHighlightEnabled={sectionHighlightEnabled}
-        onInstantHomeNavigationStart={handleInstantHomeNavigationStart}
+        onHomeNavigationStart={handleHomeNavigationStart}
       />
       {/* <DebugViewport /> */}
       <div
@@ -1082,7 +1544,14 @@ export default function MainContent({ children }: { children: ReactNode }) {
           shouldReserveGlyphRail ? "min-w-max" : ""
         } ${viewMode === "case-study" ? "pointer-events-none" : ""}`}
       >
-        <GlyphCarousel />
+        <GlyphCarousel
+          navigationLocked={
+            homeToCaseTransition !== null ||
+            isHomeProjectTransitioning ||
+            isHomeReturnMorphing
+          }
+          onProjectTransitionStart={handleHomeProjectTransitionStart}
+        />
       </div>
       {viewMode === "home" && showPrompt && (
         <motion.div
@@ -1127,7 +1596,10 @@ export default function MainContent({ children }: { children: ReactNode }) {
         className={`relative z-10 flex w-full max-w-5xl flex-col items-start px-2 md:px-4 ${viewMode === "home" ? "gap-6" : "gap-0"}`}
       >
         <MyName />
-        <LayoutGroup id="project-summaries">
+        <LayoutGroup
+          key={`project-summaries-${projectSummaryLayoutVersion}`}
+          id={`project-summaries-${projectSummaryLayoutVersion}`}
+        >
           <div
             className="relative h-[100svh] w-full"
             style={
@@ -1166,24 +1638,29 @@ export default function MainContent({ children }: { children: ReactNode }) {
                 initial={false}
                 custom={topSummaryTransitionState}
                 mode="popLayout"
+                onExitComplete={handleHomeProjectTransitionComplete}
               >
                 {showTopSummary && (
                   <motion.div
                     key={`top-summary-${projects[topSummaryIndex].id}`}
+                    data-top-summary-project-index={topSummaryIndex}
                     custom={topSummaryTransitionState}
                     variants={topSummaryProjectVariants}
                     initial="initial"
                     animate="center"
                     exit="exit"
                     className="absolute inset-0 w-full"
+                    style={
+                      viewMode === "case-study" && isOutgoingHeaderHidden
+                        ? { visibility: "hidden", pointerEvents: "none" }
+                        : undefined
+                    }
                   >
                     <ProjectSummary
                       variant={topSummaryVariant}
                       projectIndex={topSummaryIndex}
                       headerVisualProgress={smoothHeaderIntroProgress}
-                      headerExitVisualProgress={
-                        smoothHeaderVisibleProgress
-                      }
+                      headerExitVisualProgress={smoothHeaderVisibleProgress}
                       bottomVisualProgress={smoothBottomRevealProgress}
                       floatingPaneRef={
                         viewMode === "case-study" ? floatingPaneRef : undefined
@@ -1192,9 +1669,15 @@ export default function MainContent({ children }: { children: ReactNode }) {
                         viewMode !== "case-study" ||
                         (paneNavSurface === "pane" && !isPaneNavMorphing)
                       }
+                      isInteractionLocked={
+                        homeToCaseTransition !== null ||
+                        isHomeProjectTransitioning ||
+                        isHomeReturnMorphing
+                      }
                       isTransitionLocked={
                         viewMode === "case-study" && isBottomNavigationActive
                       }
+                      transitioningToNext={transitioningToNext}
                       isHandoffSourceHidden={
                         viewMode === "case-study" && isOutgoingHeaderHidden
                       }
@@ -1206,7 +1689,9 @@ export default function MainContent({ children }: { children: ReactNode }) {
                       onLayoutAnimationComplete={
                         viewMode === "case-study"
                           ? handleSummaryLayoutComplete
-                          : undefined
+                          : isHomeReturnMorphing
+                            ? handleHomeReturnMorphComplete
+                            : undefined
                       }
                       onPreviewNavigationStart={handlePreviewNavigationStart}
                     />
@@ -1243,7 +1728,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
                 headerExitVisualProgress={smoothHeaderVisibleProgress}
                 bottomVisualProgress={smoothBottomRevealProgress}
                 isTransitionLocked={isBottomNavigationActive}
-                isHandoffSourceHidden={bottomNavigation?.phase === "route"}
+                transitioningToNext={transitioningToNext}
+                isHandoffSourceHidden={isBottomHandoffSourceHidden}
                 transitionRect={bottomNavigation?.sourceRect}
                 onBottomNavigationStart={handleBottomNavigationStart}
               />

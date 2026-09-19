@@ -8,10 +8,8 @@ import {
   useRef,
   type RefObject,
 } from "react";
-import { useViewMode } from "../context/ViewModeContext";
-import { useActiveProject } from "../context/ActiveProjectContext";
+import { useSiteNavigation } from "../context/SiteNavigationContext";
 import { useRouter } from "next/navigation";
-import { flushSync } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import projects from "@/data/projects";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
@@ -57,7 +55,7 @@ interface TopBarProps {
   showCenterNav: boolean;
   retractCenterNav: boolean;
   sectionHighlightEnabled: boolean;
-  onInstantHomeNavigationStart?: () => void;
+  onHomeNavigationStart?: () => void;
 }
 
 export default function TopBar({
@@ -65,10 +63,9 @@ export default function TopBar({
   showCenterNav,
   retractCenterNav,
   sectionHighlightEnabled,
-  onInstantHomeNavigationStart,
+  onHomeNavigationStart,
 }: TopBarProps) {
-  const { viewMode, setViewMode } = useViewMode();
-  const { activeIndex, setActiveIndex } = useActiveProject();
+  const { activeIndex, setActiveIndex, viewMode } = useSiteNavigation();
   const router = useRouter();
   const pathname = usePathname();
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -96,23 +93,11 @@ export default function TopBar({
 
   const handleHomeClick = useCallback(() => {
     if (isNavigatingHome) return; // prevent double triggers
+    onHomeNavigationStart?.();
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
     setIsNavigatingHome(true);
-
-    const isMobileDevice =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent,
-      );
-
-    if (isMobileDevice) {
-      // 🚀 MOBILE: Instant navigation (skip scroll animation)
-      onInstantHomeNavigationStart?.();
-      router.push("/");
-      setIsNavigatingHome(false);
-      return;
-    }
 
     const preventScroll = (e: Event) => e.preventDefault();
     const keydownHandler = (e: KeyboardEvent) => {
@@ -167,7 +152,7 @@ export default function TopBar({
       router.push("/");
       setIsNavigatingHome(false);
     }
-  }, [isNavigatingHome, onInstantHomeNavigationStart, router]);
+  }, [isNavigatingHome, onHomeNavigationStart, router]);
 
   const handleAboutClick = useCallback(() => {
     if (pathname === "/about-me") {
@@ -180,15 +165,10 @@ export default function TopBar({
         }, 1000);
       }
     } else {
-      flushSync(() => {
-        setActiveIndex(0);
-        setViewMode("home");
-      });
-      requestAnimationFrame(() => {
-        router.push("/about-me");
-      });
+      setActiveIndex(0);
+      router.push("/about-me");
     }
-  }, [pathname, router, setActiveIndex, setViewMode]);
+  }, [pathname, router, setActiveIndex]);
 
   const handleLinkedInClick = useCallback(() => {
     window.open(

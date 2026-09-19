@@ -3,17 +3,15 @@
 import { motion, AnimatePresence } from "framer-motion";
 import projects from "@/data/projects";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
-import { useActiveProject } from "../context/ActiveProjectContext";
-import { useViewMode } from "../context/ViewModeContext";
+import { useSiteNavigation } from "../context/SiteNavigationContext";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
 import { useTheme } from "next-themes";
 
 export default function MyName() {
-  const { viewMode } = useViewMode();
   const { resolvedTheme } = useTheme();
 
   // Use your existing hook to get the project-specific color theme
-  const { activeIndex, previousIndex } = useActiveProject();
+  const { activeIndex, previousIndex, viewMode } = useSiteNavigation();
   const project = projects[activeIndex];
   const theme = useProjectTheme(project.id);
   const direction =

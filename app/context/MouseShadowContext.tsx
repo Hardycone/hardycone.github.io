@@ -2,7 +2,7 @@
 
 import { createContext, ReactNode, useContext, useEffect } from "react";
 import { useMotionValue, useTransform } from "framer-motion";
-import { useActiveProject } from "@/app/context/ActiveProjectContext";
+import { useSiteNavigation } from "@/app/context/SiteNavigationContext";
 import projects from "@/data/projects";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 
@@ -32,7 +32,7 @@ function useCursorEffectValues() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [cursorAngle, x, y]);
 
-  const { activeIndex } = useActiveProject();
+  const { activeIndex } = useSiteNavigation();
   const theme = useProjectTheme(projects[activeIndex].id);
 
   const cardLightShadow = useTransform(
