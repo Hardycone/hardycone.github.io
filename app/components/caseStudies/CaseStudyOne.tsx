@@ -104,15 +104,9 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 logoSrc="/logos/logo-flux.png"
               />
               , a quantitative UX research tool that helps teams test designs
-              and prototypes with real users quickly and rigorously. The idea
-              came from a simple observation my co-founder and I had: AI is
-              making it much easier to explore product directions through design
-              and prototyping, but teams still need a reliable way to decide
-              which one works best. My work focuses on turning a traditionally
-              intimidating research process into something approachable, guided,
-              and decision-ready. Flux launched publicly in April 2026, and my
-              role has since expanded into sales, marketing, and customer
-              development.
+              and prototypes with real users quickly and rigorously. Flux
+              launched in April 2026, and my role has since expanded into sales,
+              marketing, and customer development.
             </p>
             <NarrativeAccordion isOpen={isFluxOpen}>
               <div className="my-4 flex gap-2 rounded-1 bg-flux/5 p-8 font-serif supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-flux/5 md:gap-4 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4">
@@ -126,7 +120,9 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 <div className="flex w-full flex-col">
                   <div className="flex justify-between text-xl">
                     <div className="flex flex-col">
-                      <p className="font-semibold">Co-founder</p>
+                      <p className="font-semibold">
+                        Product Designer / Co-founder
+                      </p>
                       <p>Flux</p>
                     </div>
                     <p>2023 - Present</p>
@@ -172,17 +168,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               />{" "}
               with two co-founders. Fantail brought AI into the early stages of
               filmmaking, from writing and referencing to storyboarding and
-              dialogue exploration. We grounded the product in discovery
-              research with dozens of working filmmakers, which revealed a clear
-              tension: they saw AI’s creative potential, but existing tools gave
-              them too little control over the process. Over six months, we
-              turned that insight into an MVP and pursued funding. I led much of
-              the product and design work, translating filmmaker needs into an
-              end-to-end creative workflow. Ultimately, we shut the company
-              down. The biggest lesson was founder-market fit: we had identified
-              a real problem and designed a thoughtful solution, but lacked the
-              industry access, funding network, and insider knowledge needed to
-              build credibility.
+              dialogue exploration. I led much of the product and design work,
+              translating filmmaker needs into an end-to-end creative workflow.
             </p>
             <NarrativeAccordion isOpen={isFantailOpen}>
               <div className="mb-4 mt-4 flex gap-2 rounded-1 bg-fantail bg-opacity-[3%] p-8 dark:bg-dark-fantail/5 md:gap-4 md:rounded-2">
@@ -196,7 +183,9 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                 <div className="flex w-full flex-col">
                   <div className="flex justify-between font-sans text-xl">
                     <div className="flex flex-col">
-                      <p className="font-semibold">Co-founder</p>
+                      <p className="font-semibold">
+                        Product Designer / Co-founder
+                      </p>
                       <p>Fantail</p>
                     </div>
                     <p>2023</p>

@@ -87,7 +87,7 @@ type SectionContainerProps = SectionContainerBaseProps &
 
 export default function SectionContainer(props: SectionContainerProps) {
   const {
-    containerClassName = "p-2 md:p-6 bg-background/90 dark:bg-dark-background/90 rounded-6 supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16",
+    containerClassName = "p-2 md:p-6 rounded-6 supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16",
     contentClassName = "p-2 md:p-6",
     entryOnScroll = true,
     exitOnScroll = true,
@@ -164,7 +164,7 @@ export default function SectionContainer(props: SectionContainerProps) {
   return (
     <motion.div
       ref={containerRef}
-      className={`section-container-scroll-reveal flex flex-col text-foreground transition-[background-color] duration-150 dark:text-dark-foreground ${showBorder ? "border" : ""} ${containerClassName}`}
+      className={`section-container-scroll-reveal flex flex-col text-foreground duration-150 dark:text-dark-foreground ${showBorder ? "border" : ""} ${containerClassName}`}
       style={{
         borderColor: showBorder ? props.borderColor : undefined,
         opacity: shouldAnimateOnScroll ? revealOpacity : 1,

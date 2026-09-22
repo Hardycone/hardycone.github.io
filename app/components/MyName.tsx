@@ -35,6 +35,7 @@ export default function MyName() {
       {viewMode === "home" && (
         <motion.div
           // Slide down and fade out when leaving Home
+          data-cursor-shadow
           style={{ textShadow: textShadow }}
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1, transition: { delay: 0.2 } }}

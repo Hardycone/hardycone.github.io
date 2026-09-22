@@ -10,6 +10,7 @@ interface SpinButtonProps {
   className?: string;
   style?: MotionStyle;
   tabIndex?: number;
+  cursorShadow?: boolean;
 }
 
 export default function SpinButton({
@@ -18,10 +19,12 @@ export default function SpinButton({
   className = "",
   style,
   tabIndex,
+  cursorShadow = false,
 }: SpinButtonProps) {
   return (
     <span className="group/spin-button inline-flex">
       <motion.button
+        data-cursor-shadow={cursorShadow || undefined}
         type="button"
         tabIndex={tabIndex}
         className={`transition-scale active:scale-95 active:text-opacity-20 group-hover/spin-button:scale-[0.97] ${className}`}

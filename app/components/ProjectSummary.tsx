@@ -741,6 +741,7 @@ export default function ProjectSummary({
         {/* Ghost div to display hover shadow in non-header variants */}
         {variant !== "header" && (
           <motion.div
+            data-cursor-shadow
             style={{ boxShadow: cardHoverShadow }}
             className="pointer-events-none absolute inset-0 rounded-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100 supports-[corner-shape:squircle]:rounded-16 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-12 supports-[corner-shape:squircle]:md:rounded-24"
           />
@@ -748,6 +749,7 @@ export default function ProjectSummary({
 
         {/* Ghost div to display drop shadow */}
         <motion.div
+          data-cursor-shadow
           style={{ boxShadow: cardShadow }}
           animate={{ opacity: variant === "header" ? 0 : 1 }}
           transition={{ duration: 0.3, delay: 0.2 }}
@@ -772,6 +774,7 @@ export default function ProjectSummary({
         >
           <motion.div
             ref={setFloatingPaneNode}
+            data-cursor-shadow
             initial={false}
             animate={{ opacity: floatingPaneOpacity }}
             transition={{
@@ -916,6 +919,7 @@ export default function ProjectSummary({
             >
               {/* Button */}
               <SpinButton
+                cursorShadow
                 isLoading={isNavigating}
                 tabIndex={isSummaryInteractionEnabled ? 0 : -1}
                 className={`relative flex h-10 items-center gap-2 rounded-5 bg-background pl-2 pr-4 font-sans text-base font-semibold text-foreground dark:bg-dark-background dark:text-dark-foreground md:h-12 md:rounded-6 md:pl-3 md:pr-5`}

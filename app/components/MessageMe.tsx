@@ -101,6 +101,7 @@ function ContactPanel({
 
   return (
     <motion.form
+      data-cursor-shadow
       ref={formRef}
       id="message-me-form"
       noValidate
@@ -668,6 +669,7 @@ export default function MessageMe() {
         </AnimatePresence>
 
         <motion.button
+          data-cursor-shadow
           type="button"
           tabIndex={0}
           style={{ boxShadow: barShadow }}

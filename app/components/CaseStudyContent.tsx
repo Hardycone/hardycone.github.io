@@ -15,6 +15,7 @@ interface CaseStudyContentProps {
   scrollY: MotionValue<number>;
   isVisible?: boolean;
   exitDirection?: "up" | "down";
+  disableExitAnimation?: boolean;
   onExitComplete?: () => void;
 }
 
@@ -48,6 +49,7 @@ export default function CaseStudyContent({
   scrollY,
   isVisible = true,
   exitDirection = "down",
+  disableExitAnimation = false,
   onExitComplete,
 }: CaseStudyContentProps) {
   const project = projects[projectIndex];
@@ -67,7 +69,7 @@ export default function CaseStudyContent({
     <div className="flex w-full min-w-0 flex-col">
       <motion.div className="relative left-1/2 z-40 w-[calc(100vw-1rem)] min-w-0 max-w-6xl -translate-x-1/2 md:w-[calc(100vw-2rem)]">
         <AnimatePresence
-          mode="wait"
+          mode={disableExitAnimation ? "sync" : "wait"}
           custom={exitDirection}
           onExitComplete={onExitComplete}
         >
@@ -78,7 +80,11 @@ export default function CaseStudyContent({
               variants={contentVariants}
               initial={false}
               animate="animate"
-              exit="exit"
+              exit={
+                disableExitAnimation
+                  ? { opacity: 0, transition: { duration: 0 } }
+                  : "exit"
+              }
               className="relative z-40 flex w-full min-w-0 flex-col"
             >
               <CaseStudyComponent scrollY={scrollY} />

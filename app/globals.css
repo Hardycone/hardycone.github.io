@@ -35,6 +35,43 @@ body {
   overscroll-behavior-y: none;
 }
 
+html.theme-transitioning,
+html.theme-transitioning body,
+html.theme-transitioning body *,
+html.theme-transitioning body *::before,
+html.theme-transitioning body *::after {
+  transition-property:
+    color, background-color, border-color, outline-color, text-decoration-color,
+    fill, stroke, box-shadow, text-shadow !important;
+  transition-duration: 300ms !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+html.theme-transitioning [data-cursor-shadow] {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+html.theme-shadow-restoring [data-cursor-shadow] {
+  transition-property: box-shadow, text-shadow !important;
+  transition-duration: 150ms !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-transitioning,
+  html.theme-transitioning body,
+  html.theme-transitioning body *,
+  html.theme-transitioning body *::before,
+  html.theme-transitioning body *::after {
+    transition-duration: 0.01ms !important;
+  }
+
+  html.theme-shadow-restoring [data-cursor-shadow] {
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @layer components {
   @media (pointer: coarse) {
     /* Keep the motion, but skip blur compositing on touch-primary devices. */

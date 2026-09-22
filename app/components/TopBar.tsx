@@ -14,6 +14,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import projects from "@/data/projects";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
+import { useCanHover } from "@/hooks/useCanHover";
 import {
   HEADER_PANE_NAV_CONTENT_FADE_MS,
   HEADER_PANE_NAV_DESTINATION_FADE_MS,
@@ -41,9 +42,9 @@ import {
 } from "@phosphor-icons/react";
 
 import Home from "../icons/Home";
-import Greetings from "../icons/Greetings";
 import LinkedIn from "../icons/LinkedIn";
 import ThemeToggle from "./ThemeToggle";
+import CaseStudyGlyphMenu from "./CaseStudyGlyphMenu";
 import KeyboardHint from "./KeyboardHint";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -56,6 +57,8 @@ interface TopBarProps {
   retractCenterNav: boolean;
   sectionHighlightEnabled: boolean;
   onHomeNavigationStart?: () => void;
+  projectMenuNavigationLocked?: boolean;
+  onProjectNavigationStart: (index: number) => boolean;
 }
 
 export default function TopBar({
@@ -64,8 +67,10 @@ export default function TopBar({
   retractCenterNav,
   sectionHighlightEnabled,
   onHomeNavigationStart,
+  projectMenuNavigationLocked = false,
+  onProjectNavigationStart,
 }: TopBarProps) {
-  const { activeIndex, setActiveIndex, viewMode } = useSiteNavigation();
+  const { activeIndex, viewMode } = useSiteNavigation();
   const router = useRouter();
   const pathname = usePathname();
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -75,6 +80,7 @@ export default function TopBar({
   const theme = useProjectTheme(projects[activeIndex].id);
 
   const { barLightShadow, barDarkShadow } = useMouseShadow();
+  const canHover = useCanHover();
 
   const barShadow = resolvedTheme === "dark" ? barDarkShadow : barLightShadow;
 
@@ -86,7 +92,7 @@ export default function TopBar({
   );
 
   const [isNavigatingHome, setIsNavigatingHome] = useState(false);
-  const [isGreetingHovered, setIsGreetingHovered] = useState(false);
+  const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(false);
   const scrollTimeout = useRef<number | null>(null);
   const themeToggleButtonRef = useRef<HTMLButtonElement>(null);
   const isCenterNavVisible = showCenterNav;
@@ -114,6 +120,7 @@ export default function TopBar({
     };
 
     let onScroll: () => void;
+    let hasCommittedHomeNavigation = false;
 
     const cleanup = () => {
       window.removeEventListener("wheel", preventScroll);
@@ -127,15 +134,28 @@ export default function TopBar({
       setIsNavigatingHome(false);
     };
 
-    if (window.scrollY >= 20) {
+    const commitHomeNavigation = () => {
+      if (hasCommittedHomeNavigation) return;
+      hasCommittedHomeNavigation = true;
+
+      // Shared-layout measurement must start from the true document origin.
+      // Committing while a smooth scroll still has a few pixels remaining can
+      // leave the home floating pane projected from that stale offset.
+      window.scrollTo({ top: 0, behavior: "auto" });
+      cleanup();
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => router.push("/"));
+      });
+    };
+
+    if (Math.abs(window.scrollY) > 0.5) {
       window.addEventListener("wheel", preventScroll, { passive: false });
       window.addEventListener("touchmove", preventScroll, { passive: false });
       window.addEventListener("keydown", keydownHandler, { passive: false });
 
       onScroll = () => {
-        if (window.scrollY < 20) {
-          cleanup();
-          router.push("/");
+        if (Math.abs(window.scrollY) <= 0.5) {
+          commitHomeNavigation();
         }
       };
 
@@ -143,32 +163,12 @@ export default function TopBar({
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       scrollTimeout.current = window.setTimeout(() => {
-        cleanup();
-        // The following line makes it so that the timeout is purely for unlocking control, without forcing router push.
-        // if (window.scrollY < 5)
-        router.push("/");
+        commitHomeNavigation();
       }, 2000);
     } else {
-      router.push("/");
-      setIsNavigatingHome(false);
+      commitHomeNavigation();
     }
   }, [isNavigatingHome, onHomeNavigationStart, router]);
-
-  const handleAboutClick = useCallback(() => {
-    if (pathname === "/about-me") {
-      if (window.scrollY > 30) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        window.scrollBy({ top: 120, behavior: "smooth" });
-        setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }, 1000);
-      }
-    } else {
-      setActiveIndex(0);
-      router.push("/about-me");
-    }
-  }, [pathname, router, setActiveIndex]);
 
   const handleLinkedInClick = useCallback(() => {
     window.open(
@@ -236,13 +236,6 @@ export default function TopBar({
 
       const key = event.key.toLowerCase();
 
-      if (key === "8") {
-        event.preventDefault();
-        flashShortcutHint("about");
-        handleAboutClick();
-        return;
-      }
-
       if (key === "9") {
         event.preventDefault();
         flashShortcutHint("linkedin");
@@ -287,7 +280,6 @@ export default function TopBar({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [
-    handleAboutClick,
     flashShortcutHint,
     handleLinkedInClick,
     handleScrollToSection,
@@ -367,6 +359,12 @@ export default function TopBar({
     };
   }, [sectionHighlightEnabled, sections, pathname]);
 
+  useEffect(() => {
+    if (viewMode !== "case-study" || projectMenuNavigationLocked) {
+      setIsProjectMenuOpen(false);
+    }
+  }, [projectMenuNavigationLocked, viewMode]);
+
   return (
     <div className="pointer-events-none fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[2650px] p-3.5 md:p-[1.625rem]">
       <AnimatePresence>
@@ -380,35 +378,89 @@ export default function TopBar({
           exit={{ y: -60, opacity: 0 }}
           className="pointer-events-none z-50 flex w-full justify-between"
         >
-          <motion.button
-            type="button"
-            tabIndex={viewMode === "home" ? -1 : 0}
-            aria-hidden={viewMode === "home"}
-            title="Home"
-            style={{ boxShadow: barShadow }}
-            transition={{ duration: 0.1 }}
-            whileHover={{ scale: 1.1 }}
-            className="pointer-events-auto relative h-9 w-9 rounded-full bg-background p-2 text-foreground transition-colors hover:scale-110 dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
-            onClick={() => {
-              flashShortcutHint("home");
-              handleHomeClick();
+          <div
+            className="pointer-events-auto relative"
+            onPointerEnter={(event) => {
+              if (
+                canHover &&
+                event.pointerType !== "touch" &&
+                viewMode === "case-study" &&
+                !projectMenuNavigationLocked
+              ) {
+                setIsProjectMenuOpen(true);
+              }
+            }}
+            onPointerLeave={(event) => {
+              if (canHover && event.pointerType !== "touch") {
+                setIsProjectMenuOpen(false);
+              }
+            }}
+            onFocusCapture={(event) => {
+              const focusTarget = event.target;
+              if (
+                focusTarget instanceof HTMLElement &&
+                focusTarget.matches(":focus-visible") &&
+                viewMode === "case-study" &&
+                !projectMenuNavigationLocked
+              ) {
+                setIsProjectMenuOpen(true);
+              }
+            }}
+            onBlurCapture={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget)) {
+                setIsProjectMenuOpen(false);
+              }
             }}
           >
-            <Home />
-            {showKeyboardHints && (
-              <KeyboardHint
-                shortcut="home"
-                className="absolute left-1/2 top-[calc(100%-0.25rem)] -translate-x-1/2"
-              >
-                Esc
-              </KeyboardHint>
-            )}
-          </motion.button>
+            <motion.button
+              data-cursor-shadow
+              type="button"
+              tabIndex={viewMode === "home" ? -1 : 0}
+              aria-hidden={viewMode === "home"}
+              aria-expanded={
+                viewMode === "case-study" ? isProjectMenuOpen : undefined
+              }
+              aria-haspopup={viewMode === "case-study" ? "menu" : undefined}
+              aria-label="Home"
+              style={{
+                boxShadow: barShadow,
+                zIndex: projects.length + 1,
+              }}
+              transition={{ duration: 0.1 }}
+              whileHover={canHover ? { scale: 1.1 } : undefined}
+              className="relative h-9 w-9 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
+              onClick={() => {
+                flashShortcutHint("home");
+                handleHomeClick();
+              }}
+            >
+              <Home />
+              {showKeyboardHints && (
+                <KeyboardHint
+                  shortcut="home"
+                  className="absolute left-1/2 top-[calc(100%-0.25rem)] -translate-x-1/2"
+                >
+                  Esc
+                </KeyboardHint>
+              )}
+            </motion.button>
+            <CaseStudyGlyphMenu
+              isOpen={isProjectMenuOpen}
+              navigationLocked={projectMenuNavigationLocked}
+              onClose={() => setIsProjectMenuOpen(false)}
+              onHomeClick={() => {
+                flashShortcutHint("home");
+                handleHomeClick();
+              }}
+              onProjectNavigationStart={onProjectNavigationStart}
+            />
+          </div>
 
           {/* Center: page navigation */}
           {viewMode === "case-study" && activeProject && (
             <div className="absolute left-[3.625rem] md:left-[5.375rem] lg:left-1/2 lg:-translate-x-1/2">
               <motion.div
+                data-cursor-shadow
                 ref={centerNavRef}
                 key={`title-${activeIndex}`}
                 initial={false}
@@ -522,55 +574,15 @@ export default function TopBar({
         animate={{ y: 0, opacity: 1 }}
         className="pointer-events-auto ml-auto flex gap-2 rounded-full md:gap-4"
       >
-        {/*Resume button*/}
-        <motion.button
-          type="button"
-          tabIndex={0}
-          title="About Me"
-          style={{ boxShadow: barShadow }}
-          transition={{ duration: 0.1 }}
-          whileHover={{ scale: 1.1 }}
-          onHoverStart={() => setIsGreetingHovered(true)}
-          onHoverEnd={() => setIsGreetingHovered(false)}
-          className="relative h-9 w-9 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
-          onClick={() => {
-            flashShortcutHint("about");
-            handleAboutClick();
-          }}
-        >
-          <motion.span
-            className="block h-full w-full"
-            style={{ transformOrigin: "bottom right" }}
-            animate={
-              isGreetingHovered
-                ? {
-                    rotate: [0, 5, 5, -10, 10, -10, 0],
-                    scale: [1, 1.05, 1.05, 1.05, 1.05, 1.05, 1],
-                  }
-                : { rotate: 0, scale: 1 }
-            }
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-          >
-            <Greetings />
-          </motion.span>
-          {showKeyboardHints && (
-            <KeyboardHint
-              shortcut="about"
-              className="absolute left-1/2 top-[calc(100%-0.25rem)] -translate-x-1/2"
-            >
-              8
-            </KeyboardHint>
-          )}
-        </motion.button>
-
         {/* LinkedIn */}
         <motion.button
+          data-cursor-shadow
           type="button"
           tabIndex={0}
           title="Find Me on LinkedIn"
           style={{ boxShadow: barShadow }}
           transition={{ duration: 0.1 }}
-          whileHover={{ scale: 1.1 }}
+          whileHover={canHover ? { scale: 1.1 } : undefined}
           className="relative h-9 w-9 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
           onClick={() => {
             flashShortcutHint("linkedin");
@@ -589,9 +601,10 @@ export default function TopBar({
         </motion.button>
 
         <motion.div
+          data-cursor-shadow
           style={{ boxShadow: barShadow }}
           transition={{ duration: 0.1 }}
-          whileHover={{ scale: 1.1 }}
+          whileHover={canHover ? { scale: 1.1 } : undefined}
           className="relative z-50 flex h-9 w-9 rounded-full bg-background text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
           onClick={() => flashShortcutHint("theme")}
         >

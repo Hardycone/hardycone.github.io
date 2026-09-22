@@ -37,7 +37,8 @@ export default function HighlightCard({
 
   return (
     <motion.div
-      className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} group/card relative isolate w-full border border-white bg-background dark:border-white/25 dark:bg-dark-background ${className}`}
+      data-cursor-shadow
+      className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} group/card relative isolate w-full border border-white dark:border-white/25 ${className}`}
       style={{ boxShadow: cardSmallShadow }}
     >
       <div

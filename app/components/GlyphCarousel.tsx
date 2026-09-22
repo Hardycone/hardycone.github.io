@@ -244,6 +244,7 @@ export default function GlyphCarousel({
         return (
           <motion.div
             key={project.id}
+            data-cursor-shadow
             animate={{
               scale,
             }}

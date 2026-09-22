@@ -84,6 +84,7 @@ function LinkItem({
   const offset = (index + 1) * 60 + 4;
   return (
     <motion.a
+      data-cursor-shadow
       tabIndex={0}
       href={url}
       target="_blank"
@@ -242,6 +243,7 @@ export default function CaseStudyFab() {
 
             {/* FAB toggle button */}
             <motion.button
+              data-cursor-shadow
               type="button"
               tabIndex={0}
               style={{ boxShadow: barShadow }}

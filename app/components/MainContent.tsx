@@ -66,6 +66,13 @@ type HomeToCaseTransitionState = {
   pageWidth: number;
 };
 
+type DirectCaseNavigationState = {
+  sourceIndex: number;
+  targetIndex: number;
+  slug: string;
+  phase: "exit" | "route" | "entry-prep" | "enter";
+};
+
 type PaneNavSurface = "pane" | "nav";
 
 const CENTER_NAV_EXIT_DURATION = 180;
@@ -82,6 +89,9 @@ const HOME_PROJECT_TRANSITION = {
   ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
 };
 const HOME_RETURN_INPUT_LOCK_TIMEOUT_MS = 900;
+const DIRECT_CASE_FADE_OUT_DURATION = 0.18;
+const DIRECT_CASE_FADE_IN_DURATION = 0.24;
+const DIRECT_CASE_FADE_EASE = [0.4, 0, 0.2, 1] as const;
 
 type HomeProjectDirection = "up" | "down";
 
@@ -180,6 +190,14 @@ export default function MainContent({ children }: { children: ReactNode }) {
     useState<BottomNavigationState | null>(null);
   const [homeToCaseTransition, setHomeToCaseTransition] =
     useState<HomeToCaseTransitionState | null>(null);
+  const [directCaseNavigation, setDirectCaseNavigation] =
+    useState<DirectCaseNavigationState | null>(null);
+  const directCaseNavigationRef = useRef<DirectCaseNavigationState | null>(
+    null,
+  );
+  const [isInitialCaseEntryActive, setIsInitialCaseEntryActive] = useState(
+    viewMode === "case-study",
+  );
   const [isHomeProjectTransitioning, setIsHomeProjectTransitioning] =
     useState(false);
   const [isHomeReturnMorphing, setIsHomeReturnMorphing] = useState(false);
@@ -190,10 +208,19 @@ export default function MainContent({ children }: { children: ReactNode }) {
     useState(0);
   const historyLandingRequestRef = useRef(0);
   const historyLandingPathRef = useRef<string | null>(null);
+  const handledHistoryEntryVersionRef = useRef(0);
   const previousViewModeRef = useRef(viewMode);
   const [historyLandingVersion, setHistoryLandingVersion] = useState(0);
   const transitioningToNext =
     bottomNavigation !== null && bottomNavigation.phase !== "nav-exit";
+
+  const updateDirectCaseNavigation = useCallback(
+    (navigation: DirectCaseNavigationState | null) => {
+      directCaseNavigationRef.current = navigation;
+      setDirectCaseNavigation(navigation);
+    },
+    [],
+  );
 
   const handleHomeProjectTransitionStart = useCallback(() => {
     setIsHomeProjectTransitioning(true);
@@ -281,7 +308,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
   const isCaseStudyScrollLocked =
     viewMode === "case-study" &&
     ((transitioningToNext && !isResettingBottomNavigationScroll) ||
-      homeToCaseTransition !== null);
+      homeToCaseTransition !== null ||
+      directCaseNavigation !== null);
   const isHomeScrollLocked = viewMode === "home";
   const isPageScrollLocked = isHomeScrollLocked || isCaseStudyScrollLocked;
   const isBottomNavigationActive = bottomNavigation !== null;
@@ -420,6 +448,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
 
   const handleHomeNavigationStart = useCallback(() => {
     homeNavigationRequestedRef.current = true;
+    updateDirectCaseNavigation(null);
     setHomeToCaseTransition(null);
     setIsHomeReturnMorphing(true);
 
@@ -440,7 +469,12 @@ export default function MainContent({ children }: { children: ReactNode }) {
     // that stale visual node into the next home-to-case handoff.
     setSuppressedCaseStudyHeaderIndex(bottomNavigation.sourceIndex);
     setBottomNavigation(null);
-  }, [activeIndex, bottomNavigation, setActiveIndex]);
+  }, [
+    activeIndex,
+    bottomNavigation,
+    setActiveIndex,
+    updateDirectCaseNavigation,
+  ]);
 
   const startPaneNavMorph = useCallback(
     (destination: PaneNavSurface) => {
@@ -1052,6 +1086,172 @@ export default function MainContent({ children }: { children: ReactNode }) {
     viewMode,
   ]);
 
+  const beginDirectCaseRoute = useCallback(() => {
+    const navigation = directCaseNavigationRef.current;
+    if (!navigation || navigation.phase !== "exit") return;
+
+    const routeNavigation = { ...navigation, phase: "route" } as const;
+    updateDirectCaseNavigation(routeNavigation);
+    router.push(`/${navigation.slug}`);
+  }, [router, updateDirectCaseNavigation]);
+
+  const handleDirectCaseNavigationStart = useCallback(
+    (targetIndex: number) => {
+      if (
+        viewMode !== "case-study" ||
+        targetIndex === activeIndex ||
+        targetIndex < 0 ||
+        targetIndex >= projects.length ||
+        directCaseNavigationRef.current !== null ||
+        bottomNavigation !== null ||
+        homeToCaseTransition !== null ||
+        isHomeReturnMorphing
+      ) {
+        return false;
+      }
+
+      const project = projects[targetIndex];
+      homeNavigationRequestedRef.current = false;
+      setSuppressedCaseStudyHeaderIndex(null);
+      setActiveIndex(targetIndex);
+      updateDirectCaseNavigation({
+        sourceIndex: activeIndex,
+        targetIndex,
+        slug: project.slug,
+        phase: "exit",
+      });
+      return true;
+    },
+    [
+      activeIndex,
+      bottomNavigation,
+      homeToCaseTransition,
+      isHomeReturnMorphing,
+      setActiveIndex,
+      updateDirectCaseNavigation,
+      viewMode,
+    ],
+  );
+
+  useEffect(() => {
+    if (directCaseNavigation?.phase !== "exit") return;
+
+    // Opacity completion is normally authoritative. This only prevents an
+    // interrupted Motion callback from leaving direct navigation stuck.
+    const timeout = window.setTimeout(
+      beginDirectCaseRoute,
+      DIRECT_CASE_FADE_OUT_DURATION * 1000 + 300,
+    );
+    return () => window.clearTimeout(timeout);
+  }, [beginDirectCaseRoute, directCaseNavigation?.phase]);
+
+  useLayoutEffect(() => {
+    if (
+      directCaseNavigation?.phase !== "route" ||
+      viewMode !== "case-study" ||
+      activeIndex !== directCaseNavigation.targetIndex
+    ) {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      const navigation = directCaseNavigationRef.current;
+      if (
+        !navigation ||
+        navigation.phase !== "route" ||
+        navigation.targetIndex !== activeIndex
+      ) {
+        return;
+      }
+
+      updateDirectCaseNavigation({ ...navigation, phase: "enter" });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeIndex, directCaseNavigation, updateDirectCaseNavigation, viewMode]);
+
+  useEffect(() => {
+    if (directCaseNavigation?.phase !== "route") return;
+
+    const timeout = window.setTimeout(() => {
+      const navigation = directCaseNavigationRef.current;
+      if (navigation?.phase === "route") {
+        updateDirectCaseNavigation(null);
+      }
+    }, 2000);
+
+    return () => window.clearTimeout(timeout);
+  }, [directCaseNavigation?.phase, updateDirectCaseNavigation]);
+
+  useEffect(() => {
+    if (directCaseNavigation?.phase !== "enter") return;
+
+    const timeout = window.setTimeout(
+      () => {
+        const navigation = directCaseNavigationRef.current;
+        if (navigation?.phase === "enter") {
+          updateDirectCaseNavigation(null);
+        }
+      },
+      DIRECT_CASE_FADE_IN_DURATION * 1000 + 300,
+    );
+
+    return () => window.clearTimeout(timeout);
+  }, [directCaseNavigation?.phase, updateDirectCaseNavigation]);
+
+  useLayoutEffect(() => {
+    if (
+      historyLandingVersion === 0 ||
+      handledHistoryEntryVersionRef.current === historyLandingVersion
+    ) {
+      return;
+    }
+
+    handledHistoryEntryVersionRef.current = historyLandingVersion;
+
+    if (
+      viewMode !== "case-study" ||
+      previousViewModeRef.current !== "case-study" ||
+      directCaseNavigationRef.current !== null ||
+      bottomNavigation !== null ||
+      homeToCaseTransition !== null
+    ) {
+      return;
+    }
+
+    const navigation: DirectCaseNavigationState = {
+      sourceIndex: previousIndex ?? activeIndex,
+      targetIndex: activeIndex,
+      slug: projects[activeIndex].slug,
+      phase: "entry-prep",
+    };
+    updateDirectCaseNavigation(navigation);
+  }, [
+    activeIndex,
+    bottomNavigation,
+    historyLandingVersion,
+    homeToCaseTransition,
+    previousIndex,
+    updateDirectCaseNavigation,
+    viewMode,
+  ]);
+
+  useEffect(() => {
+    if (directCaseNavigation?.phase !== "entry-prep") return;
+
+    // History commits before we can animate the old document. Keep the new
+    // route hidden long enough for CaseStudyContent's existing presence node
+    // to settle, then reveal the complete destination.
+    const timeout = window.setTimeout(() => {
+      const navigation = directCaseNavigationRef.current;
+      if (navigation?.phase === "entry-prep") {
+        updateDirectCaseNavigation({ ...navigation, phase: "enter" });
+      }
+    }, 220);
+
+    return () => window.clearTimeout(timeout);
+  }, [directCaseNavigation?.phase, updateDirectCaseNavigation]);
+
   const handleBottomNavigationStart = useCallback(
     (slug: string, sourceRect: SummaryTransitionRect | null) => {
       if (bottomNavigation) return;
@@ -1290,6 +1490,32 @@ export default function MainContent({ children }: { children: ReactNode }) {
     );
   }, [bottomNavigation, homeToCaseTransition, viewMode]);
 
+  const handleCaseShellAnimationComplete = useCallback(() => {
+    const navigation = directCaseNavigationRef.current;
+
+    if (navigation?.phase === "exit") {
+      beginDirectCaseRoute();
+      return;
+    }
+
+    if (navigation?.phase === "enter") {
+      updateDirectCaseNavigation(null);
+    }
+
+    if (isInitialCaseEntryActive) {
+      setIsInitialCaseEntryActive(false);
+    }
+  }, [
+    beginDirectCaseRoute,
+    isInitialCaseEntryActive,
+    updateDirectCaseNavigation,
+  ]);
+
+  useEffect(() => {
+    if (viewMode === "case-study" || !directCaseNavigation) return;
+    updateDirectCaseNavigation(null);
+  }, [directCaseNavigation, updateDirectCaseNavigation, viewMode]);
+
   useEffect(() => {
     if (viewMode !== "case-study" || !homeToCaseTransition) return;
 
@@ -1513,6 +1739,16 @@ export default function MainContent({ children }: { children: ReactNode }) {
       bottomNavigation.sourceIndex !== bottomNavigation.targetIndex) ||
     (viewMode === "case-study" &&
       suppressedCaseStudyHeaderIndex === topSummaryIndex);
+  const isDirectCaseShellHidden =
+    directCaseNavigation?.phase === "exit" ||
+    directCaseNavigation?.phase === "route" ||
+    directCaseNavigation?.phase === "entry-prep";
+  const directCaseFadeDuration =
+    directCaseNavigation?.phase === "entry-prep"
+      ? 0
+      : isDirectCaseShellHidden
+        ? DIRECT_CASE_FADE_OUT_DURATION
+        : DIRECT_CASE_FADE_IN_DURATION;
 
   return (
     <main
@@ -1532,11 +1768,21 @@ export default function MainContent({ children }: { children: ReactNode }) {
         showCenterNav={
           paneNavSurface === "nav" &&
           !isPaneNavMorphing &&
-          !isBottomNavigationActive
+          !isBottomNavigationActive &&
+          directCaseNavigation === null
         }
-        retractCenterNav={isBottomNavigationActive}
+        retractCenterNav={
+          isBottomNavigationActive || directCaseNavigation !== null
+        }
         sectionHighlightEnabled={sectionHighlightEnabled}
         onHomeNavigationStart={handleHomeNavigationStart}
+        projectMenuNavigationLocked={
+          homeToCaseTransition !== null ||
+          isHomeReturnMorphing ||
+          isBottomNavigationActive ||
+          directCaseNavigation !== null
+        }
+        onProjectNavigationStart={handleDirectCaseNavigationStart}
       />
       {/* <DebugViewport /> */}
       <div
@@ -1593,6 +1839,19 @@ export default function MainContent({ children }: { children: ReactNode }) {
         </motion.div>
       )}
       <motion.div
+        initial={{ opacity: isInitialCaseEntryActive ? 0 : 1 }}
+        animate={{ opacity: isDirectCaseShellHidden ? 0 : 1 }}
+        transition={{
+          opacity: {
+            duration: directCaseFadeDuration,
+            ease: DIRECT_CASE_FADE_EASE,
+          },
+        }}
+        onAnimationComplete={handleCaseShellAnimationComplete}
+        aria-busy={directCaseNavigation !== null || undefined}
+        style={
+          directCaseNavigation !== null ? { pointerEvents: "none" } : undefined
+        }
         className={`relative z-10 flex w-full max-w-5xl flex-col items-start px-2 md:px-4 ${viewMode === "home" ? "gap-6" : "gap-0"}`}
       >
         <MyName />
@@ -1600,47 +1859,47 @@ export default function MainContent({ children }: { children: ReactNode }) {
           key={`project-summaries-${projectSummaryLayoutVersion}`}
           id={`project-summaries-${projectSummaryLayoutVersion}`}
         >
-          <div
-            className="relative h-[100svh] w-full"
-            style={
-              viewMode === "case-study"
-                ? {
-                    height: `calc(100svh + ${HEADER_STICKY_RUNWAY_PX - headerBottomClearance}px)`,
-                    width: homeToCaseTransition
-                      ? `${homeToCaseTransition.pageWidth}px`
-                      : "100vw",
-                    marginLeft: homeToCaseTransition
-                      ? `${-homeToCaseTransition.sourcePageLeft}px`
-                      : "calc((100% - 100vw) / 2)",
-                  }
-                : undefined
-            }
-          >
-            {viewMode === "case-study" && (
-              <div
-                ref={headerIntroEndRef}
-                data-header-hero-focus-target
-                aria-hidden="true"
-                className="pointer-events-none absolute left-0 z-20 h-px w-px"
-                style={{ top: `${HEADER_STICKY_RUNWAY_PX}px` }}
-              />
-            )}
-            <motion.div
-              ref={stickyHeaderRef}
-              className={`h-[100svh] w-full ${viewMode === "case-study" ? "sticky top-0" : "relative"}`}
+          {showTopSummary && (
+            <div
+              className="relative h-[100svh] w-full"
               style={
                 viewMode === "case-study"
-                  ? { height: stickyHeaderHeight }
+                  ? {
+                      height: `calc(100svh + ${HEADER_STICKY_RUNWAY_PX - headerBottomClearance}px)`,
+                      width: homeToCaseTransition
+                        ? `${homeToCaseTransition.pageWidth}px`
+                        : "100vw",
+                      marginLeft: homeToCaseTransition
+                        ? `${-homeToCaseTransition.sourcePageLeft}px`
+                        : "calc((100% - 100vw) / 2)",
+                    }
                   : undefined
               }
             >
-              <AnimatePresence
-                initial={false}
-                custom={topSummaryTransitionState}
-                mode="popLayout"
-                onExitComplete={handleHomeProjectTransitionComplete}
+              {viewMode === "case-study" && (
+                <div
+                  ref={headerIntroEndRef}
+                  data-header-hero-focus-target
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-0 z-20 h-px w-px"
+                  style={{ top: `${HEADER_STICKY_RUNWAY_PX}px` }}
+                />
+              )}
+              <motion.div
+                ref={stickyHeaderRef}
+                className={`h-[100svh] w-full ${viewMode === "case-study" ? "sticky top-0" : "relative"}`}
+                style={
+                  viewMode === "case-study"
+                    ? { height: stickyHeaderHeight }
+                    : undefined
+                }
               >
-                {showTopSummary && (
+                <AnimatePresence
+                  initial={false}
+                  custom={topSummaryTransitionState}
+                  mode="popLayout"
+                  onExitComplete={handleHomeProjectTransitionComplete}
+                >
                   <motion.div
                     key={`top-summary-${projects[topSummaryIndex].id}`}
                     data-top-summary-project-index={topSummaryIndex}
@@ -1672,7 +1931,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
                       isInteractionLocked={
                         homeToCaseTransition !== null ||
                         isHomeProjectTransitioning ||
-                        isHomeReturnMorphing
+                        isHomeReturnMorphing ||
+                        directCaseNavigation !== null
                       }
                       isTransitionLocked={
                         viewMode === "case-study" && isBottomNavigationActive
@@ -1696,10 +1956,10 @@ export default function MainContent({ children }: { children: ReactNode }) {
                       onPreviewNavigationStart={handlePreviewNavigationStart}
                     />
                   </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          </div>
+                </AnimatePresence>
+              </motion.div>
+            </div>
+          )}
 
           {viewMode === "case-study" && (
             <CaseStudyContent
@@ -1707,6 +1967,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
               scrollY={scrollY}
               isVisible={!transitioningToNext}
               exitDirection={caseStudyExitDirection}
+              disableExitAnimation={directCaseNavigation !== null}
               onExitComplete={handleCaseStudyExitComplete}
             />
           )}

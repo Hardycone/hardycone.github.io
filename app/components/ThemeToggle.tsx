@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { type Ref, useEffect, useId, useRef, useState } from "react";
+import { useCanHover } from "@/hooks/useCanHover";
 
 const iconColors = {
   light: "#27272a",
@@ -11,6 +12,8 @@ const iconColors = {
 };
 
 const colorTransitionDurationMs = 1050;
+const siteThemeTransitionDurationMs = 300;
+const cursorShadowRestoreDurationMs = 150;
 
 const rayPositions = Array.from({ length: 8 }, (_, index) => {
   const angle = (index * Math.PI) / 4;
@@ -101,37 +104,89 @@ interface ThemeToggleProps {
 
 export default function ThemeToggle({ buttonRef }: ThemeToggleProps) {
   const { setTheme, resolvedTheme } = useTheme();
+  const canHover = useCanHover();
   const [mounted, setMounted] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [isColorTransitioning, setIsColorTransitioning] = useState(false);
   const colorTransitionTimeout = useRef<number | null>(null);
+  const siteThemeTransitionTimeout = useRef<number | null>(null);
+  const cursorShadowRestoreTimeout = useRef<number | null>(null);
+  const siteThemeTransitionFrame = useRef<number | null>(null);
 
   // Ensure client-only rendering to avoid hydration mismatch
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (!canHover) setIsHovered(false);
+  }, [canHover]);
 
   useEffect(() => {
     return () => {
       if (colorTransitionTimeout.current) {
         window.clearTimeout(colorTransitionTimeout.current);
       }
+      if (siteThemeTransitionTimeout.current) {
+        window.clearTimeout(siteThemeTransitionTimeout.current);
+      }
+      if (cursorShadowRestoreTimeout.current) {
+        window.clearTimeout(cursorShadowRestoreTimeout.current);
+      }
+      if (siteThemeTransitionFrame.current) {
+        window.cancelAnimationFrame(siteThemeTransitionFrame.current);
+      }
+      document.documentElement.classList.remove(
+        "theme-transitioning",
+        "theme-shadow-restoring",
+      );
     };
   }, []);
 
   if (!mounted) return null;
 
   const isDark = resolvedTheme === "dark";
-  const iconColor = isColorTransitioning
-    ? iconColors.transition
-    : isDark
-      ? iconColors.dark
-      : iconColors.light;
+  const iconColor =
+    isColorTransitioning || isHovered
+      ? iconColors.transition
+      : isDark
+        ? iconColors.dark
+        : iconColors.light;
 
   const toggleTheme = () => {
     if (colorTransitionTimeout.current) {
       window.clearTimeout(colorTransitionTimeout.current);
     }
+    if (siteThemeTransitionTimeout.current) {
+      window.clearTimeout(siteThemeTransitionTimeout.current);
+    }
+    if (cursorShadowRestoreTimeout.current) {
+      window.clearTimeout(cursorShadowRestoreTimeout.current);
+    }
+    if (siteThemeTransitionFrame.current) {
+      window.cancelAnimationFrame(siteThemeTransitionFrame.current);
+    }
 
     setIsColorTransitioning(true);
-    setTheme(isDark ? "light" : "dark");
+    document.documentElement.classList.remove("theme-shadow-restoring");
+    document.documentElement.classList.add("theme-transitioning");
+
+    // Give the browser one frame to register the transition properties before
+    // next-themes swaps the root class and changes all theme colors.
+    siteThemeTransitionFrame.current = window.requestAnimationFrame(() => {
+      setTheme(isDark ? "light" : "dark");
+      siteThemeTransitionFrame.current = null;
+
+      siteThemeTransitionTimeout.current = window.setTimeout(() => {
+        const root = document.documentElement;
+        root.classList.remove("theme-transitioning");
+        root.classList.add("theme-shadow-restoring");
+        siteThemeTransitionTimeout.current = null;
+
+        cursorShadowRestoreTimeout.current = window.setTimeout(() => {
+          root.classList.remove("theme-shadow-restoring");
+          cursorShadowRestoreTimeout.current = null;
+        }, cursorShadowRestoreDurationMs);
+      }, siteThemeTransitionDurationMs);
+    });
 
     colorTransitionTimeout.current = window.setTimeout(() => {
       setIsColorTransitioning(false);
@@ -145,6 +200,16 @@ export default function ThemeToggle({ buttonRef }: ThemeToggleProps) {
       type="button"
       tabIndex={0}
       onClick={toggleTheme}
+      onPointerEnter={(event) => {
+        if (canHover && event.pointerType !== "touch") {
+          setIsHovered(true);
+        }
+      }}
+      onPointerLeave={(event) => {
+        if (canHover && event.pointerType !== "touch") {
+          setIsHovered(false);
+        }
+      }}
       onPointerUp={(event) => event.currentTarget.blur()}
       title={`Switch to ${isDark ? "Light" : "Dark"} Mode`}
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
