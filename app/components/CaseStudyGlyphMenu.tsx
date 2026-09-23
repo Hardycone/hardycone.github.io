@@ -23,8 +23,9 @@ const MENU_SEQUENCE_TIME_SCALE = 1;
 const LABEL_SEQUENCE_SPEED = 2;
 const LABEL_CHARACTER_STAGGER =
   (0.025 / LABEL_SEQUENCE_SPEED) * MENU_SEQUENCE_TIME_SCALE;
-const BUTTON_STAGGER =
-  (0.1 / LABEL_SEQUENCE_SPEED) * MENU_SEQUENCE_TIME_SCALE;
+const LABEL_CHARACTER_REVEAL_DURATION =
+  (0.18 / LABEL_SEQUENCE_SPEED) * MENU_SEQUENCE_TIME_SCALE;
+const BUTTON_STAGGER = (0.05 / LABEL_SEQUENCE_SPEED) * MENU_SEQUENCE_TIME_SCALE;
 const BUTTON_MOTION_DURATION = 0.3 * MENU_SEQUENCE_TIME_SCALE;
 const LABEL_ENTRY_ADVANCE = 0.2 * MENU_SEQUENCE_TIME_SCALE;
 const LABEL_EASE = [0.22, 1, 0.36, 1] as const;
@@ -35,10 +36,44 @@ const getNaturalLabelExpansionDuration = (label: string) =>
 
 const LABEL_ANIMATION_DURATION = Math.max(
   getNaturalLabelExpansionDuration("Home"),
-  ...projects.map((project) =>
-    getNaturalLabelExpansionDuration(project.title),
+  ...projects.map((project) => getNaturalLabelExpansionDuration(project.title)),
+);
+
+const getLabelRevealCompletionDuration = (label: string) =>
+  LABEL_ANIMATION_DURATION * ((label.length + 1) / (label.length + 2)) +
+  LABEL_CHARACTER_REVEAL_DURATION;
+
+const MENU_ENTRY_DURATION = Math.max(
+  BUTTON_MOTION_DURATION + (projects.length - 1) * BUTTON_STAGGER,
+  BUTTON_MOTION_DURATION -
+    BUTTON_STAGGER -
+    LABEL_ENTRY_ADVANCE +
+    getLabelRevealCompletionDuration("Home"),
+  ...projects.map(
+    (project, index) =>
+      index * BUTTON_STAGGER +
+      BUTTON_MOTION_DURATION -
+      LABEL_ENTRY_ADVANCE +
+      getLabelRevealCompletionDuration(project.title),
   ),
 );
+
+const MENU_EXIT_DURATION = Math.max(
+  projects.length * BUTTON_STAGGER + LABEL_ANIMATION_DURATION,
+  ...projects.map(
+    (_project, index) =>
+      (projects.length - index - 1) * BUTTON_STAGGER +
+      LABEL_ANIMATION_DURATION +
+      BUTTON_MOTION_DURATION,
+  ),
+);
+
+const MENU_COMPLETION_GUARD_MS = 16;
+
+export const CASE_STUDY_GLYPH_MENU_ENTRY_DURATION_MS =
+  Math.ceil(MENU_ENTRY_DURATION * 1000) + MENU_COMPLETION_GUARD_MS;
+export const CASE_STUDY_GLYPH_MENU_EXIT_DURATION_MS =
+  Math.ceil(MENU_EXIT_DURATION * 1000) + MENU_COMPLETION_GUARD_MS;
 
 function MenuLabel({
   label,
@@ -81,8 +116,7 @@ function MenuLabel({
         transition={{
           x: {
             delay: enterDelay,
-            duration:
-              (0.24 / LABEL_SEQUENCE_SPEED) * MENU_SEQUENCE_TIME_SCALE,
+            duration: (0.24 / LABEL_SEQUENCE_SPEED) * MENU_SEQUENCE_TIME_SCALE,
             ease: LABEL_EASE,
           },
           scale: { duration: 0.2 },
@@ -91,10 +125,16 @@ function MenuLabel({
       >
         <motion.span
           data-cursor-shadow
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
+          initial={{
+            width: "0%",
+            opacity: 0,
+          }}
+          animate={{
+            width: "100%",
+            opacity: 1,
+          }}
           exit={{
-            scaleX: 0,
+            width: "0%",
             transition: {
               delay: exitDelay,
               duration: expansionDuration,
@@ -102,7 +142,7 @@ function MenuLabel({
             },
           }}
           transition={{
-            scaleX: {
+            width: {
               delay: enterDelay,
               duration: expansionDuration,
               ease: LABEL_EASE,
@@ -115,7 +155,7 @@ function MenuLabel({
             },
           }}
           style={{ boxShadow: barShadow }}
-          className="absolute inset-0 origin-left rounded-md bg-background dark:bg-dark-background"
+          className="absolute inset-y-0 left-0 rounded-md bg-background dark:bg-dark-background"
         />
 
         <span className="relative z-10 flex px-2 py-1">
@@ -141,8 +181,7 @@ function MenuLabel({
                 delay:
                   enterDelay +
                   expansionDuration * ((index + 2) / (label.length + 2)),
-                duration:
-                  (0.18 / LABEL_SEQUENCE_SPEED) * MENU_SEQUENCE_TIME_SCALE,
+                duration: LABEL_CHARACTER_REVEAL_DURATION,
                 ease: "easeOut",
               }}
             >
@@ -238,13 +277,10 @@ export default function CaseStudyGlyphMenu({
             const travelOffset = -(index + 1) * itemStride;
             const buttonEntryDelay = index * BUTTON_STAGGER;
             const labelEntryDelay =
-              buttonEntryDelay +
-              BUTTON_MOTION_DURATION -
-              LABEL_ENTRY_ADVANCE;
+              buttonEntryDelay + BUTTON_MOTION_DURATION - LABEL_ENTRY_ADVANCE;
             const reverseExitIndex = projects.length - index - 1;
             const labelExitDelay = reverseExitIndex * BUTTON_STAGGER;
-            const buttonExitDelay =
-              labelExitDelay + LABEL_ANIMATION_DURATION;
+            const buttonExitDelay = labelExitDelay + LABEL_ANIMATION_DURATION;
 
             return (
               <motion.div

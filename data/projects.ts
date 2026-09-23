@@ -116,7 +116,7 @@ const projects: Project[] = [
       { label: "Role", content: "Co-founder" },
       { label: "Scope", content: "Research/Product/Design/Brand" },
     ],
-    image: "/images/hero-flux.webp",
+    image: "/images/hero-flux.jpg",
     button: "Look Inside",
     textColor: "flux",
     bgColor: "fluxBackground",

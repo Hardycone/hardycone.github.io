@@ -73,6 +73,16 @@ html.theme-shadow-restoring [data-cursor-shadow] {
 }
 
 @layer components {
+  .message-me-panel-top {
+    transform-origin: calc(100% - 106px) -34px;
+  }
+
+  @media (min-width: 768px) {
+    .message-me-panel-top {
+      transform-origin: calc(100% - 142px) -38px;
+    }
+  }
+
   @media (pointer: coarse) {
     /* Keep the motion, but skip blur compositing on touch-primary devices. */
     .section-container-scroll-reveal,

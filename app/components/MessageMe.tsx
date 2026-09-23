@@ -34,6 +34,7 @@ type FormFields = {
 
 type ValidatedField = "name" | "email" | "message";
 type FieldErrors = Partial<Record<ValidatedField, string>>;
+type MessageMePlacement = "bottom-bar" | "top-bar";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -70,6 +71,7 @@ function ContactPanel({
   messageInputRef,
   showSendShortcut,
   sendShortcutLabel,
+  placement,
   onTextEntryFocusChange,
   onCopyEmail,
   onChange,
@@ -87,11 +89,13 @@ function ContactPanel({
   messageInputRef: RefObject<HTMLTextAreaElement | null>;
   showSendShortcut: boolean;
   sendShortcutLabel: string;
+  placement: MessageMePlacement;
   onTextEntryFocusChange: (isFocused: boolean) => void;
   onCopyEmail: () => void;
   onChange: (field: keyof FormFields, value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
+  const isTopBar = placement === "top-bar";
   const fieldClasses = (hasError: boolean) =>
     `w-full rounded-1.5 supports-[corner-shape:squircle]:rounded-3 supports-[corner-shape:squircle]:[corner-shape:squircle] border bg-background/80 px-3 py-2 font-sans text-base text-foreground outline-none transition-[border-color,box-shadow] placeholder:text-foreground/40 focus:ring-2 dark:bg-dark-background/80 dark:text-dark-foreground dark:placeholder:text-dark-foreground/40 ${
       hasError
@@ -121,11 +125,15 @@ function ContactPanel({
           );
         });
       }}
-      initial={{ y: 36, opacity: 0, scale: 0 }}
+      initial={{ y: isTopBar ? 0 : 36, opacity: 0, scale: 0 }}
       animate={{ y: 0, opacity: 1, scale: 1 }}
-      exit={{ y: 36, opacity: 0, scale: 0 }}
+      exit={{ y: isTopBar ? 0 : 36, opacity: 0, scale: 0 }}
       transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-      className="pointer-events-auto absolute bottom-full right-0 mb-6 flex max-h-[calc(100dvh-5.5rem)] w-[calc(100vw-1.75rem)] max-w-sm origin-bottom-right flex-col gap-3 overflow-y-auto rounded-4.5 bg-background/95 p-3 text-foreground backdrop-blur-xl supports-[corner-shape:squircle]:rounded-9 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-background/95 dark:text-dark-foreground md:rounded-5.5 md:p-4 supports-[corner-shape:squircle]:md:rounded-11"
+      className={`pointer-events-auto absolute flex max-h-[calc(100dvh-5.5rem)] w-[calc(100vw-1.75rem)] max-w-sm flex-col gap-3 overflow-y-auto rounded-4.5 bg-background/95 p-3 text-foreground backdrop-blur-xl supports-[corner-shape:squircle]:rounded-9 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-background/95 dark:text-dark-foreground md:rounded-5.5 md:p-4 supports-[corner-shape:squircle]:md:rounded-11 ${
+        isTopBar
+          ? "message-me-panel-top -right-[5.5rem] top-full mt-2 md:-right-[7.5rem] md:mt-4"
+          : "bottom-full right-0 mb-6 origin-bottom-right"
+      }`}
     >
       <div>
         <h5 className="font-sans text-xl font-bold sm:text-xl">
@@ -276,7 +284,11 @@ function ContactPanel({
   );
 }
 
-export default function MessageMe() {
+export default function MessageMe({
+  placement = "bottom-bar",
+}: {
+  placement?: MessageMePlacement;
+}) {
   const { resolvedTheme } = useTheme();
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
   const { barLightShadow, barDarkShadow } = useMouseShadow();
@@ -306,6 +318,7 @@ export default function MessageMe() {
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
   const copyTimeout = useRef<number | null>(null);
   const toastTimeout = useRef<number | null>(null);
+  const isTopBar = placement === "top-bar";
 
   const handleCopyEmail = useCallback(async () => {
     try {
@@ -615,7 +628,7 @@ export default function MessageMe() {
 
   return (
     <motion.div
-      initial={{ y: 80, opacity: 0 }}
+      initial={isTopBar ? false : { y: 80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
       className="pointer-events-none relative"
@@ -640,6 +653,7 @@ export default function MessageMe() {
               messageInputRef={messageInputRef}
               showSendShortcut={isFormTextEntryFocused && showFormKeyboardHints}
               sendShortcutLabel={isApplePlatform ? "⌘ + Enter" : "Ctrl + Enter"}
+              placement={placement}
               onTextEntryFocusChange={setIsFormTextEntryFocused}
               onCopyEmail={handleCopyEmail}
               onChange={handleFieldChange}
@@ -653,11 +667,19 @@ export default function MessageMe() {
             <motion.div
               role="status"
               aria-live="polite"
-              initial={{ y: 12, opacity: 0, scale: 0.98 }}
+              initial={{ y: isTopBar ? -12 : 12, opacity: 0, scale: 0.98 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: 8, opacity: 0, scale: 0.98 }}
+              exit={{
+                y: isTopBar ? -8 : 8,
+                opacity: 0,
+                scale: 0.98,
+              }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="pointer-events-none absolute bottom-full right-0 z-50 mb-6 flex w-[calc(100vw-2rem)] max-w-sm items-start gap-2 rounded-2 border border-green-600/20 bg-emerald-800 p-4 font-sans text-sm text-background shadow-md dark:border-green-400/20 dark:bg-emerald-100 dark:text-dark-background"
+              className={`pointer-events-none absolute z-50 flex w-[calc(100vw-2rem)] max-w-sm items-start gap-2 rounded-2 border border-green-600/20 bg-emerald-800 p-4 font-sans text-sm text-background shadow-md dark:border-green-400/20 dark:bg-emerald-100 dark:text-dark-background ${
+                isTopBar
+                  ? "-right-[5.5rem] top-full mt-6 md:-right-[7.5rem]"
+                  : "bottom-full right-0 mb-6"
+              }`}
             >
               <SmileyWinkIcon
                 size={20}
@@ -695,8 +717,12 @@ export default function MessageMe() {
             (!isFormTextEntryFocused && showKeyboardHints)) && (
             <KeyboardHint
               shortcut="message"
-              className="absolute bottom-[calc(100%-0.25rem)] z-10 translate-x-1/2"
-              style={{ right: 22 }}
+              className={
+                isTopBar
+                  ? "absolute left-1/2 top-[calc(100%-0.25rem)] z-10 -translate-x-1/2"
+                  : "absolute bottom-[calc(100%-0.25rem)] z-10 translate-x-1/2"
+              }
+              style={isTopBar ? undefined : { right: 22 }}
             >
               {isOpen && isFormTextEntryFocused ? "Esc" : "M"}
             </KeyboardHint>

@@ -190,8 +190,7 @@ function getExpandedFontSize() {
 }
 
 function getNotePadding() {
-  if (window.matchMedia("(min-width: 768px)").matches) return 40;
-  return 24;
+  return 64;
 }
 
 function getCardPosition(): CardPosition {
@@ -841,31 +840,28 @@ export default function ResearchThemeCanvas({
                                     lineHeight: `${activeCard.expandedLineHeight}px`,
                                   }}
                                 >
-                                  <motion.span
+                                  <span
                                     className="inline"
-                                    initial={{ opacity: 0 }}
-                                    animate={{
+                                    style={{
                                       opacity: showsSupportingText ? 1 : 0,
+                                      transition: `opacity ${slow(0.22)}s ease-out`,
+                                      willChange: "opacity",
                                     }}
-                                    transition={{
-                                      duration: slow(0.22),
-                                      ease: "easeOut",
-                                    }}
-                                    onAnimationComplete={() => {
-                                      if (
-                                        activeCard.phase === "closing-content"
-                                      ) {
-                                        setActiveCard((current) =>
-                                          current?.quoteId === quote.id &&
-                                          current.phase === "closing-content"
-                                            ? { ...current, phase: "closing" }
-                                            : current,
-                                        );
+                                    onTransitionEnd={(event) => {
+                                      if (event.propertyName !== "opacity") {
+                                        return;
                                       }
+
+                                      setActiveCard((current) =>
+                                        current?.quoteId === quote.id &&
+                                        current.phase === "closing-content"
+                                          ? { ...current, phase: "closing" }
+                                          : current,
+                                      );
                                     }}
                                   >
                                     “{quote.before}
-                                  </motion.span>
+                                  </span>
                                   <span
                                     ref={phraseTargetRef}
                                     aria-hidden="true"
@@ -873,20 +869,27 @@ export default function ResearchThemeCanvas({
                                   >
                                     {quote.highlight}
                                   </span>
-                                  <motion.span
+                                  <span
                                     className="inline"
-                                    initial={{ opacity: 0 }}
-                                    animate={{
+                                    style={{
                                       opacity: showsSupportingText ? 1 : 0,
-                                    }}
-                                    transition={{
-                                      duration: slow(0.22),
-                                      ease: "easeOut",
+                                      transition: `opacity ${slow(0.22)}s ease-out`,
+                                      willChange: "opacity",
                                     }}
                                   >
                                     {quote.after}”
-                                  </motion.span>
+                                  </span>
                                 </blockquote>
+                                <p
+                                  className="mt-auto self-end pt-4 text-right font-sans text-sm font-normal text-foreground-light dark:text-dark-foreground-light"
+                                  style={{
+                                    opacity: showsSupportingText ? 1 : 0,
+                                    transition: `opacity ${slow(0.22)}s ease-out`,
+                                    willChange: "opacity",
+                                  }}
+                                >
+                                  - UX designer
+                                </p>
                               </div>
                             ) : null}
 
@@ -991,7 +994,7 @@ export default function ResearchThemeCanvas({
                 aria-modal="true"
                 aria-label={`“${activeMobileQuote.quote.before}${activeMobileQuote.quote.highlight}${activeMobileQuote.quote.after}” — ${activeMobileQuote.theme.label}`}
                 onClick={() => closeQuote()}
-                className={`${themeTones[activeMobileQuote.themeIndex % themeTones.length].note} relative z-10 flex max-h-[calc(100dvh-2rem)] w-full max-w-lg cursor-pointer flex-col justify-start overflow-y-auto overscroll-contain p-12 font-serif text-base leading-[1.375] shadow-sm`}
+                className={`${themeTones[activeMobileQuote.themeIndex % themeTones.length].note} relative z-10 flex max-h-[calc(100dvh-2rem)] w-full max-w-lg cursor-pointer flex-col justify-start overflow-y-auto overscroll-contain p-16 font-serif text-base leading-[1.375] shadow-sm`}
                 style={{
                   width: "min(calc(100vw - 2rem), calc(100dvh - 2rem), 32rem)",
                   height: "min(calc(100vw - 2rem), calc(100dvh - 2rem), 32rem)",
@@ -1017,6 +1020,9 @@ export default function ResearchThemeCanvas({
                   </span>
                   {activeMobileQuote.quote.after}”
                 </blockquote>
+                <p className="mt-auto self-end pt-4 text-right font-sans text-sm font-normal text-foreground-light dark:text-dark-foreground-light">
+                  - UX designer
+                </p>
               </div>
             </div>,
             document.body,

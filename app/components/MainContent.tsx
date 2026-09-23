@@ -50,7 +50,6 @@ import {
   HEADER_BOTTOM_CLEARANCE_DESKTOP_PX,
 } from "@/lib/caseStudyTransitions";
 // import DebugViewport from "./DebugViewport";
-import BottomBar from "./BottomBar";
 type BottomNavigationState = {
   slug: string;
   sourceIndex: number;
@@ -2004,8 +2003,6 @@ export default function MainContent({ children }: { children: ReactNode }) {
           viewMode === "case-study" ? "pointer-events-none" : ""
         }`}
       />
-
-      <BottomBar />
     </main>
   );
 }

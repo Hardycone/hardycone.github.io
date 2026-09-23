@@ -64,7 +64,7 @@ function useCursorEffectValues() {
     [x, y],
     ([latestX, latestY]: number[]) => `
       inset ${-latestX / 3}px ${-latestY / 3}px 4px 0px rgba(255, 255, 255, 0.2),
-      inset ${latestX / 3}px ${latestY / 3}px 4px 0px rgba(0,0,0,1)
+      inset ${latestX / 3}px ${latestY / 3}px 4px 0px rgba(0,0,0,0.6)
     `,
   );
 

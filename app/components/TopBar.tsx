@@ -44,7 +44,11 @@ import {
 import Home from "../icons/Home";
 import LinkedIn from "../icons/LinkedIn";
 import ThemeToggle from "./ThemeToggle";
-import CaseStudyGlyphMenu from "./CaseStudyGlyphMenu";
+import MessageMe from "./MessageMe";
+import CaseStudyGlyphMenu, {
+  CASE_STUDY_GLYPH_MENU_ENTRY_DURATION_MS,
+  CASE_STUDY_GLYPH_MENU_EXIT_DURATION_MS,
+} from "./CaseStudyGlyphMenu";
 import KeyboardHint from "./KeyboardHint";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -60,6 +64,8 @@ interface TopBarProps {
   projectMenuNavigationLocked?: boolean;
   onProjectNavigationStart: (index: number) => boolean;
 }
+
+type ProjectMenuPhase = "closed" | "opening" | "open" | "closing";
 
 export default function TopBar({
   centerNavRef,
@@ -92,10 +98,60 @@ export default function TopBar({
   );
 
   const [isNavigatingHome, setIsNavigatingHome] = useState(false);
-  const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(false);
+  const [projectMenuPhase, setProjectMenuPhase] =
+    useState<ProjectMenuPhase>("closed");
+  const projectMenuPhaseRef = useRef<ProjectMenuPhase>("closed");
+  const projectMenuPointerInsideRef = useRef(false);
+  const projectMenuFocusInsideRef = useRef(false);
+  const projectMenuForcedClosedRef = useRef(false);
   const scrollTimeout = useRef<number | null>(null);
+  const homeButtonRef = useRef<HTMLButtonElement>(null);
   const themeToggleButtonRef = useRef<HTMLButtonElement>(null);
   const isCenterNavVisible = showCenterNav;
+  const isProjectMenuOpen =
+    projectMenuPhase === "opening" || projectMenuPhase === "open";
+
+  const updateProjectMenuPhase = useCallback((phase: ProjectMenuPhase) => {
+    projectMenuPhaseRef.current = phase;
+    setProjectMenuPhase(phase);
+  }, []);
+
+  const isProjectMenuInteractionValid = useCallback(
+    () =>
+      projectMenuPointerInsideRef.current ||
+      projectMenuFocusInsideRef.current,
+    [],
+  );
+
+  const isCollapsedProjectMenuInteractionValid = useCallback(
+    () =>
+      projectMenuFocusInsideRef.current ||
+      homeButtonRef.current?.matches(":hover") === true,
+    [],
+  );
+
+  const requestProjectMenuOpen = useCallback(() => {
+    projectMenuForcedClosedRef.current = false;
+    if (projectMenuPhaseRef.current === "closed") {
+      updateProjectMenuPhase("opening");
+    }
+  }, [updateProjectMenuPhase]);
+
+  const requestProjectMenuCloseIfInvalid = useCallback(() => {
+    if (
+      projectMenuPhaseRef.current === "open" &&
+      !isProjectMenuInteractionValid()
+    ) {
+      updateProjectMenuPhase("closing");
+    }
+  }, [isProjectMenuInteractionValid, updateProjectMenuPhase]);
+
+  const forceProjectMenuClosed = useCallback(() => {
+    projectMenuForcedClosedRef.current = true;
+    if (projectMenuPhaseRef.current === "open") {
+      updateProjectMenuPhase("closing");
+    }
+  }, [updateProjectMenuPhase]);
 
   const handleHomeClick = useCallback(() => {
     if (isNavigatingHome) return; // prevent double triggers
@@ -361,9 +417,51 @@ export default function TopBar({
 
   useEffect(() => {
     if (viewMode !== "case-study" || projectMenuNavigationLocked) {
-      setIsProjectMenuOpen(false);
+      projectMenuPointerInsideRef.current = false;
+      projectMenuFocusInsideRef.current = false;
+      projectMenuForcedClosedRef.current = true;
+      updateProjectMenuPhase("closed");
     }
-  }, [projectMenuNavigationLocked, viewMode]);
+  }, [projectMenuNavigationLocked, updateProjectMenuPhase, viewMode]);
+
+  useEffect(() => {
+    if (
+      viewMode !== "case-study" ||
+      projectMenuNavigationLocked ||
+      (projectMenuPhase !== "opening" && projectMenuPhase !== "closing")
+    ) {
+      return;
+    }
+
+    const transitionDuration =
+      projectMenuPhase === "opening"
+        ? CASE_STUDY_GLYPH_MENU_ENTRY_DURATION_MS
+        : CASE_STUDY_GLYPH_MENU_EXIT_DURATION_MS;
+
+    const timeout = window.setTimeout(() => {
+      if (projectMenuPhase === "opening") {
+        const shouldBeOpen =
+          !projectMenuForcedClosedRef.current &&
+          isProjectMenuInteractionValid();
+        updateProjectMenuPhase(shouldBeOpen ? "open" : "closing");
+        return;
+      }
+
+      const shouldBeOpen =
+        !projectMenuForcedClosedRef.current &&
+        isCollapsedProjectMenuInteractionValid();
+      updateProjectMenuPhase(shouldBeOpen ? "opening" : "closed");
+    }, transitionDuration);
+
+    return () => window.clearTimeout(timeout);
+  }, [
+    isCollapsedProjectMenuInteractionValid,
+    isProjectMenuInteractionValid,
+    projectMenuNavigationLocked,
+    projectMenuPhase,
+    updateProjectMenuPhase,
+    viewMode,
+  ]);
 
   return (
     <div className="pointer-events-none fixed inset-x-0 top-0 z-50 m-auto flex w-full max-w-[2650px] p-3.5 md:p-[1.625rem]">
@@ -387,12 +485,15 @@ export default function TopBar({
                 viewMode === "case-study" &&
                 !projectMenuNavigationLocked
               ) {
-                setIsProjectMenuOpen(true);
+                projectMenuPointerInsideRef.current = true;
+                requestProjectMenuOpen();
               }
             }}
             onPointerLeave={(event) => {
               if (canHover && event.pointerType !== "touch") {
-                setIsProjectMenuOpen(false);
+                projectMenuPointerInsideRef.current = false;
+                projectMenuForcedClosedRef.current = false;
+                requestProjectMenuCloseIfInvalid();
               }
             }}
             onFocusCapture={(event) => {
@@ -403,16 +504,19 @@ export default function TopBar({
                 viewMode === "case-study" &&
                 !projectMenuNavigationLocked
               ) {
-                setIsProjectMenuOpen(true);
+                projectMenuFocusInsideRef.current = true;
+                requestProjectMenuOpen();
               }
             }}
             onBlurCapture={(event) => {
               if (!event.currentTarget.contains(event.relatedTarget)) {
-                setIsProjectMenuOpen(false);
+                projectMenuFocusInsideRef.current = false;
+                requestProjectMenuCloseIfInvalid();
               }
             }}
           >
             <motion.button
+              ref={homeButtonRef}
               data-cursor-shadow
               type="button"
               tabIndex={viewMode === "home" ? -1 : 0}
@@ -447,7 +551,7 @@ export default function TopBar({
             <CaseStudyGlyphMenu
               isOpen={isProjectMenuOpen}
               navigationLocked={projectMenuNavigationLocked}
-              onClose={() => setIsProjectMenuOpen(false)}
+              onClose={forceProjectMenuClosed}
               onHomeClick={() => {
                 flashShortcutHint("home");
                 handleHomeClick();
@@ -574,6 +678,8 @@ export default function TopBar({
         animate={{ y: 0, opacity: 1 }}
         className="pointer-events-auto ml-auto flex gap-2 rounded-full md:gap-4"
       >
+        <MessageMe placement="top-bar" />
+
         {/* LinkedIn */}
         <motion.button
           data-cursor-shadow

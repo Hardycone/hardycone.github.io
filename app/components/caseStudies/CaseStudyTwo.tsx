@@ -17,6 +17,7 @@ import projects from "@/data/projects";
 import { useSiteNavigation } from "@/app/context/SiteNavigationContext";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import HorizontalCardGroup from "../HorizontalCardGroup";
+import HorizontalScrollStrip from "../HorizontalScrollStrip";
 import LazyVideo from "../LazyVideo";
 import SectionContainer from "../SectionContainer";
 import SubHeading from "../SubHeading";
@@ -231,10 +232,11 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               Flux helps product teams run rigorous experiments on their
               prototypes with ease.
             </span>{" "}
-            Users can configure experiments, recruit large participant samples,
-            run tests, and get reports within hours. They can learn behavioral
-            trends, sentiment differences, and performance variation between
-            their prototypes, all without any expertise in quantitative methods.
+            Researchers can configure experiments, recruit large participant
+            samples, run tests, and get reports within hours. They can learn
+            behavioral trends, sentiment differences, and performance variation
+            between their prototypes, all without needing any expertise in
+            quantitative methods.
           </p>
         </SectionContainer>
         <SectionContainer
@@ -272,11 +274,11 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                         Import
                       </h5>
                       <p className="mt-3 !font-serif">
-                        Users can import their interactive design prototypes
-                        from Figma or live prototypes hosted anywhere into Flux.
-                        For Figma prototypes, Flux can parse the nodes in each
-                        flow and render a flow map matching the interactions
-                        that exist in the Figma file.
+                        Researchers can import their prototypes from Figma or
+                        live prototypes hosted anywhere into Flux. For Figma
+                        prototypes, Flux can parse the nodes in each flow and
+                        render a flow map matching the interactions that exist
+                        in the Figma file.
                       </p>
                     </div>
                   </div>
@@ -303,8 +305,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                       </h5>
                       <p className="mt-3 !font-serif">
                         Configuring an experiment in Flux is designed to be
-                        approachable. Users can follow a guided wizard style
-                        process to define the hotspots to track, followup
+                        approachable. Researchers can follow a guided wizard
+                        style process to define the hotspots to track, followup
                         questions, and a recruiting plan.
                       </p>
                     </div>
@@ -334,7 +336,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                         The comprehensive research report offers quantitative
                         insights into user behavior and sentiment, as well as
                         qualitative data to compliment the quantitative
-                        analysis. The statistical tested results offer
+                        analysis. The statistically tested results offer
                         measurable confidence that guides product decisions.
                       </p>
                     </div>
@@ -365,21 +367,20 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
               AI has drastically lowered the cost of building, but not the cost
               of building the wrong thing.
             </span>{" "}
-            Naturally, research is the answer to this. But as agentic design and
-            dev workflows continue to accelerate, it&rsquo;s becoming
-            increasingly difficult to strike the right balance between speed and
-            confidence.
+            User research can mitigate this. But as agentic design and dev
+            workflows continue to accelerate, it&rsquo;s becoming increasingly
+            difficult to strike the balance between speed and confidence.
           </p>
           <SubSectionContainer>
             <SubHeading>Spotting the gap</SubHeading>
             <p>
-              We took a look at existing research tools, and quickly noticed
-              that they are overwhelmingly qualitative, which can be very useful
-              in understanding the &lsquo;why&rsquo; behind behaviorial trends,
-              but can&rsquo;t offer measurable confidence. Scaled testing remain
-              largely out of reach for teams without existing infrastructure to
-              support it. There seemed to be a gap where an easy-to-use
-              quantitative testing tool for prototypes could exist.
+              Existing user research tools are overwhelmingly qualitative, which
+              can be very useful in understanding the &lsquo;why&rsquo; behind
+              behaviorial trends, but can&rsquo;t offer measurable confidence.
+              Scaled testing remain largely out of reach for teams without
+              existing infrastructure to support it. There seemed to be a gap
+              where an easy-to-use quantitative testing tool for prototypes
+              could exist.
             </p>
             <HighlightCard
               borderBaseColor={theme.hex.primary}
@@ -402,14 +403,24 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           <SubSectionContainer>
             <SubHeading>Research and discovery</SubHeading>
             <p>
-              My cofounder and I started with conversations with people in our
-              network. We reached out to a mix of researchers, product managers,
-              and designers to learn about their existing workflows, their pain
-              points, and their thoughts on a potential new solution. This
-              research process took the shape of casual 5-minute conversations
-              as well as more intentional and structured hour-long interviews.
-              Once we sat down to compare notes, the emerging insights are
-              illuminating.
+              We spoke to a mix of researchers, product managers, and designers
+              to learn about their workflows, pain points, and their thoughts on
+              user research. This process took different shapes, ranging from
+              casual 5-minute conversations to structured hour-long interviews.
+              Once we sat down to synthesize our findings, we saw three themes
+              emerging:{" "}
+              <span className="font-bold text-flux dark:text-dark-flux">
+                research can no longer keep pace with development
+              </span>
+              ;{" "}
+              <span className="font-bold text-flux dark:text-dark-flux">
+                research is being democraitized
+              </span>
+              ; and{" "}
+              <span className="font-bold text-flux dark:text-dark-flux">
+                there is a demand for more quantitative research
+              </span>
+              .
             </p>
 
             <ResearchThemeCanvas themes={researchThemes} />
@@ -848,12 +859,10 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           <SubSectionContainer>
             <SubHeading>Launch</SubHeading>
             <p>
-              Numerous iterations led us to Verion 1 of Flux which we launched
-              to the public in April of 2026. Flux has since matured into an
-              end-to-end platform for quantitative prototype testing. Teams can
-              configure a study, recruit participants, run tests, and review
-              decision-ready results in one product, and my role has expanded
-              into customer development, sales, and product strategy.
+              We launched Version 1 of Flux in April of 2026. Flux has since
+              matured into an end-to-end platform for quantitative prototype
+              testing. Teams can configure a study, recruit participants, run
+              tests, and review decision-ready results in one product.
             </p>
             <LazyVideo
               src="https://assets.haichaowang.com/promo-export-01.mp4"
@@ -864,8 +873,8 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
             />
           </SubSectionContainer>
           <SubSectionContainer>
-            <HorizontalCardGroup
-              showBody
+            <HorizontalScrollStrip
+              ariaLabel="Flux testimonials"
               body={
                 <SubSectionContainer>
                   <SubHeading>Reception</SubHeading>
@@ -875,133 +884,102 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
                   </p>
                 </SubSectionContainer>
               }
-              stickyTopOnLarge="5rem"
-              bottomMarginOnLarge="2rem"
-              cardWidthClassNameOnLarge="md:w-[80rem]"
-              maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
-              alignment="aligned"
-              groupClassName="gap-2 "
-              cards={[
-                {
-                  id: "1",
-                  content: (
-                    <div className="flex h-full w-full flex-col gap-2">
-                      <div className="flex size-full gap-2">
-                        <HighlightCard
-                          highlightOnHover={false}
-                          className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
-                        >
-                          <blockquote className="text-[1.75rem]">
-                            “Great for more ambiguous testing where we want to
-                            get a{" "}
-                            <span className="text-[2.25rem] font-bold">
-                              quant pulse
-                            </span>{" "}
-                            on key changes without building extensively.”
-                          </blockquote>
-                          <figcaption className="mt-6 text-end text-[1.25rem]">
-                            — Product manager, consumer app
-                          </figcaption>
-                        </HighlightCard>
-                        <HighlightCard
-                          highlightOnHover={false}
-                          className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
-                        >
-                          <blockquote className="text-[1.75rem]">
-                            “Good tool for designers in a team that wants to{" "}
-                            <span className="text-[2.25rem] font-bold">
-                              democratize sound research
-                            </span>
-                            .”
-                          </blockquote>
-                          <figcaption className="mt-6 text-end text-[1.25rem]">
-                            — UX researcher, consumer app
-                          </figcaption>
-                        </HighlightCard>
-                      </div>
-                      <HighlightCard
-                        highlightOnHover={false}
-                        className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
-                      >
-                        <blockquote className="text-[1.75rem]">
-                          “Being able to reduce the number of design variants
-                          before developing them further is a great advantage.
-                          It&rsquo;s a way of doing{" "}
-                          <span className="text-[2.25rem] font-bold">
-                            no-code A/B testing
-                          </span>
-                          .”
-                        </blockquote>
-                        <figcaption className="mt-6 text-end text-[1.25rem]">
-                          — Engineering manager, consumer app
-                        </figcaption>
-                      </HighlightCard>
-                    </div>
-                  ),
-                },
-                {
-                  id: "2",
-                  content: (
-                    <div className="flex h-full w-full flex-col gap-2">
-                      <HighlightCard
-                        highlightOnHover={false}
-                        className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
-                      >
-                        <blockquote className="text-[1.75rem]">
-                          “After doing interviews with a dozen users and
-                          identifying a promising direction, this can be a way
-                          to elevate the confidence of the insights with{" "}
-                          <span className="text-[2.25rem] font-bold">
-                            more tangible evidence
-                          </span>
-                          .”
-                        </blockquote>
-                        <figcaption className="mt-6 text-end text-[1.25rem]">
-                          — UX researcher, Big Tech
-                        </figcaption>
-                      </HighlightCard>
-                      <div className="flex size-full gap-2">
-                        <HighlightCard
-                          highlightOnHover={false}
-                          className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
-                        >
-                          <blockquote className="text-[1.75rem]">
-                            “Flux helps when we have prototypes but no bandwidth
-                            to fully build something to{" "}
-                            <span className="text-[2.25rem] font-bold">
-                              test with confidence
-                            </span>
-                            .”
-                          </blockquote>
-                          <figcaption className="mt-6 text-end text-[1.25rem]">
-                            — UX research manager, consumer app
-                          </figcaption>
-                        </HighlightCard>
-                        <HighlightCard
-                          highlightOnHover={false}
-                          className={`flex size-full flex-col justify-between ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
-                        >
-                          <blockquote className="text-[1.75rem]">
-                            “I really like how it looks. It&rsquo;s very{" "}
-                            <span className="text-[2.25rem] font-bold">
-                              easy to follow
-                            </span>
-                            .”
-                          </blockquote>
-                          <figcaption className="mt-6 text-end text-[1.25rem]">
-                            — UX manager, Big Tech
-                          </figcaption>
-                        </HighlightCard>{" "}
-                      </div>
-                    </div>
-                  ),
-                },
-              ].map(({ id, content }) => (
-                <div key={id} className="h-full w-full">
-                  {content}
-                </div>
-              ))}
-            ></HorizontalCardGroup>
+              contentClassName="grid w-max grid-flow-col auto-cols-[min(85vw,24rem)] grid-rows-1 gap-2 md:w-[170vw] md:max-w-[160rem] md:grid-flow-row md:auto-cols-auto md:grid-cols-4 md:grid-rows-2"
+            >
+              <HighlightCard
+                highlightOnHover={false}
+                className={`flex min-w-0 flex-col justify-between gap-6 md:col-start-1 md:row-start-1 ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+              >
+                <blockquote className="text-[1.75rem]">
+                  “Great for more ambiguous testing where we want to get a{" "}
+                  <span className="text-[2.25rem] font-bold">quant pulse</span>{" "}
+                  on key changes without building extensively.”
+                </blockquote>
+                <figcaption className="text-end text-[1.25rem]">
+                  — Product manager, consumer app
+                </figcaption>
+              </HighlightCard>
+              <HighlightCard
+                highlightOnHover={false}
+                className={`flex min-w-0 flex-col justify-between gap-6 md:col-start-2 md:row-start-1 ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+              >
+                <blockquote className="text-[1.75rem]">
+                  “Good tool for designers in a team that wants to{" "}
+                  <span className="text-[2.25rem] font-bold">
+                    democratize sound research
+                  </span>
+                  .”
+                </blockquote>
+                <figcaption className="text-end text-[1.25rem]">
+                  — UX researcher, consumer app
+                </figcaption>
+              </HighlightCard>
+              <HighlightCard
+                highlightOnHover={false}
+                className={`flex min-w-0 flex-col justify-between gap-6 md:col-span-2 md:row-start-2 ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+              >
+                <blockquote className="text-[1.75rem]">
+                  “Being able to reduce the number of design variants before
+                  developing them further is a great advantage. It&rsquo;s a way
+                  of doing{" "}
+                  <span className="text-[2.25rem] font-bold">
+                    no-code A/B testing
+                  </span>
+                  .”
+                </blockquote>
+                <figcaption className="text-end text-[1.25rem]">
+                  — Engineering manager, consumer app
+                </figcaption>
+              </HighlightCard>
+              <HighlightCard
+                highlightOnHover={false}
+                className={`flex min-w-0 flex-col justify-between gap-6 md:col-span-2 md:col-start-3 md:row-start-1 ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+              >
+                <blockquote className="text-[1.75rem]">
+                  “After doing interviews with a dozen users and identifying a
+                  promising direction, this can be a way to elevate the
+                  confidence of the insights with{" "}
+                  <span className="text-[2.25rem] font-bold">
+                    more tangible evidence
+                  </span>
+                  .”
+                </blockquote>
+                <figcaption className="text-end text-[1.25rem]">
+                  — UX researcher, Big Tech
+                </figcaption>
+              </HighlightCard>
+              <HighlightCard
+                highlightOnHover={false}
+                className={`flex min-w-0 flex-col justify-between gap-6 md:col-start-3 md:row-start-2 ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+              >
+                <blockquote className="text-[1.75rem]">
+                  “Flux helps when we have prototypes but no bandwidth to fully
+                  build something to{" "}
+                  <span className="text-[2.25rem] font-bold">
+                    test with confidence
+                  </span>
+                  .”
+                </blockquote>
+                <figcaption className="text-end text-[1.25rem]">
+                  — UX research manager, consumer app
+                </figcaption>
+              </HighlightCard>
+              <HighlightCard
+                highlightOnHover={false}
+                className={`flex min-w-0 flex-col justify-between gap-6 md:col-start-4 md:row-start-2 ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+              >
+                <blockquote className="text-[1.75rem]">
+                  “I really like how it looks. It&rsquo;s very{" "}
+                  <span className="text-[2.25rem] font-bold">
+                    easy to follow
+                  </span>
+                  .”
+                </blockquote>
+                <figcaption className="text-end text-[1.25rem]">
+                  — UX manager, Big Tech
+                </figcaption>
+              </HighlightCard>
+            </HorizontalScrollStrip>
           </SubSectionContainer>
         </SectionContainer>
       </section>

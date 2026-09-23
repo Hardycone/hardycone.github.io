@@ -2,7 +2,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from "react";
 import { useTheme } from "next-themes";
 // import projects from "@/data/projects";
 import { useTransform, MotionValue } from "framer-motion";
@@ -17,23 +16,58 @@ import { hexToRgba } from "@/lib/palette";
 import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
 import SubSectionContainer from "../SubSectionContainer";
-import FlourishName from "../FlourishName";
-import NarrativeAccordion from "../NarrativeAccordion";
 import BioContactForm from "../BioContactForm";
 
 interface CaseStudyOneProps {
   scrollY: MotionValue<number>;
 }
 
+interface StaticNameProps {
+  name: string;
+  bgColor: string;
+  logoSrc?: string | { light: string; dark: string };
+  logoClassName?: string;
+}
+
+function StaticName({
+  name,
+  bgColor,
+  logoSrc,
+  logoClassName = "",
+}: StaticNameProps) {
+  return (
+    <span
+      className="-my-[0.5rem] inline-flex translate-y-[0.275em] items-center gap-[0.125em] rounded-[0.125em] py-[0.125em] pl-[0.125em] pr-[0.25em] font-bold"
+      style={{ backgroundColor: bgColor }}
+    >
+      {logoSrc &&
+        (typeof logoSrc === "string" ? (
+          <img
+            src={logoSrc}
+            alt=""
+            className={`inline-block h-[1.25em] w-[1.25em] max-w-none flex-none object-contain ${logoClassName}`}
+          />
+        ) : (
+          <>
+            <img
+              src={logoSrc.light}
+              alt=""
+              className={`block h-[1.25em] w-[1.25em] max-w-none flex-none object-contain dark:hidden ${logoClassName}`}
+            />
+            <img
+              src={logoSrc.dark}
+              alt=""
+              className={`hidden h-[1.25em] w-[1.25em] max-w-none flex-none object-contain dark:block ${logoClassName}`}
+            />
+          </>
+        ))}
+      {name}
+    </span>
+  );
+}
+
 export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
   const { resolvedTheme } = useTheme();
-  const [isFluxOpen, setIsFluxOpen] = useState(true);
-  const [isFantailOpen, setIsFantailOpen] = useState(true);
-  const [isAslfOpen, setIsAslfOpen] = useState(true);
-  const [isUwOpen, setIsUwOpen] = useState(true);
-  const [isSyracuseOpen, setIsSyracuseOpen] = useState(true);
-  const [isAwardsOpen, setIsAwardsOpen] = useState(true);
-  const [isBnuOpen, setIsBnuOpen] = useState(true);
 
   const introTheme = useProjectTheme("intro");
   const fluxTheme = useProjectTheme("flux");
@@ -93,22 +127,17 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           <SubSectionContainer className="gap-0">
             <p>
               I’m currently working on{" "}
-              <FlourishName
+              <StaticName
                 name="Flux"
                 bgColor={hexToRgba(fluxTheme.hex.primary, 0.03)}
-                gradientCenterColor={hexToRgba(fluxTheme.hex.soft, 1)}
-                gradientMiddleColor={hexToRgba(fluxTheme.hex.soft, 1)}
-                isActive={isFluxOpen}
-                onToggle={() => setIsFluxOpen((prev) => !prev)}
-                onFlourish={() => setIsFluxOpen(true)}
                 logoSrc="/logos/logo-flux.png"
               />
-              , a quantitative UX research tool that helps teams test designs
-              and prototypes with real users quickly and rigorously. Flux
-              launched in April 2026, and my role has since expanded into sales,
-              marketing, and customer development.
+              , a quantitative UX research platform that helps teams test
+              designs and prototypes with real users quickly and rigorously.
+              Flux launched in April 2026, and my role has since expanded into
+              sales, marketing, and customer development.
             </p>
-            <NarrativeAccordion isOpen={isFluxOpen}>
+            <div className="overflow-hidden">
               <div className="my-4 flex gap-2 rounded-1 bg-flux/5 p-8 font-serif supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-flux/5 md:gap-4 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4">
                 <div className="w-12 flex-shrink-0">
                   <img
@@ -130,9 +159,9 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   <div className="mt-2">
                     <ul className="ml-4 mt-2 list-disc text-pretty font-sans">
                       <li>
-                        Led Flux from concept to public launch, shaping the
-                        product strategy, core workflows, interaction patterns,
-                        visual system, and brand identity
+                        Led Flux from concept to public launch, shaping product
+                        strategy, core workflows, interaction patterns, visual
+                        system, and brand identity
                       </li>
                       <li>
                         Translated statistical research methods into guided
@@ -153,17 +182,12 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   </div>
                 </div>
               </div>
-            </NarrativeAccordion>
+            </div>
             <p className="mt-8">
               In 2023, I launched{" "}
-              <FlourishName
+              <StaticName
                 name="Fantail"
                 bgColor={hexToRgba(fantailTheme.hex.primary, 0.03)}
-                gradientCenterColor={hexToRgba(fantailTheme.hex.soft, 1)}
-                gradientMiddleColor={hexToRgba(fantailTheme.hex.soft, 1)}
-                isActive={isFantailOpen}
-                onToggle={() => setIsFantailOpen((prev) => !prev)}
-                onFlourish={() => setIsFantailOpen(true)}
                 logoSrc="/logos/logo-fantail.svg"
               />{" "}
               with two co-founders. Fantail brought AI into the early stages of
@@ -171,7 +195,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               dialogue exploration. I led much of the product and design work,
               translating filmmaker needs into an end-to-end creative workflow.
             </p>
-            <NarrativeAccordion isOpen={isFantailOpen}>
+            <div className="overflow-hidden">
               <div className="mb-4 mt-4 flex gap-2 rounded-1 bg-fantail bg-opacity-[3%] p-8 dark:bg-dark-fantail/5 md:gap-4 md:rounded-2">
                 <div className="w-12 flex-shrink-0">
                   <img
@@ -212,17 +236,12 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   </div>
                 </div>
               </div>
-            </NarrativeAccordion>
+            </div>
             <p className="mt-8">
               From 2016 to 2021, I worked at{" "}
-              <FlourishName
+              <StaticName
                 name="ASLF"
                 bgColor={hexToRgba(wolcottTheme.hex.primary, 0.05)}
-                gradientCenterColor={hexToRgba(wolcottTheme.hex.soft, 1)}
-                gradientMiddleColor={hexToRgba(wolcottTheme.hex.soft, 1)}
-                isActive={isAslfOpen}
-                onToggle={() => setIsAslfOpen((prev) => !prev)}
-                onFlourish={() => setIsAslfOpen(true)}
                 logoSrc={{
                   light: "/logos/logo-aslf.png",
                   dark: "/logos/logo-aslf-inverted.png",
@@ -239,7 +258,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               project was a lesson in listening: to the community, to the land,
               and to the policy constraints that shape what gets built.
             </p>
-            <NarrativeAccordion isOpen={isAslfOpen}>
+            <div className="overflow-hidden">
               <div className="mb-4 mt-4 flex gap-2 rounded-1 bg-wolcott/5 p-8 dark:bg-dark-wolcott/5 md:gap-4 md:rounded-2">
                 <div className="w-12 flex-shrink-0">
                   <img
@@ -322,7 +341,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   </div>
                 </div>
               </div>
-            </NarrativeAccordion>
+            </div>
 
             {/*Subsection 1: Experience*/}
           </SubSectionContainer>
@@ -342,14 +361,9 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
           <SubSectionContainer className="gap-0">
             <p>
               I’ve work on projects{" "}
-              <FlourishName
+              <StaticName
                 name="recognized and funded"
                 bgColor={hexToRgba(introTheme.hex.primary, 0.05)}
-                gradientCenterColor={hexToRgba(introTheme.hex.soft, 1)}
-                gradientMiddleColor={hexToRgba(introTheme.hex.soft, 1)}
-                isActive={isAwardsOpen}
-                onToggle={() => setIsAwardsOpen((prev) => !prev)}
-                onFlourish={() => setIsAwardsOpen(true)}
                 logoSrc="/logos/logo-awards.png"
               />{" "}
               by organizations like NASA, EPA, NOAA, USDA, NPS (National Park
@@ -358,7 +372,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               landscape report for Muir Woods, and successful public funding for
               environmental and community projects across the country.
             </p>
-            <NarrativeAccordion isOpen={isAwardsOpen}>
+            <div className="overflow-hidden">
               <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-suits/5 md:rounded-2">
                 <div className="flex w-full flex-col gap-4">
                   <div className="flex justify-between font-sans text-xl">
@@ -397,17 +411,12 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   </div>
                 </div>
               </div>
-            </NarrativeAccordion>
+            </div>
             <p className="mt-8">
               In 2023, I graduated from{" "}
-              <FlourishName
+              <StaticName
                 name="University of Washington"
                 bgColor={hexToRgba(introTheme.hex.primary, 0.05)}
-                gradientCenterColor={hexToRgba(introTheme.hex.soft, 1)}
-                gradientMiddleColor={hexToRgba(introTheme.hex.soft, 1)}
-                isActive={isUwOpen}
-                onToggle={() => setIsUwOpen((prev) => !prev)}
-                onFlourish={() => setIsUwOpen(true)}
                 logoSrc={{
                   light: "/logos/logo-uw.png",
                   dark: "/logos/logo-uw-gold.png",
@@ -421,7 +430,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               prototyping, and applied them to projects ranging from NASA
               spacesuit interfaces to quantitative UX testing tools.
             </p>
-            <NarrativeAccordion isOpen={isUwOpen}>
+            <div className="overflow-hidden">
               <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-suits/5 md:rounded-2">
                 <div className="w-12 flex-shrink-0">
                   <img
@@ -446,17 +455,12 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   </div>
                 </div>
               </div>
-            </NarrativeAccordion>
+            </div>
             <p className="mt-8">
               I also hold a Master of Landscape Architecture from{" "}
-              <FlourishName
+              <StaticName
                 name="SUNY ESF"
                 bgColor={hexToRgba(introTheme.hex.primary, 0.05)}
-                gradientCenterColor={hexToRgba(introTheme.hex.soft, 1)}
-                gradientMiddleColor={hexToRgba(introTheme.hex.soft, 1)}
-                isActive={isSyracuseOpen}
-                onToggle={() => setIsSyracuseOpen((prev) => !prev)}
-                onFlourish={() => setIsSyracuseOpen(true)}
                 logoSrc={{
                   light: "/logos/logo-esf.png",
                   dark: "/logos/logo-esf-light.png",
@@ -471,7 +475,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               Flux is surprisingly direct: design is a tool for empowerment,
               whether the medium is a park or a prototype.
             </p>
-            <NarrativeAccordion isOpen={isSyracuseOpen}>
+            <div className="overflow-hidden">
               <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-chinatown/5 md:rounded-2">
                 <div className="w-12 flex-shrink-0">
                   <img
@@ -496,17 +500,12 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   </div>
                 </div>
               </div>
-            </NarrativeAccordion>{" "}
+            </div>{" "}
             <p className="mt-8">
               My undergraduate training in Environmental Science at{" "}
-              <FlourishName
+              <StaticName
                 name="Beijing Normal University"
                 bgColor={hexToRgba(introTheme.hex.primary, 0.05)}
-                gradientCenterColor={hexToRgba(introTheme.hex.soft, 1)}
-                gradientMiddleColor={hexToRgba(introTheme.hex.soft, 1)}
-                isActive={isBnuOpen}
-                onToggle={() => setIsBnuOpen((prev) => !prev)}
-                onFlourish={() => setIsBnuOpen(true)}
                 logoSrc="/logos/logo-bnu.png"
                 logoClassName="dark:brightness-[50] dark:saturate-0"
               />{" "}
@@ -519,7 +518,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
               participatory, and responsive to the people they affect? This has
               been the driving force of my career ever since.
             </p>
-            <NarrativeAccordion isOpen={isBnuOpen}>
+            <div className="overflow-hidden">
               {" "}
               <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-chinatown/5 md:rounded-2">
                 <div className="w-12 flex-shrink-0">
@@ -540,7 +539,7 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
                   </div>
                 </div>
               </div>
-            </NarrativeAccordion>
+            </div>
             {/*Subsection 4: Skills*/}
           </SubSectionContainer>
         </SectionContainer>
