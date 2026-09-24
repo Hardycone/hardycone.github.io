@@ -30,9 +30,15 @@ import SubSectionContainer from "../SubSectionContainer";
 
 interface CaseStudyFiveProps {
   scrollY: MotionValue<number>;
+  fadeInFirstSection?: boolean;
+  firstSectionFadeReady?: boolean;
 }
 
-export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
+export default function CaseStudyFive({
+  scrollY,
+  fadeInFirstSection = false,
+  firstSectionFadeReady = true,
+}: CaseStudyFiveProps) {
   const { resolvedTheme } = useTheme();
   const { activeIndex } = useSiteNavigation();
   const theme = useProjectTheme(projects[activeIndex].id);
@@ -59,6 +65,8 @@ export default function CaseStudyFive({ scrollY }: CaseStudyFiveProps) {
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
           heading="The Product"
+          fadeInOnMount={fadeInFirstSection}
+          fadeInReady={firstSectionFadeReady}
           headingIcon={PackageIcon}
           headingSweepAt={100}
           borderColor={borderColor}

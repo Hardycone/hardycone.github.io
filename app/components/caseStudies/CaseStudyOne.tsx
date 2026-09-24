@@ -20,6 +20,8 @@ import BioContactForm from "../BioContactForm";
 
 interface CaseStudyOneProps {
   scrollY: MotionValue<number>;
+  fadeInFirstSection?: boolean;
+  firstSectionFadeReady?: boolean;
 }
 
 interface StaticNameProps {
@@ -66,7 +68,11 @@ function StaticName({
   );
 }
 
-export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
+export default function CaseStudyOne({
+  scrollY,
+  fadeInFirstSection = false,
+  firstSectionFadeReady = true,
+}: CaseStudyOneProps) {
   const { resolvedTheme } = useTheme();
 
   const introTheme = useProjectTheme("intro");
@@ -115,6 +121,8 @@ export default function CaseStudyOne({ scrollY }: CaseStudyOneProps) {
         {/*Section Header Block*/}
         <SectionContainer
           heading="My Work"
+          fadeInOnMount={fadeInFirstSection}
+          fadeInReady={firstSectionFadeReady}
           headingIcon={PathIcon}
           headingBaseColorClassName={
             "text-foreground dark:text-dark-foreground"

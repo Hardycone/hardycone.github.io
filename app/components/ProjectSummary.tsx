@@ -7,6 +7,7 @@ import {
   useLayoutEffect,
   useState,
   useRef,
+  type MouseEvent as ReactMouseEvent,
 } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -99,7 +100,7 @@ interface ProjectSummaryProps {
   transitioningToNext?: boolean;
   isHandoffSourceHidden?: boolean;
   transitionRect?: SummaryTransitionRect | null;
-  onHeaderBackgroundClick?: () => void;
+  onHeaderClick?: () => void;
   onLayoutAnimationComplete?: () => void;
   onPreviewNavigationStart?: (sourceRect: SummaryTransitionRect | null) => void;
   onBottomNavigationStart?: (
@@ -133,7 +134,7 @@ export default function ProjectSummary({
   transitioningToNext = false,
   isHandoffSourceHidden = false,
   transitionRect,
-  onHeaderBackgroundClick,
+  onHeaderClick,
   onLayoutAnimationComplete,
   onPreviewNavigationStart,
   onBottomNavigationStart,
@@ -194,7 +195,8 @@ export default function ProjectSummary({
     [0, 1],
     [headerImageBaseRadius, headerImageTargetRadius],
   );
-  const holdExpandedHeaderImage = isTransitionLocked || transitioningToNext;
+  const holdExpandedHeaderImage =
+    !isMdUp || isTransitionLocked || transitioningToNext;
 
   // Motion projects the bottom frame into the header with independent X/Y
   // scales. Counter-scale the bitmap so it keeps a true object-cover crop.
@@ -537,11 +539,30 @@ export default function ProjectSummary({
         ? "auto"
         : "none"
       : "auto";
-  const isHeaderBackgroundInteractive =
+  const isHeaderClickToScrollEnabled =
     variant === "header" &&
-    Boolean(onHeaderBackgroundClick) &&
+    Boolean(onHeaderClick) &&
     !isTransitionLocked &&
     !transitioningToNext;
+  const handleHeaderSummaryClick = useCallback(
+    (event: ReactMouseEvent<HTMLDivElement>) => {
+      const target = event.target;
+      if (
+        target instanceof Element &&
+        target.closest(
+          "a, button, input, select, textarea, [role='button'], [contenteditable='true']",
+        )
+      ) {
+        return;
+      }
+
+      const selection = window.getSelection();
+      if (selection && !selection.isCollapsed) return;
+
+      onHeaderClick?.();
+    },
+    [onHeaderClick],
+  );
 
   // --- Framer Motion variants
   const motionVariants = {
@@ -666,6 +687,9 @@ export default function ProjectSummary({
       aria-hidden={isHandoffSourceHidden || undefined}
       data-summary-variant={variant}
       data-summary-transition-locked={isTransitionLocked || undefined}
+      onClick={
+        isHeaderClickToScrollEnabled ? handleHeaderSummaryClick : undefined
+      }
       className={`project-summary-scroll-reveal z-10 flex flex-col ${containerClasses}`}
     >
       {/* Bottom variant title bar */}
@@ -718,12 +742,7 @@ export default function ProjectSummary({
             layoutDependency={
               participatesInSharedHandoff ? layoutDependency : undefined
             }
-            onClick={
-              isHeaderBackgroundInteractive
-                ? onHeaderBackgroundClick
-                : undefined
-            }
-            className={`${isHeaderBackgroundInteractive ? "cursor-default" : "pointer-events-none"} absolute overflow-hidden supports-[corner-shape:squircle]:[corner-shape:squircle]`}
+            className="pointer-events-none absolute overflow-hidden supports-[corner-shape:squircle]:[corner-shape:squircle]"
             style={{
               ...backgroundImageStyle,
               willChange: isTransitionLocked ? "transform" : undefined,

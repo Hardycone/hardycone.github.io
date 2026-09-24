@@ -24,12 +24,18 @@ import SubSectionContainer from "../SubSectionContainer";
 
 interface CaseStudyThreeProps {
   scrollY: MotionValue<number>;
+  fadeInFirstSection?: boolean;
+  firstSectionFadeReady?: boolean;
 }
 
 const contentNoteClass =
   "rounded-1 border border-dashed border-foreground/20 px-4 py-3 italic text-foreground/60 dark:border-dark-foreground/20 dark:text-dark-foreground/60 md:rounded-2";
 
-export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
+export default function CaseStudyThree({
+  scrollY,
+  fadeInFirstSection = false,
+  firstSectionFadeReady = true,
+}: CaseStudyThreeProps) {
   const { resolvedTheme } = useTheme();
   const { activeIndex } = useSiteNavigation();
   const theme = useProjectTheme(projects[activeIndex].id);
@@ -56,6 +62,8 @@ export default function CaseStudyThree({ scrollY }: CaseStudyThreeProps) {
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
           heading="The Product"
+          fadeInOnMount={fadeInFirstSection}
+          fadeInReady={firstSectionFadeReady}
           headingIcon={PackageIcon}
           headingSweepAt={100}
           borderColor={borderColor}

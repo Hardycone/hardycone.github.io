@@ -39,6 +39,8 @@ import {
 
 interface CaseStudyTwoProps {
   scrollY: MotionValue<number>;
+  fadeInFirstSection?: boolean;
+  firstSectionFadeReady?: boolean;
 }
 
 const researchThemes: ResearchTheme[] = [
@@ -194,7 +196,11 @@ const researchThemes: ResearchTheme[] = [
   },
 ];
 
-export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
+export default function CaseStudyTwo({
+  scrollY,
+  fadeInFirstSection = false,
+  firstSectionFadeReady = true,
+}: CaseStudyTwoProps) {
   const { resolvedTheme } = useTheme();
   const { activeIndex } = useSiteNavigation();
   const theme = useProjectTheme(projects[activeIndex].id);
@@ -217,15 +223,19 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
   );
 
   return (
-    <article className="flex flex-col gap-8">
+    <article className="flex flex-col gap-4">
       <section id="section-1" className="scroll-mt-24">
         <SectionContainer
           heading="The Product"
+          fadeInOnMount={fadeInFirstSection}
+          fadeInReady={firstSectionFadeReady}
           headingIcon={PackageIcon}
           headingSweepAt={100}
-          borderColor={borderColor}
+          showBorder={false}
           exitOnScroll={false}
           entryOnScroll={false}
+          containerClassName="pt-2 md:pt-6"
+          contentClassName="p-2 md:p-6"
         >
           <p>
             <span className="font-bold text-flux dark:text-dark-flux">
@@ -243,7 +253,7 @@ export default function CaseStudyTwo({ scrollY }: CaseStudyTwoProps) {
           showHeading={false}
           showBorder={false}
           entryOnScroll={false}
-          containerClassName="mt-4"
+          containerClassName=""
           contentClassName=""
         >
           <HorizontalCardGroup

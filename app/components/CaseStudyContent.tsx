@@ -13,13 +13,19 @@ import CaseStudyFive from "./caseStudies/CaseStudyFive";
 interface CaseStudyContentProps {
   projectIndex: number;
   scrollY: MotionValue<number>;
+  horizontalOffset?: number;
+  fadeInFirstSection?: boolean;
+  firstSectionFadeReady?: boolean;
   isVisible?: boolean;
   exitDirection?: "up" | "down";
   disableExitAnimation?: boolean;
   onExitComplete?: () => void;
 }
 
-type CaseStudyComponentProps = Pick<CaseStudyContentProps, "scrollY">;
+type CaseStudyComponentProps = Pick<
+  CaseStudyContentProps,
+  "scrollY" | "fadeInFirstSection" | "firstSectionFadeReady"
+>;
 
 type ProjectSlug = "about-me" | "flux" | "fantail" | "nasa-suits" | "wolcott";
 
@@ -47,6 +53,9 @@ const contentVariants = {
 export default function CaseStudyContent({
   projectIndex,
   scrollY,
+  horizontalOffset = 0,
+  fadeInFirstSection = false,
+  firstSectionFadeReady = true,
   isVisible = true,
   exitDirection = "down",
   disableExitAnimation = false,
@@ -66,7 +75,14 @@ export default function CaseStudyContent({
   }, [project.id]);
 
   return (
-    <div className="flex w-full min-w-0 flex-col">
+    <div
+      className="flex w-full min-w-0 flex-col"
+      style={
+        horizontalOffset
+          ? { position: "relative", left: -horizontalOffset }
+          : undefined
+      }
+    >
       <motion.div className="relative left-1/2 z-40 w-[calc(100vw-1rem)] min-w-0 max-w-6xl -translate-x-1/2 md:w-[calc(100vw-2rem)]">
         <AnimatePresence
           mode={disableExitAnimation ? "sync" : "wait"}
@@ -87,7 +103,11 @@ export default function CaseStudyContent({
               }
               className="relative z-40 flex w-full min-w-0 flex-col"
             >
-              <CaseStudyComponent scrollY={scrollY} />
+              <CaseStudyComponent
+                scrollY={scrollY}
+                fadeInFirstSection={fadeInFirstSection}
+                firstSectionFadeReady={firstSectionFadeReady}
+              />
             </motion.div>
           )}
         </AnimatePresence>

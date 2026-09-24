@@ -46,7 +46,7 @@ import {
   HEADER_PANE_NAV_MORPH_TRIGGER_PX,
   HEADER_PANE_NAV_REVERSE_OFFSET_PX,
   HEADER_STICKY_RUNWAY_PX,
-  HEADER_BOTTOM_CLEARANCE_MOBILE_PX,
+  HEADER_MOBILE_CLICK_SCROLL_PX,
   HEADER_BOTTOM_CLEARANCE_DESKTOP_PX,
 } from "@/lib/caseStudyTransitions";
 // import DebugViewport from "./DebugViewport";
@@ -63,6 +63,7 @@ type HomeToCaseTransitionState = {
   targetIndex: number;
   sourcePageLeft: number;
   pageWidth: number;
+  glyphRailWidth: number;
 };
 
 type DirectCaseNavigationState = {
@@ -258,7 +259,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
   });
   const headerIntroEndRef = useRef<HTMLDivElement>(null);
   const stickyHeaderRef = useRef<HTMLDivElement>(null);
-  const stickyHeaderHeight = useMotionValue("100svh");
+  const glyphRailRef = useRef<HTMLDivElement>(null);
+  const stickyHeaderHeight = useMotionValue("100lvh");
   const headerExitProgress = useMotionValue(0);
   const headerVisibleProgress = useTransform(
     headerExitProgress,
@@ -314,9 +316,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
   const isBottomNavigationActive = bottomNavigation !== null;
   const shouldReserveGlyphRail =
     viewMode === "home" || homeToCaseTransition !== null;
-  const headerBottomClearance = isMdUp
-    ? HEADER_BOTTOM_CLEARANCE_DESKTOP_PX
-    : HEADER_BOTTOM_CLEARANCE_MOBILE_PX;
+  const headerBottomClearance = isMdUp ? HEADER_BOTTOM_CLEARANCE_DESKTOP_PX : 0;
+  const headerIntroRunway = isMdUp ? HEADER_STICKY_RUNWAY_PX : 0;
 
   const updateSectionHighlightEnabled = useCallback((enabled: boolean) => {
     if (sectionHighlightEnabledRef.current === enabled) {
@@ -333,7 +334,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       const stickyHeader = stickyHeaderRef.current;
       if (!anchor || !stickyHeader || viewMode !== "case-study") {
         floatingPaneRef.current?.style.removeProperty("translate");
-        stickyHeaderHeight.set("100svh");
+        stickyHeaderHeight.set("100lvh");
         headerIntroProgress.set(0);
         headerExitProgress.set(0);
         updateSectionHighlightEnabled(false);
@@ -341,7 +342,9 @@ export default function MainContent({ children }: { children: ReactNode }) {
       }
 
       const anchorRect = anchor.getBoundingClientRect();
-      const introDistance = scrollPosition + anchorRect.top;
+      const introDistance = isMdUp
+        ? scrollPosition + anchorRect.top
+        : HEADER_STICKY_RUNWAY_PX;
       const progress =
         introDistance > 0
           ? Math.min(1, Math.max(0, scrollPosition / introDistance))
@@ -362,8 +365,8 @@ export default function MainContent({ children }: { children: ReactNode }) {
       floatingPaneRef.current?.style.removeProperty("translate");
       stickyHeaderHeight.set(
         collapseDistance > 0
-          ? `calc(100svh - ${collapseDistance}px)`
-          : "100svh",
+          ? `calc(100lvh - ${collapseDistance}px)`
+          : "100lvh",
       );
       headerIntroProgress.set(progress);
       headerExitProgress.set(exitProgress);
@@ -374,6 +377,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       headerExitProgress,
       headerBottomClearance,
       headerIntroProgress,
+      isMdUp,
       scrollY,
       stickyHeaderHeight,
       updateSectionHighlightEnabled,
@@ -385,13 +389,23 @@ export default function MainContent({ children }: { children: ReactNode }) {
     const target = headerIntroEndRef.current;
     if (!target) return;
 
-    target.scrollIntoView({
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "auto"
-        : "smooth",
-      block: "start",
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)")
+      .matches
+      ? "auto"
+      : "smooth";
+
+    if (isMdUp) {
+      target.scrollIntoView({ behavior, block: "start" });
+      return;
+    }
+
+    const headerTop =
+      window.scrollY + (target.parentElement?.getBoundingClientRect().top ?? 0);
+    window.scrollTo({
+      top: headerTop + HEADER_MOBILE_CLICK_SCROLL_PX,
+      behavior,
     });
-  }, []);
+  }, [isMdUp]);
 
   const updateBottomRevealProgress = useCallback(() => {
     const summary = bottomSummaryRef.current;
@@ -939,10 +953,10 @@ export default function MainContent({ children }: { children: ReactNode }) {
     scrollY.set(0);
     headerIntroProgress.set(0);
     smoothHeaderIntroProgress.jump(0);
-    stickyHeaderHeight.set("100svh");
+    stickyHeaderHeight.set("100lvh");
     // Shared-layout measurement runs in the next React layout phase, before a
     // scheduled MotionValue render is guaranteed to reach the DOM.
-    stickyHeaderRef.current?.style.setProperty("height", "100svh");
+    stickyHeaderRef.current?.style.setProperty("height", "100lvh");
     headerExitProgress.set(0);
     smoothHeaderVisibleProgress.jump(1);
     bottomRevealProgress.set(0);
@@ -1289,9 +1303,12 @@ export default function MainContent({ children }: { children: ReactNode }) {
         targetIndex: activeIndex,
         sourcePageLeft,
         pageWidth: pageRect.width,
+        glyphRailWidth: isMdUp
+          ? 0
+          : (glyphRailRef.current?.getBoundingClientRect().width ?? 0),
       });
     },
-    [activeIndex],
+    [activeIndex, isMdUp],
   );
 
   useEffect(() => {
@@ -1785,6 +1802,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
       />
       {/* <DebugViewport /> */}
       <div
+        ref={glyphRailRef}
         className={`relative z-10 flex flex-1 flex-col overflow-hidden ${
           shouldReserveGlyphRail ? "min-w-max" : ""
         } ${viewMode === "case-study" ? "pointer-events-none" : ""}`}
@@ -1860,11 +1878,13 @@ export default function MainContent({ children }: { children: ReactNode }) {
         >
           {showTopSummary && (
             <div
-              className="relative h-[100svh] w-full"
+              className={`relative w-full ${viewMode === "case-study" ? "h-[100lvh]" : "h-[100svh]"}`}
               style={
                 viewMode === "case-study"
                   ? {
-                      height: `calc(100svh + ${HEADER_STICKY_RUNWAY_PX - headerBottomClearance}px)`,
+                      height: headerIntroRunway
+                        ? `calc(100lvh + ${headerIntroRunway - headerBottomClearance}px)`
+                        : "100lvh",
                       width: homeToCaseTransition
                         ? `${homeToCaseTransition.pageWidth}px`
                         : "100vw",
@@ -1881,12 +1901,12 @@ export default function MainContent({ children }: { children: ReactNode }) {
                   data-header-hero-focus-target
                   aria-hidden="true"
                   className="pointer-events-none absolute left-0 z-20 h-px w-px"
-                  style={{ top: `${HEADER_STICKY_RUNWAY_PX}px` }}
+                  style={{ top: `${headerIntroRunway}px` }}
                 />
               )}
               <motion.div
                 ref={stickyHeaderRef}
-                className={`h-[100svh] w-full ${viewMode === "case-study" ? "sticky top-0" : "relative"}`}
+                className={`w-full ${viewMode === "case-study" ? "h-[100lvh]" : "h-[100svh]"} ${viewMode === "case-study" && isMdUp ? "sticky top-0" : "relative"}`}
                 style={
                   viewMode === "case-study"
                     ? { height: stickyHeaderHeight }
@@ -1940,7 +1960,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
                       isHandoffSourceHidden={
                         viewMode === "case-study" && isOutgoingHeaderHidden
                       }
-                      onHeaderBackgroundClick={
+                      onHeaderClick={
                         viewMode === "case-study" && !transitioningToNext
                           ? scrollToHeaderHeroFocus
                           : undefined
@@ -1964,6 +1984,11 @@ export default function MainContent({ children }: { children: ReactNode }) {
             <CaseStudyContent
               projectIndex={renderedCaseStudyIndex}
               scrollY={scrollY}
+              horizontalOffset={
+                !isMdUp ? homeToCaseTransition?.glyphRailWidth : undefined
+              }
+              fadeInFirstSection={!isMdUp && homeToCaseTransition !== null}
+              firstSectionFadeReady={homeToCaseTransition === null}
               isVisible={!transitioningToNext}
               exitDirection={caseStudyExitDirection}
               disableExitAnimation={directCaseNavigation !== null}

@@ -2,11 +2,12 @@
 
 "use client";
 
-import { ComponentType, ReactNode, useRef } from "react";
+import { ComponentType, ReactNode, useEffect, useRef } from "react";
 import { IconProps } from "@phosphor-icons/react";
 import {
   MotionValue,
   UseInViewOptions,
+  animate,
   motion,
   useInView,
   useMotionValue,
@@ -26,6 +27,8 @@ interface SectionContainerBaseProps {
   contentClassName?: string;
   entryOnScroll?: boolean;
   exitOnScroll?: boolean;
+  fadeInOnMount?: boolean;
+  fadeInReady?: boolean;
   children: ReactNode;
 }
 
@@ -91,12 +94,26 @@ export default function SectionContainer(props: SectionContainerProps) {
     contentClassName = "p-2 md:p-6",
     entryOnScroll = true,
     exitOnScroll = true,
+    fadeInOnMount = false,
+    fadeInReady = true,
     children,
   } = props;
   const showBorder = props.showBorder !== false;
   const headingSweepAt = Math.min(100, Math.max(0, props.headingSweepAt ?? 80));
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
+  // Keep the initial opt-in after the handoff clears its transition state.
+  const shouldFadeInOnMount = useRef(fadeInOnMount && !shouldReduceMotion);
+  const mountFadeOpacity = useMotionValue(shouldFadeInOnMount.current ? 0 : 1);
+  useEffect(() => {
+    if (!shouldFadeInOnMount.current || !fadeInReady) return;
+
+    const animation = animate(mountFadeOpacity, 1, {
+      duration: 0.45,
+      ease: [0.4, 0, 0.2, 1],
+    });
+    return () => animation.stop();
+  }, [fadeInReady, mountFadeOpacity]);
   const shouldAnimateEntry = entryOnScroll && !shouldReduceMotion;
   const shouldAnimateExit = exitOnScroll && !shouldReduceMotion;
   const shouldAnimateOnScroll = shouldAnimateEntry || shouldAnimateExit;
@@ -133,6 +150,11 @@ export default function SectionContainer(props: SectionContainerProps) {
     restSpeed: 0.01,
   });
   const revealOpacity = useTransform(revealProgress, [0, 1], [0, 1]);
+  const combinedOpacity = useTransform(
+    [revealOpacity, mountFadeOpacity],
+    ([scrollOpacity, fadeOpacity]: number[]) =>
+      (shouldAnimateOnScroll ? scrollOpacity : 1) * fadeOpacity,
+  );
   const revealScale = useTransform(revealProgress, [0, 1], [0.9, 1]);
   const revealFilter = useTransform(
     revealProgress,
@@ -167,7 +189,11 @@ export default function SectionContainer(props: SectionContainerProps) {
       className={`section-container-scroll-reveal flex flex-col text-foreground duration-150 dark:text-dark-foreground ${showBorder ? "border" : ""} ${containerClassName}`}
       style={{
         borderColor: showBorder ? props.borderColor : undefined,
-        opacity: shouldAnimateOnScroll ? revealOpacity : 1,
+        opacity: shouldFadeInOnMount.current
+          ? combinedOpacity
+          : shouldAnimateOnScroll
+            ? revealOpacity
+            : 1,
         originX: shouldAnimateOnScroll ? 0.5 : undefined,
         originY: shouldAnimateOnScroll ? revealOriginY : undefined,
         scale: shouldAnimateOnScroll ? revealScale : 1,
