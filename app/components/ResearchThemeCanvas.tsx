@@ -13,6 +13,7 @@ import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { XIcon } from "@phosphor-icons/react";
 import HighlightCard from "./HighlightCard";
+import StickyPaperSurface from "./StickyPaperSurface";
 
 export interface ResearchQuote {
   id: string;
@@ -48,11 +49,13 @@ interface CardBox {
 type CardPosition = "absolute" | "fixed";
 
 type CardPhase =
+  | "flattening"
   | "positioning"
   | "opening"
   | "open"
   | "closing-content"
-  | "closing";
+  | "closing"
+  | "recurling";
 
 interface ActiveCard {
   quoteId: string;
@@ -81,19 +84,27 @@ interface ActiveCard {
 const themeTones = [
   {
     label: "text-foreground-ultralight dark:text-dark-foreground-ultralight",
-    note: "bg-red-200 dark:bg-red-900 text-foreground dark:text-dark-foreground",
+    note: "text-foreground dark:text-dark-foreground",
+    paperFace: "fill-red-200 dark:fill-red-900",
+    paperUnderside: "fill-red-300 dark:fill-red-950",
   },
   {
     label: "text-foreground-ultralight dark:text-dark-foreground-ultralight",
-    note: "bg-indigo-200 dark:bg-indigo-900 text-foreground dark:text-dark-foreground",
+    note: "text-foreground dark:text-dark-foreground",
+    paperFace: "fill-indigo-200 dark:fill-indigo-900",
+    paperUnderside: "fill-indigo-300 dark:fill-indigo-950",
   },
   {
     label: "text-foreground-ultralight dark:text-dark-foreground-ultralight",
-    note: "bg-lime-200 dark:bg-lime-900 text-foreground dark:text-dark-foreground",
+    note: "text-foreground dark:text-dark-foreground",
+    paperFace: "fill-lime-200 dark:fill-lime-900",
+    paperUnderside: "fill-lime-300 dark:fill-lime-950",
   },
   {
     label: "text-foreground-ultralight dark:text-dark-foreground-ultralight",
-    note: "bg-amber-200 dark:bg-amber-900 text-foreground dark:text-dark-foreground",
+    note: "text-foreground dark:text-dark-foreground",
+    paperFace: "fill-amber-200 dark:fill-amber-900",
+    paperUnderside: "fill-amber-300 dark:fill-amber-950",
   },
 ] as const;
 
@@ -354,7 +365,7 @@ export default function ResearchThemeCanvas({
         expandedFontSize,
         expandedLineHeight: expandedFontSize * 1.375,
         notePadding: getNotePadding(),
-        phase: position === "fixed" ? "open" : "positioning",
+        phase: position === "fixed" ? "open" : "flattening",
       });
     },
     [activeCard, getTargetBox],
@@ -367,7 +378,8 @@ export default function ResearchThemeCanvas({
       if (
         !current ||
         current.phase === "closing-content" ||
-        current.phase === "closing"
+        current.phase === "closing" ||
+        current.phase === "recurling"
       ) {
         return current;
       }
@@ -584,7 +596,10 @@ export default function ResearchThemeCanvas({
 
   return (
     <>
-      <HighlightCard className="overflow-hidden" highlightOnHover={false}>
+      <HighlightCard
+        highlightCardClassName="overflow-hidden"
+        highlightOnHover={false}
+      >
         <div
           ref={canvasRef}
           className="relative isolate overflow-hidden p-3 md:p-8"
@@ -622,13 +637,17 @@ export default function ResearchThemeCanvas({
                     const geometry =
                       isActive && usesExpandedGeometry
                         ? activeCard.target
-                        : isActive && activeCard.phase === "closing"
+                        : isActive &&
+                            (activeCard.phase === "closing" ||
+                              activeCard.phase === "recurling")
                           ? activeCard.restingOrigin
                           : activeCard?.origin;
                     const phraseGeometry =
                       isActive && usesExpandedGeometry
                         ? activeCard.phraseTarget
-                        : isActive && activeCard.phase === "closing"
+                        : isActive &&
+                            (activeCard.phase === "closing" ||
+                              activeCard.phase === "recurling")
                           ? { left: 12, top: 8 }
                           : (activeCard?.openingPhraseOrigin ?? {
                               left: 12,
@@ -698,15 +717,27 @@ export default function ResearchThemeCanvas({
                                 openQuote(quote.id, event.currentTarget);
                               }
                             }}
-                            className={`${isActive ? "z-30 max-w-none cursor-pointer overflow-hidden" : `${compactPositionStyle ? "z-10" : "relative"} min-w-max shrink-0 cursor-pointer transition-[filter,transform] hover:brightness-[0.98] focus-visible:ring-2 focus-visible:ring-zinc-700 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:focus-visible:ring-offset-dark-background md:hover:z-[15] md:hover:scale-[1.08]`} ${tone.note} rounded-none text-left font-serif text-xs font-semibold leading-tight shadow-sm outline-none md:text-sm`}
+                            className={`${isActive ? "z-30 max-w-none cursor-pointer overflow-hidden" : `${compactPositionStyle ? "z-10" : "relative"} min-w-max shrink-0 cursor-pointer transition-[filter,transform] hover:brightness-[0.98] focus-visible:ring-2 focus-visible:ring-zinc-700 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:focus-visible:ring-offset-dark-background md:hover:z-[15] md:hover:scale-[1.08]`} ${tone.note} rounded-none text-left font-serif text-xs font-semibold leading-tight outline-none md:text-sm`}
                             style={
                               isActive
                                 ? {
                                     position: activeCard.position,
-                                    left: activeCard.origin.left,
-                                    top: activeCard.origin.top,
-                                    width: activeCard.origin.width,
-                                    height: activeCard.origin.height,
+                                    left:
+                                      activeCard.phase === "recurling"
+                                        ? activeCard.restingOrigin.left
+                                        : activeCard.origin.left,
+                                    top:
+                                      activeCard.phase === "recurling"
+                                        ? activeCard.restingOrigin.top
+                                        : activeCard.origin.top,
+                                    width:
+                                      activeCard.phase === "recurling"
+                                        ? activeCard.restingOrigin.width
+                                        : activeCard.origin.width,
+                                    height:
+                                      activeCard.phase === "recurling"
+                                        ? activeCard.restingOrigin.height
+                                        : activeCard.origin.height,
                                     maxWidth: "none",
                                     padding: 0,
                                   }
@@ -751,6 +782,29 @@ export default function ResearchThemeCanvas({
                               }
 
                               if (activeCard.phase === "closing") {
+                                setActiveCard((current) =>
+                                  current?.quoteId === quote.id &&
+                                  current.phase === "closing"
+                                    ? { ...current, phase: "recurling" }
+                                    : current,
+                                );
+                              }
+                            }}
+                          >
+                            <StickyPaperSurface
+                              id={quote.id}
+                              faceClassName={tone.paperFace}
+                              undersideClassName={tone.paperUnderside}
+                              phase={isActive ? activeCard.phase : null}
+                              onFlattenComplete={() => {
+                                setActiveCard((current) =>
+                                  current?.quoteId === quote.id &&
+                                  current.phase === "flattening"
+                                    ? { ...current, phase: "positioning" }
+                                    : current,
+                                );
+                              }}
+                              onRecurlComplete={() => {
                                 setCardVersions((current) => ({
                                   ...current,
                                   [quote.id]: (current[quote.id] ?? 0) + 1,
@@ -764,9 +818,8 @@ export default function ResearchThemeCanvas({
                                   );
                                 }
                                 restoreFocusRef.current = false;
-                              }
-                            }}
-                          >
+                              }}
+                            />
                             <motion.span
                               key="phrase"
                               ref={(element) => {
@@ -801,14 +854,16 @@ export default function ResearchThemeCanvas({
                                       fontSize: `${
                                         usesExpandedGeometry
                                           ? activeCard.expandedFontSize
-                                          : activeCard.phase === "closing"
+                                          : activeCard.phase === "closing" ||
+                                              activeCard.phase === "recurling"
                                             ? activeCard.compactFontSize
                                             : activeCard.openingFontSize
                                       }px`,
                                       lineHeight: `${
                                         usesExpandedGeometry
                                           ? activeCard.expandedLineHeight
-                                          : activeCard.phase === "closing"
+                                          : activeCard.phase === "closing" ||
+                                              activeCard.phase === "recurling"
                                             ? activeCard.compactLineHeight
                                             : activeCard.openingLineHeight
                                       }px`,
@@ -968,7 +1023,8 @@ export default function ResearchThemeCanvas({
               animate={{
                 opacity:
                   activeCard.phase === "closing-content" ||
-                  activeCard.phase === "closing"
+                  activeCard.phase === "closing" ||
+                  activeCard.phase === "recurling"
                     ? 0
                     : 1,
               }}
@@ -994,35 +1050,49 @@ export default function ResearchThemeCanvas({
                 aria-modal="true"
                 aria-label={`“${activeMobileQuote.quote.before}${activeMobileQuote.quote.highlight}${activeMobileQuote.quote.after}” — ${activeMobileQuote.theme.label}`}
                 onClick={() => closeQuote()}
-                className={`${themeTones[activeMobileQuote.themeIndex % themeTones.length].note} relative z-10 flex max-h-[calc(100dvh-2rem)] w-full max-w-lg cursor-pointer flex-col justify-start overflow-y-auto overscroll-contain p-16 font-serif text-base leading-[1.375] shadow-sm`}
+                className={`${themeTones[activeMobileQuote.themeIndex % themeTones.length].note} relative z-10 w-full max-w-lg cursor-pointer font-serif text-base leading-[1.375]`}
                 style={{
                   width: "min(calc(100vw - 2rem), calc(100dvh - 2rem), 32rem)",
                   height: "min(calc(100vw - 2rem), calc(100dvh - 2rem), 32rem)",
                 }}
               >
-                <button
-                  ref={closeButtonRef}
-                  type="button"
-                  aria-label="Close quote"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    closeQuote(event.detail === 0);
-                  }}
-                  className="absolute right-3 top-3 flex size-9 items-center justify-center transition-transform hover:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
-                >
-                  <XIcon size={18} weight="bold" />
-                </button>
+                <StickyPaperSurface
+                  id={`mobile-${activeMobileQuote.quote.id}`}
+                  faceClassName={
+                    themeTones[activeMobileQuote.themeIndex % themeTones.length]
+                      .paperFace
+                  }
+                  undersideClassName={
+                    themeTones[activeMobileQuote.themeIndex % themeTones.length]
+                      .paperUnderside
+                  }
+                  phase={null}
+                />
+                <div className="relative z-10 flex h-full flex-col justify-start overflow-y-auto overscroll-contain p-16 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  <button
+                    ref={closeButtonRef}
+                    type="button"
+                    aria-label="Close quote"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      closeQuote(event.detail === 0);
+                    }}
+                    className="absolute right-3 top-3 flex size-9 items-center justify-center transition-transform hover:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+                  >
+                    <XIcon size={18} weight="bold" />
+                  </button>
 
-                <blockquote className="text-pretty font-serif font-normal text-foreground-light dark:text-dark-foreground-light">
-                  “{activeMobileQuote.quote.before}
-                  <span className="font-semibold">
-                    {activeMobileQuote.quote.highlight}
-                  </span>
-                  {activeMobileQuote.quote.after}”
-                </blockquote>
-                <p className="mt-auto self-end pt-4 text-right font-sans text-sm font-normal text-foreground-light dark:text-dark-foreground-light">
-                  - UX designer
-                </p>
+                  <blockquote className="text-pretty font-serif font-normal text-foreground-light dark:text-dark-foreground-light">
+                    “{activeMobileQuote.quote.before}
+                    <span className="font-semibold">
+                      {activeMobileQuote.quote.highlight}
+                    </span>
+                    {activeMobileQuote.quote.after}”
+                  </blockquote>
+                  <p className="mt-auto self-end pt-4 text-right font-sans text-sm font-normal text-foreground-light dark:text-dark-foreground-light">
+                    - UX designer
+                  </p>
+                </div>
               </div>
             </div>,
             document.body,

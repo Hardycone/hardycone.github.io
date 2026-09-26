@@ -7,7 +7,7 @@ import { useCardGroupActive } from "@/app/context/CardGroupContext";
 
 export interface HighlightCardProps {
   children: ReactNode;
-  className?: string;
+  highlightCardClassName?: string;
   contentClassName?: string;
   isActive?: boolean;
   highlightOnHover?: boolean;
@@ -22,7 +22,7 @@ export interface HighlightCardProps {
 
 export default function HighlightCard({
   children,
-  className = "",
+  highlightCardClassName = "",
   contentClassName,
   isActive,
   highlightOnHover = true,
@@ -38,7 +38,7 @@ export default function HighlightCard({
   return (
     <motion.div
       data-cursor-shadow
-      className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} group/card relative isolate w-full border border-white dark:border-white/25 ${className}`}
+      className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} group/card relative isolate w-full border border-white dark:border-white/25 ${highlightCardClassName}`}
       style={{ boxShadow: cardSmallShadow }}
     >
       <div

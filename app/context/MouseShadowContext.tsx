@@ -68,6 +68,22 @@ function useCursorEffectValues() {
     `,
   );
 
+  const indentLightShadow = useTransform(
+    [x, y],
+    ([latestX, latestY]: number[]) => `
+      inset ${-latestX / 2}px ${-latestY / 2}px 8px 0px rgba(0, 0, 0, 0.1),
+      inset ${latestX / 2}px ${latestY / 2}px 4px 0px rgba(255, 255, 255, 1)
+    `,
+  );
+
+  const indentDarkShadow = useTransform(
+    [x, y],
+    ([latestX, latestY]: number[]) => `
+      inset ${-latestX / 2}px ${-latestY / 2}px 8px 0px rgba(0, 0, 0, 1),
+      inset ${latestX / 2}px ${latestY / 2}px 4px 0px rgba(255, 255, 255, 0.2)
+    `,
+  );
+
   const cardHoverLightShadow = useTransform(
     [x, y],
     ([latestX, latestY]: number[]) => `
@@ -148,6 +164,8 @@ function useCursorEffectValues() {
     cardDarkShadow,
     cardLightSmallShadow,
     cardDarkSmallShadow,
+    indentLightShadow,
+    indentDarkShadow,
     cardHoverLightShadow,
     cardHoverDarkShadow,
     barLightShadow,

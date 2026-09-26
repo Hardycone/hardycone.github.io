@@ -90,8 +90,8 @@ type SectionContainerProps = SectionContainerBaseProps &
 
 export default function SectionContainer(props: SectionContainerProps) {
   const {
-    containerClassName = "p-2 md:p-6 rounded-6 supports-[corner-shape:squircle]:rounded-12 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-8 supports-[corner-shape:squircle]:md:rounded-16",
-    contentClassName = "p-2 md:p-6",
+    containerClassName = "",
+    contentClassName = "gap-6 md:gap-9 pt-6 md:pt-9",
     entryOnScroll = true,
     exitOnScroll = true,
     fadeInOnMount = false,
@@ -217,9 +217,7 @@ export default function SectionContainer(props: SectionContainerProps) {
           ) : null}
         </>
       ) : null}
-      <div className={`flex flex-col gap-12 ${contentClassName}`}>
-        {children}
-      </div>
+      <div className={`flex flex-col ${contentClassName}`}>{children}</div>
     </motion.div>
   );
 }

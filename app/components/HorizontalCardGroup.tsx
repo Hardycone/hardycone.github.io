@@ -110,7 +110,7 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
   const {
     cards,
     alignment = "aligned",
-    groupClassName = "gap-6 md:gap-4",
+    groupClassName = "gap-3 md:gap-6",
     cardSlotClassName = "",
     cardHeightClassNameOnSmall = "min-h-[100svh]",
     stickyTopOnLarge = "2rem",
@@ -578,7 +578,7 @@ export default function HorizontalCardGroup(props: HorizontalCardGroupProps) {
       <div className="flex flex-col md:sticky md:top-[var(--horizontal-card-group-sticky-top)] md:h-[calc(100svh-var(--horizontal-card-group-sticky-top)-var(--horizontal-card-group-bottom-margin))]">
         {props.showBody ? (
           <div
-            className={`relative z-10 mb-4 md:flex-none ${props.bodyClassName ?? ""}`}
+            className={`relative z-10 md:flex-none ${props.bodyClassName ?? ""}`}
           >
             {props.body}
           </div>

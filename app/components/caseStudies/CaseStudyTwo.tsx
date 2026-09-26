@@ -124,7 +124,7 @@ const researchThemes: ResearchTheme[] = [
   },
   {
     id: "quant-value",
-    label: "Quant research is desirable",
+    label: "Quant research is in demand",
     quotes: [
       {
         id: "quant-stakeholders",
@@ -223,8 +223,8 @@ export default function CaseStudyTwo({
   );
 
   return (
-    <article className="flex flex-col gap-4">
-      <section id="section-1" className="scroll-mt-24">
+    <article className="flex flex-col gap-16 md:gap-24">
+      <section id="section-1" className="mt-6 scroll-mt-24">
         <SectionContainer
           heading="The Product"
           fadeInOnMount={fadeInFirstSection}
@@ -232,327 +232,124 @@ export default function CaseStudyTwo({
           headingIcon={PackageIcon}
           headingSweepAt={100}
           showBorder={false}
-          exitOnScroll={false}
           entryOnScroll={false}
-          containerClassName="pt-2 md:pt-6"
-          contentClassName="p-2 md:p-6"
         >
-          <p>
-            <span className="font-bold text-flux dark:text-dark-flux">
-              Flux helps product teams run rigorous experiments on their
-              prototypes with ease.
-            </span>{" "}
-            Researchers can configure experiments, recruit large participant
-            samples, run tests, and get reports within hours. They can learn
-            behavioral trends, sentiment differences, and performance variation
-            between their prototypes, all without needing any expertise in
-            quantitative methods.
-          </p>
-        </SectionContainer>
-        <SectionContainer
-          showHeading={false}
-          showBorder={false}
-          entryOnScroll={false}
-          containerClassName=""
-          contentClassName=""
-        >
-          <HorizontalCardGroup
-            alignment="aligned"
-            cardSlotClassName="tall:!h-[100svh]"
-            bottomMarginOnLarge="1rem"
-            cardWidthClassNameOnLarge="md:w-screen"
-            maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
-            stickyTopOnLarge="5rem"
-            cards={[
-              {
-                id: "import",
-                content: (
-                  <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
-                    <div
-                      className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
-                    >
-                      <ZoomableImage
-                        src="/images/flux-01.png"
-                        alt="Flux prototype import interface"
-                        className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
-                        imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
-                        unzoomedPadding="var(--zoom-preview-padding)"
-                      />
-                    </div>
-                    <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
-                      <h5 className="font-serif text-[1.5rem] font-bold">
-                        Import
-                      </h5>
-                      <p className="mt-3 !font-serif">
-                        Researchers can import their prototypes from Figma or
-                        live prototypes hosted anywhere into Flux. For Figma
-                        prototypes, Flux can parse the nodes in each flow and
-                        render a flow map matching the interactions that exist
-                        in the Figma file.
-                      </p>
-                    </div>
-                  </div>
-                ),
-              },
-              {
-                id: "configure",
-                content: (
-                  <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
-                    <div
-                      className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
-                    >
-                      <ZoomableImage
-                        src="/images/flux-01.png"
-                        alt="Flux prototype import interface"
-                        className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
-                        imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
-                        unzoomedPadding="var(--zoom-preview-padding)"
-                      />
-                    </div>
-                    <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
-                      <h5 className="font-serif text-[1.5rem] font-bold">
-                        Configure
-                      </h5>
-                      <p className="mt-3 !font-serif">
-                        Configuring an experiment in Flux is designed to be
-                        approachable. Researchers can follow a guided wizard
-                        style process to define the hotspots to track, followup
-                        questions, and a recruiting plan.
-                      </p>
-                    </div>
-                  </div>
-                ),
-              },
-              {
-                id: "report",
-                content: (
-                  <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
-                    <div
-                      className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
-                    >
-                      <ZoomableImage
-                        src="/images/flux-01.png"
-                        alt="Flux prototype import interface"
-                        className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
-                        imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
-                        unzoomedPadding="var(--zoom-preview-padding)"
-                      />
-                    </div>
-                    <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
-                      <h5 className="font-serif text-[1.5rem] font-bold">
-                        Report
-                      </h5>
-                      <p className="mt-3 !font-serif">
-                        The comprehensive research report offers quantitative
-                        insights into user behavior and sentiment, as well as
-                        qualitative data to compliment the quantitative
-                        analysis. The statistically tested results offer
-                        measurable confidence that guides product decisions.
-                      </p>
-                    </div>
-                  </div>
-                ),
-              },
-            ].map(({ id, content }) => (
-              <HighlightCard
-                key={id}
-                className="flex h-full min-h-[inherit] flex-col"
-                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-2 tall:overflow-hidden"
-              >
-                {content}
-              </HighlightCard>
-            ))}
-          />
-        </SectionContainer>
-      </section>
-      <section id="section-2" className="scroll-mt-24">
-        <SectionContainer
-          heading="The Zero"
-          headingIcon={SealQuestionIcon}
-          borderColor={borderColor}
-        >
-          <p>
-            Flux started with a simple observation:{" "}
-            <span className="font-bold text-flux dark:text-dark-flux">
-              AI has drastically lowered the cost of building, but not the cost
-              of building the wrong thing.
-            </span>{" "}
-            User research can mitigate this. But as agentic design and dev
-            workflows continue to accelerate, it&rsquo;s becoming increasingly
-            difficult to strike the balance between speed and confidence.
-          </p>
-          <SubSectionContainer>
-            <SubHeading>Spotting the gap</SubHeading>
-            <p>
-              Existing user research tools are overwhelmingly qualitative, which
-              can be very useful in understanding the &lsquo;why&rsquo; behind
-              behaviorial trends, but can&rsquo;t offer measurable confidence.
-              Scaled testing remain largely out of reach for teams without
-              existing infrastructure to support it. There seemed to be a gap
-              where an easy-to-use quantitative testing tool for prototypes
-              could exist.
-            </p>
-            <HighlightCard
-              borderBaseColor={theme.hex.primary}
-              borderHighlightColor={`color-mix(in oklab, ${theme.hex.primary} 30%, white 70%)`}
-              activeBackgroundClassName="bg-flux bg-opacity-5 dark:bg-dark-flux dark:bg-opacity-5"
-              highlightOnHover={false}
-            >
-              <div className="flex flex-col p-4">
-                <h5 className="flex items-center gap-2 font-serif text-[1.5rem] font-semibold text-flux dark:text-dark-flux">
-                  <LinkBreakIcon size={28} /> The Gap
-                </h5>
-                <p className="pb-4 pl-24 pr-4 pt-24 indent-[4.5rem] font-serif text-[1.5rem] text-flux dark:text-dark-flux md:pb-10 md:pl-48 md:pr-10 md:pt-48 md:text-[2.25rem]">
-                  Product teams are prototyping with AI faster than ever before,
-                  but there is no easy way to validate ideas with statistical
-                  confidence that can match this speed.
-                </p>
-              </div>
-            </HighlightCard>
-          </SubSectionContainer>
-          <SubSectionContainer>
-            <SubHeading>Research and discovery</SubHeading>
-            <p>
-              We spoke to a mix of researchers, product managers, and designers
-              to learn about their workflows, pain points, and their thoughts on
-              user research. This process took different shapes, ranging from
-              casual 5-minute conversations to structured hour-long interviews.
-              Once we sat down to synthesize our findings, we saw three themes
-              emerging:{" "}
-              <span className="font-bold text-flux dark:text-dark-flux">
-                research can no longer keep pace with development
-              </span>
-              ;{" "}
-              <span className="font-bold text-flux dark:text-dark-flux">
-                research is being democraitized
-              </span>
-              ; and{" "}
-              <span className="font-bold text-flux dark:text-dark-flux">
-                there is a demand for more quantitative research
-              </span>
-              .
-            </p>
-
-            <ResearchThemeCanvas themes={researchThemes} />
-          </SubSectionContainer>
-          <SubSectionContainer>
-            <VerticalCardGroup
-              bodyWidthClassNameOnLarge="md:w-[max(10rem,40%)]"
-              cardHeightOnLarge="min(calc(100dvh - 5rem), 400px)"
-              cardHeightClassNameOnSmall="min-h-72"
-              body={({ activeIndex: visibleCard }) => (
-                <SubSectionContainer>
-                  <SubHeading>Framing the problem</SubHeading>
-                  <p>
-                    Our research insights led us directly to a clear problem
-                    space:
-                  </p>
-                  <p>
-                    Existing quantitativ UX research workflows are{" "}
-                    {[
-                      { label: "specialized", after: ", " },
-                      { label: "time-consuming", after: ", and " },
-                      {
-                        label: "fragmented",
-                        after: " across different tools.",
-                      },
-                    ].map(({ label, after }, index) => (
-                      <span key={label}>
-                        <motion.span
-                          animate={{
-                            color:
-                              visibleCard === index
-                                ? theme.hex.primary
-                                : theme.hex.foregroundUltralight,
-                            fontWeight: visibleCard === index ? 700 : 400,
-                            fontSize: visibleCard === index ? "1.25em" : "1em",
-                          }}
-                        >
-                          {label}
-                        </motion.span>
-                        {after}
-                      </span>
-                    ))}
-                  </p>
-                </SubSectionContainer>
-              )}
+          <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
+            <SubSectionContainer>
+              <p>
+                <span className="font-bold text-flux dark:text-dark-flux">
+                  Flux helps product teams run rigorous experiments on their
+                  prototypes with ease.
+                </span>{" "}
+                Researchers can configure experiments, recruit large participant
+                samples, run tests, and get reports within hours. They can learn
+                behavioral trends, sentiment differences, and performance
+                variation between their prototypes, all without needing any
+                expertise in quantitative methods.
+              </p>
+            </SubSectionContainer>
+            <HorizontalCardGroup
+              alignment="aligned"
+              cardSlotClassName="tall:!h-[100svh]"
+              bottomMarginOnLarge="1rem"
+              cardWidthClassNameOnLarge="md:w-screen"
+              maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
+              stickyTopOnLarge="5rem"
               cards={[
                 {
-                  id: "concepts",
-                  contentClassName:
-                    "flex h-full flex-col justify-between overflow-auto p-6 md:p-10",
+                  id: "import",
                   content: (
-                    <>
-                      <AtomIcon
-                        size={48}
-                        weight="duotone"
-                        className={theme.textColorClass}
-                      />
-                      <div>
-                        <h5 className="text-pretty font-serif text-[1.875rem]">
-                          Statistics is inherently scientific.
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Import
                         </h5>
                         <p className="mt-3 !font-serif">
-                          To get results that are statistically sound, expertise
-                          is required.
+                          Researchers can import their prototypes from Figma or
+                          live prototypes hosted anywhere into Flux. For Figma
+                          prototypes, Flux can parse the nodes in each flow and
+                          render a flow map matching the interactions that exist
+                          in the Figma file.
                         </p>
                       </div>
-                    </>
+                    </div>
                   ),
                 },
                 {
-                  id: "traffic",
-                  contentClassName:
-                    "flex h-full flex-col justify-between overflow-auto p-6 md:p-10",
+                  id: "configure",
                   content: (
-                    <>
-                      <HourglassMediumIcon
-                        size={48}
-                        weight="duotone"
-                        className={theme.textColorClass}
-                      />
-                      <div>
-                        <h5 className="text-pretty font-serif text-[1.875rem]">
-                          Quantitative research takes time.
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Configure
                         </h5>
                         <p className="mt-3 !font-serif">
-                          Experiment design, sourcing, and reporting all take
-                          time. It is not uncommon for an end-to-end process to
-                          takes weeks.
+                          Configuring an experiment in Flux is designed to be
+                          approachable. Researchers can follow a guided wizard
+                          style process to define the hotspots to track,
+                          followup questions, and a recruiting plan.
                         </p>
                       </div>
-                    </>
+                    </div>
                   ),
                 },
                 {
-                  id: "operation",
-                  contentClassName:
-                    "flex h-full flex-col justify-between overflow-auto p-6 md:p-10",
+                  id: "report",
                   content: (
-                    <>
-                      <StackIcon
-                        size={42}
-                        weight="duotone"
-                        className={theme.textColorClass}
-                      />
-                      <div>
-                        <h5 className="text-pretty font-serif text-[1.875rem]">
-                          Rigor is operationally heavy.
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Report
                         </h5>
                         <p className="mt-3 !font-serif">
-                          Experiment design, recruitment, data collection,
-                          analysis, and reporting often span multiple tools and
-                          skillsets.
+                          The comprehensive research report offers quantitative
+                          insights into user behavior and sentiment, as well as
+                          qualitative data to compliment the quantitative
+                          analysis. The statistically tested results offer
+                          measurable confidence that guides product decisions.
                         </p>
                       </div>
-                    </>
+                    </div>
                   ),
                 },
-              ].map(({ id, content, contentClassName }) => (
+              ].map(({ id, content }) => (
                 <HighlightCard
                   key={id}
-                  className="flex h-full min-h-[inherit] flex-col"
-                  contentClassName={contentClassName}
+                  highlightCardClassName="flex h-full min-h-[inherit] flex-col"
+                  contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-2 tall:overflow-hidden"
                 >
                   {content}
                 </HighlightCard>
@@ -561,22 +358,221 @@ export default function CaseStudyTwo({
           </SubSectionContainer>
         </SectionContainer>
       </section>
-
+      <section id="section-2" className="scroll-mt-24">
+        <SectionContainer
+          heading="The Zero"
+          headingIcon={SealQuestionIcon}
+          borderColor={borderColor}
+        >
+          <SubSectionContainer>
+            <p>
+              Flux started with a simple observation:{" "}
+              <span className="font-bold text-flux dark:text-dark-flux">
+                AI has drastically lowered the cost of building, but not the
+                cost of building the wrong thing.
+              </span>{" "}
+              User research can mitigate this. But as agentic design and dev
+              workflows continue to accelerate, it&rsquo;s becoming increasingly
+              difficult to strike the balance between speed and confidence.
+            </p>
+          </SubSectionContainer>
+          <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
+            <SubSectionContainer>
+              <SubHeading>Spotting the gap</SubHeading>
+              <p>
+                Existing user research tools are overwhelmingly qualitative,
+                which can be very useful in understanding the &lsquo;why&rsquo;
+                behind behaviorial trends, but can&rsquo;t offer measurable
+                confidence. Scaled testing remain largely out of reach for teams
+                without existing infrastructure to support it. There seemed to
+                be a gap where an easy-to-use quantitative testing tool for
+                prototypes could exist.
+              </p>
+            </SubSectionContainer>
+            <HighlightCard
+              borderBaseColor={theme.hex.primary}
+              borderHighlightColor={`color-mix(in oklab, ${theme.hex.primary} 30%, white 70%)`}
+              highlightOnHover={false}
+            >
+              <div className="flex flex-col p-4">
+                <h5 className="flex items-center gap-2 font-serif text-[1.5rem] font-semibold text-flux dark:text-dark-flux">
+                  <LinkBreakIcon size={28} /> The Gap
+                </h5>
+                <p className="px-4 pb-4 pt-24 indent-[4.5rem] font-serif text-[1.5rem] text-flux dark:text-dark-flux md:pb-10 md:pl-48 md:pr-10 md:pt-48 md:text-[2.25rem]">
+                  Product teams are prototyping with AI faster than ever before,
+                  but there is no easy way to validate ideas with statistical
+                  confidence that can match this speed.
+                </p>
+              </div>
+            </HighlightCard>
+          </SubSectionContainer>
+          <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
+            <SubSectionContainer>
+              <SubHeading>Research and discovery</SubHeading>
+              <p>
+                We spoke to a mix of researchers, product managers, and
+                designers to learn about their workflows, pain points, and their
+                thoughts on user research. This process took different shapes,
+                ranging from casual 5-minute conversations to structured
+                hour-long interviews. Once we sat down to synthesize our
+                findings, we saw three themes emerging:{" "}
+                <span className="font-bold text-flux dark:text-dark-flux">
+                  research can no longer keep pace with development
+                </span>
+                ;{" "}
+                <span className="font-bold text-flux dark:text-dark-flux">
+                  research is being democraitized
+                </span>
+                ; and{" "}
+                <span className="font-bold text-flux dark:text-dark-flux">
+                  there is a demand for more quantitative research
+                </span>
+                .
+              </p>
+            </SubSectionContainer>
+            <ResearchThemeCanvas themes={researchThemes} />
+          </SubSectionContainer>
+          <VerticalCardGroup
+            bodyWidthClassNameOnLarge="md:w-[max(10rem,40%)]"
+            cardHeightOnLarge="min(calc(100dvh - 5rem), 400px)"
+            cardHeightClassNameOnSmall="min-h-72"
+            body={({ activeIndex: visibleCard }) => (
+              <SubSectionContainer>
+                <SubHeading>Framing the problem</SubHeading>
+                <p>
+                  Our research insights led us directly to a clear problem
+                  space:
+                </p>
+                <p>
+                  Existing quantitativ UX research workflows are{" "}
+                  {[
+                    { label: "specialized", after: ", " },
+                    { label: "time-consuming", after: ", and " },
+                    {
+                      label: "fragmented",
+                      after: " across different tools.",
+                    },
+                  ].map(({ label, after }, index) => (
+                    <span key={label}>
+                      <motion.span
+                        animate={{
+                          color:
+                            visibleCard === index
+                              ? theme.hex.primary
+                              : theme.hex.foregroundUltralight,
+                          fontWeight: visibleCard === index ? 700 : 300,
+                          fontSize: visibleCard === index ? "1.25em" : "1em",
+                        }}
+                      >
+                        {label}
+                      </motion.span>
+                      {after}
+                    </span>
+                  ))}
+                </p>
+              </SubSectionContainer>
+            )}
+            cards={[
+              {
+                id: "concepts",
+                contentClassName:
+                  "flex h-full flex-col justify-between overflow-auto p-6 md:p-10",
+                content: (
+                  <>
+                    <AtomIcon
+                      size={48}
+                      weight="duotone"
+                      className={theme.textColorClass}
+                    />
+                    <div>
+                      <h5 className="text-pretty font-serif text-[1.875rem]">
+                        Statistics is inherently scientific.
+                      </h5>
+                      <p className="mt-3 !font-serif">
+                        To get results that are statistically sound, expertise
+                        is required.
+                      </p>
+                    </div>
+                  </>
+                ),
+              },
+              {
+                id: "traffic",
+                contentClassName:
+                  "flex h-full flex-col justify-between overflow-auto p-6 md:p-10",
+                content: (
+                  <>
+                    <HourglassMediumIcon
+                      size={48}
+                      weight="duotone"
+                      className={theme.textColorClass}
+                    />
+                    <div>
+                      <h5 className="text-pretty font-serif text-[1.875rem]">
+                        Quantitative research takes time.
+                      </h5>
+                      <p className="mt-3 !font-serif">
+                        Experiment design, sourcing, and reporting all take
+                        time. It is not uncommon for an end-to-end process to
+                        takes weeks.
+                      </p>
+                    </div>
+                  </>
+                ),
+              },
+              {
+                id: "operation",
+                contentClassName:
+                  "flex h-full flex-col justify-between overflow-auto p-6 md:p-10",
+                content: (
+                  <>
+                    <StackIcon
+                      size={42}
+                      weight="duotone"
+                      className={theme.textColorClass}
+                    />
+                    <div>
+                      <h5 className="text-pretty font-serif text-[1.875rem]">
+                        Rigor is operationally heavy.
+                      </h5>
+                      <p className="mt-3 !font-serif">
+                        Experiment design, recruitment, data collection,
+                        analysis, and reporting often span multiple tools and
+                        skillsets.
+                      </p>
+                    </div>
+                  </>
+                ),
+              },
+            ].map(({ id, content, contentClassName }) => (
+              <HighlightCard
+                key={id}
+                highlightCardClassName="flex h-full min-h-[inherit] flex-col"
+                contentClassName={contentClassName}
+              >
+                {content}
+              </HighlightCard>
+            ))}
+          />
+        </SectionContainer>
+      </section>
       <section id="section-3" className="scroll-mt-24">
         <SectionContainer
           heading="The Messy Middle"
           headingIcon={PuzzlePieceIcon}
           showBorder={false}
         >
-          <p>
-            Once we established the problem space, we started sketching out what
-            Flux needed to be. Along the way, we encountered many interesting
-            design challenges. I will elaborate on 3 of them.
-          </p>
+          <SubSectionContainer>
+            <p>
+              Once we established the problem space, we started sketching out
+              what Flux needed to be. Along the way, we encountered many
+              interesting design challenges. I will elaborate on 3 of them.
+            </p>
+          </SubSectionContainer>
           <HorizontalCardGroup
             showBody
             body={
-              <SubSectionContainer>
+              <SubSectionContainer subSectionContainerClassName="mb-4 md:mb-6 px-2 md:px-6">
                 <SubHeading>Balancing rigor and usability</SubHeading>
               </SubSectionContainer>
             }
@@ -664,7 +660,7 @@ export default function CaseStudyTwo({
             ].map(({ id, content }) => (
               <HighlightCard
                 key={id}
-                className="flex h-full min-h-[inherit] flex-col"
+                highlightCardClassName="flex h-full min-h-[inherit] flex-col"
                 contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
               >
                 {content}
@@ -674,7 +670,7 @@ export default function CaseStudyTwo({
           <HorizontalCardGroup
             showBody
             body={
-              <SubSectionContainer>
+              <SubSectionContainer subSectionContainerClassName="mb-4 md:mb-6 px-2 md:px-6">
                 <SubHeading>
                   Building for trust in underlying methodology
                 </SubHeading>
@@ -749,17 +745,17 @@ export default function CaseStudyTwo({
             ].map(({ id, content }) => (
               <HighlightCard
                 key={id}
-                className="flex h-full min-h-[inherit] flex-col"
+                highlightCardClassName="flex h-full min-h-[inherit] flex-col"
                 contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
               >
                 {content}
               </HighlightCard>
             ))}
-          />{" "}
+          />
           <HorizontalCardGroup
             showBody
             body={
-              <SubSectionContainer>
+              <SubSectionContainer subSectionContainerClassName="mb-4 md:mb-6 px-2 md:px-6">
                 <SubHeading>
                   Addressing uncertainty before commitment
                 </SubHeading>
@@ -850,7 +846,7 @@ export default function CaseStudyTwo({
             ].map(({ id, content }) => (
               <HighlightCard
                 key={id}
-                className="flex h-full min-h-[inherit] flex-col"
+                highlightCardClassName="flex h-full min-h-[inherit] flex-col"
                 contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
               >
                 {content}
@@ -866,27 +862,37 @@ export default function CaseStudyTwo({
           headingIcon={RocketLaunchIcon}
           showBorder={false}
         >
-          <SubSectionContainer>
-            <SubHeading>Launch</SubHeading>
-            <p>
-              We launched Version 1 of Flux in April of 2026. Flux has since
-              matured into an end-to-end platform for quantitative prototype
-              testing. Teams can configure a study, recruit participants, run
-              tests, and review decision-ready results in one product.
-            </p>
-            <LazyVideo
-              src="https://assets.haichaowang.com/promo-export-01.mp4"
-              poster="/images/promo-export-01-poster.jpg"
-              controls
-              playsInline
-              className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD}`}
-            />
+          <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
+            <SubSectionContainer>
+              <SubHeading>Launch</SubHeading>
+              <p>
+                We launched Version 1 of Flux in April of 2026. Flux has since
+                matured into an end-to-end platform for quantitative prototype
+                testing. Teams can configure a study, recruit participants, run
+                tests, and review decision-ready results in one product.
+              </p>
+            </SubSectionContainer>
+            <HighlightCard
+              borderBaseColor={theme.hex.primary}
+              borderHighlightColor={`color-mix(in oklab, ${theme.hex.primary} 30%, white 70%)`}
+              highlightOnHover={false}
+              highlightCardClassName="p-2"
+            >
+              <LazyVideo
+                src="https://assets.haichaowang.com/promo-export-01.mp4"
+                poster="/images/promo-export-01-poster.jpg"
+                controls
+                playsInline
+                className={`${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+              />
+            </HighlightCard>
           </SubSectionContainer>
-          <SubSectionContainer>
+          <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
             <HorizontalScrollStrip
               ariaLabel="Flux testimonials"
+              knobBackgroundClassName="bg-white dark:bg-white/25"
               body={
-                <SubSectionContainer>
+                <SubSectionContainer subSectionContainerClassName="px-3 md:px-6 gap-4 md:gap-6 mb-4 md:mb-6">
                   <SubHeading>Reception</SubHeading>
                   <p>
                     We put Flux in front of dozens of UXers to use and the
@@ -898,94 +904,96 @@ export default function CaseStudyTwo({
             >
               <HighlightCard
                 highlightOnHover={false}
-                className={`flex min-w-0 flex-col justify-between gap-6 md:col-start-1 md:row-start-1 ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+                highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 md:col-start-1 md:row-start-1 p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
               >
-                <blockquote className="text-[1.75rem]">
+                <blockquote className="text-[1.25rem] md:text-[1.75rem]">
                   “Great for more ambiguous testing where we want to get a{" "}
-                  <span className="text-[2.25rem] font-bold">quant pulse</span>{" "}
+                  <span className="text-[1.75rem] font-bold md:text-[2.25rem]">
+                    quant pulse
+                  </span>{" "}
                   on key changes without building extensively.”
                 </blockquote>
-                <figcaption className="text-end text-[1.25rem]">
+                <figcaption className="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]">
                   — Product manager, consumer app
                 </figcaption>
               </HighlightCard>
               <HighlightCard
                 highlightOnHover={false}
-                className={`flex min-w-0 flex-col justify-between gap-6 md:col-start-2 md:row-start-1 ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+                highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 md:col-start-2 md:row-start-1 p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
               >
-                <blockquote className="text-[1.75rem]">
+                <blockquote className="text-[1.25rem] md:text-[1.75rem]">
                   “Good tool for designers in a team that wants to{" "}
-                  <span className="text-[2.25rem] font-bold">
+                  <span className="text-[1.75rem] font-bold md:text-[2.25rem]">
                     democratize sound research
                   </span>
                   .”
                 </blockquote>
-                <figcaption className="text-end text-[1.25rem]">
+                <figcaption className="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]">
                   — UX researcher, consumer app
                 </figcaption>
               </HighlightCard>
               <HighlightCard
                 highlightOnHover={false}
-                className={`flex min-w-0 flex-col justify-between gap-6 md:col-span-2 md:row-start-2 ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+                highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 md:col-span-2 md:row-start-2 p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
               >
-                <blockquote className="text-[1.75rem]">
+                <blockquote className="text-[1.25rem] md:text-[1.75rem]">
                   “Being able to reduce the number of design variants before
                   developing them further is a great advantage. It&rsquo;s a way
                   of doing{" "}
-                  <span className="text-[2.25rem] font-bold">
+                  <span className="text-[1.75rem] font-bold md:text-[2.25rem]">
                     no-code A/B testing
                   </span>
                   .”
                 </blockquote>
-                <figcaption className="text-end text-[1.25rem]">
+                <figcaption className="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]">
                   — Engineering manager, consumer app
                 </figcaption>
               </HighlightCard>
               <HighlightCard
                 highlightOnHover={false}
-                className={`flex min-w-0 flex-col justify-between gap-6 md:col-span-2 md:col-start-3 md:row-start-1 ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+                highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 md:col-span-2 md:col-start-3 md:row-start-1 p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
               >
-                <blockquote className="text-[1.75rem]">
+                <blockquote className="text-[1.25rem] md:text-[1.75rem]">
                   “After doing interviews with a dozen users and identifying a
                   promising direction, this can be a way to elevate the
                   confidence of the insights with{" "}
-                  <span className="text-[2.25rem] font-bold">
+                  <span className="text-[1.75rem] font-bold md:text-[2.25rem]">
                     more tangible evidence
                   </span>
                   .”
                 </blockquote>
-                <figcaption className="text-end text-[1.25rem]">
+                <figcaption className="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]">
                   — UX researcher, Big Tech
                 </figcaption>
               </HighlightCard>
               <HighlightCard
                 highlightOnHover={false}
-                className={`flex min-w-0 flex-col justify-between gap-6 md:col-start-3 md:row-start-2 ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+                highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 md:col-start-3 md:row-start-2 p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
               >
-                <blockquote className="text-[1.75rem]">
+                <blockquote className="text-[1.25rem] md:text-[1.75rem]">
                   “Flux helps when we have prototypes but no bandwidth to fully
                   build something to{" "}
-                  <span className="text-[2.25rem] font-bold">
+                  <span className="text-[1.75rem] font-bold md:text-[2.25rem]">
                     test with confidence
                   </span>
                   .”
                 </blockquote>
-                <figcaption className="text-end text-[1.25rem]">
+                <figcaption className="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]">
                   — UX research manager, consumer app
                 </figcaption>
               </HighlightCard>
               <HighlightCard
                 highlightOnHover={false}
-                className={`flex min-w-0 flex-col justify-between gap-6 md:col-start-4 md:row-start-2 ${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} p-9 font-serif leading-10 text-foreground dark:text-dark-foreground`}
+                highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 md:col-start-4 md:row-start-2 p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
               >
-                <blockquote className="text-[1.75rem]">
+                <blockquote className="text-[1.25rem] md:text-[1.75rem]">
                   “I really like how it looks. It&rsquo;s very{" "}
-                  <span className="text-[2.25rem] font-bold">
+                  <span className="text-[1.75rem] font-bold md:text-[2.25rem]">
                     easy to follow
                   </span>
                   .”
                 </blockquote>
-                <figcaption className="text-end text-[1.25rem]">
+                <figcaption className="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]">
                   — UX manager, Big Tech
                 </figcaption>
               </HighlightCard>
@@ -998,7 +1006,7 @@ export default function CaseStudyTwo({
         <SectionContainer
           heading="Reflections"
           headingIcon={BrainIcon}
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer>
             <SubHeading>Leveraging AI</SubHeading>
