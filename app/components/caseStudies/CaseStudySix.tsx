@@ -46,7 +46,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           exitOnScroll
           entryOnScroll={false}
         >
-          <SubSectionContainer className="gap-0">
+          <SubSectionContainer subSectionContainerClassName="gap-0">
             <p className="mb-6">
               Our team set out to solve a common but underexplored problem: how
               do product teams know which design works best—really know, with
@@ -71,7 +71,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           }
           borderColor={borderColor}
         >
-          <SubSectionContainer className="gap-0">
+          <SubSectionContainer subSectionContainerClassName="gap-0">
             <h2>Research</h2>
             <p>
               We worked with historians, artists, and Chinatown residents. Key
@@ -173,7 +173,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           }
           borderColor={borderColor}
         >
-          <SubSectionContainer className="gap-0">
+          <SubSectionContainer subSectionContainerClassName="gap-0">
             <h2>Design</h2>
             <p>
               The design included: A public plaza with inlaid poetry in multiple
@@ -267,7 +267,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           }
           borderColor={borderColor}
         >
-          <SubSectionContainer className="gap-0">
+          <SubSectionContainer subSectionContainerClassName="gap-0">
             <h2>Design</h2>
             <p>
               The project became a cultural landmark. Tourists and residents
@@ -428,7 +428,7 @@ export default function CaseStudySix({ scrollY }: CaseStudySixProps) {
           }
           borderColor={borderColor}
         >
-          <SubSectionContainer className="gap-0">
+          <SubSectionContainer subSectionContainerClassName="gap-0">
             <h2>Design</h2>
             <p>
               The project became a cultural landmark. Tourists and residents
