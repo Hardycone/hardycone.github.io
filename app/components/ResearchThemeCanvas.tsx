@@ -11,7 +11,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
-import { XIcon } from "@phosphor-icons/react";
+import { LightbulbIcon, XIcon } from "@phosphor-icons/react";
 import HighlightCard from "./HighlightCard";
 import StickyPaperSurface from "./StickyPaperSurface";
 
@@ -600,6 +600,9 @@ export default function ResearchThemeCanvas({
         highlightCardClassName="overflow-hidden"
         highlightOnHover={false}
       >
+        <h5 className="flex items-center gap-2 px-4 pt-4 font-serif text-[1.5rem] font-semibold text-flux dark:text-dark-flux">
+          <LightbulbIcon size={28} /> Insights
+        </h5>
         <div
           ref={canvasRef}
           className="relative isolate overflow-hidden p-3 md:p-8"

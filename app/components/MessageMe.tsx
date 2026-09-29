@@ -16,6 +16,7 @@ import {
 } from "react";
 import { useTheme } from "next-themes";
 import { useMouseShadow } from "@/hooks/useMouseShadow";
+import { useCanHover } from "@/hooks/useCanHover";
 import MessageToggleIcon from "./MessageToggleIcon";
 import KeyboardHint from "./KeyboardHint";
 import { useKeyboardHints } from "../context/KeyboardHintsContext";
@@ -290,6 +291,7 @@ export default function MessageMe({
   placement?: MessageMePlacement;
 }) {
   const { resolvedTheme } = useTheme();
+  const canHover = useCanHover();
   const { showKeyboardHints, flashShortcutHint } = useKeyboardHints();
   const { barLightShadow, barDarkShadow } = useMouseShadow();
   const barShadow = resolvedTheme === "dark" ? barDarkShadow : barLightShadow;
@@ -695,6 +697,8 @@ export default function MessageMe({
           type="button"
           tabIndex={0}
           style={{ boxShadow: barShadow }}
+          transition={{ duration: 0.1 }}
+          whileHover={canHover ? { scale: 1.1 } : undefined}
           onHoverStart={() => setIsHovered(true)}
           onHoverEnd={() => setIsHovered(false)}
           onClick={() => {
@@ -704,7 +708,7 @@ export default function MessageMe({
           aria-expanded={isOpen}
           aria-controls="message-me-form"
           aria-label={isOpen ? "Close message form" : "Message me"}
-          className="pointer-events-auto relative h-9 w-9 rounded-full bg-background text-foreground transition-all dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
+          className="pointer-events-auto relative h-9 w-9 rounded-full bg-background text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
           title={isOpen ? "Close message form" : "Message me"}
         >
           <span className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-full">

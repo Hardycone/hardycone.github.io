@@ -24,6 +24,7 @@ import SubHeading from "../SubHeading";
 import SubSectionContainer from "../SubSectionContainer";
 import VerticalCardGroup from "../VerticalCardGroup";
 import HighlightCard from "../HighlightCard";
+import TextCard, { TextCardEmphasis } from "../TextCard";
 import ZoomableImage from "../ZoomableImage";
 import ResearchThemeCanvas, {
   type ResearchTheme,
@@ -31,10 +32,8 @@ import ResearchThemeCanvas, {
 import {
   ROUNDED_SQUIRCLE_01,
   ROUNDED_SQUIRCLE_03,
-  ROUNDED_SQUIRCLE_05,
   ROUNDED_SQUIRCLE_03_MD,
   ROUNDED_SQUIRCLE_05_MD,
-  ROUNDED_SQUIRCLE_07_MD,
 } from "@/lib/styleTokens";
 
 interface CaseStudyTwoProps {
@@ -196,6 +195,84 @@ const researchThemes: ResearchTheme[] = [
   },
 ];
 
+const problemCards = [
+  {
+    id: "concepts",
+    icon: AtomIcon,
+    iconSize: 48,
+    heading: "Statistics is inherently scientific.",
+    body: "To get results that are statistically sound, expertise is required.",
+  },
+  {
+    id: "traffic",
+    icon: HourglassMediumIcon,
+    iconSize: 48,
+    heading: "Quantitative research takes time.",
+    body: "Experiment design, sourcing, and reporting all take time. It is not uncommon for an end-to-end process to takes weeks.",
+  },
+  {
+    id: "operation",
+    icon: StackIcon,
+    iconSize: 42,
+    heading: "Rigor is operationally heavy.",
+    body: "Experiment design, recruitment, data collection, analysis, and reporting often span multiple tools and skillsets.",
+  },
+];
+
+const testimonials = [
+  {
+    id: "quant-pulse",
+    layoutClassName: "md:col-start-1 md:row-start-1",
+    before: "“Great for more ambiguous testing where we want to get a ",
+    emphasis: "quant pulse",
+    after: " on key changes without building extensively.”",
+    byline: "— Product manager, consumer app",
+  },
+  {
+    id: "democratize-research",
+    layoutClassName: "md:col-start-2 md:row-start-1",
+    before: "“Good tool for designers in a team that wants to ",
+    emphasis: "democratize sound research",
+    after: ".”",
+    byline: "— UX researcher, consumer app",
+  },
+  {
+    id: "no-code-testing",
+    layoutClassName: "md:col-span-2 md:row-start-2",
+    before:
+      "“Being able to reduce the number of design variants before developing them further is a great advantage. It’s a way of doing ",
+    emphasis: "no-code A/B testing",
+    after: ".”",
+    byline: "— Engineering manager, consumer app",
+  },
+  {
+    id: "tangible-evidence",
+    layoutClassName: "md:col-span-2 md:col-start-3 md:row-start-1",
+    before:
+      "“After doing interviews with a dozen users and identifying a promising direction, this can be a way to elevate the confidence of the insights with ",
+    emphasis: "more tangible evidence",
+    after: ".”",
+    byline: "— UX researcher, Big Tech",
+  },
+  {
+    id: "confidence",
+    layoutClassName: "md:col-start-3 md:row-start-2",
+    before:
+      "“Flux helps when we have prototypes but no bandwidth to fully build something to ",
+    emphasis: "test with confidence",
+    after: ".”",
+    byline: "— UX research manager, consumer app",
+  },
+  {
+    id: "easy-to-follow",
+    layoutClassName: "md:col-start-4 md:row-start-2",
+    before: "“I really like how it looks. It’s very ",
+    emphasis: "easy to follow",
+    after: ".”",
+    byline: "— UX manager, Big Tech",
+  },
+];
+
 export default function CaseStudyTwo({
   scrollY,
   fadeInFirstSection = false,
@@ -237,7 +314,7 @@ export default function CaseStudyTwo({
           <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
             <SubSectionContainer>
               <p>
-                <span className="font-bold text-flux dark:text-dark-flux">
+                <span className="font-semibold">
                   Flux helps product teams run rigorous experiments on their
                   prototypes with ease.
                 </span>{" "}
@@ -367,7 +444,7 @@ export default function CaseStudyTwo({
           <SubSectionContainer>
             <p>
               Flux started with a simple observation:{" "}
-              <span className="font-bold text-flux dark:text-dark-flux">
+              <span className="font-semibold">
                 AI has drastically lowered the cost of building, but not the
                 cost of building the wrong thing.
               </span>{" "}
@@ -394,16 +471,20 @@ export default function CaseStudyTwo({
               borderHighlightColor={`color-mix(in oklab, ${theme.hex.primary} 30%, white 70%)`}
               highlightOnHover={false}
             >
-              <div className="flex flex-col p-4">
-                <h5 className="flex items-center gap-2 font-serif text-[1.5rem] font-semibold text-flux dark:text-dark-flux">
-                  <LinkBreakIcon size={28} /> The Gap
-                </h5>
-                <p className="px-4 pb-4 pt-24 indent-[4.5rem] font-serif text-[1.5rem] text-flux dark:text-dark-flux md:pb-10 md:pl-48 md:pr-10 md:pt-48 md:text-[2.25rem]">
-                  Product teams are prototyping with AI faster than ever before,
-                  but there is no easy way to validate ideas with statistical
-                  confidence that can match this speed.
-                </p>
-              </div>
+              <TextCard
+                title={
+                  <>
+                    <LinkBreakIcon size={28} /> The Gap
+                  </>
+                }
+                className="flex flex-col p-4 font-serif"
+                titleClassName="flex items-center gap-2 font-serif text-[1.5rem] font-semibold text-flux dark:text-dark-flux"
+                bodyClassName="px-4 pb-4 pt-24 indent-[4.5rem] font-serif text-[1.5rem] md:pb-10 md:pl-48 md:pr-10 md:pt-48 md:text-[2.25rem]"
+              >
+                Product teams are prototyping with AI faster than ever before,
+                but there is no easy way to validate ideas with statistical
+                confidence that can match this speed.
+              </TextCard>
             </HighlightCard>
           </SubSectionContainer>
           <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
@@ -416,15 +497,15 @@ export default function CaseStudyTwo({
                 ranging from casual 5-minute conversations to structured
                 hour-long interviews. Once we sat down to synthesize our
                 findings, we saw three themes emerging:{" "}
-                <span className="font-bold text-flux dark:text-dark-flux">
+                <span className="font-bold">
                   research can no longer keep pace with development
                 </span>
                 ;{" "}
-                <span className="font-bold text-flux dark:text-dark-flux">
+                <span className="font-bold">
                   research is being democraitized
                 </span>
                 ; and{" "}
-                <span className="font-bold text-flux dark:text-dark-flux">
+                <span className="font-bold">
                   there is a demand for more quantitative research
                 </span>
                 .
@@ -472,87 +553,31 @@ export default function CaseStudyTwo({
                 </p>
               </SubSectionContainer>
             )}
-            cards={[
-              {
-                id: "concepts",
-                contentClassName:
-                  "flex h-full flex-col justify-between overflow-auto p-6 md:p-10",
-                content: (
-                  <>
-                    <AtomIcon
-                      size={48}
-                      weight="duotone"
-                      className={theme.textColorClass}
-                    />
-                    <div>
-                      <h5 className="text-pretty font-serif text-[1.875rem]">
-                        Statistics is inherently scientific.
-                      </h5>
-                      <p className="mt-3 !font-serif">
-                        To get results that are statistically sound, expertise
-                        is required.
-                      </p>
-                    </div>
-                  </>
-                ),
-              },
-              {
-                id: "traffic",
-                contentClassName:
-                  "flex h-full flex-col justify-between overflow-auto p-6 md:p-10",
-                content: (
-                  <>
-                    <HourglassMediumIcon
-                      size={48}
-                      weight="duotone"
-                      className={theme.textColorClass}
-                    />
-                    <div>
-                      <h5 className="text-pretty font-serif text-[1.875rem]">
-                        Quantitative research takes time.
-                      </h5>
-                      <p className="mt-3 !font-serif">
-                        Experiment design, sourcing, and reporting all take
-                        time. It is not uncommon for an end-to-end process to
-                        takes weeks.
-                      </p>
-                    </div>
-                  </>
-                ),
-              },
-              {
-                id: "operation",
-                contentClassName:
-                  "flex h-full flex-col justify-between overflow-auto p-6 md:p-10",
-                content: (
-                  <>
-                    <StackIcon
-                      size={42}
-                      weight="duotone"
-                      className={theme.textColorClass}
-                    />
-                    <div>
-                      <h5 className="text-pretty font-serif text-[1.875rem]">
-                        Rigor is operationally heavy.
-                      </h5>
-                      <p className="mt-3 !font-serif">
-                        Experiment design, recruitment, data collection,
-                        analysis, and reporting often span multiple tools and
-                        skillsets.
-                      </p>
-                    </div>
-                  </>
-                ),
-              },
-            ].map(({ id, content, contentClassName }) => (
-              <HighlightCard
-                key={id}
-                highlightCardClassName="flex h-full min-h-[inherit] flex-col"
-                contentClassName={contentClassName}
-              >
-                {content}
-              </HighlightCard>
-            ))}
+            cards={problemCards.map(
+              ({ id, icon: Icon, iconSize, heading, body }) => (
+                <HighlightCard
+                  key={id}
+                  highlightCardClassName="flex h-full min-h-[inherit] flex-col"
+                  contentClassName="flex h-full flex-col justify-between overflow-auto p-6 md:p-10"
+                >
+                  <TextCard
+                    title={
+                      <Icon
+                        size={iconSize}
+                        weight="duotone"
+                        className={theme.textColorClass}
+                      />
+                    }
+                    titleAs="none"
+                    heading={heading}
+                    className="flex flex-1 flex-col justify-between font-serif"
+                    bodyClassName="mt-3 !font-serif"
+                  >
+                    {body}
+                  </TextCard>
+                </HighlightCard>
+              ),
+            )}
           />
         </SectionContainer>
       </section>
@@ -902,101 +927,27 @@ export default function CaseStudyTwo({
               }
               contentClassName="grid w-max grid-flow-col auto-cols-[min(85vw,24rem)] grid-rows-1 gap-2 md:w-[170vw] md:max-w-[160rem] md:grid-flow-row md:auto-cols-auto md:grid-cols-4 md:grid-rows-2"
             >
-              <HighlightCard
-                highlightOnHover={false}
-                highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 md:col-start-1 md:row-start-1 p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
-              >
-                <blockquote className="text-[1.25rem] md:text-[1.75rem]">
-                  “Great for more ambiguous testing where we want to get a{" "}
-                  <span className="text-[1.75rem] font-bold md:text-[2.25rem]">
-                    quant pulse
-                  </span>{" "}
-                  on key changes without building extensively.”
-                </blockquote>
-                <figcaption className="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]">
-                  — Product manager, consumer app
-                </figcaption>
-              </HighlightCard>
-              <HighlightCard
-                highlightOnHover={false}
-                highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 md:col-start-2 md:row-start-1 p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
-              >
-                <blockquote className="text-[1.25rem] md:text-[1.75rem]">
-                  “Good tool for designers in a team that wants to{" "}
-                  <span className="text-[1.75rem] font-bold md:text-[2.25rem]">
-                    democratize sound research
-                  </span>
-                  .”
-                </blockquote>
-                <figcaption className="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]">
-                  — UX researcher, consumer app
-                </figcaption>
-              </HighlightCard>
-              <HighlightCard
-                highlightOnHover={false}
-                highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 md:col-span-2 md:row-start-2 p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
-              >
-                <blockquote className="text-[1.25rem] md:text-[1.75rem]">
-                  “Being able to reduce the number of design variants before
-                  developing them further is a great advantage. It&rsquo;s a way
-                  of doing{" "}
-                  <span className="text-[1.75rem] font-bold md:text-[2.25rem]">
-                    no-code A/B testing
-                  </span>
-                  .”
-                </blockquote>
-                <figcaption className="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]">
-                  — Engineering manager, consumer app
-                </figcaption>
-              </HighlightCard>
-              <HighlightCard
-                highlightOnHover={false}
-                highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 md:col-span-2 md:col-start-3 md:row-start-1 p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
-              >
-                <blockquote className="text-[1.25rem] md:text-[1.75rem]">
-                  “After doing interviews with a dozen users and identifying a
-                  promising direction, this can be a way to elevate the
-                  confidence of the insights with{" "}
-                  <span className="text-[1.75rem] font-bold md:text-[2.25rem]">
-                    more tangible evidence
-                  </span>
-                  .”
-                </blockquote>
-                <figcaption className="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]">
-                  — UX researcher, Big Tech
-                </figcaption>
-              </HighlightCard>
-              <HighlightCard
-                highlightOnHover={false}
-                highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 md:col-start-3 md:row-start-2 p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
-              >
-                <blockquote className="text-[1.25rem] md:text-[1.75rem]">
-                  “Flux helps when we have prototypes but no bandwidth to fully
-                  build something to{" "}
-                  <span className="text-[1.75rem] font-bold md:text-[2.25rem]">
-                    test with confidence
-                  </span>
-                  .”
-                </blockquote>
-                <figcaption className="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]">
-                  — UX research manager, consumer app
-                </figcaption>
-              </HighlightCard>
-              <HighlightCard
-                highlightOnHover={false}
-                highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 md:col-start-4 md:row-start-2 p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
-              >
-                <blockquote className="text-[1.25rem] md:text-[1.75rem]">
-                  “I really like how it looks. It&rsquo;s very{" "}
-                  <span className="text-[1.75rem] font-bold md:text-[2.25rem]">
-                    easy to follow
-                  </span>
-                  .”
-                </blockquote>
-                <figcaption className="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]">
-                  — UX manager, Big Tech
-                </figcaption>
-              </HighlightCard>
+              {testimonials.map(
+                ({ id, layoutClassName, before, emphasis, after, byline }) => (
+                  <HighlightCard
+                    key={id}
+                    highlightOnHover={false}
+                    highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 ${layoutClassName} p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
+                  >
+                    <TextCard
+                      bodyAs="blockquote"
+                      byline={byline}
+                      className="flex flex-1 flex-col justify-between gap-6 font-serif"
+                      bodyClassName="text-[1.25rem] md:text-[1.75rem]"
+                      bylineClassName="text-pretty text-end text-[1rem] leading-tight md:text-[1.25rem]"
+                    >
+                      {before}
+                      <TextCardEmphasis>{emphasis}</TextCardEmphasis>
+                      {after}
+                    </TextCard>
+                  </HighlightCard>
+                ),
+              )}
             </HorizontalScrollStrip>
           </SubSectionContainer>
         </SectionContainer>

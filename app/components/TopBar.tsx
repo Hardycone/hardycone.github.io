@@ -118,8 +118,7 @@ export default function TopBar({
 
   const isProjectMenuInteractionValid = useCallback(
     () =>
-      projectMenuPointerInsideRef.current ||
-      projectMenuFocusInsideRef.current,
+      projectMenuPointerInsideRef.current || projectMenuFocusInsideRef.current,
     [],
   );
 
@@ -581,8 +580,9 @@ export default function TopBar({
                       ? HEADER_PANE_NAV_DESTINATION_FADE_MS / 1000
                       : HEADER_PANE_NAV_CONTENT_FADE_MS / 1000,
                   ease: retractCenterNav ? "easeIn" : "easeOut",
+                  scale: { duration: 0.1 },
                 }}
-                whileHover={{ scale: 1.02 }}
+                whileHover={canHover ? { scale: 1.02 } : undefined}
                 className={`flex max-w-[calc(100vw-12.75rem)] select-none justify-center gap-2 rounded-full bg-background px-3 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground sm:max-w-none sm:px-4 lg:gap-4 ${
                   isCenterNavVisible
                     ? "pointer-events-auto"

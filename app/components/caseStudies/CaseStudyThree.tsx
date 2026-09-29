@@ -123,7 +123,7 @@ export default function CaseStudyThree({
             ].map(([number, title, copy]) => (
               <HighlightCard
                 key={title}
-                className="flex h-full min-h-[inherit] flex-col"
+                highlightCardClassName="flex h-full min-h-[inherit] flex-col"
                 contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
               >
                 <span className={`text-sm font-bold ${theme.textColorClass}`}>
@@ -231,7 +231,7 @@ export default function CaseStudyThree({
               find patterns across very different creative practices.
             </p>
           </SubSectionContainer>
-          <SubSectionContainer className="gap-0">
+          <SubSectionContainer subSectionContainerClassName="gap-0">
             <HorizontalCardGroup
               showBody
               body={
@@ -301,7 +301,7 @@ export default function CaseStudyThree({
               ].map(({ id, content }) => (
                 <HighlightCard
                   key={id}
-                  className="flex h-full min-h-[inherit] flex-col"
+                  highlightCardClassName="flex h-full min-h-[inherit] flex-col"
                   contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
                 >
                   {content}

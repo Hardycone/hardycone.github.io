@@ -132,7 +132,7 @@ export default function CaseStudyOne({
           exitOnScroll
           entryOnScroll={false}
         >
-          <SubSectionContainer className="gap-0">
+          <SubSectionContainer subSectionContainerClassName="gap-0">
             <p>
               I’m currently working on{" "}
               <StaticName
@@ -366,7 +366,7 @@ export default function CaseStudyOne({
           }
           borderColor={borderColor}
         >
-          <SubSectionContainer className="gap-0">
+          <SubSectionContainer subSectionContainerClassName="gap-0">
             <p>
               I’ve work on projects{" "}
               <StaticName
@@ -637,7 +637,7 @@ export default function CaseStudyOne({
           }
           borderColor={borderColor}
         >
-          <SubSectionContainer className="gap-0">
+          <SubSectionContainer subSectionContainerClassName="gap-0">
             <p>
               Outside of work, I enjoy hiking in the mountains, taking pictures
               with my faithful Sony a7iii, practicing barre chords on my
@@ -721,7 +721,7 @@ export default function CaseStudyOne({
           }
           borderColor={borderColor}
         >
-          <SubSectionContainer className="gap-0">
+          <SubSectionContainer subSectionContainerClassName="gap-0">
             <BioContactForm />
           </SubSectionContainer>
         </SectionContainer>

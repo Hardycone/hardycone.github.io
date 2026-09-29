@@ -32,7 +32,7 @@ export default function HorizontalScrollStrip({
   contentClassName = "flex w-max gap-4",
   body,
   bodyClassName = "",
-  knobBackgroundClassName = "bg-background dark:bg-dark-background",
+  knobBackgroundClassName = "bg-white dark:bg-dark-background",
 }: HorizontalScrollStripProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -42,14 +42,14 @@ export default function HorizontalScrollStrip({
   const prefersReducedMotion = useReducedMotion();
   const { resolvedTheme } = useTheme();
   const {
-    cardLightSmallShadow,
-    cardDarkSmallShadow,
+    knobLightShadow,
+    knobDarkShadow,
     indentLightShadow,
     indentDarkShadow,
   } = useMouseShadow();
   const knobShadow =
-    resolvedTheme === "dark" ? cardDarkSmallShadow : cardLightSmallShadow;
-  const railShadow =
+    resolvedTheme === "dark" ? knobDarkShadow : knobLightShadow;
+  const indentShadow =
     resolvedTheme === "dark" ? indentDarkShadow : indentLightShadow;
 
   const syncScroll = useCallback(() => {
@@ -102,7 +102,9 @@ export default function HorizontalScrollStrip({
     const bounds = event.currentTarget.getBoundingClientRect();
     const radius = SLIDER_KNOB_SIZE_PX / 2;
     const knobCenterX =
-      bounds.left + radius + (bounds.width - SLIDER_KNOB_SIZE_PX) * scrollProgress;
+      bounds.left +
+      radius +
+      (bounds.width - SLIDER_KNOB_SIZE_PX) * scrollProgress;
     const knobCenterY = bounds.top + bounds.height / 2;
     setIsKnobHovered(
       Math.abs(event.clientX - knobCenterX) <= radius + 2 &&
@@ -153,8 +155,8 @@ export default function HorizontalScrollStrip({
           />
           <motion.div
             data-cursor-shadow
-            className="pointer-events-none absolute left-0 top-1/2 h-7 w-full -translate-y-1/2 rounded-full border border-white bg-background dark:border-white/25 dark:bg-dark-background"
-            style={{ boxShadow: railShadow }}
+            className="pointer-events-none absolute left-0 top-1/2 h-8 w-full -translate-y-1/2 rounded-full border border-white bg-zinc-200 dark:border-white/25 dark:bg-zinc-800"
+            style={{ boxShadow: indentShadow }}
           />
           <div
             className="pointer-events-none absolute top-1/2 h-5 w-5 -translate-y-1/2 rounded-full peer-focus-visible:ring-2 peer-focus-visible:ring-foreground peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background dark:peer-focus-visible:ring-dark-foreground dark:peer-focus-visible:ring-offset-dark-background"
@@ -164,7 +166,7 @@ export default function HorizontalScrollStrip({
           >
             <motion.div
               data-cursor-shadow
-              className={`h-full w-full rounded-full border border-white dark:border-white/25 ${knobBackgroundClassName}`}
+              className={`h-full w-full rounded-full dark:border-white/25 ${knobBackgroundClassName}`}
               style={{ boxShadow: knobShadow }}
               animate={{ scale: isKnobHovered ? 1.14 : 1 }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.18 }}

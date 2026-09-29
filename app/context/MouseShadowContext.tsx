@@ -56,7 +56,6 @@ function useCursorEffectValues() {
     ([latestX, latestY]: number[]) => `
        inset ${latestX / 2}px ${latestY / 2}px 8px 0px rgba(0, 0, 0, 0.1),
        inset ${-latestX / 2}px ${-latestY / 2}px 4px 0px rgba(255, 255, 255, 1)
-
     `,
   );
 
@@ -68,10 +67,26 @@ function useCursorEffectValues() {
     `,
   );
 
+  const knobLightShadow = useTransform(
+    [x, y],
+    ([latestX, latestY]: number[]) => `
+      ${latestX / 3}px ${latestY / 3}px 4px 0px rgba(255,255,255,1),
+      ${-latestX / 3}px ${-latestY / 3}px 4px 0px rgba(0, 0, 0, 0.2)
+    `,
+  );
+
+  const knobDarkShadow = useTransform(
+    [x, y],
+    ([latestX, latestY]: number[]) => `
+      ${latestX / 3}px ${latestY / 3}px 4px 0px rgba(255,255,255,0.1),
+      ${-latestX / 2}px ${-latestY / 2}px 4px 0px rgba(0, 0, 0, 0.2)
+    `,
+  );
+
   const indentLightShadow = useTransform(
     [x, y],
     ([latestX, latestY]: number[]) => `
-      inset ${-latestX / 2}px ${-latestY / 2}px 8px 0px rgba(0, 0, 0, 0.1),
+      inset ${-latestX / 2}px ${-latestY / 2}px 4px 0px rgba(0, 0, 0, 0.2),
       inset ${latestX / 2}px ${latestY / 2}px 4px 0px rgba(255, 255, 255, 1)
     `,
   );
@@ -79,7 +94,7 @@ function useCursorEffectValues() {
   const indentDarkShadow = useTransform(
     [x, y],
     ([latestX, latestY]: number[]) => `
-      inset ${-latestX / 2}px ${-latestY / 2}px 8px 0px rgba(0, 0, 0, 1),
+      inset ${-latestX / 2}px ${-latestY / 2}px 0px 0px rgba(0, 0, 0, 1),
       inset ${latestX / 2}px ${latestY / 2}px 4px 0px rgba(255, 255, 255, 0.2)
     `,
   );
@@ -164,6 +179,8 @@ function useCursorEffectValues() {
     cardDarkShadow,
     cardLightSmallShadow,
     cardDarkSmallShadow,
+    knobLightShadow,
+    knobDarkShadow,
     indentLightShadow,
     indentDarkShadow,
     cardHoverLightShadow,

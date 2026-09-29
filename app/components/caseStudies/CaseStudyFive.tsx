@@ -125,7 +125,7 @@ export default function CaseStudyFive({
             ].map(([number, title, copy]) => (
               <HighlightCard
                 key={title}
-                className="flex h-full min-h-[inherit] flex-col"
+                highlightCardClassName="flex h-full min-h-[inherit] flex-col"
                 contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
               >
                 <span className={`text-sm font-bold ${theme.textColorClass}`}>
@@ -295,7 +295,7 @@ export default function CaseStudyFive({
               became alternatives, and alternatives became commitments.
             </p>
           </SubSectionContainer>
-          <SubSectionContainer className="gap-0">
+          <SubSectionContainer subSectionContainerClassName="gap-0">
             <HorizontalCardGroup
               showBody
               body={
@@ -339,7 +339,7 @@ export default function CaseStudyFive({
               ].map(([number, title, copy]) => (
                 <HighlightCard
                   key={title.toLowerCase()}
-                  className="flex h-full min-h-[inherit] flex-col"
+                  highlightCardClassName="flex h-full min-h-[inherit] flex-col"
                   contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
                 >
                   <span className={`text-sm font-bold ${theme.textColorClass}`}>
