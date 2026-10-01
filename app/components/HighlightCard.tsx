@@ -38,12 +38,12 @@ export default function HighlightCard({
   return (
     <motion.div
       data-cursor-shadow
-      className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} group/card relative isolate w-full border border-white dark:border-white/25 ${highlightCardClassName}`}
+      className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} group/card relative isolate w-full ${highlightCardClassName}`}
       style={{ boxShadow: cardSmallShadow }}
     >
       <div
         aria-hidden="true"
-        className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} pointer-events-none absolute inset-0 -z-10 bg-white opacity-0 transition-opacity duration-300 motion-reduce:transition-none dark:bg-black ${canHighlightOnHover ? "md:group-hover/card:opacity-25" : ""}`}
+        className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} pointer-events-none absolute inset-0 -z-10 bg-white opacity-0 transition-opacity duration-300 motion-reduce:transition-none dark:bg-black ${canHighlightOnHover ? "md:group-hover/card:opacity-50" : ""}`}
       />
       {contentClassName ? (
         <div className={contentClassName}>{children}</div>

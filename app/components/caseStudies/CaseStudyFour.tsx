@@ -1,7 +1,10 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import { MotionValue, useTransform } from "framer-motion";
+// import { useTheme } from "next-themes";
+import {
+  MotionValue,
+  // , useTransform
+} from "framer-motion";
 import {
   ArrowRightIcon,
   PackageIcon,
@@ -25,6 +28,13 @@ import HighlightCard from "../HighlightCard";
 import SectionContainer from "../SectionContainer";
 import SubHeading from "../SubHeading";
 import SubSectionContainer from "../SubSectionContainer";
+import ZoomableImage from "../ZoomableImage";
+import {
+  ROUNDED_SQUIRCLE_01,
+  ROUNDED_SQUIRCLE_03,
+  ROUNDED_SQUIRCLE_03_MD,
+  ROUNDED_SQUIRCLE_05_MD,
+} from "@/lib/styleTokens";
 
 interface CaseStudyFourProps {
   scrollY: MotionValue<number>;
@@ -33,111 +43,165 @@ interface CaseStudyFourProps {
 }
 
 export default function CaseStudyFour({
-  scrollY,
+  // scrollY,
   fadeInFirstSection = false,
   firstSectionFadeReady = true,
 }: CaseStudyFourProps) {
-  const { resolvedTheme } = useTheme();
+  // const { resolvedTheme } = useTheme();
   const { activeIndex } = useSiteNavigation();
   const theme = useProjectTheme(projects[activeIndex].id);
 
-  const borderOpacity = useTransform(
-    scrollY,
-    [
-      0,
-      window.innerHeight * 2,
-      document.body.scrollHeight - window.innerHeight * 2,
-      document.body.scrollHeight - window.innerHeight * 1.2,
-      document.body.scrollHeight - window.innerHeight,
-    ],
-    resolvedTheme === "dark" ? [0.25, 0, 0, 0.25, 0] : [1, 0, 0, 1, 0],
-  );
+  // const borderOpacity = useTransform(
+  //   scrollY,
+  //   [
+  //     0,
+  //     window.innerHeight * 2,
+  //     document.body.scrollHeight - window.innerHeight * 2,
+  //     document.body.scrollHeight - window.innerHeight * 1.2,
+  //     document.body.scrollHeight - window.innerHeight,
+  //   ],
+  //   resolvedTheme === "dark" ? [0.25, 0, 0, 0.25, 0] : [1, 0, 0, 1, 0],
+  // );
 
-  const borderColor = useTransform(
-    borderOpacity,
-    (opacity) => `rgba(255,255,255,${opacity})`,
-  );
+  // const borderColor = useTransform(
+  //   borderOpacity,
+  //   (opacity) => `rgba(255,255,255,${opacity})`,
+  // );
 
   return (
-    <article className="flex flex-col gap-12">
-      <section id="section-1" className="scroll-mt-24">
+    <article className="flex flex-col gap-16 md:gap-24">
+      <section id="section-1" className="mt-6 scroll-mt-24">
         <SectionContainer
           heading="The Product"
           fadeInOnMount={fadeInFirstSection}
           fadeInReady={firstSectionFadeReady}
           headingIcon={PackageIcon}
           headingSweepAt={100}
-          borderColor={borderColor}
-          exitOnScroll={false}
-          entryOnScroll={false}
-        >
-          <p>
-            We built a{" "}
-            <span className="font-bold text-suits dark:text-dark-suits">
-              mixed reality interface for a simulated Extravehicular Activity
-              (EVA) mission
-            </span>{" "}
-            on the lunar surface. The system guided an astronaut from suit
-            disconnect through field science and a safe return route. on the
-            lunar surface. The system guided an astronaut from suit disconnect
-            through field science and a safe return route. on the lunar surface.
-            The system guided an astronaut from suit disconnect through field
-            science and a safe return route.
-          </p>
-        </SectionContainer>
-        <SectionContainer
-          showHeading={false}
           showBorder={false}
           entryOnScroll={false}
-          containerClassName="mt-4"
-          contentClassName=""
         >
-          <HorizontalCardGroup
-            alignment="aligned"
-            bottomMarginOnLarge="2rem"
-            cardWidthClassNameOnLarge="md:w-[80rem]"
-            maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
-            stickyTopOnLarge="5rem"
-            cards={[
-              [
-                "Import",
-                "Import design prototypes",
-                "Researchers can bring in interactive prototypes created in Figma, or live hosted prototypes.",
-              ],
-              [
-                "Configure",
-                "Configure the experiment",
-                "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
-              ],
-              [
-                "Recruit",
-                "Set a recruit goal and choose participant source",
-                "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
-              ],
-              [
-                "Test",
-                "Once the experiment is launched, participant results immediately start being recorded",
-                "There is not much to do other than wait",
-              ],
-              [
-                "Report",
-                "Get report within hours",
-                "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
-              ],
-            ].map(([number, title, copy]) => (
-              <HighlightCard
-                key={title}
-                highlightCardClassName="flex h-full min-h-[inherit] flex-col"
-                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
-              >
-                <span className={`text-sm font-bold ${theme.textColorClass}`}>
-                  {number}
-                </span>
-                <h4 className="mt-auto pt-8">{title}</h4>
-                <p className="mt-3">{copy}</p>
-              </HighlightCard>
-            ))}
-          />
+          <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
+            <SubSectionContainer>
+              <p>
+                We built a mixed reality interface for a simulated
+                Extravehicular Activity (EVA) mission on the lunar surface. The
+                system guided an astronaut from suit disconnect through field
+                science and a safe return route. on the lunar surface. The
+                system guided an astronaut from suit disconnect through field
+                science and a safe return route. on the lunar surface. The
+                system guided an astronaut from suit disconnect through field
+                science and a safe return route.
+              </p>
+            </SubSectionContainer>
+            <HorizontalCardGroup
+              alignment="aligned"
+              cardSlotClassName="tall:!h-[100svh]"
+              bottomMarginOnLarge="1rem"
+              cardWidthClassNameOnLarge="md:w-screen"
+              maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
+              stickyTopOnLarge="5rem"
+              cards={[
+                {
+                  id: "import",
+                  content: (
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-suits bg-suits tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Import
+                        </h5>
+                        <p className="mt-3 !font-serif">
+                          Researchers can import their prototypes from Figma or
+                          live prototypes hosted anywhere into Flux. For Figma
+                          prototypes, Flux can parse the nodes in each flow and
+                          render a flow map matching the interactions that exist
+                          in the Figma file.
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  id: "configure",
+                  content: (
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-suits bg-suits tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Configure
+                        </h5>
+                        <p className="mt-3 !font-serif">
+                          Configuring an experiment in Flux is designed to be
+                          approachable. Researchers can follow a guided wizard
+                          style process to define the hotspots to track,
+                          followup questions, and a recruiting plan.
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  id: "report",
+                  content: (
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-suits bg-suits tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Report
+                        </h5>
+                        <p className="mt-3 !font-serif">
+                          The comprehensive research report offers quantitative
+                          insights into user behavior and sentiment, as well as
+                          qualitative data to compliment the quantitative
+                          analysis. The statistically tested results offer
+                          measurable confidence that guides product decisions.
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                },
+              ].map(({ id, content }) => (
+                <HighlightCard
+                  key={id}
+                  highlightCardClassName="flex h-full min-h-[inherit] flex-col border border-suits/50 dark:border-dark-suits/50"
+                  contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-2 tall:overflow-hidden"
+                >
+                  {content}
+                </HighlightCard>
+              ))}
+            />{" "}
+          </SubSectionContainer>
+
           <SubSectionContainer>
             <p>
               For NASA&apos;s SUITS challenge, our multidisciplinary team
@@ -170,11 +234,10 @@ export default function CaseStudyFour({
         <SectionContainer
           heading="Mission"
           headingIcon={TargetIcon}
-          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer>
-            <SubHeading showNumber number="1">
+            <SubHeading>
               Designing the whole EVA, not isolated screens
             </SubHeading>
             <p>
@@ -191,9 +254,7 @@ export default function CaseStudyFour({
               cardWidthClassNameOnLarge="md:w-[80rem]"
               body={
                 <SubSectionContainer>
-                  <SubHeading showNumber number="2">
-                    The simulated mission
-                  </SubHeading>
+                  <SubHeading>The simulated mission</SubHeading>
                   <p>
                     Each phase had different information needs, but the
                     interface still had to feel like one dependable system. Each
@@ -288,13 +349,10 @@ export default function CaseStudyFour({
         <SectionContainer
           heading="System Design"
           headingIcon={PuzzlePieceIcon}
-          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer>
-            <SubHeading showNumber number="1">
-              Make the right information glanceable
-            </SubHeading>
+            <SubHeading>Make the right information glanceable</SubHeading>
             <p>
               A headset can display almost anything; that made restraint the
               core design problem. Persistent information was limited to mission
@@ -354,13 +412,10 @@ export default function CaseStudyFour({
         <SectionContainer
           heading="Human-In-The-Loop Evaluations"
           headingIcon={PersonSimpleCircleIcon}
-          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer>
-            <SubHeading showNumber number="1">
-              Testing behavior, not screen preference
-            </SubHeading>
+            <SubHeading>Testing behavior, not screen preference</SubHeading>
             <p>
               We rehearsed the mission as a sequence of physical actions. Tests
               focused on whether participants noticed alerts, recovered their
@@ -402,13 +457,10 @@ export default function CaseStudyFour({
         <SectionContainer
           heading="Field Test"
           headingIcon={PersonSimpleRunIcon}
-          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer>
-            <SubHeading showNumber number="1">
-              NASA Rock Yard, after dark
-            </SubHeading>
+            <SubHeading>NASA Rock Yard, after dark</SubHeading>
             <p>
               As a SUITS finalist, the team brought the prototype to Johnson
               Space Center. NASA engineers ran the simulated EVA in the Rock
@@ -427,17 +479,14 @@ export default function CaseStudyFour({
         </SectionContainer>
       </section>
 
-      <section id="section-6" className="scroll-mt-24">
+      <section id="section-6" className="mb-16 scroll-mt-24 md:mb-24">
         <SectionContainer
           heading="Reflection"
           headingIcon={BrainIcon}
-          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer>
-            <SubHeading showNumber number="1">
-              Designing for consequential attention
-            </SubHeading>
+            <SubHeading>Designing for consequential attention</SubHeading>
             <div className="grid gap-8 md:grid-cols-3">
               {[
                 [

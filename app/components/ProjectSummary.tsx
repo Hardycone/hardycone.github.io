@@ -884,7 +884,7 @@ export default function ProjectSummary({
               layoutDependency={layoutDependency}
               className={`mt-2 text-pretty font-sans text-[0.875rem] leading-snug md:mt-4 md:text-[1rem] lg:mt-5 xl:mt-6 2xl:mt-7 ${
                 variant === "header"
-                  ? "md:border-l-4 md:border-foreground md:py-2 md:pl-4 md:dark:border-dark-foreground xl:w-[70%]"
+                  ? "xl:w-[70%]"
                   : variant === "preview"
                     ? ""
                     : "hidden"

@@ -39,6 +39,7 @@ import {
   CompassRoseIcon,
   PersonSimpleCircleIcon,
   PaperPlaneTiltIcon,
+  ParkIcon,
 } from "@phosphor-icons/react";
 
 import Home from "../icons/Home";
@@ -98,6 +99,7 @@ export default function TopBar({
   );
 
   const [isNavigatingHome, setIsNavigatingHome] = useState(false);
+  const [isHomeMenuItemHovered, setIsHomeMenuItemHovered] = useState(false);
   const [projectMenuPhase, setProjectMenuPhase] =
     useState<ProjectMenuPhase>("closed");
   const projectMenuPhaseRef = useRef<ProjectMenuPhase>("closed");
@@ -529,9 +531,19 @@ export default function TopBar({
                 boxShadow: barShadow,
                 zIndex: projects.length + 1,
               }}
+              animate={{ scale: isHomeMenuItemHovered ? 1.1 : 1 }}
               transition={{ duration: 0.1 }}
-              whileHover={canHover ? { scale: 1.1 } : undefined}
               className="relative h-9 w-9 rounded-full bg-background p-2 text-foreground transition-colors dark:bg-dark-background dark:text-dark-foreground md:h-11 md:w-11"
+              onPointerEnter={(event) => {
+                if (canHover && event.pointerType !== "touch") {
+                  setIsHomeMenuItemHovered(true);
+                }
+              }}
+              onPointerLeave={(event) => {
+                if (canHover && event.pointerType !== "touch") {
+                  setIsHomeMenuItemHovered(false);
+                }
+              }}
               onClick={() => {
                 flashShortcutHint("home");
                 handleHomeClick();
@@ -549,8 +561,10 @@ export default function TopBar({
             </motion.button>
             <CaseStudyGlyphMenu
               isOpen={isProjectMenuOpen}
+              isHomeItemHovered={isHomeMenuItemHovered}
               navigationLocked={projectMenuNavigationLocked}
               onClose={forceProjectMenuClosed}
+              onHomeItemHoverChange={setIsHomeMenuItemHovered}
               onHomeClick={() => {
                 flashShortcutHint("home");
                 handleHomeClick();
@@ -630,6 +644,7 @@ export default function TopBar({
                       CompassRoseIcon,
                       PersonSimpleCircleIcon,
                       PaperPlaneTiltIcon,
+                      ParkIcon,
                     };
                     type IconName = keyof typeof Icons;
                     const Icon = Icons[section.icon as IconName];

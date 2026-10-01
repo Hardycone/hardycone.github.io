@@ -2,9 +2,12 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useTheme } from "next-themes";
+// import { useTheme } from "next-themes";
 // import projects from "@/data/projects";
-import { useTransform, MotionValue } from "framer-motion";
+import {
+  // useTransform,
+  MotionValue,
+} from "framer-motion";
 import {
   CertificateIcon,
   PathIcon,
@@ -17,6 +20,7 @@ import { useProjectTheme } from "@/hooks/useProjectTheme";
 import SectionContainer from "../SectionContainer";
 import SubSectionContainer from "../SubSectionContainer";
 import BioContactForm from "../BioContactForm";
+import HighlightCard from "../HighlightCard";
 
 interface CaseStudyOneProps {
   scrollY: MotionValue<number>;
@@ -69,11 +73,11 @@ function StaticName({
 }
 
 export default function CaseStudyOne({
-  scrollY,
+  // scrollY,
   fadeInFirstSection = false,
   firstSectionFadeReady = true,
 }: CaseStudyOneProps) {
-  const { resolvedTheme } = useTheme();
+  // const { resolvedTheme } = useTheme();
 
   const introTheme = useProjectTheme("intro");
   const fluxTheme = useProjectTheme("flux");
@@ -97,42 +101,38 @@ export default function CaseStudyOne({
   // // --- 1. USE 'vw' for 'useTransform' ---
   // // We are moving the "filmstrip" by full viewport widths
   // const x = useTransform(scrollYProgress, [0, 1], ["0vw", "-200vw"]);
-  const borderOpacity = useTransform(
-    scrollY,
-    [
-      0,
-      window.innerHeight * 2,
-      document.body.scrollHeight - window.innerHeight * 2,
-      document.body.scrollHeight - window.innerHeight * 1.2,
-      document.body.scrollHeight - window.innerHeight,
-    ],
-    resolvedTheme === "dark" ? [0.25, 0, 0, 0.25, 0] : [1, 0, 0, 1, 0],
-  );
+  // const borderOpacity = useTransform(
+  //   scrollY,
+  //   [
+  //     0,
+  //     window.innerHeight * 2,
+  //     document.body.scrollHeight - window.innerHeight * 2,
+  //     document.body.scrollHeight - window.innerHeight * 1.2,
+  //     document.body.scrollHeight - window.innerHeight,
+  //   ],
+  //   resolvedTheme === "dark" ? [0.25, 0, 0, 0.25, 0] : [1, 0, 0, 1, 0],
+  // );
 
-  const borderColor = useTransform(
-    borderOpacity,
-    (o) => `rgba(255,255,255,${o})`,
-  );
+  // const borderColor = useTransform(
+  //   borderOpacity,
+  //   (o) => `rgba(255,255,255,${o})`,
+  // );
 
   return (
-    <article className="mx-auto w-full min-w-0 max-w-6xl">
+    <article className="flex flex-col gap-16 md:gap-24">
       {/*Section 1: Resume*/}
-      <section id="section-1" className="mb-8 w-full min-w-0 scroll-mt-24">
+      <section id="section-1" className="mt-6 scroll-mt-24">
         {/*Section Header Block*/}
         <SectionContainer
           heading="My Work"
           fadeInOnMount={fadeInFirstSection}
           fadeInReady={firstSectionFadeReady}
           headingIcon={PathIcon}
-          headingBaseColorClassName={
-            "text-foreground dark:text-dark-foreground"
-          }
           headingSweepAt={100}
-          borderColor={borderColor}
-          exitOnScroll
+          showBorder={false}
           entryOnScroll={false}
         >
-          <SubSectionContainer subSectionContainerClassName="gap-0">
+          <SubSectionContainer>
             <p>
               I’m currently working on{" "}
               <StaticName
@@ -145,53 +145,56 @@ export default function CaseStudyOne({
               Flux launched in April 2026, and my role has since expanded into
               sales, marketing, and customer development.
             </p>
-            <div className="overflow-hidden">
-              <div className="my-4 flex gap-2 rounded-1 bg-flux/5 p-8 font-serif supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-flux/5 md:gap-4 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4">
-                <div className="w-12 flex-shrink-0">
-                  <img
-                    src="/logos/logo-flux.png"
-                    alt="Flux logo"
-                    className="block size-12 object-cover"
-                  />
+            <HighlightCard
+              highlightOnHover={false}
+              highlightCardClassName="border border-intro/50 dark:border-dark-intro/50 gap-2 p-8 md:gap-4 flex"
+            >
+              <div className="w-12 flex-shrink-0">
+                <img
+                  src="/logos/logo-flux.png"
+                  alt="Flux logo"
+                  className="block size-12 object-cover"
+                />
+              </div>
+              <div className="flex w-full flex-col">
+                <div className="flex justify-between text-xl">
+                  <div className="flex flex-col">
+                    <p className="font-semibold">
+                      Product Designer / Co-founder
+                    </p>
+                    <p>Flux</p>
+                  </div>
+                  <p>2023 - Present</p>
                 </div>
-                <div className="flex w-full flex-col">
-                  <div className="flex justify-between text-xl">
-                    <div className="flex flex-col">
-                      <p className="font-semibold">
-                        Product Designer / Co-founder
-                      </p>
-                      <p>Flux</p>
-                    </div>
-                    <p>2023 - Present</p>
-                  </div>
-                  <div className="mt-2">
-                    <ul className="ml-4 mt-2 list-disc text-pretty font-sans">
-                      <li>
-                        Led Flux from concept to public launch, shaping product
-                        strategy, core workflows, interaction patterns, visual
-                        system, and brand identity
-                      </li>
-                      <li>
-                        Translated statistical research methods into guided
-                        study setup flows that are approachable without
-                        compromising rigor
-                      </li>
-                      <li>
-                        Designed data-heavy reporting experiences that turned
-                        prototype behavior, confidence intervals, and user
-                        feedback into decision-ready insights
-                      </li>
-                      <li>
-                        Led discovery interviews and live demos with designers,
-                        PMs, and researchers, using feedback to refine product
-                        decisions, positioning, and go-to-market direction
-                      </li>
-                    </ul>
-                  </div>
+                <div className="mt-2">
+                  <ul className="ml-4 mt-2 list-disc text-pretty font-sans font-light">
+                    <li>
+                      Led Flux from concept to public launch, shaping product
+                      strategy, core workflows, interaction patterns, visual
+                      system, and brand identity
+                    </li>
+                    <li>
+                      Translated statistical research methods into guided study
+                      setup flows that are approachable without compromising
+                      rigor
+                    </li>
+                    <li>
+                      Designed data-heavy reporting experiences that turned
+                      prototype behavior, confidence intervals, and user
+                      feedback into decision-ready insights
+                    </li>
+                    <li>
+                      Led discovery interviews and live demos with designers,
+                      PMs, and researchers, using feedback to refine product
+                      decisions, positioning, and go-to-market direction
+                    </li>
+                  </ul>
                 </div>
               </div>
-            </div>
-            <p className="mt-8">
+            </HighlightCard>
+          </SubSectionContainer>
+          <SubSectionContainer>
+            <p>
               In 2023, I launched{" "}
               <StaticName
                 name="Fantail"
@@ -204,7 +207,7 @@ export default function CaseStudyOne({
               translating filmmaker needs into an end-to-end creative workflow.
             </p>
             <div className="overflow-hidden">
-              <div className="mb-4 mt-4 flex gap-2 rounded-1 bg-fantail bg-opacity-[3%] p-8 dark:bg-dark-fantail/5 md:gap-4 md:rounded-2">
+              <div className="flex gap-2 rounded-1 bg-fantail bg-opacity-[3%] p-8 dark:bg-dark-fantail/5 md:gap-4 md:rounded-2">
                 <div className="w-12 flex-shrink-0">
                   <img
                     src="/logos/logo-fantail.svg"
@@ -244,8 +247,10 @@ export default function CaseStudyOne({
                   </div>
                 </div>
               </div>
-            </div>
-            <p className="mt-8">
+            </div>{" "}
+          </SubSectionContainer>
+          <SubSectionContainer>
+            <p>
               From 2016 to 2021, I worked at{" "}
               <StaticName
                 name="ASLF"
@@ -267,7 +272,7 @@ export default function CaseStudyOne({
               and to the policy constraints that shape what gets built.
             </p>
             <div className="overflow-hidden">
-              <div className="mb-4 mt-4 flex gap-2 rounded-1 bg-wolcott/5 p-8 dark:bg-dark-wolcott/5 md:gap-4 md:rounded-2">
+              <div className="flex gap-2 rounded-1 bg-wolcott/5 p-8 dark:bg-dark-wolcott/5 md:gap-4 md:rounded-2">
                 <div className="w-12 flex-shrink-0">
                   <img
                     src="/logos/logo-aslf.png"
@@ -350,8 +355,6 @@ export default function CaseStudyOne({
                 </div>
               </div>
             </div>
-
-            {/*Subsection 1: Experience*/}
           </SubSectionContainer>
         </SectionContainer>
       </section>
@@ -361,12 +364,9 @@ export default function CaseStudyOne({
         <SectionContainer
           heading="My Qualifications"
           headingIcon={CertificateIcon}
-          headingBaseColorClassName={
-            "text-foreground dark:text-dark-foreground"
-          }
-          borderColor={borderColor}
+          showBorder={false}
         >
-          <SubSectionContainer subSectionContainerClassName="gap-0">
+          <SubSectionContainer>
             <p>
               I’ve work on projects{" "}
               <StaticName
@@ -381,7 +381,7 @@ export default function CaseStudyOne({
               environmental and community projects across the country.
             </p>
             <div className="overflow-hidden">
-              <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-suits/5 md:rounded-2">
+              <div className="flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-suits/5 md:rounded-2">
                 <div className="flex w-full flex-col gap-4">
                   <div className="flex justify-between font-sans text-xl">
                     <div className="flex flex-col">
@@ -420,7 +420,9 @@ export default function CaseStudyOne({
                 </div>
               </div>
             </div>
-            <p className="mt-8">
+          </SubSectionContainer>
+          <SubSectionContainer>
+            <p>
               In 2023, I graduated from{" "}
               <StaticName
                 name="University of Washington"
@@ -439,7 +441,7 @@ export default function CaseStudyOne({
               spacesuit interfaces to quantitative UX testing tools.
             </p>
             <div className="overflow-hidden">
-              <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-suits/5 md:rounded-2">
+              <div className="flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-suits/5 md:rounded-2">
                 <div className="w-12 flex-shrink-0">
                   <img
                     src="/logos/logo-uw.png"
@@ -464,7 +466,9 @@ export default function CaseStudyOne({
                 </div>
               </div>
             </div>
-            <p className="mt-8">
+          </SubSectionContainer>
+          <SubSectionContainer>
+            <p>
               I also hold a Master of Landscape Architecture from{" "}
               <StaticName
                 name="SUNY ESF"
@@ -484,7 +488,7 @@ export default function CaseStudyOne({
               whether the medium is a park or a prototype.
             </p>
             <div className="overflow-hidden">
-              <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-chinatown/5 md:rounded-2">
+              <div className="flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-chinatown/5 md:rounded-2">
                 <div className="w-12 flex-shrink-0">
                   <img
                     src="/logos/logo-esf.png"
@@ -508,8 +512,10 @@ export default function CaseStudyOne({
                   </div>
                 </div>
               </div>
-            </div>{" "}
-            <p className="mt-8">
+            </div>
+          </SubSectionContainer>
+          <SubSectionContainer>
+            <p>
               My undergraduate training in Environmental Science at{" "}
               <StaticName
                 name="Beijing Normal University"
@@ -528,7 +534,7 @@ export default function CaseStudyOne({
             </p>
             <div className="overflow-hidden">
               {" "}
-              <div className="mb-4 mt-4 flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-chinatown/5 md:rounded-2">
+              <div className="flex gap-4 rounded-1 bg-intro/5 p-8 dark:bg-dark-chinatown/5 md:rounded-2">
                 <div className="w-12 flex-shrink-0">
                   <img
                     src="/logos/logo-bnu.png"
@@ -558,10 +564,7 @@ export default function CaseStudyOne({
         <SectionContainer
           heading="My Skills"
           headingIcon={PaperPlaneTiltIcon}
-          headingBaseColorClassName={
-            "text-foreground dark:text-dark-foreground"
-          }
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer>
             <div className="mb-8">
@@ -632,10 +635,7 @@ export default function CaseStudyOne({
         <SectionContainer
           heading="My Interests"
           headingIcon={CameraIcon}
-          headingBaseColorClassName={
-            "text-foreground dark:text-dark-foreground"
-          }
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer subSectionContainerClassName="gap-0">
             <p>
@@ -650,78 +650,78 @@ export default function CaseStudyOne({
               hardware project, or chasing a new creative rabbit hole.
             </p>
           </SubSectionContainer>
+          <div className="relative left-1/2 mb-8 w-[calc(100svw-2rem)] max-w-[1440px] -translate-x-1/2">
+            {/*Image Grid*/}
+            <div className="grid grid-cols-4 grid-rows-4 gap-2">
+              {/* Image 1 - 4 cells horizontally */}
+              <div className="relative col-span-4 row-span-1">
+                <img
+                  src="/images/20230624-HWP00734-Edit.jpg"
+                  alt="Dummy Image 1"
+                  className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
+                />
+              </div>
+              {/* Image 2 - 2x2 square */}
+              <div className="relative col-span-2 row-span-2 aspect-[1/1]">
+                <img
+                  src="/images/20230828-HWP01792.jpg"
+                  alt="Dummy Image 2"
+                  className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
+                />
+              </div>
+              {/* Image 3 - 2 cells vertically adjacent */}
+              <div className="relative col-span-1 row-span-2">
+                <img
+                  src="/images/20200701-DSC00551_01.jpg"
+                  alt="Dummy Image 3"
+                  className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
+                />
+              </div>
+              {/* Remaining cells */}
+              <div className="relative">
+                <img
+                  src="/images/20230314-HWP09309.jpg"
+                  alt="Dummy Image 4"
+                  className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
+                />
+              </div>
+              <div className="relative">
+                <img
+                  src="/images/20230314-HWP09323.jpg"
+                  alt="Dummy Image 5"
+                  className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
+                />
+              </div>
+              <div className="relative">
+                <img
+                  src="/images/IMG_2354.JPG"
+                  alt="Dummy Image 7"
+                  className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
+                />
+              </div>
+              <div className="relative col-span-3 row-span-1">
+                <img
+                  src="/images/20240704-HWP03580-Edit.jpg"
+                  alt="Dummy Image 6"
+                  className="absolute inset-0 h-full w-full rounded-1 object-cover object-top supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
+                />
+              </div>
+            </div>
+          </div>{" "}
         </SectionContainer>
-        <div className="relative left-1/2 mb-8 w-[calc(100svw-2rem)] max-w-[1440px] -translate-x-1/2">
-          {/*Image Grid*/}
-          <div className="grid grid-cols-4 grid-rows-4 gap-2">
-            {/* Image 1 - 4 cells horizontally */}
-            <div className="relative col-span-4 row-span-1">
-              <img
-                src="/images/20230624-HWP00734-Edit.jpg"
-                alt="Dummy Image 1"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
-              />
-            </div>
-            {/* Image 2 - 2x2 square */}
-            <div className="relative col-span-2 row-span-2 aspect-[1/1]">
-              <img
-                src="/images/20230828-HWP01792.jpg"
-                alt="Dummy Image 2"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
-              />
-            </div>
-            {/* Image 3 - 2 cells vertically adjacent */}
-            <div className="relative col-span-1 row-span-2">
-              <img
-                src="/images/20200701-DSC00551_01.jpg"
-                alt="Dummy Image 3"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
-              />
-            </div>
-            {/* Remaining cells */}
-            <div className="relative">
-              <img
-                src="/images/20230314-HWP09309.jpg"
-                alt="Dummy Image 4"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
-              />
-            </div>
-            <div className="relative">
-              <img
-                src="/images/20230314-HWP09323.jpg"
-                alt="Dummy Image 5"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
-              />
-            </div>
-            <div className="relative">
-              <img
-                src="/images/IMG_2354.JPG"
-                alt="Dummy Image 7"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
-              />
-            </div>
-            <div className="relative col-span-3 row-span-1">
-              <img
-                src="/images/20240704-HWP03580-Edit.jpg"
-                alt="Dummy Image 6"
-                className="absolute inset-0 h-full w-full rounded-1 object-cover object-top supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] supports-[corner-shape:squircle]:md:rounded-4"
-              />
-            </div>
-          </div>
-        </div>
       </section>
 
       {/*Section 5: Let's Chat!*/}
-      <section id="section-5" className="w-full min-w-0 scroll-mt-24">
+      <section
+        id="section-5"
+        className="mb-16 w-full min-w-0 scroll-mt-24 md:mb-24"
+      >
         <SectionContainer
           heading="Let's Chat!"
           headingIcon={PaperPlaneTiltIcon}
-          headingBaseColorClassName={
-            "text-foreground dark:text-dark-foreground"
-          }
-          borderColor={borderColor}
+          showBorder={false}
         >
-          <SubSectionContainer subSectionContainerClassName="gap-0">
+          <SubSectionContainer>
             <BioContactForm />
           </SubSectionContainer>
         </SectionContainer>

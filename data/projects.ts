@@ -176,8 +176,8 @@ const projects: Project[] = [
     bgColor: "fantailBackground",
     glyphAnimation: glyphThreeAnimation as GlyphAnimationData,
     sections: [
-      { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
-      { id: "section-2", label: "The 0", icon: "SealQuestionIcon" },
+      { id: "section-1", label: "The Product", icon: "PackageIcon" },
+      { id: "section-2", label: "The Zero", icon: "SealQuestionIcon" },
       {
         id: "section-3",
         label: "The Messy Middle",
@@ -185,15 +185,11 @@ const projects: Project[] = [
       },
       {
         id: "section-4",
-        label: "The 1",
+        label: "The One",
         icon: "RocketLaunchIcon",
       },
-      {
-        id: "section-5",
-        label: "Outcome",
-        icon: "PresentationChartIcon",
-      },
-      { id: "section-6", label: "Reflection", icon: "BrainIcon" },
+
+      { id: "section-5", label: "Reflection", icon: "BrainIcon" },
     ],
     externalLinks: [],
   },
@@ -220,20 +216,16 @@ const projects: Project[] = [
     bgColor: "suitsBackground",
     glyphAnimation: glyphFourAnimation as GlyphAnimationData,
     sections: [
-      { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
+      { id: "section-1", label: "The Product", icon: "PackageIcon" },
       { id: "section-2", label: "Mission", icon: "TargetIcon" },
       { id: "section-3", label: "System Design", icon: "PuzzlePieceIcon" },
       {
         id: "section-4",
-        label: "Testing",
+        label: "Field Test",
         icon: "PersonSimpleCircleIcon",
       },
-      {
-        id: "section-5",
-        label: "Field Test",
-        icon: "PersonSimpleRunIcon",
-      },
-      { id: "section-6", label: "Reflection", icon: "BrainIcon" },
+
+      { id: "section-5", label: "Reflection", icon: "BrainIcon" },
     ],
     externalLinks: [
       {
@@ -267,7 +259,7 @@ const projects: Project[] = [
     bgColor: "wolcottBackground",
     glyphAnimation: glyphFiveAnimation as GlyphAnimationData,
     sections: [
-      { id: "section-1", label: "Quick Take", icon: "ScrollIcon" },
+      { id: "section-1", label: "The Product", icon: "ParkIcon" },
       {
         id: "section-2",
         label: "Context",

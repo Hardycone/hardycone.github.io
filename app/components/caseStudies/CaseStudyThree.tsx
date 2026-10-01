@@ -1,14 +1,17 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import { MotionValue, useTransform } from "framer-motion";
+// import { useTheme } from "next-themes";
+import {
+  MotionValue,
+  // , useTransform
+} from "framer-motion";
 import {
   BrainIcon,
   PackageIcon,
   FileTextIcon,
   FilmStripIcon,
   ImageSquareIcon,
-  PresentationChartIcon,
+  // PresentationChartIcon,
   PuzzlePieceIcon,
   RocketLaunchIcon,
   SealQuestionIcon,
@@ -21,6 +24,13 @@ import HighlightCard from "../HighlightCard";
 import SectionContainer from "../SectionContainer";
 import SubHeading from "../SubHeading";
 import SubSectionContainer from "../SubSectionContainer";
+import ZoomableImage from "../ZoomableImage";
+import {
+  ROUNDED_SQUIRCLE_01,
+  ROUNDED_SQUIRCLE_03,
+  ROUNDED_SQUIRCLE_03_MD,
+  ROUNDED_SQUIRCLE_05_MD,
+} from "@/lib/styleTokens";
 
 interface CaseStudyThreeProps {
   scrollY: MotionValue<number>;
@@ -32,144 +42,159 @@ const contentNoteClass =
   "rounded-1 border border-dashed border-foreground/20 px-4 py-3 italic text-foreground/60 dark:border-dark-foreground/20 dark:text-dark-foreground/60 md:rounded-2";
 
 export default function CaseStudyThree({
-  scrollY,
+  // scrollY,
   fadeInFirstSection = false,
   firstSectionFadeReady = true,
 }: CaseStudyThreeProps) {
-  const { resolvedTheme } = useTheme();
+  // const { resolvedTheme } = useTheme();
   const { activeIndex } = useSiteNavigation();
   const theme = useProjectTheme(projects[activeIndex].id);
 
-  const borderOpacity = useTransform(
-    scrollY,
-    [
-      0,
-      window.innerHeight * 2,
-      document.body.scrollHeight - window.innerHeight * 2,
-      document.body.scrollHeight - window.innerHeight * 1.2,
-      document.body.scrollHeight - window.innerHeight,
-    ],
-    resolvedTheme === "dark" ? [0.25, 0, 0, 0.25, 0] : [1, 0, 0, 1, 0],
-  );
+  // const borderOpacity = useTransform(
+  //   scrollY,
+  //   [
+  //     0,
+  //     window.innerHeight * 2,
+  //     document.body.scrollHeight - window.innerHeight * 2,
+  //     document.body.scrollHeight - window.innerHeight * 1.2,
+  //     document.body.scrollHeight - window.innerHeight,
+  //   ],
+  //   resolvedTheme === "dark" ? [0.25, 0, 0, 0.25, 0] : [1, 0, 0, 1, 0],
+  // );
 
-  const borderColor = useTransform(
-    borderOpacity,
-    (opacity) => `rgba(255,255,255,${opacity})`,
-  );
+  // const borderColor = useTransform(
+  //   borderOpacity,
+  //   (opacity) => `rgba(255,255,255,${opacity})`,
+  // );
 
   return (
-    <article className="flex flex-col gap-12">
-      <section id="section-1" className="scroll-mt-24">
+    <article className="flex flex-col gap-16 md:gap-24">
+      <section id="section-1" className="mt-6 scroll-mt-24">
         <SectionContainer
           heading="The Product"
           fadeInOnMount={fadeInFirstSection}
           fadeInReady={firstSectionFadeReady}
           headingIcon={PackageIcon}
           headingSweepAt={100}
-          borderColor={borderColor}
-          exitOnScroll={false}
-          entryOnScroll={false}
-        >
-          <p>
-            <span className="font-bold text-fantail dark:text-dark-fantail">
-              Fantail offered filmmakers focused on the messy early phase where
-              a film idea is still a mood, an image, or a fragment of dialogue.
-            </span>{" "}
-            Our aim was to support that moment without forcing a rigid process.
-            Our aim was to support that moment without forcing a rigid process.
-            Our aim was to support that moment without forcing a rigid process.
-            Our aim was to support that moment without forcing a rigid process.
-          </p>
-        </SectionContainer>
-        <SectionContainer
-          showHeading={false}
           showBorder={false}
           entryOnScroll={false}
-          containerClassName="mt-4"
-          contentClassName=""
         >
-          <HorizontalCardGroup
-            alignment="aligned"
-            bottomMarginOnLarge="2rem"
-            cardWidthClassNameOnLarge="md:w-[80rem]"
-            maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
-            stickyTopOnLarge="5rem"
-            cards={[
-              [
-                "Import",
-                "Import design prototypes",
-                "Researchers can bring in interactive prototypes created in Figma, or live hosted prototypes.",
-              ],
-              [
-                "Configure",
-                "Configure the experiment",
-                "Researchers can then configure their experiment in a few simple clicks. They can set up button tracking, turn on click heatmapping, add a AI-moderated qualitative think-aloud session, and add follow-up questions for participants to answer after they go through the prototype.",
-              ],
-              [
-                "Recruit",
-                "Set a recruit goal and choose participant source",
-                "Researchers can then set a goal for their experiment. Flux gives guidelines on how to set a sample size according to statistical best practices. Researchers also have the option to either generate a link to share with their own panel, or recreate with Flux by a click of a button.",
-              ],
-              [
-                "Test",
-                "Once the experiment is launched, participant results immediately start being recorded",
-                "There is not much to do other than wait",
-              ],
-              [
-                "Report",
-                "Get report within hours",
-                "Researchers usually get results back within a few hours, complete with statistical tests and confidence intervals, turning a rigorous process that traditionally takes weeks into something done over lunch",
-              ],
-            ].map(([number, title, copy]) => (
-              <HighlightCard
-                key={title}
-                highlightCardClassName="flex h-full min-h-[inherit] flex-col"
-                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
-              >
-                <span className={`text-sm font-bold ${theme.textColorClass}`}>
-                  {number}
-                </span>
-                <h4 className="mt-auto pt-8">{title}</h4>
-                <p className="mt-3">{copy}</p>
-              </HighlightCard>
-            ))}
-          />
-          <SubSectionContainer>
-            <p>
-              Fantail was an AI-assisted story development startup I co-founded
-              with two teammates while completing my MHCID at the University of
-              Washington. We focused on the messy early phase where a film idea
-              is still a mood, an image, or a fragment of dialogue. Our aim was
-              to support that moment without forcing a rigid, script-first
-              process.
-            </p>
-            <p>
-              Over six months, we moved from discovery research to a functional
-              MVP that let indie filmmakers start with any creative input and
-              shape it into a structured story. We heard encouraging early
-              reactions, especially to the flexible, scene-based approach, but
-              we did not secure funding and chose not to continue bootstrapping.
-            </p>
-            <div className="grid gap-px overflow-hidden rounded-1 bg-foreground/10 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] dark:bg-dark-foreground/15 md:grid-cols-3 md:rounded-2 supports-[corner-shape:squircle]:md:rounded-4">
-              {[
-                ["Role", "Co-founder · Product design"],
-                ["Research", "12 in-depth filmmaker interviews"],
-                ["Outcome", "Functional MVP · Early positive feedback"],
-              ].map(([label, value]) => (
-                <div
-                  key={label}
-                  className="bg-background p-5 dark:bg-dark-background"
+          <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
+            <SubSectionContainer>
+              <p>
+                Fantail offered filmmakers focused on the messy early phase
+                where a film idea is still a mood, an image, or a fragment of
+                dialogue. Our aim was to support that moment without forcing a
+                rigid process.
+              </p>
+            </SubSectionContainer>
+            <HorizontalCardGroup
+              alignment="aligned"
+              cardSlotClassName="tall:!h-[100svh]"
+              bottomMarginOnLarge="1rem"
+              cardWidthClassNameOnLarge="md:w-screen"
+              maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
+              stickyTopOnLarge="5rem"
+              cards={[
+                {
+                  id: "import",
+                  content: (
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-fantail bg-fantail tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Import
+                        </h5>
+                        <p className="mt-3 !font-serif">
+                          Researchers can import their prototypes from Figma or
+                          live prototypes hosted anywhere into Flux. For Figma
+                          prototypes, Flux can parse the nodes in each flow and
+                          render a flow map matching the interactions that exist
+                          in the Figma file.
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  id: "configure",
+                  content: (
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-fantail bg-fantail tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Configure
+                        </h5>
+                        <p className="mt-3 !font-serif">
+                          Configuring an experiment in Flux is designed to be
+                          approachable. Researchers can follow a guided wizard
+                          style process to define the hotspots to track,
+                          followup questions, and a recruiting plan.
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  id: "report",
+                  content: (
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-fantail bg-fantail tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Report
+                        </h5>
+                        <p className="mt-3 !font-serif">
+                          The comprehensive research report offers quantitative
+                          insights into user behavior and sentiment, as well as
+                          qualitative data to compliment the quantitative
+                          analysis. The statistically tested results offer
+                          measurable confidence that guides product decisions.
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                },
+              ].map(({ id, content }) => (
+                <HighlightCard
+                  key={id}
+                  highlightCardClassName="flex h-full min-h-[inherit] flex-col border border-fantail/50 dark:border-dark-fantail/50"
+                  contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-2 tall:overflow-hidden"
                 >
-                  <p className={`mb-1 font-semibold ${theme.textColorClass}`}>
-                    {label}
-                  </p>
-                  <p>{value}</p>
-                </div>
+                  {content}
+                </HighlightCard>
               ))}
-            </div>
-            <p className={contentNoteClass}>
-              Content note: Show a hero image of the main workspace.
-            </p>
+            />
           </SubSectionContainer>
         </SectionContainer>
       </section>
@@ -178,13 +203,10 @@ export default function CaseStudyThree({
         <SectionContainer
           heading="The Zero"
           headingIcon={SealQuestionIcon}
-          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer>
-            <SubHeading showNumber number="1">
-              Starting with ambiguity
-            </SubHeading>
+            <SubHeading>Starting with ambiguity</SubHeading>
             <p>
               We began with a wide problem space in indie filmmaking and,
               through twelve semi-structured interviews, narrowed to a clear
@@ -194,9 +216,7 @@ export default function CaseStudyThree({
             </p>
           </SubSectionContainer>
           <SubSectionContainer>
-            <SubHeading showNumber number="2">
-              The problem
-            </SubHeading>
+            <SubHeading>The problem</SubHeading>
             <p
               className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
               style={{ backgroundColor: theme.hex.soft }}
@@ -216,13 +236,10 @@ export default function CaseStudyThree({
         <SectionContainer
           heading="The Messy Middle"
           headingIcon={PuzzlePieceIcon}
-          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer>
-            <SubHeading showNumber number="1">
-              Research refined the lens
-            </SubHeading>
+            <SubHeading>Research refined the lens</SubHeading>
             <p>
               I ran hour-long, semi-structured interviews with twelve
               independent filmmakers. Each session paired an interviewer with a
@@ -231,21 +248,16 @@ export default function CaseStudyThree({
               find patterns across very different creative practices.
             </p>
           </SubSectionContainer>
-          <SubSectionContainer subSectionContainerClassName="gap-0">
+          <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
+            <SubSectionContainer>
+              <SubHeading>Messy was the pattern</SubHeading>
+              <p>
+                The strongest finding was not a single preferred workflow. It
+                was that the process was deeply personal, organic, and
+                non-uniform.
+              </p>
+            </SubSectionContainer>
             <HorizontalCardGroup
-              showBody
-              body={
-                <SubSectionContainer>
-                  <SubHeading showNumber number="2">
-                    Messy was the pattern
-                  </SubHeading>
-                  <p>
-                    The strongest finding was not a single preferred workflow.
-                    It was that the process was deeply personal, organic, and
-                    non-uniform.
-                  </p>
-                </SubSectionContainer>
-              }
               cards={[
                 {
                   id: "inputs",
@@ -310,16 +322,7 @@ export default function CaseStudyThree({
             />
           </SubSectionContainer>
           <SubSectionContainer>
-            <p className={contentNoteClass}>
-              Content note: Show a small affinity map or cluster of interview
-              notes. The artifact should support the decision, not dominate the
-              section.
-            </p>
-          </SubSectionContainer>
-          <SubSectionContainer>
-            <SubHeading showNumber number="3">
-              The design principle
-            </SubHeading>
+            <SubHeading>The design principle</SubHeading>
             <p
               className="rounded-1 p-6 supports-[corner-shape:squircle]:rounded-2 supports-[corner-shape:squircle]:[corner-shape:squircle] md:rounded-2 md:p-10 supports-[corner-shape:squircle]:md:rounded-4"
               style={{ backgroundColor: theme.hex.soft }}
@@ -333,13 +336,10 @@ export default function CaseStudyThree({
         <SectionContainer
           heading="The One"
           headingIcon={RocketLaunchIcon}
-          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer>
-            <SubHeading showNumber number="1">
-              A script-agnostic start
-            </SubHeading>
+            <SubHeading>A script-agnostic start</SubHeading>
             <p>
               Fantail was designed around a simple bet. Instead of forcing
               filmmakers to begin with a rigid screenplay format, we let them
@@ -352,9 +352,7 @@ export default function CaseStudyThree({
           </SubSectionContainer>
 
           <SubSectionContainer>
-            <SubHeading showNumber number="2">
-              Scenes without rigidity
-            </SubHeading>
+            <SubHeading>Scenes without rigidity</SubHeading>
             <p>
               The core organizing unit was the scene. Our research showed that
               filmmaking processes vary widely, but all films are built out of
@@ -368,9 +366,7 @@ export default function CaseStudyThree({
           </SubSectionContainer>
 
           <SubSectionContainer>
-            <SubHeading showNumber number="3">
-              Three connected areas
-            </SubHeading>
+            <SubHeading>Three connected areas</SubHeading>
             <p>
               Each scene was divided into references, script, and storyboard.
               Together, the three areas connected raw inspiration to the written
@@ -415,9 +411,7 @@ export default function CaseStudyThree({
           </SubSectionContainer>
 
           <SubSectionContainer>
-            <SubHeading showNumber number="4">
-              Start anywhere, build outward
-            </SubHeading>
+            <SubHeading>Start anywhere, build outward</SubHeading>
             <p>
               A scene could start with a photo, a line of dialogue, a character
               note, or another fragment. From there, users could add context,
@@ -432,9 +426,7 @@ export default function CaseStudyThree({
           </SubSectionContainer>
 
           <SubSectionContainer>
-            <SubHeading showNumber number="5">
-              Deliberate cuts
-            </SubHeading>
+            <SubHeading>Deliberate cuts</SubHeading>
             <p>
               We explored AI table reads and permission-based collaboration, but
               held both back. Voice quality was not consistent enough, and
@@ -449,19 +441,9 @@ export default function CaseStudyThree({
               flow.
             </p>
           </SubSectionContainer>
-        </SectionContainer>
-      </section>
-      <section id="section-5" className="scroll-mt-24">
-        <SectionContainer
-          heading="Outcome"
-          headingIcon={PresentationChartIcon}
-          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
-          borderColor={borderColor}
-        >
+
           <SubSectionContainer>
-            <SubHeading showNumber number="1">
-              Product signal, business reality
-            </SubHeading>
+            <SubHeading>Product signal, business reality</SubHeading>
             <div className="grid gap-8 md:grid-cols-2">
               <div>
                 <h4 className={theme.textColorClass}>What we reached</h4>
@@ -494,19 +476,17 @@ export default function CaseStudyThree({
               if a representative quote is available.
             </p>
           </SubSectionContainer>
-        </SectionContainer>
+        </SectionContainer>{" "}
       </section>
-      <section id="section-6" className="scroll-mt-24">
+
+      <section id="section-5" className="mb-16 scroll-mt-24 md:mb-24">
         <SectionContainer
           heading="Reflection"
           headingIcon={BrainIcon}
-          headingBaseColorClassName="text-foreground dark:text-dark-foreground"
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer>
-            <SubHeading showNumber number="1">
-              What I carried forward
-            </SubHeading>
+            <SubHeading>What I carried forward</SubHeading>
             <p>
               Fantail taught me how to turn a messy creative process into a
               structured product system. It also taught me that a strong concept

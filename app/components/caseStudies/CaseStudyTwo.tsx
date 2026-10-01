@@ -1,7 +1,12 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import { motion, MotionValue, useTransform } from "framer-motion";
+import { useState } from "react";
+// import { useTheme } from "next-themes";
+import {
+  motion,
+  MotionValue,
+  // , useTransform
+} from "framer-motion";
 import {
   BrainIcon,
   AtomIcon,
@@ -12,6 +17,7 @@ import {
   SealQuestionIcon,
   StackIcon,
   LinkBreakIcon,
+  LightbulbIcon,
 } from "@phosphor-icons/react";
 import projects from "@/data/projects";
 import { useSiteNavigation } from "@/app/context/SiteNavigationContext";
@@ -44,6 +50,78 @@ interface CaseStudyTwoProps {
 
 const researchThemes: ResearchTheme[] = [
   {
+    id: "quant-value",
+    label: "Quant research is in demand",
+    quotes: [
+      {
+        id: "quant-stakeholders",
+        compactPosition: {
+          x: "-2%",
+          y: "-19%",
+        },
+        before: "As a qual researcher, sometimes I feel it's difficult to ",
+        highlight: "get buy-in",
+        after:
+          " from more quant focused stakeholders, and I'm not really specially trained in that area.",
+      },
+      {
+        id: "heavy-quant",
+        compactPosition: {
+          x: "23%",
+          y: "39%",
+        },
+        before:
+          "I think it's always helpful to have a heavy quant portion and a light qual portion when testing more complex changes in order to ",
+        highlight: "mitigate risk",
+        after: ".",
+      },
+      {
+        id: "value-add",
+        compactPosition: {
+          x: "-38%",
+          y: "12%",
+        },
+        before:
+          "We have a couple mixed method researchers but we're mostly qual. I can definitely see the ",
+        highlight: "value add",
+        after: " on the quant side.",
+      },
+      {
+        id: "ab-test",
+        compactPosition: {
+          x: "-31%",
+          y: "-33%",
+        },
+        before:
+          "There are things we definitely want to validate with in-product with a/b testing. But that's not always the case. For earlier in the cycle, we don't really have a good tool to ",
+        highlight: "a/b test prototypes",
+        after: " quickly.",
+      },
+      {
+        id: "ship-everything",
+        compactPosition: {
+          x: "16%",
+          y: "-39%",
+        },
+        before: "Building is much fasters now, but you still ",
+        highlight: "can't ship everything",
+        after:
+          ". Prototyping is still necessary. And that's much faster now too.",
+      },
+      {
+        id: "too-much",
+        compactPosition: {
+          x: "-8%",
+          y: "30%",
+        },
+        before:
+          "There's a lot going on. Designers and PMs are all vibecoding. We're ",
+        highlight: "building too much",
+        after: " stuff too fast. Sometimes without any sort of validation.",
+      },
+    ],
+  },
+  {
     id: "research-time",
     label: "Research takes too long",
     quotes: [
@@ -70,15 +148,14 @@ const researchThemes: ResearchTheme[] = [
           ". A lot of times the concepts I want to explore could already be irrelevant by the time I figure out how to test.",
       },
       {
-        id: "big-study",
+        id: "ten-variants",
         compactPosition: {
           x: "7%",
           y: "24%",
         },
-        before:
-          "Occasionally I have something like 10 variants I want to test and that's ",
-        highlight: "a big study",
-        after: " to set up.",
+        before: "Occasionally I have something like ",
+        highlight: "10 variants",
+        after: " I want to test and that's a big study to set up time wise.",
       },
     ],
   },
@@ -118,78 +195,6 @@ const researchThemes: ResearchTheme[] = [
           "Obviously AI tooling is a big thing and there is just so much going on. But one thing is that it's letting everyone be able to do ",
         highlight: "a bit of everything",
         after: ".",
-      },
-    ],
-  },
-  {
-    id: "quant-value",
-    label: "Quant research is in demand",
-    quotes: [
-      {
-        id: "quant-stakeholders",
-        compactPosition: {
-          x: "-2%",
-          y: "-22%",
-        },
-        before: "As a qual researcher, sometimes I feel it's difficult to ",
-        highlight: "get buy-in",
-        after:
-          " from more quant focused stakeholders, and I'm not really specially trained in that area.",
-      },
-      {
-        id: "heavy-quant",
-        compactPosition: {
-          x: "23%",
-          y: "39%",
-        },
-        before:
-          "I think it's always helpful to have a heavy quant portion and a light qual portion when testing more complex changes in order to ",
-        highlight: "mitigate risk",
-        after: ".",
-      },
-      {
-        id: "value-add",
-        compactPosition: {
-          x: "-34%",
-          y: "12%",
-        },
-        before:
-          "We have a couple mixed method researchers but we're mostly qual. I can definitely see the ",
-        highlight: "value add",
-        after: " on the quant side.",
-      },
-      {
-        id: "ab-test",
-        compactPosition: {
-          x: "-35%",
-          y: "-33%",
-        },
-        before:
-          "There are things we definitely want to validate with in-product with a/b testing. But that's not always the case. For earlier in the cycle, we don't really have a good tool to ",
-        highlight: "a/b test prototypes",
-        after: " quickly.",
-      },
-      {
-        id: "ship-everything",
-        compactPosition: {
-          x: "16%",
-          y: "-39%",
-        },
-        before: "Building is much fasters now, but you still ",
-        highlight: "can't ship everything",
-        after:
-          ". Prototyping is still necessary. And that's much faster now too.",
-      },
-      {
-        id: "too-much",
-        compactPosition: {
-          x: "-8%",
-          y: "30%",
-        },
-        before:
-          "There's a lot going on. Designers and PMs are all vibecoding. We're ",
-        highlight: "building too much",
-        after: " stuff too fast. Sometimes without any sort of validation.",
       },
     ],
   },
@@ -274,30 +279,32 @@ const testimonials = [
 ];
 
 export default function CaseStudyTwo({
-  scrollY,
+  // scrollY,
   fadeInFirstSection = false,
   firstSectionFadeReady = true,
 }: CaseStudyTwoProps) {
-  const { resolvedTheme } = useTheme();
+  const [isResearchBackdropVisible, setIsResearchBackdropVisible] =
+    useState(false);
+  // const { resolvedTheme } = useTheme();
   const { activeIndex } = useSiteNavigation();
   const theme = useProjectTheme(projects[activeIndex].id);
 
-  const borderOpacity = useTransform(
-    scrollY,
-    [
-      0,
-      window.innerHeight * 2,
-      document.body.scrollHeight - window.innerHeight * 2,
-      document.body.scrollHeight - window.innerHeight * 1.2,
-      document.body.scrollHeight - window.innerHeight,
-    ],
-    resolvedTheme === "dark" ? [0.4, 0, 0, 0.4, 0] : [1, 0, 0, 1, 0],
-  );
+  // const borderOpacity = useTransform(
+  //   scrollY,
+  //   [
+  //     0,
+  //     window.innerHeight * 2,
+  //     document.body.scrollHeight - window.innerHeight * 2,
+  //     document.body.scrollHeight - window.innerHeight * 1.2,
+  //     document.body.scrollHeight - window.innerHeight,
+  //   ],
+  //   resolvedTheme === "dark" ? [0.4, 0, 0, 0.4, 0] : [1, 0, 0, 1, 0],
+  // );
 
-  const borderColor = useTransform(
-    borderOpacity,
-    (opacity) => `rgba(255,255,255,${opacity})`,
-  );
+  // const borderColor = useTransform(
+  //   borderOpacity,
+  //   (opacity) => `rgba(255,255,255,${opacity})`,
+  // );
 
   return (
     <article className="flex flex-col gap-16 md:gap-24">
@@ -314,15 +321,12 @@ export default function CaseStudyTwo({
           <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
             <SubSectionContainer>
               <p>
-                <span className="font-semibold">
-                  Flux helps product teams run rigorous experiments on their
-                  prototypes with ease.
-                </span>{" "}
-                Researchers can configure experiments, recruit large participant
-                samples, run tests, and get reports within hours. They can learn
-                behavioral trends, sentiment differences, and performance
-                variation between their prototypes, all without needing any
-                expertise in quantitative methods.
+                Flux helps product teams run rigorous experiments on their
+                prototypes with ease. Researchers can configure experiments,
+                recruit large participant samples, run tests, and get reports
+                within hours. They can learn behavioral trends, sentiment
+                differences, and performance variation between their prototypes,
+                all without needing any expertise in quantitative methods.
               </p>
             </SubSectionContainer>
             <HorizontalCardGroup
@@ -425,7 +429,7 @@ export default function CaseStudyTwo({
               ].map(({ id, content }) => (
                 <HighlightCard
                   key={id}
-                  highlightCardClassName="flex h-full min-h-[inherit] flex-col"
+                  highlightCardClassName="flex h-full min-h-[inherit] flex-col border border-flux/50 dark:border-dark-flux/50"
                   contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-2 tall:overflow-hidden"
                 >
                   {content}
@@ -439,18 +443,16 @@ export default function CaseStudyTwo({
         <SectionContainer
           heading="The Zero"
           headingIcon={SealQuestionIcon}
-          borderColor={borderColor}
+          showBorder={false}
         >
           <SubSectionContainer>
             <p>
-              Flux started with a simple observation:{" "}
-              <span className="font-semibold">
-                AI has drastically lowered the cost of building, but not the
-                cost of building the wrong thing.
-              </span>{" "}
-              User research can mitigate this. But as agentic design and dev
-              workflows continue to accelerate, it&rsquo;s becoming increasingly
-              difficult to strike the balance between speed and confidence.
+              Flux started with a simple observation: AI has drastically lowered
+              the cost of building, but not the cost of building the wrong
+              thing. User research can mitigate this. But as agentic design and
+              dev workflows continue to accelerate, it&rsquo;s becoming
+              increasingly difficult to strike the balance between speed and
+              confidence.
             </p>
           </SubSectionContainer>
           <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
@@ -469,6 +471,7 @@ export default function CaseStudyTwo({
             <HighlightCard
               borderBaseColor={theme.hex.primary}
               borderHighlightColor={`color-mix(in oklab, ${theme.hex.primary} 30%, white 70%)`}
+              highlightCardClassName="border border-flux/50 dark:border-dark-flux/50"
               highlightOnHover={false}
             >
               <TextCard
@@ -496,22 +499,32 @@ export default function CaseStudyTwo({
                 thoughts on user research. This process took different shapes,
                 ranging from casual 5-minute conversations to structured
                 hour-long interviews. Once we sat down to synthesize our
-                findings, we saw three themes emerging:{" "}
-                <span className="font-bold">
-                  research can no longer keep pace with development
-                </span>
-                ;{" "}
-                <span className="font-bold">
-                  research is being democraitized
-                </span>
-                ; and{" "}
-                <span className="font-bold">
-                  there is a demand for more quantitative research
-                </span>
-                .
+                findings, we saw three themes emerging: research can no longer
+                keep pace with development ; research is being democraitized ;
+                and there is a demand for more quantitative research.
               </p>
             </SubSectionContainer>
-            <ResearchThemeCanvas themes={researchThemes} />
+            <HighlightCard
+              highlightCardClassName="border border-flux/50 dark:border-dark-flux/50 overflow-hidden"
+              highlightOnHover={false}
+            >
+              <div className="relative">
+                <h5 className="flex items-center gap-2 px-4 pt-4 font-serif text-[1.5rem] font-semibold text-flux dark:text-dark-flux">
+                  <LightbulbIcon size={28} /> Insights
+                </h5>
+                <motion.div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 z-20 bg-zinc-950/45 backdrop-blur-[1px]"
+                  initial={false}
+                  animate={{ opacity: isResearchBackdropVisible ? 1 : 0 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                />
+              </div>
+              <ResearchThemeCanvas
+                themes={researchThemes}
+                onDesktopBackdropVisibilityChange={setIsResearchBackdropVisible}
+              />
+            </HighlightCard>
           </SubSectionContainer>
           <VerticalCardGroup
             bodyWidthClassNameOnLarge="md:w-[max(10rem,40%)]"
@@ -557,7 +570,7 @@ export default function CaseStudyTwo({
               ({ id, icon: Icon, iconSize, heading, body }) => (
                 <HighlightCard
                   key={id}
-                  highlightCardClassName="flex h-full min-h-[inherit] flex-col"
+                  highlightCardClassName="flex h-full min-h-[inherit] flex-col border border-flux/50 dark:border-dark-flux/50"
                   contentClassName="flex h-full flex-col justify-between overflow-auto p-6 md:p-10"
                 >
                   <TextCard
@@ -591,293 +604,286 @@ export default function CaseStudyTwo({
             <p>
               Once we established the problem space, we started sketching out
               what Flux needed to be. Along the way, we encountered many
-              interesting design challenges. I will elaborate on 3 of them.
+              interesting design challenges. I will elaborate on two of them.
             </p>
           </SubSectionContainer>
-          <HorizontalCardGroup
-            showBody
-            body={
-              <SubSectionContainer subSectionContainerClassName="mb-4 md:mb-6 px-2 md:px-6">
-                <SubHeading>Balancing rigor and usability</SubHeading>
-              </SubSectionContainer>
-            }
-            alignment="aligned"
-            stickyTopOnLarge="5rem"
-            cardWidthClassNameOnLarge="md:w-[80rem]"
-            maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
-            bottomMarginOnLarge="2rem"
-            cards={[
-              {
-                id: "tension",
-                content: (
-                  <div className="flex h-full flex-col">
-                    <span
-                      className={`text-sm font-bold ${theme.textColorClass}`}
-                    >
-                      The tension
-                    </span>
-                    <h4 className="mt-auto pt-8">Tension</h4>
-                    <p className="mt-3">
-                      [Placeholder] The central tension: how do we design a
-                      productthat deals with highly scientific research methods
-                      in a way that is easy to understand? An overarching theme
-                      is finding the balance between a product that inspires
-                      confidence in the results it delivers and a product that
-                      is easy and intuitive to use. Two moments repeatedly
-                      exposed the design tension. Teams had to choose a
-                      defensible participant count without necessarily
-                      understanding power analysis, and they had to configure an
-                      expensive study before seeing the report it would produce.
-                      In both cases, users needed guidance without losing
-                      visibility or control. Valid without a stat lesson How
-                      could teams run defensible studies without making setup
-                      feel like coursework? Guidance without restriction How
-                      could the default path protect newer users while
-                      preserving expert control?
-                    </p>
-                  </div>
-                ),
-              },
-              {
-                id: "iterations",
-                content: (
-                  <div className="flex h-full flex-col">
-                    <span
-                      className={`text-sm font-bold ${theme.textColorClass}`}
-                    >
-                      Exploration
-                    </span>
-                    <h4 className="mt-auto pt-8">Exploration</h4>
-                    <p className="mt-3">
-                      On example of this is power analysis. When comparing two
-                      variants, statisticians do a calculation called power
-                      analysis to determine what sample size they need to find
-                      potential statistical signifiance. In other words, how
-                      many people to recruit in order to know the results are
-                      real. This is a simple yet specialized matter. The
-                      confidence provided by doing quantitative analysis is what
-                      sets Flux apart. So we obviously want to make sure studies
-                      are legit. At the same time, we didn&rsquo;t want to res
-                    </p>
-                  </div>
-                ),
-              },
-              {
-                id: "solution",
-                content: (
-                  <div className="flex h-full flex-col">
-                    <span
-                      className={`text-sm font-bold ${theme.textColorClass}`}
-                    >
-                      My Solution
-                    </span>
-                    <h4 className="mt-auto pt-8">I solved it</h4>
-                    <p className="mt-3">
-                      Researchers can then set a goal for their experiment. Flux
-                      gives guidelines on how to set a sample size according to
-                      statistical best practices. Researchers also have the
-                      option to either generate a link to share with their own
-                      panel, or recreate with Flux by a click of a button.
-                    </p>
-                  </div>
-                ),
-              },
-            ].map(({ id, content }) => (
-              <HighlightCard
-                key={id}
-                highlightCardClassName="flex h-full min-h-[inherit] flex-col"
-                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
-              >
-                {content}
-              </HighlightCard>
-            ))}
-          />
-          <HorizontalCardGroup
-            showBody
-            body={
-              <SubSectionContainer subSectionContainerClassName="mb-4 md:mb-6 px-2 md:px-6">
-                <SubHeading>
-                  Building for trust in underlying methodology
-                </SubHeading>
-              </SubSectionContainer>
-            }
-            alignment="aligned"
-            stickyTopOnLarge="5rem"
-            cardWidthClassNameOnLarge="md:w-[80rem]"
-            maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
-            bottomMarginOnLarge="2rem"
-            cards={[
-              {
-                id: "tension",
-                content: (
-                  <div className="flex h-full flex-col">
-                    <span
-                      className={`text-sm font-bold ${theme.textColorClass}`}
-                    >
-                      Tension
-                    </span>
-                    <h4 className="mt-auto pt-8">Tension</h4>
-                    <p className="mt-3">
-                      Users, especially those who aren&rsquo;t well-versed in
-                      quantitative methods, might start feeling lost as they go
-                      through the preocess of setting up an experiment. The
-                      whole point of quantitative research is to produce
-                      measurable confidence in the results. But what if what
-                      they are doing is not &lsquo;valid science?&rsquo;? Will
-                      they be able to defend the findings in a meeting?
-                    </p>
-                  </div>
-                ),
-              },
-              {
-                id: "iterations",
-                content: (
-                  <div className="flex h-full flex-col">
-                    <span
-                      className={`text-sm font-bold ${theme.textColorClass}`}
-                    >
-                      Exploration
-                    </span>
-                    <h4 className="mt-auto pt-8">Exploration</h4>
-                    <p className="mt-3">
-                      I tackled this from several different angles. First, I
-                      explroed the idea of a &lsquo;statistics crush
-                      course&rsquo;. I quicklly realized it
-                    </p>
-                  </div>
-                ),
-              },
-              {
-                id: "solution",
-                content: (
-                  <div className="flex h-full flex-col">
-                    <span
-                      className={`text-sm font-bold ${theme.textColorClass}`}
-                    >
-                      My Solution
-                    </span>
-                    <h4 className="mt-auto pt-8">I solved it</h4>
-                    <p className="mt-3">
-                      Researchers can then set a goal for their experiment. Flux
-                      gives guidelines on how to set a sample size according to
-                      statistical best practices. Researchers also have the
-                      option to either generate a link to share with their own
-                      panel, or recreate with Flux by a click of a button.
-                    </p>
-                  </div>
-                ),
-              },
-            ].map(({ id, content }) => (
-              <HighlightCard
-                key={id}
-                highlightCardClassName="flex h-full min-h-[inherit] flex-col"
-                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
-              >
-                {content}
-              </HighlightCard>
-            ))}
-          />
-          <HorizontalCardGroup
-            showBody
-            body={
-              <SubSectionContainer subSectionContainerClassName="mb-4 md:mb-6 px-2 md:px-6">
-                <SubHeading>
-                  Addressing uncertainty before commitment
-                </SubHeading>
-              </SubSectionContainer>
-            }
-            alignment="aligned"
-            stickyTopOnLarge="5rem"
-            cardWidthClassNameOnLarge="md:w-[80rem]"
-            maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
-            bottomMarginOnLarge="2rem"
-            cards={[
-              {
-                id: "tension",
-                content: (
-                  <div className="flex h-full flex-col">
-                    <span
-                      className={`text-sm font-bold ${theme.textColorClass}`}
-                    >
-                      Tension
-                    </span>
-                    <h4 className="mt-auto pt-8">Tension</h4>
-                    <p className="mt-3">
-                      The central tension: how do we clearly signel to the user
-                      what a study would produce before committing time and
-                      money to run it?
-                    </p>
-                  </div>
-                ),
-              },
-              {
-                id: "iterations",
-                content: (
-                  <div className="flex h-full flex-col">
-                    <span
-                      className={`text-sm font-bold ${theme.textColorClass}`}
-                    >
-                      Exploration
-                    </span>
-                    <h4 className="mt-auto pt-8">Exploration</h4>
-                    <p className="mt-3">
-                      Uncertainty comes from two distinct sources: 1.
-                      Quantitative studies usually involves hundreds, sometimes
-                      even thousands, of participants, which is expensive both
-                      financially and operationally. 2. How do users know if
-                      they are doing &lsquo;real&rsquo; science? They sometimes
-                      feel uncertain about the validity of the results. We
-                      addressed this from 2 different angles. for 1, we built a
-                      feature that allows users to preview a mock report that
-                      contains fictitious data. This report updates in real time
-                      based on the experiment setup, and offers an one-to-one
-                      look at the shape of the data they will receive at the end
-                      of the study. Seeing this before launching reduces a great
-                      deal of uncertainty. This also serves as an opportunity
-                      for users to spot potential erros in their setup,
-                      eliminating doubts around the process. For 2, our approach
-                      is much subtler. I made sure to expose the science behind
-                      the calculations as much as possible without being
-                      intruisive. I also added many explainers throughout the
-                      process to help users understand what they are doing. This
-                      gives users a good idea of the methodology behind the
-                      experiment. I also added a summary feature to help users
-                      draw conclusions in the results, allowing them to have
-                      confidence in presenting the results to stakeholders.
-                    </p>
-                  </div>
-                ),
-              },
-              {
-                id: "solution",
-                content: (
-                  <div className="flex h-full flex-col">
-                    <span
-                      className={`text-sm font-bold ${theme.textColorClass}`}
-                    >
-                      My Solution
-                    </span>
-                    <h4 className="mt-auto pt-8">I solved it</h4>
-                    <p className="mt-3">
-                      Researchers can then set a goal for their experiment. Flux
-                      gives guidelines on how to set a sample size according to
-                      statistical best practices. Researchers also have the
-                      option to either generate a link to share with their own
-                      panel, or recreate with Flux by a click of a button.
-                    </p>
-                  </div>
-                ),
-              },
-            ].map(({ id, content }) => (
-              <HighlightCard
-                key={id}
-                highlightCardClassName="flex h-full min-h-[inherit] flex-col"
-                contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-8"
-              >
-                {content}
-              </HighlightCard>
-            ))}
-          />
+
+          <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
+            <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6 px-4 md:px-6">
+              <SubHeading>Balancing rigor and usability</SubHeading>
+              <p>
+                Statistics may not be something everyone can master without
+                training, but our belief is that the process itself can be
+                simplified to a degree that anyone can follow and yield credibe
+                results. The design challenge for Flux is to provide guardrails
+                and guidance without compromising rigor.
+              </p>
+            </SubSectionContainer>
+            <HorizontalCardGroup
+              alignment="aligned"
+              cardSlotClassName="tall:!h-[100svh]"
+              bottomMarginOnLarge="1rem"
+              cardWidthClassNameOnLarge="md:w-screen"
+              maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
+              stickyTopOnLarge="5rem"
+              cards={[
+                {
+                  id: "tension",
+                  content: (
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Tension
+                        </h5>
+                        <p className="mt-3 !font-serif">
+                          How do we design a product that deals with highly
+                          scientific research methods in a way that is easy to
+                          understand? An overarching theme is finding the
+                          balance between a product that inspires confidence in
+                          the results it delivers and a product that is easy and
+                          intuitive to use. Two moments repeatedly exposed the
+                          design tension. Teams had to choose a defensible
+                          participant count without necessarily understanding
+                          power analysis, and they had to configure an expensive
+                          study before seeing the report it would produce. In
+                          both cases, users needed guidance without losing
+                          visibility or control. Valid without a stat lesson How
+                          could teams run defensible studies without making
+                          setup feel like coursework? Guidance without
+                          restriction How could the default path protect newer
+                          users while preserving expert control?
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  id: "exploration",
+                  content: (
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Exploration
+                        </h5>
+                        <p className="mt-3 !font-serif">
+                          On example of this is power analysis. When comparing
+                          two variants, statisticians do a calculation called
+                          power analysis to determine what sample size they need
+                          to find potential statistical signifiance. In other
+                          words, how many people to recruit in order to know the
+                          results are real. This is a simple yet specialized
+                          matter. The confidence provided by doing quantitative
+                          analysis is what sets Flux apart. So we obviously want
+                          to make sure studies are legit. At the same time, we
+                          didn’t want to res
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  id: "solution",
+                  content: (
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Solution
+                        </h5>
+                        <p className="mt-3 !font-serif">
+                          Researchers can then set a goal for their experiment.
+                          Flux gives guidelines on how to set a sample size
+                          according to statistical best practices. Researchers
+                          also have the option to either generate a link to
+                          share with their own panel, or recreate with Flux by a
+                          click of a button.
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                },
+              ].map(({ id, content }) => (
+                <HighlightCard
+                  key={id}
+                  highlightCardClassName="flex h-full min-h-[inherit] flex-col border border-flux/50 dark:border-dark-flux/50"
+                  contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-2 tall:overflow-hidden"
+                >
+                  {content}
+                </HighlightCard>
+              ))}
+            />{" "}
+          </SubSectionContainer>
+          <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
+            <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6 px-4 md:px-6">
+              <SubHeading>Addressing uncertainty before commitment</SubHeading>
+              <p>
+                A quantitative study involves a large number of participants.
+                The commitment is a big one, often times with hundreds, if not
+                thousands, of dollars on the line. Researchers need to be
+                reassured that the results will be of value, whether or not
+                their hypothesis is proven.
+              </p>
+            </SubSectionContainer>
+            <HorizontalCardGroup
+              alignment="aligned"
+              cardSlotClassName="tall:!h-[100svh]"
+              bottomMarginOnLarge="1rem"
+              cardWidthClassNameOnLarge="md:w-screen"
+              maxCardWidthClassNameOnLarge="md:max-w-[177.7778cqh]"
+              stickyTopOnLarge="5rem"
+              cards={[
+                {
+                  id: "tension",
+                  content: (
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Tension
+                        </h5>
+                        <p className="mt-3 !font-serif">
+                          How do we clearly signal to researchers what an
+                          experiment woudl produce before asking them to commit
+                          their time and money to run it?
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  id: "exploration",
+                  content: (
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Exploration
+                        </h5>
+                        <p className="mt-3 !font-serif">
+                          Uncertainty comes from two distinct sources: 1.
+                          Quantitative studies usually involves hundreds,
+                          sometimes even thousands, of participants, which is
+                          expensive both financially and operationally. 2. How
+                          do users know if they are doing ‘real’ science? They
+                          sometimes feel uncertain about the validity of the
+                          results. We addressed this from 2 different angles.
+                          for 1, we built a feature that allows users to preview
+                          a mock report that contains fictitious data. This
+                          report updates in real time based on the experiment
+                          setup, and offers an one-to-one look at the shape of
+                          the data they will receive at the end of the study.
+                          Seeing this before launching reduces a great deal of
+                          uncertainty. This also serves as an opportunity for
+                          users to spot potential erros in their setup,
+                          eliminating doubts around the process. For 2, our
+                          approach is much subtler. I made sure to expose the
+                          science behind the calculations as much as possible
+                          without being intruisive. I also added many explainers
+                          throughout the process to help users understand what
+                          they are doing. This gives users a good idea of the
+                          methodology behind the experiment. I also added a
+                          summary feature to help users draw conclusions in the
+                          results, allowing them to have confidence in
+                          presenting the results to stakeholders.
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  id: "solution",
+                  content: (
+                    <div className="flex h-full w-full tall:min-h-0 tall:flex-col">
+                      <div
+                        className={`min-w-0 flex-1 overflow-hidden border border-flux bg-flux tall:min-h-0 ${ROUNDED_SQUIRCLE_03} ${ROUNDED_SQUIRCLE_05_MD}`}
+                      >
+                        <ZoomableImage
+                          src="/images/flux-01.png"
+                          alt="Flux prototype import interface"
+                          className="[--zoom-preview-padding:1rem] md:[--zoom-preview-padding:2rem]"
+                          imageRoundedClassName={`${ROUNDED_SQUIRCLE_01} ${ROUNDED_SQUIRCLE_03_MD}`}
+                          unzoomedPadding="var(--zoom-preview-padding)"
+                        />
+                      </div>
+                      <div className="w-[30%] p-6 tall:h-[40svh] tall:w-full tall:shrink-0 tall:overflow-y-auto">
+                        <h5 className="font-serif text-[1.5rem] font-bold">
+                          Solution
+                        </h5>
+                        <p className="mt-3 !font-serif">
+                          Researchers can then set a goal for their experiment.
+                          Flux gives guidelines on how to set a sample size
+                          according to statistical best practices. Researchers
+                          also have the option to either generate a link to
+                          share with their own panel, or recreate with Flux by a
+                          click of a button.
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                },
+              ].map(({ id, content }) => (
+                <HighlightCard
+                  key={id}
+                  highlightCardClassName="flex h-full min-h-[inherit] flex-col border border-flux/50 dark:border-dark-flux/50"
+                  contentClassName="flex min-h-0 flex-1 flex-col overflow-auto p-2 tall:overflow-hidden"
+                >
+                  {content}
+                </HighlightCard>
+              ))}
+            />
+          </SubSectionContainer>
         </SectionContainer>
       </section>
 
@@ -901,7 +907,7 @@ export default function CaseStudyTwo({
               borderBaseColor={theme.hex.primary}
               borderHighlightColor={`color-mix(in oklab, ${theme.hex.primary} 30%, white 70%)`}
               highlightOnHover={false}
-              highlightCardClassName="p-2"
+              highlightCardClassName="p-2 border border-flux/50 dark:border-dark-flux/50"
             >
               <LazyVideo
                 src="https://assets.haichaowang.com/promo-export-01.mp4"
@@ -915,7 +921,9 @@ export default function CaseStudyTwo({
           <SubSectionContainer subSectionContainerClassName="gap-4 md:gap-6">
             <HorizontalScrollStrip
               ariaLabel="Flux testimonials"
-              knobBackgroundClassName="bg-white dark:bg-white/25"
+              railClassName="h-7 w-full rounded-full border border-flux/50 bg-flux/10 dark:border-dark-flux/50 dark:bg-dark-flux/10"
+              knobClassName="h-5 w-5 rounded-full bg-white dark:bg-black"
+              knobHoveredClassName=""
               body={
                 <SubSectionContainer subSectionContainerClassName="px-3 md:px-6 gap-4 md:gap-6 mb-4 md:mb-6">
                   <SubHeading>Reception</SubHeading>
@@ -932,7 +940,7 @@ export default function CaseStudyTwo({
                   <HighlightCard
                     key={id}
                     highlightOnHover={false}
-                    highlightCardClassName={`flex min-w-0 flex-col justify-between gap-6 ${layoutClassName} p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
+                    highlightCardClassName={`flex min-w-0 border border-flux/50 dark:border-dark-flux/50 flex-col justify-between gap-6 ${layoutClassName} p-6 md:p-8 font-serif leading-8 md:leading-10 text-foreground dark:text-dark-foreground`}
                   >
                     <TextCard
                       bodyAs="blockquote"
@@ -953,7 +961,7 @@ export default function CaseStudyTwo({
         </SectionContainer>
       </section>
 
-      <section id="section-5" className="mb-12 scroll-mt-24">
+      <section id="section-5" className="mb-16 scroll-mt-24 md:mb-24">
         <SectionContainer
           heading="Reflections"
           headingIcon={BrainIcon}

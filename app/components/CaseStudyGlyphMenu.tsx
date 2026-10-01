@@ -13,8 +13,10 @@ import AnimatedGlyph from "./AnimatedGlyph";
 
 interface CaseStudyGlyphMenuProps {
   isOpen: boolean;
+  isHomeItemHovered: boolean;
   navigationLocked?: boolean;
   onClose: () => void;
+  onHomeItemHoverChange: (isHovered: boolean) => void;
   onHomeClick: () => void;
   onProjectNavigationStart: (index: number) => boolean;
 }
@@ -81,7 +83,9 @@ function MenuLabel({
   exitDelay = 0,
   barShadow,
   canHover,
+  isHovered = false,
   disabled = false,
+  onHoverChange,
   onClick,
   className = "",
   style,
@@ -91,7 +95,9 @@ function MenuLabel({
   exitDelay?: number;
   barShadow: MotionValue<string>;
   canHover: boolean;
+  isHovered?: boolean;
   disabled?: boolean;
+  onHoverChange?: (isHovered: boolean) => void;
   onClick: () => void;
   className?: string;
   style?: React.CSSProperties;
@@ -111,8 +117,18 @@ function MenuLabel({
         disabled={disabled}
         onClick={onClick}
         initial={{ x: -6 }}
-        animate={{ x: 0 }}
-        whileHover={canHover && !disabled ? { scale: 1.1 } : undefined}
+        animate={{ x: 0, scale: isHovered ? 1.1 : 1 }}
+        style={{ transformOrigin: "left center" }}
+        onPointerEnter={(event) => {
+          if (canHover && !disabled && event.pointerType !== "touch") {
+            onHoverChange?.(true);
+          }
+        }}
+        onPointerLeave={(event) => {
+          if (canHover && !disabled && event.pointerType !== "touch") {
+            onHoverChange?.(false);
+          }
+        }}
         transition={{
           x: {
             delay: enterDelay,
@@ -196,13 +212,18 @@ function MenuLabel({
 
 export default function CaseStudyGlyphMenu({
   isOpen,
+  isHomeItemHovered,
   navigationLocked = false,
   onClose,
+  onHomeItemHoverChange,
   onHomeClick,
   onProjectNavigationStart,
 }: CaseStudyGlyphMenuProps) {
   const { activeIndex, viewMode } = useSiteNavigation();
   const [pendingProjectIndex, setPendingProjectIndex] = useState<number | null>(
+    null,
+  );
+  const [hoveredProjectIndex, setHoveredProjectIndex] = useState<number | null>(
     null,
   );
   const { resolvedTheme } = useTheme();
@@ -237,6 +258,13 @@ export default function CaseStudyGlyphMenu({
     return () => window.clearTimeout(timeout);
   }, [pendingProjectIndex]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      onHomeItemHoverChange(false);
+      setHoveredProjectIndex(null);
+    }
+  }, [isOpen, onHomeItemHoverChange]);
+
   const handleProjectClick = (index: number) => {
     if (!isInteractive) return;
 
@@ -263,6 +291,8 @@ export default function CaseStudyGlyphMenu({
             label="Home"
             barShadow={barShadow}
             canHover={canHover}
+            isHovered={isHomeItemHovered}
+            onHoverChange={onHomeItemHoverChange}
             onClick={onHomeClick}
             enterDelay={
               BUTTON_MOTION_DURATION - BUTTON_STAGGER - LABEL_ENTRY_ADVANCE
@@ -333,7 +363,12 @@ export default function CaseStudyGlyphMenu({
                     aria-label={project.title}
                     aria-current={isActive ? "page" : undefined}
                     disabled={!isInteractive}
-                    whileHover={canHover ? { scale: 1.1 } : undefined}
+                    animate={{
+                      scale:
+                        isInteractive && hoveredProjectIndex === index
+                          ? 1.1
+                          : 1,
+                    }}
                     transition={{ duration: 0.2 }}
                     style={{
                       boxShadow: barShadow,
@@ -341,6 +376,22 @@ export default function CaseStudyGlyphMenu({
                     }}
                     className={`relative h-full w-full cursor-pointer touch-manipulation select-none overflow-hidden rounded-full bg-background p-0.5 dark:bg-dark-background md:p-0 ${index === 0 ? "glyph-one" : index === 2 ? "glyph-three" : ""}`}
                     onClick={() => handleProjectClick(index)}
+                    onPointerEnter={(event) => {
+                      if (
+                        canHover &&
+                        isInteractive &&
+                        event.pointerType !== "touch"
+                      ) {
+                        setHoveredProjectIndex(index);
+                      }
+                    }}
+                    onPointerLeave={(event) => {
+                      if (canHover && event.pointerType !== "touch") {
+                        setHoveredProjectIndex((current) =>
+                          current === index ? null : current,
+                        );
+                      }
+                    }}
                   >
                     <AnimatedGlyph
                       animationData={project.glyphAnimation}
@@ -355,6 +406,12 @@ export default function CaseStudyGlyphMenu({
                   label={project.title}
                   barShadow={barShadow}
                   canHover={canHover}
+                  isHovered={isInteractive && hoveredProjectIndex === index}
+                  onHoverChange={(isHovered) => {
+                    setHoveredProjectIndex((current) =>
+                      isHovered ? index : current === index ? null : current,
+                    );
+                  }}
                   disabled={!isInteractive}
                   onClick={() => handleProjectClick(index)}
                   enterDelay={labelEntryDelay}
