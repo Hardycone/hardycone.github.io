@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { type MouseEventHandler, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { ROUNDED_SQUIRCLE_05, ROUNDED_SQUIRCLE_07_MD } from "@/lib/styleTokens";
 import { useMouseShadow } from "../context/MouseShadowContext";
@@ -11,6 +11,7 @@ export interface HighlightCardProps {
   contentClassName?: string;
   isActive?: boolean;
   highlightOnHover?: boolean;
+  onClick?: MouseEventHandler<HTMLDivElement>;
   // Previous appearance controls retained while the conic border is disabled.
   activeBackgroundClassName?: string;
   inactiveBackgroundClassName?: string;
@@ -26,6 +27,7 @@ export default function HighlightCard({
   contentClassName,
   isActive,
   highlightOnHover = true,
+  onClick,
 }: HighlightCardProps) {
   const groupIsActive = useCardGroupActive();
   const resolvedIsActive = isActive ?? groupIsActive ?? false;
@@ -40,6 +42,7 @@ export default function HighlightCard({
       data-cursor-shadow
       className={`${ROUNDED_SQUIRCLE_05} ${ROUNDED_SQUIRCLE_07_MD} group/card relative isolate w-full ${highlightCardClassName}`}
       style={{ boxShadow: cardSmallShadow }}
+      onClick={onClick}
     >
       <div
         aria-hidden="true"
